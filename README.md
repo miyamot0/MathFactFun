@@ -14,7 +14,45 @@ The MFF project currently includes a total of four scientists working across mul
 
 [Corey Peltier, Ph.D.](mailto:coreypeltier@ou.edu) (University of Oklahoma): Corey Peltier is an Assistant Professor in the Department of Educational Psychology within the Special Education Program at the University of Oklahoma. His research interests include improving the mathematical outcomes for students at-risk or identified with a disability. A secondary line of research focused on the use of single-case designs to identify effective interventions. Corey is a content area expert for MFF.
 
-## Licenses
+## Core Goals of MFF
+
+...
+
+### Goal #1: Quick and Easy Benchmarking of Declarative and Procedural Math Facts
+
+...
+
+### Goal #2: Support for Identifying Students At-Risk for Learning Issues in Early Math
+
+...
+
+### Goal #3: Facilitating Regular Progress Monitoring for Classroom Teachers
+
+...
+
+### Goal #4: Evaluating Computer-based Activities for Improving Basic Math Fact Fluency
+
+...
+
+## Illustrations of Functionality
+
+...
+
+### Benchmarking of Declarative and Procedural Math Facts
+
+...
+
+### Facilitating Progress Monitoring
+
+...
+
+### Delivery of Tier II/Tier III Math Intervention for Fluency
+
+...
+
+## Open Source Licenses
+
+...
 
 [Measures and Interventions for Numeracy Development (MIND)](https://brianponcy.wixsite.com/mind) - Brian Poncy
 
@@ -39,3 +77,7 @@ The MFF project currently includes a total of four scientists working across mul
 [react-scripts](https://github.com/facebook/create-react-app) - Facebook (MIT)
 
 [react-select](https://github.com/JedWatson/react-select/tree/master/packages/react-select) - Jed Watson (MIT)
+
+## Software Licenses
+
+MIT-licensed (2022) - Shawn P. Gilroy, Louisiana State University
