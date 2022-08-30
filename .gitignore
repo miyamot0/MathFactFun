@@ -12,6 +12,7 @@
 /build
 
 # security
+src/firebase/config.tsx
 /functions
 storate-rules
 firestore.rules
