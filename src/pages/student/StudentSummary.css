@@ -1,0 +1,44 @@
+.student-summary {
+    background-color: #fff;
+    padding: 16px;
+    border-radius: 4px;
+    margin: 20px 0px;
+}
+
+.due-date {
+    padding-top: 20px;
+    font-size: 0.9em !important;
+    color: var(--title-color) !important;
+}
+
+.student-summary .details {
+    margin: 30px 0;
+    color: var(--text-style-color);
+    line-height: 1.5em;
+    font-size: 1em;
+}
+
+.student-summary .btn {
+    margin-top: 20px;
+}
+
+.student-summary p {
+    margin-top: 5px;
+    color: var(--text-style-color);
+    font-size: 0.9em;
+}
+
+.student-summary hr {
+    border-top: 1px dotted black;
+    border-bottom: 0px dotted black;
+}
+
+.btn-below {
+    margin-top: 10px;
+    margin-right: 10px;
+}
+
+.student-summary-h4 {
+    font-size: 1em;
+    color: var(--heading-style-color);
+}

@@ -1,0 +1,141 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+/* Styles: for general applications */
+
+:root {
+  --heading-style-color: #5F686D;
+  --text-style-color: #939391;
+  --primary-style-color: #33A7E4;
+  --background-style-color: #e4e2e2b6;
+  --primary-border-radius: 5px;
+}
+
+body {
+  font-family: Roboto;
+  margin: 0;
+  font-size: 1.25em;
+  background: var(--background-style-color);
+}
+
+ul,
+li,
+p,
+h1,
+h2,
+h3,
+h4 {
+  margin: 0;
+  padding: 0;
+}
+
+ul {
+  list-style-type: none;
+}
+
+a:link {
+  color: #33A7E4;
+}
+
+/* visited link */
+a:visited {
+  color: #FF9439;
+}
+
+.global-page-title {
+  font-size: 1em;
+  color: var(--heading-style-color);
+  display: inline-block;
+}
+
+/* Styles: for button */
+
+.global-btn {
+  background: #fff;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  color: var(--primary-style-color);
+  border: 1px solid var(--primary-style-color);
+  font-size: 1em;
+}
+
+.global-btn:hover {
+  color: #fff;
+  background-color: var(--primary-style-color);
+}
+
+.global-btn-red {
+  color: #FF5039;
+  border: 1px solid #FF5039;
+}
+
+.global-btn-red:hover {
+  color: #fff;
+  background-color: #FF5039;
+}
+
+.global-btn-light-red {
+  color: #F43779;
+  border: 1px solid #F43779;
+}
+
+.global-btn-light-red:hover {
+  color: #fff;
+  background-color: #F43779;
+}
+
+.global-btn-green {
+  color: #0ada4f;
+  border: 1px solid #0ada4f;
+}
+
+.global-btn-green:hover {
+  color: #fff;
+  background-color: #0ada4f;
+}
+
+.global-btn-orange {
+  color: #FF9439 !important;
+  border: 1px solid #FF9439 !important;
+}
+
+.global-btn-orange:hover {
+  color: #fff !important;
+  background-color: #FF9439 !important;
+}
+
+/* Styles: for forms */
+
+label {
+  display: block;
+  margin: 30px auto;
+}
+
+label span {
+  display: block;
+  margin-bottom: 10px;
+}
+
+input,
+textarea {
+  padding: 10px 10px;
+  font-size: 1em;
+  width: 100%;
+  color: #5e5e5e;
+  border: 1px solid hsl(0, 0%, 80%);
+  border-radius: var(--primary-border-radius);
+  box-sizing: border-box;
+}
+
+textarea {
+  min-height: 150px;
+}
+
+.error {
+  color: red;
+  background: rgb(221, 127, 143);
+  border: 1px solid red;
+  border-radius: 4px;
+  padding: 10px;
+  margin: 10px 0;
+}

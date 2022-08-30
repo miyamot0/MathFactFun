@@ -1,0 +1,42 @@
+.info-form-list {
+    margin-top: 30px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(0px, 400px));
+    grid-gap: 20px;
+    margin-bottom: 50px;
+}
+
+.info-form-list p {
+    color: var(--text-style-color);
+    padding-top: 5px;
+    padding-bottom: 20px;
+}
+
+.info-panel {
+    background-color: #fff;
+    padding: 16px;
+    border-radius: 6px;
+    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.05);
+    text-decoration: none;
+    color: inherit;
+    width: auto;
+}
+
+.info-panel>hr {
+    border-top: 1px dotted black;
+    border-bottom: 0px dotted black;
+}
+
+.info-panel:last-of-type {
+    padding-bottom: 20px;
+}
+
+.information-element {
+    list-style-type: circle;
+    margin-left: 25px;
+}
+
+.information-element li {
+    margin-bottom: 5px;
+    color: var(--text-style-color);
+}

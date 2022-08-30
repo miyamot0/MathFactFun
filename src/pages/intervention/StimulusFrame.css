@@ -1,0 +1,120 @@
+.stimulus-block-wrapper {
+    display: grid;
+    column-gap: 10px;
+    row-gap: 10px;
+    grid-gap: 10px;
+    height: 80%;
+    margin-left: 20%;
+    margin-right: 20%;
+    grid-template-rows: 25% 25% 3% 25%;
+}
+
+.stimulus-block-shared {
+    min-width: 80px;
+    text-align: center;
+    display: flex;
+    font-size: 1.5em !important;
+    font-weight: bold;
+}
+
+.stimulus-block1 {
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 1;
+    grid-row-end: 2;
+    text-align: center;
+    background-color: white;
+}
+
+.stimulus-block2 {
+    grid-column-start: 2;
+    grid-column-end: 3;
+    grid-row-start: 1;
+    grid-row-end: 2;
+    text-align: center;
+    background-color: white;
+}
+
+.stimulus-block3 {
+    grid-column-start: 3;
+    grid-column-end: 4;
+    grid-row-start: 1;
+    grid-row-end: 2;
+    text-align: center;
+    background-color: white;
+}
+
+.stimulus-block4 {
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 2;
+    grid-row-end: 3;
+    text-align: center;
+    background-color: white;
+}
+
+.stimulus-block5 {
+    grid-column-start: 2;
+    grid-column-end: 3;
+    grid-row-start: 2;
+    grid-row-end: 3;
+    text-align: center;
+    background-color: white;
+}
+
+.stimulus-block6 {
+    grid-column-start: 3;
+    grid-column-end: 4;
+    grid-row-start: 2;
+    grid-row-end: 3;
+    text-align: center;
+    background-color: white;
+}
+
+.stimulus-block7 {
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 4;
+    grid-row-end: 5;
+    text-align: center;
+    background-color: white;
+}
+
+.stimulus-block8 {
+    grid-column-start: 2;
+    grid-column-end: 3;
+    grid-row-start: 4;
+    grid-row-end: 5;
+    text-align: center;
+    background-color: white;
+}
+
+.stimulus-block9 {
+    grid-column-start: 3;
+    grid-column-end: 4;
+    grid-row-start: 4;
+    grid-row-end: 5;
+    text-align: center;
+    background-color: white;
+}
+
+.stimulus-equalsLine {
+    grid-column-start: 1;
+    grid-column-end: 4;
+    grid-row-start: 3;
+    grid-row-end: 4;
+    text-align: center;
+}
+
+.stimulus-button-section {
+    flex: 1;
+    display: grid;
+    justify-content: column;
+    margin: auto auto;
+}
+
+.stimulus-btn {
+    justify-content: center;
+    align-content: center;
+    height: auto;
+}

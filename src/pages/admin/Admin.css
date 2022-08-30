@@ -1,0 +1,24 @@
+.adminTable {
+  width: 100%;
+  padding-top: 10px;
+}
+
+.adminTable th {
+  font-weight: bold;
+  text-align: left;
+  text-decoration: underline;
+}
+
+.adminTable td {
+  padding: 10px;
+  border: 1px solid #666;
+  color: var(--text-style-color);
+}
+
+.new-user-btn {
+  margin-top: 20px;
+}
+
+.btn-grow-horiz {
+  width: 100%;
+}

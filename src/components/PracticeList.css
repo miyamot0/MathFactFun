@@ -1,0 +1,90 @@
+.practice-list {
+  margin-top: 40px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-gap: 20px;
+}
+
+.practice-list-container {
+  background-color: #fff;
+  padding: 16px;
+  border-radius: 6px;
+  box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.05);
+  text-decoration: none;
+  color: inherit;
+}
+
+.practice-list a {
+  text-decoration: none;
+  color: var(--heading-style-color);
+  font-weight: bold;
+}
+
+.practice-list h4 {
+  font-size: 0.9em;
+  color: var(--heading-style-color);
+}
+
+.practice-list p {
+  color: var(--text-style-color);
+  font-size: 0.9em;
+}
+
+.practice-list .assigned-to {
+  margin-top: 20px;
+  padding-top: 10px;
+  border-top: 1px solid #eee;
+}
+
+.practice-list .assigned-to li {
+  display: inline-block;
+}
+
+.practice-list ul {
+  margin: 10px 0;
+  display: flex;
+}
+
+.practice-list li {
+  margin-right: 10px;
+  list-style-type: none;
+}
+
+.practice-list .avatar {
+  width: 30px;
+  height: 30px;
+}
+
+.practice-list .practiced-today {
+  display: inline-block;
+  margin-right: 10px;
+  width: 12px;
+  height: 12px;
+  background: #0ebb50;
+  border-radius: 50%;
+  margin-top: 2px;
+}
+
+.practice-list .needs-practice {
+  display: inline-block;
+  margin-right: 10px;
+  width: 12px;
+  height: 12px;
+  background: #FF5733;
+  border-radius: 50%;
+  margin-top: 2px;
+}
+
+.practice-list-card {
+  background-color: #fff;
+  padding: 16px;
+  border-radius: 6px;
+  box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.05);
+  text-decoration: none;
+  color: inherit;
+}
+
+.practice-list hr {
+  border-top: 1px dotted black;
+  border-bottom: 0px dotted black;
+}

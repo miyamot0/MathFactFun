@@ -1,0 +1,99 @@
+.benchmark-list {
+  margin-top: 40px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-gap: 20px;
+}
+
+.benchmark-list-container {
+  background-color: #fff;
+  padding: 16px;
+  border-radius: 6px;
+  box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.05);
+  text-decoration: none;
+  color: inherit;
+}
+
+.benchmark-list-card {
+  background-color: #fff;
+  padding: 16px;
+  border-radius: 6px;
+  box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.05);
+  text-decoration: none;
+  color: inherit;
+}
+
+.benchmark-list-card a {
+  text-decoration: none;
+  color: var(--heading-style-color);
+  font-weight: bold;
+}
+
+.benchmark-list-card-title {
+  text-decoration: none;
+  color: inherit;
+}
+
+.benchmark-list h4 {
+  font-size: 0.9em;
+  color: var(--heading-style-color);
+}
+
+.benchmark-list p {
+  color: var(--text-style-color);
+  font-size: 0.9em;
+}
+
+.benchmark-list .assigned-to {
+  margin-top: 20px;
+  padding-top: 10px;
+  border-top: 1px solid #eee;
+}
+
+.benchmark-list .assigned-to li {
+  display: inline-block;
+}
+
+.benchmark-list ul {
+  margin: 10px 0;
+  display: flex;
+}
+
+.benchmark-list li {
+  margin-right: 10px;
+  list-style-type: none;
+}
+
+.benchmark-list .avatar {
+  width: 30px;
+  height: 30px;
+}
+
+.benchmark-list .benchmarkd-today {
+  display: inline-block;
+  margin-right: 10px;
+  width: 12px;
+  height: 12px;
+  background: #0ebb50;
+  border-radius: 50%;
+  margin-top: 2px;
+}
+
+.benchmark-list .needs-benchmark {
+  display: inline-block;
+  margin-right: 10px;
+  width: 12px;
+  height: 12px;
+  background: #FF5733;
+  border-radius: 50%;
+  margin-top: 2px;
+}
+
+.benchmark-list p {
+  margin-top: 5px;
+}
+
+.benchmark-list hr {
+  border-top: 1px dotted black;
+  border-bottom: 0px dotted black;
+}

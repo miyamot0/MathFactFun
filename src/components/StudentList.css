@@ -1,0 +1,75 @@
+.student-list {
+  margin-top: 40px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-gap: 20px;
+}
+
+.student-list-card {
+  background-color: #fff;
+  padding: 16px;
+  border-radius: 6px;
+  box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.05);
+  text-decoration: none;
+  color: inherit;
+}
+
+.student-list a {
+  text-decoration: none;
+  color: var(--heading-style-color);
+  font-weight: bold;
+}
+
+.student-list-h4 {
+  font-size: 0.9em;
+  color: var(--heading-style-color);
+}
+
+.student-list p {
+  color: var(--text-style-color);
+  font-size: 0.9em;
+  margin-top: 5px;
+}
+
+.student-list .assigned-to li {
+  display: inline-block;
+}
+
+.student-list ul {
+  margin: 10px 0;
+  display: flex;
+}
+
+.student-list li {
+  margin-right: 10px;
+  list-style-type: none;
+}
+
+.student-list .on-track {
+  display: inline-block;
+  margin-right: 10px;
+  width: 12px;
+  height: 12px;
+  background: #0ebb50;
+  border-radius: 50%;
+  margin-top: 5px;
+}
+
+.student-list .needs-review {
+  display: inline-block;
+  margin-right: 10px;
+  width: 12px;
+  height: 12px;
+  background: #FF5733;
+  border-radius: 50%;
+  margin-top: 5px;
+}
+
+.student-list p {
+  margin-top: 5px;
+}
+
+.student-list hr {
+  border-top: 1px dotted black;
+  border-bottom: 0px dotted black;
+}

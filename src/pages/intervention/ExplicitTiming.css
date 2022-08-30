@@ -1,0 +1,70 @@
+.wrapperET {
+  display: grid;
+  column-gap: 10px;
+  row-gap: 10px;
+  grid-gap: 10px;
+  margin: 0 auto;
+  /*
+    Calculate height WRT gutter vals
+    */
+  height: calc(100vh - 0px);
+  width: calc(100vw - 200px);
+
+  text-align: center;
+  vertical-align: middle;
+  grid-template-rows: 5% 15% 20% 15% 15% 15%;
+  /* New */
+  padding-top: 10px;
+}
+
+.topBoxET {
+  grid-column-start: 1;
+  grid-column-end: 7;
+  grid-row-start: 1;
+  grid-row-end: 2;
+  text-align: center;
+  justify-content: center;
+  align-content: center;
+}
+
+/* New */
+.topBoxET h2 {
+  color: var(--heading-style-color);
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.box2ET {
+  grid-column-start: 2;
+  grid-column-end: 5;
+  grid-row-start: 2;
+  grid-row-end: 4;
+  text-align: center;
+
+  /* New */
+  border: none;
+  border-radius: 2pt;
+  box-shadow: 0 0 0 1pt var(--text-style-color);
+  padding-top: 15px;
+}
+
+.box3ET {
+  grid-column-start: 5;
+  grid-column-end: 7;
+  grid-row-start: 2;
+  grid-row-end: 7;
+  display: grid;
+  place-items: center;
+}
+
+/* fixed */
+.box5ET {
+  grid-column-start: 3;
+  grid-column-end: 5;
+  grid-row-start: 4;
+  grid-row-end: 7;
+  text-align: center;
+
+  /* New */
+  padding-top: 10px;
+}
