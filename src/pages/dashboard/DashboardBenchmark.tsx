@@ -19,8 +19,12 @@ import BenchmarkList from "../../components/BenchmarkList";
 import "./Dashboards.css";
 import { StudentDataInterface } from "../../models/StudentModel";
 
+interface RoutedTeacherSet {
+  id?: string;
+};
+
 export default function DashboardBenchmark() {
-  const { id } = useParams();
+  const { id } = useParams<RoutedTeacherSet>();
   const { documentError, document } = useFirebaseDocument("students", id);
 
   if (documentError) {

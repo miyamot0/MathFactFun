@@ -24,7 +24,6 @@ import { useAuthorizationContext } from "../../context/useAuthorizationContext";
 
 // widgets
 import KeyPad from "./KeyPad";
-import Timer from "../../components/Timer";
 import SimpleProblemFrame from "./SimpleProblemFrame";
 import TimerButton from "../../components/TimerButton";
 
@@ -72,8 +71,13 @@ const customStyles = {
 
 Modal.setAppElement("#root");
 
+interface RoutedStudentSet {
+  id?: string;
+  target?: string;
+};
+
 export default function TapedProblems() {
-  const { id, target } = useParams();
+  const { id, target } = useParams<RoutedStudentSet>();
   const { user } = useAuthorizationContext();
   const history = useHistory();
 

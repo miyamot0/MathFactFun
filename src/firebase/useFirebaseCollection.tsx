@@ -23,9 +23,12 @@ import { PerformanceDataInterface } from "../models/PerformanceModel";
 
 const CollectionError = "Unable to retrieve data";
 
+type CurrentObjectTypes = StudentDataInterface | CommentInterface | PerformanceDataInterface;
+type CurrentObjectTypeArrays = StudentDataInterface[] | CommentInterface[] | PerformanceDataInterface[];
+
 interface UseFirebaseCollection {
-  documents: StudentDataInterface[] | CommentInterface[] | PerformanceDataInterface[];
-  error: string;
+  documents: CurrentObjectTypeArrays | null;
+  error: string | undefined;
 }
 
 /** useFirebaseCollection
@@ -39,11 +42,11 @@ interface UseFirebaseCollection {
  */
 export function useFirebaseCollection(
   collectionString: string,
-  queryString: string[],
-  orderString: string[]
+  queryString: string[] | undefined,
+  orderString: string[] | undefined
 ): UseFirebaseCollection {
-  const [documents, setDocuments] = useState(null);
-  const [error, setError] = useState(null);
+  const [documents, setDocuments] = useState<StudentDataInterface[] | CommentInterface[] | PerformanceDataInterface[] | null>(null);
+  const [error, setError] = useState<string>();
 
   const query = useRef(queryString).current;
   const orderBy = useRef(orderString).current;
@@ -57,20 +60,23 @@ export function useFirebaseCollection(
       ref = ref.where(fieldPath, opString as WhereFilterOp, value);
     }
     if (orderBy) {
-      const [fieldPath, direction] = query;
+      const [fieldPath, direction] = orderBy;
 
       ref = ref.orderBy(fieldPath, direction as OrderByDirection);
     }
 
     const unsubscribe = ref.onSnapshot(
       (snapshot) => {
-        let results = [];
+        let results = Array<CurrentObjectTypes | null>();
+
         snapshot.docs.forEach((doc) => {
-          results.push({ ...doc.data(), id: doc.id });
+          let preDoc = doc.data() as CurrentObjectTypes;
+          preDoc.id = doc.id;
+          results.push(preDoc);
         });
 
-        setDocuments(results);
-        setError(null);
+        setDocuments(results as StudentDataInterface[] | CommentInterface[] | PerformanceDataInterface[]);
+        setError(undefined);
       },
       (error) => {
         setError(CollectionError);

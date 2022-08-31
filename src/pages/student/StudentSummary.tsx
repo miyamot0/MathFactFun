@@ -17,10 +17,12 @@ import { useHistory } from "react-router-dom";
 import { useAuthorizationContext } from "../../context/useAuthorizationContext";
 import { GetApproachStringFromLabel } from "../../utilities/LabelHelper";
 
+import { StudentDataInterface } from "../../models/StudentModel";
+
 // styles
 import "./StudentSummary.css";
 
-export default function StudentSummary({ student }) {
+export default function StudentSummary({ student }: { student: StudentDataInterface }) {
   const { deleteDocument, response } = useFirestore("students");
   const { user, adminFlag } = useAuthorizationContext();
   const history = useHistory();
@@ -35,7 +37,7 @@ export default function StudentSummary({ student }) {
     event.preventDefault();
 
     if (window.confirm("Are you sure to delete this student?")) {
-      deleteDocument(student.id);
+      deleteDocument(student.id as string);
 
       if (!response.error) {
         history.push(`/dashboard`);
@@ -58,13 +60,13 @@ export default function StudentSummary({ student }) {
         </p>
         <p>
           <b>Current Intervention:</b>{" "}
-          {GetApproachStringFromLabel(student.currentApproach)}
+          {GetApproachStringFromLabel(student.currentApproach as string)}
         </p>
         <p>
           <b>Details</b>: {student.details}
         </p>
         <p className="due-date">
-          Next Benchmark Scheduled: {student.dueDate.toDate().toDateString()}
+          Next Benchmark Scheduled: {student.dueDate?.toDate().toDateString()}
         </p>
       </div>
 

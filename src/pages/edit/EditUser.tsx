@@ -22,9 +22,13 @@ const EditFormStyle = {
   maxWidth: "600px",
 };
 
+interface RoutedAdminSet {
+  id?: string;
+};
+
 export default function EditUser() {
   const history = useHistory();
-  const { id } = useParams();
+  const { id } = useParams<RoutedAdminSet>();
   const { documentError, document } = useFirebaseDocument("users", id);
   const { updateDocument, response } = useFirestore("users");
 

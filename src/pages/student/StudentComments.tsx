@@ -17,9 +17,11 @@ import { useAuthorizationContext } from "../../context/useAuthorizationContext";
 import { useFirestore } from "../../firebase/useFirestore";
 import { CommentInterface } from "../../models/StudentModel";
 
+import { StudentDataInterface } from "../../models/StudentModel";
+
 import "./StudentComments.css";
 
-export default function StudentComments({ student }) {
+export default function StudentComments({ student }: { student: StudentDataInterface }) {
   const { updateDocument, response } = useFirestore("students");
   const { user, adminFlag } = useAuthorizationContext();
 
@@ -44,7 +46,7 @@ export default function StudentComments({ student }) {
       id: Math.random(),
     };
 
-    await updateDocument(student.id, {
+    await updateDocument(student.id as string, {
       comments: [...student.comments, usersComment],
     });
 
@@ -69,7 +71,7 @@ export default function StudentComments({ student }) {
         (com) => com.id !== currentComment.id
       );
 
-      await updateDocument(student.id, {
+      await updateDocument(student.id as string, {
         comments: newCommentObj,
       });
     }
@@ -89,7 +91,7 @@ export default function StudentComments({ student }) {
                 >
                   <a
                     style={{ textDecoration: "none" }}
-                    href="#"
+                    href="#!"
                     onClick={() => removeComment(comment)}
                   >
                     X
@@ -99,8 +101,7 @@ export default function StudentComments({ student }) {
 
               <div className="comment-author">
                 <p>
-                  {comment.displayName
-                    .split(" ")
+                  {comment.displayName?.split(" ")
                     .map(
                       (w) => w[0].toUpperCase() + w.substring(1).toLowerCase()
                     )

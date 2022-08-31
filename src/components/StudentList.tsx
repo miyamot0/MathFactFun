@@ -80,6 +80,8 @@ function generateWrapper(student: StudentDataInterface): JSX.Element {
   const isBenchmarkingCurrent = checkIfProgrammingCurrent(student.dueDate);
   const isBenchmarkingCompleted = checkIfBenchmarksCompleted(student);
 
+  console.log(student)
+
   if (isBenchmarkingCurrent) {
     return (
       <p>

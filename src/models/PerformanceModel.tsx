@@ -21,7 +21,7 @@ export interface PerformanceDataInterface {
   totalDigits: number;
 
   // Timestamps
-  createdAt: firebase.firestore.Timestamp;
+  createdAt?: firebase.firestore.Timestamp;
 
   // Arrays
   entries: FactModelInterface[];
@@ -83,7 +83,7 @@ export const PerformanceModel = () => {
       if (typeof this.data.dateTimeEnd !== "string") return false;
       if (typeof this.data.dateTimeStart !== "string") return false;
 
-      if (!(this.data.createdAt instanceof firebase.firestore.Timestamp))
+      if (!(this.data.createdAt !== null))
         return false;
 
       for (let i = 0; i < this.data.entries.length; i++) {
@@ -95,7 +95,7 @@ export const PerformanceModel = () => {
       return true;
     },
     SubmitObject: function (): PerformanceDataInterface {
-      let filteredData = this.data;
+      let filteredData = this.data as PerformanceDataInterface;
       filteredData.entries = this.data.entries.map((entry) => entry.data);
 
       return filteredData;

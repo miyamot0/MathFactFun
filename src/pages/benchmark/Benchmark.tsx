@@ -49,8 +49,13 @@ const ActionSequence = {
 
 const DelCode = "Del";
 
+interface RoutedStudentSet {
+  id?: string;
+  target?: string
+};
+
 export default function Benchmark() {
-  const { id, target } = useParams();
+  const { id, target } = useParams<RoutedStudentSet>();
   const { user } = useAuthorizationContext();
   const history = useHistory();
 

@@ -99,8 +99,15 @@ function getMappedMarker(
   }
 }
 
+interface RoutedStudentProgressSet {
+  id?: string;
+  target?: string;
+  method?: string;
+  aim?: string;
+};
+
 export default function ProgressMonitor() {
-  const { id, target, method, aim } = useParams();
+  const { id, target, method, aim } = useParams<RoutedStudentProgressSet>();
   const { user, adminFlag } = useAuthorizationContext();
 
   // Limit scope if not an admin

@@ -63,6 +63,7 @@ export default function CreateUser() {
       displayName: name,
       displaySchool: school,
       password: password,
+      id: undefined
     };
 
     await addDocument(userObject);

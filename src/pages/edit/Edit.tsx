@@ -40,8 +40,12 @@ interface SelectOption {
   label: string;
 }
 
+interface RoutedStudentSet {
+  id?: string;
+};
+
 export default function Edit() {
-  const { id } = useParams();
+  const { id } = useParams<RoutedStudentSet>();
   const { documentError, document } = useFirebaseDocument("students", id);
   const history = useHistory();
   const { updateDocument, response } = useFirestore("students");

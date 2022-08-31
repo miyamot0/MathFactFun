@@ -84,8 +84,12 @@ const reducerPerOperation = (doc) => {
     );
 };
 
+interface RoutedStudentSet {
+  id?: string;
+};
+
 export default function Screening() {
-  const { id } = useParams();
+  const { id } = useParams<RoutedStudentSet>();
   const { user, adminFlag } = useAuthorizationContext();
   const [chartOptions, setChartOptions] = useState({});
 

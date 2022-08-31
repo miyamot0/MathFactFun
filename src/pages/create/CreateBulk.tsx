@@ -30,10 +30,14 @@ const CreateFormStyle = {
   maxWidth: "600px",
 };
 
+interface RoutedAdminSet {
+  id?: string;
+};
+
 // Page to create new students
 export default function CreateBulk() {
   const history = useHistory();
-  const { id } = useParams();
+  const { id } = useParams<RoutedAdminSet>();
   const { addDocument, response } = useFirestore("students");
 
   // field values
@@ -155,6 +159,7 @@ export default function CreateBulk() {
         aimLine,
         minForTask,
         problemSet: "A",
+        id: undefined
       };
 
       await addDocument(studentObject);

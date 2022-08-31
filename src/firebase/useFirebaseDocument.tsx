@@ -19,8 +19,8 @@ const ErrorNoData = "There was not a document at this location";
 const ErrorSnapshot = "Unable to get the document";
 
 interface UseFirebaseDocument {
-  document: StudentDataInterface | UserDataInterface;
-  documentError: string;
+  document: StudentDataInterface | UserDataInterface | null;
+  documentError: string | undefined;
 }
 
 /** useFirebaseDocument
@@ -32,11 +32,11 @@ interface UseFirebaseDocument {
  * @returns {UseFirebaseDocument}
  */
 export function useFirebaseDocument(
-  collectionString,
-  idString
+  collectionString: string,
+  idString: string | undefined
 ): UseFirebaseDocument {
-  const [document, setDocument] = useState(null);
-  const [documentError, setError] = useState(null);
+  const [document, setDocument] = useState<null | StudentDataInterface | UserDataInterface>(null);
+  const [documentError, setError] = useState<string>();
 
   function pullDocs() {
     const ref = projectFirestore.collection(collectionString).doc(idString);
@@ -44,11 +44,24 @@ export function useFirebaseDocument(
     const unsubscribe = ref.onSnapshot(
       (snapshot) => {
         if (snapshot.data()) {
-          setDocument({
-            ...snapshot.data(),
-            id: snapshot.id,
-          });
-          setError(null);
+
+          let id = snapshot.id as string;
+
+          if (snapshot.data() as StudentDataInterface) {
+            let object = snapshot.data() as StudentDataInterface;
+            object.id = id;
+
+            setDocument(object);
+          }
+
+          if (snapshot.data() as UserDataInterface) {
+            let object = snapshot.data() as UserDataInterface;
+            object.id = id;
+
+            setDocument(object);
+          }
+
+          setError(undefined);
         } else {
           setError(ErrorNoData);
         }
@@ -63,6 +76,7 @@ export function useFirebaseDocument(
 
   useEffect(() => {
     pullDocs();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [collectionString, idString]);
 
   return { document, documentError };

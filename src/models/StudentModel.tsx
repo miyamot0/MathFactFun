@@ -21,7 +21,7 @@ export interface StudentDataInterface {
   minForTask?: number;
 
   // Strings
-  id?: string;
+  id: string | undefined | null;
   creator?: string;
   currentApproach?: string;
   currentErrorApproach?: string;
@@ -33,9 +33,9 @@ export interface StudentDataInterface {
   problemSet?: string;
 
   // Timestamps
-  createdAt?: firebase.firestore.Timestamp;
-  dueDate?: firebase.firestore.Timestamp;
-  lastActivity?: firebase.firestore.Timestamp;
+  createdAt?: firebase.firestore.Timestamp | null;
+  dueDate?: firebase.firestore.Timestamp | null;
+  lastActivity?: firebase.firestore.Timestamp | null;
 
   // Arrays
   comments: CommentInterface[];
@@ -67,14 +67,14 @@ export function StudentModel(): StudentModelInterface {
 
       // Strings
       id: null,
-      creator: null,
+      creator: undefined,
       currentApproach: "N/A",
-      currentErrorApproach: null,
-      currentGrade: null,
-      currentSRApproach: null,
+      currentErrorApproach: undefined,
+      currentGrade: undefined,
+      currentSRApproach: undefined,
       currentTarget: "N/A",
-      details: null,
-      name: null,
+      details: undefined,
+      name: undefined,
       problemSet: "A",
 
       // Timestamps

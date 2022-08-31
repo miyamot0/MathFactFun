@@ -18,13 +18,15 @@ import { useFirebaseCollection } from "../../firebase/useFirebaseCollection";
 import { useFirestore } from "../../firebase/useFirestore";
 import { FactsOnFire } from "../../maths/Mind";
 import Select from "react-select";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { DragDropContext, Droppable, Draggable, DropResult } from "react-beautiful-dnd";
 import {
   OnlyUnique,
   GetOperatorFromLabel,
   Sum,
 } from "../../utilities/LabelHelper";
 import { StudentDataInterface } from "../../models/StudentModel";
+import { PerformanceDataInterface } from "../../models/PerformanceModel";
+import { FactDataInterface, FactModelInterface } from "../../models/FactEntryModel";
 
 const TitleStyle = {
   color: "#444",
@@ -73,39 +75,13 @@ interface SetItem {
   Latency: number;
 }
 
-interface DragColumnsInterface {
-  Available: {
-    name: string;
-    items: SetItem[];
-  };
-  Targeted: {
-    name: string;
-    items: SetItem[];
-  };
-  Mastered: {
-    name: string;
-    items: SetItem[];
-  };
-  Skipped: {
-    name: string;
-    items: SetItem[];
-  };
+interface DragColumnContents {
+  name: string;
+  items: SetItem[];
 }
 
-interface DraggableInterface {
-  combine: any;
-  destination: {
-    droppableId: string;
-    index: number;
-  }
-  draggableId: string;
-  mode: string;
-  reason: string;
-  source: {
-    droppableId: string;
-    index: number;
-  },
-  type: string;
+interface DragColumnsInterface {
+  [key: string]: DragColumnContents | null
 }
 
 /** onDragEnd
@@ -118,7 +94,7 @@ interface DraggableInterface {
  * @param {(value: React.SetStateAction<boolean>) => void} setIncomingChange Callback for triggering change
  */
 function onDragEnd(
-  result: DraggableInterface,
+  result: DropResult,
   columns: DragColumnsInterface,
   setColumns: (value: React.SetStateAction<DragColumnsInterface>) => void,
   setIncomingChange: (value: React.SetStateAction<boolean>) => void
@@ -138,8 +114,8 @@ function onDragEnd(
   if (source.droppableId !== destination.droppableId) {
     const sourceColumn = columns[source.droppableId];
     const destColumn = columns[destination.droppableId];
-    const sourceItems = [...sourceColumn.items];
-    const destItems = [...destColumn.items];
+    const sourceItems = [...sourceColumn!.items];
+    const destItems = [...destColumn!.items];
     const [removed] = sourceItems.splice(source.index, 1);
     destItems.splice(destination.index, 0, removed);
 
@@ -157,15 +133,15 @@ function onDragEnd(
       },
     } as DragColumnsInterface;
 
-    columnObject.Available.name = `Available (${columnObject.Available.items.length})`;
-    columnObject.Targeted.name = `Targeted (${columnObject.Targeted.items.length})`;
-    columnObject.Mastered.name = `Mastered (${columnObject.Mastered.items.length})`;
-    columnObject.Skipped.name = `Skipped (${columnObject.Skipped.items.length})`;
+    columnObject.Available!.name = `Available (${columnObject.Available!.items.length})`;
+    columnObject.Targeted!.name = `Targeted (${columnObject.Targeted!.items.length})`;
+    columnObject.Mastered!.name = `Mastered (${columnObject.Mastered!.items.length})`;
+    columnObject.Skipped!.name = `Skipped (${columnObject.Skipped!.items.length})`;
 
     setColumns(columnObject);
   } else {
     const column = columns[source.droppableId];
-    const copiedItems = [...column.items];
+    const copiedItems = [...column!.items];
     const [removed] = copiedItems.splice(source.index, 1);
     copiedItems.splice(destination.index, 0, removed);
 
@@ -175,7 +151,7 @@ function onDragEnd(
         ...column,
         items: copiedItems,
       },
-    };
+    } as DragColumnsInterface;
 
     setColumns(columnObject);
   }
@@ -185,15 +161,13 @@ function onDragEnd(
  *
  * Load relevant math facts
  *
- * @param {Object} student Student document from firestore
+ * @param {StudentDataInterface} student Student document from firestore
  * @returns {Array} Mind facts
  */
-const loadMathFacts = (student) => {
-  if (student.currentTarget == null) return null;
-
+function loadMathFacts(student: StudentDataInterface | null): { Answer: string; id: string; }[][] {
   let factsOnFire = FactsOnFire.Addition;
 
-  switch (student.currentTarget) {
+  switch (student!.currentTarget) {
     case "Addition":
       factsOnFire = FactsOnFire.Addition;
       break;
@@ -219,32 +193,32 @@ const loadMathFacts = (student) => {
       };
     });
   });
-};
+}
 
 /** formatTextBox
  *
  * Format text output regarding decimal points
  *
- * @param {Float} entry Value supplied
- * @param {Int} dec Decimal points
- * @returns {String} Formatted string
+ * @param {number} entry Value supplied
+ * @param {number} dec Decimal points
+ * @returns {string} Formatted string
  */
-const formatTextBox = (entry, dec) => {
+function formatTextBox(entry: number, dec: number) {
   if (entry === undefined) {
     return "---";
   } else {
     return entry.toFixed(dec);
   }
-};
+}
 
 /** formatBackgroundColor
  *
  * Formats the background color based on criteria
  *
- * @param {Object} entry Summarized math fact info
+ * @param {SetItem} entry Summarized math fact info
  * @returns {String} Color for background
  */
-const formatBackgroundColor = (entry) => {
+const formatBackgroundColor = (entry: SetItem) => {
   let backgroundColor = "#456C86";
 
   if (
@@ -262,13 +236,18 @@ const formatBackgroundColor = (entry) => {
   return backgroundColor;
 };
 
+interface RoutedStudentSet {
+  id?: string;
+  target?: string
+};
+
 export default function SetCreator() {
-  const { target, id } = useParams();
+  const { target, id } = useParams<RoutedStudentSet>();
   const { document } = useFirebaseDocument("students", id);
   const { documents } = useFirebaseCollection(
     `performances/${target}/${id}`,
-    null,
-    null
+    undefined,
+    undefined
   );
   const { updateDocument, response } = useFirestore("students");
 
@@ -300,21 +279,29 @@ export default function SetCreator() {
   useEffect(() => {
     if (documents) {
       const mappedDocument = documents.map((doc) => {
+
+        // Obj saved on FS
+        const docAsObject = doc as PerformanceDataInterface;
+
         return {
-          Items: doc.entries,
-          Date: new Date(doc.dateTimeStart),
-          ShortDate: new Date(doc.dateTimeStart).toLocaleDateString("en-US"),
-          Errors: doc.errCount,
-          DigitsCorrect: doc.correctDigits,
-          DigitsCorrectInitial: doc.nCorrectInitial,
-          DigitsTotal: doc.totalDigits,
-          SessionDuration: doc.sessionDuration,
+          // Pull in entries
+          Items: docAsObject.entries as FactDataInterface[],
+          Date: new Date(docAsObject.dateTimeStart),
+          ShortDate: new Date(docAsObject.dateTimeStart).toLocaleDateString("en-US"),
+          Errors: docAsObject.errCount,
+          DigitsCorrect: docAsObject.correctDigits,
+          DigitsCorrectInitial: docAsObject.nCorrectInitial,
+          DigitsTotal: docAsObject.totalDigits,
+          SessionDuration: docAsObject.sessionDuration,
         };
       });
 
-      const itemSummaries = mappedDocument.map((items) => items.Items);
+      // Pull out fact models alone, array of array
+      const itemSummaries: FactDataInterface[][] = mappedDocument.map((items) => items.Items);
+
       const flatItemSummaries = [].concat(...itemSummaries);
-      const uniqueProblems = flatItemSummaries
+
+      const uniqueProblems: string[] = flatItemSummaries
         .map((obj) => obj.factString)
         .filter(OnlyUnique)
         .sort();
@@ -387,12 +374,13 @@ export default function SetCreator() {
     if (document && itemHistory && !loadedData) {
       // Loads ALL facts
 
-      const mapped = loadMathFacts(document);
+      const mapped = loadMathFacts(document as StudentDataInterface);
 
       const flattened = [].concat.apply([], mapped).map((entry) => {
         let otrs = 0,
           accuracy = 0,
           latency = 0;
+
         const releventResult = itemHistory.filter(
           (obj) => obj.FactString === entry.Answer
         );
@@ -419,6 +407,7 @@ export default function SetCreator() {
         let otrs = 0,
           accuracy = 0,
           latency = 0;
+
         const releventResult = itemHistory.filter(
           (obj) => obj.FactString === element.split(":")[0]
         );
@@ -437,12 +426,14 @@ export default function SetCreator() {
           Latency: latency,
         };
       });
-      newColumns.Targeted.items = currTargetedSets;
+
+      newColumns.Targeted!.items = currTargetedSets;
 
       const currMasteredSets = (document as StudentDataInterface).factsMastered.map((element) => {
         let otrs = 0,
           accuracy = 0,
           latency = 0;
+
         const releventResult = itemHistory.filter(
           (obj) => obj.FactString === element.split(":")[0]
         );
@@ -461,12 +452,14 @@ export default function SetCreator() {
           Latency: latency,
         };
       });
-      newColumns.Mastered.items = currMasteredSets;
+
+      newColumns.Mastered!.items = currMasteredSets;
 
       const currSkippedSets = (document as StudentDataInterface).factsSkipped.map((element) => {
         let otrs = 0,
           accuracy = 0,
           latency = 0;
+
         const releventResult = itemHistory.filter(
           (obj) => obj.FactString === element.split(":")[0]
         );
@@ -485,7 +478,8 @@ export default function SetCreator() {
           Latency: latency,
         };
       });
-      newColumns.Skipped.items = currSkippedSets;
+
+      newColumns.Skipped!.items = currSkippedSets;
 
       let takenArray = [
         ...currTargetedSets.map((a) => a.id),
@@ -497,12 +491,12 @@ export default function SetCreator() {
         return !takenArray.includes(item.id);
       });
 
-      newColumns.Available.items = filteredMap;
+      newColumns.Available!.items = filteredMap;
 
-      newColumns.Available.name = `Available (${newColumns.Available.items.length})`;
-      newColumns.Targeted.name = `Targeted (${newColumns.Targeted.items.length})`;
-      newColumns.Mastered.name = `Mastered (${newColumns.Mastered.items.length})`;
-      newColumns.Skipped.name = `Skipped (${newColumns.Skipped.items.length})`;
+      newColumns.Available!.name = `Available (${newColumns.Available!.items.length})`;
+      newColumns.Targeted!.name = `Targeted (${newColumns.Targeted!.items.length})`;
+      newColumns.Mastered!.name = `Mastered (${newColumns.Mastered!.items.length})`;
+      newColumns.Skipped!.name = `Skipped (${newColumns.Skipped!.items.length})`;
 
       setColumns(newColumns);
       setLoadedData(true);
@@ -517,10 +511,10 @@ export default function SetCreator() {
    */
   function moveTargetedItems(value: string): void {
     let newColumns = columns;
-    let preAvailable = columns.Available.items;
-    let preTargeted = columns.Targeted.items;
-    let preMastered = columns.Mastered.items;
-    let preSkipped = columns.Skipped.items;
+    let preAvailable = columns.Available!.items;
+    let preTargeted = columns.Targeted!.items;
+    let preMastered = columns.Mastered!.items;
+    let preSkipped = columns.Skipped!.items;
 
     switch (value) {
       case "Mastered":
@@ -551,14 +545,14 @@ export default function SetCreator() {
 
     preTargeted = [];
 
-    newColumns.Available.items = preAvailable;
-    newColumns.Available.name = `Available (${preAvailable.length})`;
-    newColumns.Targeted.items = preTargeted;
-    newColumns.Targeted.name = `Targeted (${preTargeted.length})`;
-    newColumns.Mastered.items = preMastered;
-    newColumns.Mastered.name = `Mastered (${preMastered.length})`;
-    newColumns.Skipped.items = preSkipped;
-    newColumns.Skipped.name = `Skipped (${preSkipped.length})`;
+    newColumns.Available!.items = preAvailable;
+    newColumns.Available!.name = `Available (${preAvailable.length})`;
+    newColumns.Targeted!.items = preTargeted;
+    newColumns.Targeted!.name = `Targeted (${preTargeted.length})`;
+    newColumns.Mastered!.items = preMastered;
+    newColumns.Mastered!.name = `Mastered (${preMastered.length})`;
+    newColumns.Skipped!.items = preSkipped;
+    newColumns.Skipped!.name = `Skipped (${preSkipped.length})`;
 
     setIncomingChange(true);
     setColumns(newColumns);
@@ -572,20 +566,20 @@ export default function SetCreator() {
    */
   function moveItemsToTargeted(setArray: number): void {
     let newColumns = columns;
-    let preAvailable = columns.Available.items;
-    let preTargeted = columns.Targeted.items;
-    let preSkipped = columns.Skipped.items;
-    let preMastered = columns.Mastered.items;
+    let preAvailable = columns.Available!.items;
+    let preTargeted = columns.Targeted!.items;
+    let preSkipped = columns.Skipped!.items;
+    let preMastered = columns.Mastered!.items;
 
-    const mapped = loadMathFacts(document)[setArray].map((item) => item.id);
+    const mapped = loadMathFacts(document as StudentDataInterface)[setArray].map((item) => item.id);
 
-    columns.Targeted.items.forEach((item) => {
+    columns.Targeted!.items.forEach((item) => {
       preAvailable.push(item);
     });
 
     preTargeted = [];
 
-    columns.Available.items.forEach((item) => {
+    columns.Available!.items.forEach((item) => {
       if (mapped.includes(item.id)) {
         preTargeted.push(item);
 
@@ -595,7 +589,7 @@ export default function SetCreator() {
       }
     });
 
-    columns.Skipped.items.forEach((item) => {
+    columns.Skipped!.items.forEach((item) => {
       if (mapped.includes(item.id)) {
         preTargeted.push(item);
 
@@ -605,7 +599,7 @@ export default function SetCreator() {
       }
     });
 
-    columns.Mastered.items.forEach((item) => {
+    columns.Mastered!.items.forEach((item) => {
       if (mapped.includes(item.id)) {
         preTargeted.push(item);
 
@@ -615,14 +609,14 @@ export default function SetCreator() {
       }
     });
 
-    newColumns.Available.items = preAvailable;
-    newColumns.Available.name = `Available (${preAvailable.length})`;
-    newColumns.Targeted.items = preTargeted;
-    newColumns.Targeted.name = `Targeted (${preTargeted.length})`;
-    newColumns.Mastered.items = preMastered;
-    newColumns.Mastered.name = `Mastered (${preMastered.length})`;
-    newColumns.Skipped.items = preSkipped;
-    newColumns.Skipped.name = `Skipped (${preSkipped.length})`;
+    newColumns.Available!.items = preAvailable;
+    newColumns.Available!.name = `Available (${preAvailable.length})`;
+    newColumns.Targeted!.items = preTargeted;
+    newColumns.Targeted!.name = `Targeted (${preTargeted.length})`;
+    newColumns.Mastered!.items = preMastered;
+    newColumns.Mastered!.name = `Mastered (${preMastered.length})`;
+    newColumns.Skipped!.items = preSkipped;
+    newColumns.Skipped!.name = `Skipped (${preSkipped.length})`;
 
     setIncomingChange(true);
     setColumns(newColumns);
@@ -636,15 +630,15 @@ export default function SetCreator() {
   function resetItems(): void {
     if (window.confirm("Are you sure you want to reset?") === true) {
       let newColumns = columns;
-      newColumns.Available.items = baseItems;
-      newColumns.Mastered.items = [];
-      newColumns.Skipped.items = [];
-      newColumns.Targeted.items = [];
+      newColumns.Available!.items = baseItems;
+      newColumns.Mastered!.items = [];
+      newColumns.Skipped!.items = [];
+      newColumns.Targeted!.items = [];
 
-      newColumns.Available.name = `Available (${baseItems.length})`;
-      newColumns.Targeted.name = `Targeted (0)`;
-      newColumns.Mastered.name = `Mastered (0)`;
-      newColumns.Skipped.name = `Skipped (0)`;
+      newColumns.Available!.name = `Available (${baseItems.length})`;
+      newColumns.Targeted!.name = `Targeted (0)`;
+      newColumns.Mastered!.name = `Mastered (0)`;
+      newColumns.Skipped!.name = `Skipped (0)`;
 
       setIncomingChange(true);
       setColumns(newColumns);
@@ -669,7 +663,7 @@ export default function SetCreator() {
       case "Division":
         return FactsOnFire.Division;
       default:
-        return null;
+        return FactsOnFire.Addition;
     }
   }
 
@@ -725,7 +719,7 @@ export default function SetCreator() {
                 }
               )}
               onChange={(option) => {
-                moveTargetedItems(option.value);
+                moveTargetedItems(option!.value);
               }}
             />
           </label>
@@ -765,7 +759,7 @@ export default function SetCreator() {
                             minHeight: 500,
                           }}
                         >
-                          {column.items.map((item, index) => {
+                          {column!.items.map((item, index) => {
                             return (
                               <Draggable
                                 key={item.id}

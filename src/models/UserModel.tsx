@@ -7,8 +7,8 @@
  */
 
 export interface UserDataInterface {
+    id: string | undefined | null;
     displayEmail: string;
     displayName: string;
     displaySchool: string;
-    id?: string;
 }
