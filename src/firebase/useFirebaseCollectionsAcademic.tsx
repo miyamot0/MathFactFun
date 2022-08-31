@@ -23,22 +23,22 @@ import { PerformanceDataInterface } from "../models/PerformanceModel";
 const CollectionError = "Unable to retrieve data";
 
 interface UseFirebaseCollectionAddition {
-  additionDocuments: any;
+  additionDocuments: PerformanceDataInterface[] | undefined;
   additionError: string | undefined;
 }
 
 interface UseFirebaseCollectionSubtraction {
-  subtractionDocuments: any;
+  subtractionDocuments: PerformanceDataInterface[] | undefined;
   subtractionError: string | undefined;
 }
 
 interface UseFirebaseCollectionMultiplication {
-  multiplicationDocuments: any;
+  multiplicationDocuments: PerformanceDataInterface[] | undefined;
   multiplicationError: string | undefined;
 }
 
 interface UseFirebaseCollectionDivision {
-  divisionDocuments: any;
+  divisionDocuments: PerformanceDataInterface[] | undefined;
   divisionError: string | undefined;
 }
 
@@ -53,8 +53,8 @@ interface UseFirebaseCollectionDivision {
  */
 export function useFirebaseCollectionAddition(
   idString: string,
-  queryString: string[],
-  orderString: string[]
+  queryString: string[] | undefined,
+  orderString: string[] | undefined
 ): UseFirebaseCollectionAddition {
   const [additionDocuments, setAdditionDocuments] = useState<PerformanceDataInterface[]>();
   const [additionError, setError] = useState<string>();
@@ -73,7 +73,7 @@ export function useFirebaseCollectionAddition(
       ref = ref.where(fieldPath, opString as WhereFilterOp, value);
     }
     if (orderBy) {
-      const [fieldPath, direction] = query;
+      const [fieldPath, direction] = orderBy;
 
       ref = ref.orderBy(fieldPath, direction as OrderByDirection);
     }
@@ -114,8 +114,8 @@ export function useFirebaseCollectionAddition(
  */
 export function useFirebaseCollectionSubtraction(
   idString: string,
-  queryString: string[],
-  orderString: string[]
+  queryString: string[] | undefined,
+  orderString: string[] | undefined
 ): UseFirebaseCollectionSubtraction {
   const [subtractionDocuments, setSubtractionDocuments] = useState<PerformanceDataInterface[]>();
   const [subtractionError, setError] = useState<string>();
@@ -134,7 +134,7 @@ export function useFirebaseCollectionSubtraction(
       ref = ref.where(fieldPath, opString as WhereFilterOp, value);
     }
     if (orderBy) {
-      const [fieldPath, direction] = query;
+      const [fieldPath, direction] = orderBy;
 
       ref = ref.orderBy(fieldPath, direction as OrderByDirection);
     }
@@ -174,8 +174,8 @@ export function useFirebaseCollectionSubtraction(
  */
 export function useFirebaseCollectionMultiplication(
   idString: string,
-  queryString: string[],
-  orderString: string[]
+  queryString: string[] | undefined,
+  orderString: string[] | undefined
 ): UseFirebaseCollectionMultiplication {
   const [multiplicationDocuments, setMultiplicationDocuments] = useState<PerformanceDataInterface[]>();
   const [multiplicationError, setError] = useState<string>();
@@ -194,7 +194,7 @@ export function useFirebaseCollectionMultiplication(
       ref = ref.where(fieldPath, opString as WhereFilterOp, value);
     }
     if (orderBy) {
-      const [fieldPath, direction] = query;
+      const [fieldPath, direction] = orderBy;
 
       ref = ref.orderBy(fieldPath, direction as OrderByDirection);
     }
@@ -234,8 +234,8 @@ export function useFirebaseCollectionMultiplication(
  */
 export function useFirebaseCollectionDivision(
   idString: string,
-  queryString: string[],
-  orderString: string[]
+  queryString: string[] | undefined,
+  orderString: string[] | undefined
 ): UseFirebaseCollectionDivision {
   const [divisionDocuments, setDivisionDocuments] = useState<PerformanceDataInterface[]>();
   const [divisionError, setError] = useState<string>();
@@ -254,7 +254,7 @@ export function useFirebaseCollectionDivision(
       ref = ref.where(fieldPath, opString as WhereFilterOp, value);
     }
     if (orderBy) {
-      const [fieldPath, direction] = query;
+      const [fieldPath, direction] = orderBy;
 
       ref = ref.orderBy(fieldPath, direction as OrderByDirection);
     }

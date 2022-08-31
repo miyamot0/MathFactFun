@@ -67,6 +67,23 @@ const DropContainer = {
   alignItems: "center" as const,
 };
 
+type SingleOptionType = { label: string, value: string }
+
+interface FactStructure {
+  Answer: string;
+  id: string;
+}
+
+interface ItemHistory {
+  FactString: string;
+  X: number;
+  Y: number;
+  Latency: number;
+  AverageCorrect: number;
+  Correct: number;
+  Total: number;
+};
+
 interface SetItem {
   Answer: string;
   id: string;
@@ -164,7 +181,7 @@ function onDragEnd(
  * @param {StudentDataInterface} student Student document from firestore
  * @returns {Array} Mind facts
  */
-function loadMathFacts(student: StudentDataInterface | null): { Answer: string; id: string; }[][] {
+function loadMathFacts(student: StudentDataInterface | null): FactStructure[][] {
   let factsOnFire = FactsOnFire.Addition;
 
   switch (student!.currentTarget) {
@@ -190,7 +207,7 @@ function loadMathFacts(student: StudentDataInterface | null): { Answer: string; 
       return {
         Answer: answer,
         id: `${answer}:${setNum}:${posInArray}`,
-      };
+      } as FactStructure;
     });
   });
 }
@@ -253,9 +270,9 @@ export default function SetCreator() {
 
   const [loadedData, setLoadedData] = useState(false);
   const [incomingChange, setIncomingChange] = useState(false);
-  const [baseItems, setBaseItems] = useState([]);
-  const [assignedSet, setAssignedSet] = useState([]);
-  const [itemHistory, setItemHistory] = useState(null);
+  const [baseItems, setBaseItems] = useState<any>();
+  const [assignedSet, setAssignedSet] = useState<SingleOptionType>();
+  const [itemHistory, setItemHistory] = useState<ItemHistory[]>();
 
   const [columns, setColumns] = useState<DragColumnsInterface>({
     Available: {
@@ -286,8 +303,8 @@ export default function SetCreator() {
         return {
           // Pull in entries
           Items: docAsObject.entries as FactDataInterface[],
-          Date: new Date(docAsObject.dateTimeStart),
-          ShortDate: new Date(docAsObject.dateTimeStart).toLocaleDateString("en-US"),
+          Date: new Date(docAsObject.dateTimeStart!),
+          ShortDate: new Date(docAsObject.dateTimeStart!).toLocaleDateString("en-US"),
           Errors: docAsObject.errCount,
           DigitsCorrect: docAsObject.correctDigits,
           DigitsCorrectInitial: docAsObject.nCorrectInitial,
@@ -298,11 +315,10 @@ export default function SetCreator() {
 
       // Pull out fact models alone, array of array
       const itemSummaries: FactDataInterface[][] = mappedDocument.map((items) => items.Items);
-
-      const flatItemSummaries = [].concat(...itemSummaries);
+      const flatItemSummaries: FactDataInterface[] = itemSummaries.reduce((accumulator, value) => accumulator.concat(value));
 
       const uniqueProblems: string[] = flatItemSummaries
-        .map((obj) => obj.factString)
+        .map((obj) => obj.factString!)
         .filter(OnlyUnique)
         .sort();
 
@@ -316,21 +332,21 @@ export default function SetCreator() {
           .reduce(Sum);
 
         const itemLatency = relevantItems
-          .map((item) => Math.abs(item.latencySeconds))
+          .map((item) => Math.abs(item.latencySeconds!))
           .reduce(Sum);
 
         return {
           FactString: itemString,
-          X: parseInt(itemString.split(GetOperatorFromLabel(target))[0]),
+          X: parseInt(itemString.split(GetOperatorFromLabel(target!))[0]),
           Y: parseInt(
-            itemString.split(GetOperatorFromLabel(target))[1].split("=")[0]
+            itemString.split(GetOperatorFromLabel(target!))[1].split("=")[0]
           ),
           Latency: itemLatency / relevantItems.length,
           AverageCorrect: (itemsCorrect / relevantItems.length) * 100,
           Correct: itemsCorrect,
           Total: relevantItems.length,
         };
-      });
+      }) as ItemHistory[];
 
       setItemHistory(uniqueQuants);
     }
@@ -340,9 +356,9 @@ export default function SetCreator() {
     if (loadedData && incomingChange) {
       setIncomingChange(false);
 
-      let factsTargeted = columns.Targeted.items.map((a) => a.id);
-      var factsSkipped = columns.Skipped.items.map((a) => a.id);
-      var factsMastered = columns.Mastered.items.map((a) => a.id);
+      let factsTargeted = columns.Targeted!.items.map((a) => a.id);
+      var factsSkipped = columns.Skipped!.items.map((a) => a.id);
+      var factsMastered = columns.Mastered!.items.map((a) => a.id);
 
       const studentObject = {
         factsTargeted,
@@ -351,7 +367,7 @@ export default function SetCreator() {
       };
 
       const uploadData = async () => {
-        await updateDocument(id, studentObject);
+        await updateDocument(id!, studentObject);
       };
 
       uploadData();
@@ -374,9 +390,12 @@ export default function SetCreator() {
     if (document && itemHistory && !loadedData) {
       // Loads ALL facts
 
-      const mapped = loadMathFacts(document as StudentDataInterface);
+      const mapped: FactStructure[][] = loadMathFacts(document as StudentDataInterface);
+      const mappedReduced: FactStructure[] = mapped.reduce(
+        (accumulator, value) => accumulator.concat(value)
+      );
 
-      const flattened = [].concat.apply([], mapped).map((entry) => {
+      const flattened: SetItem[] = mappedReduced.map((entry: FactStructure) => {
         let otrs = 0,
           accuracy = 0,
           latency = 0;
@@ -396,7 +415,7 @@ export default function SetCreator() {
           OTRs: otrs,
           Accuracy: accuracy,
           Latency: latency,
-        };
+        } as SetItem;
       });
 
       setBaseItems(flattened);
@@ -667,7 +686,7 @@ export default function SetCreator() {
     }
   }
 
-  const relevantFOFSets = getRelevantCCCSet(target);
+  const relevantFOFSets = getRelevantCCCSet(target!);
 
   return (
     <div style={SetContainer}>
@@ -698,11 +717,11 @@ export default function SetCreator() {
                   value: (index + 1).toString(),
                   label:
                     "Set: " + label + (index + 1 - valueAdjustment).toString(),
-                };
+                } as SingleOptionType;
               })}
               onChange={(option) => {
-                setAssignedSet(option);
-                moveItemsToTargeted(parseInt(option.value) - 1);
+                setAssignedSet(option!);
+                moveItemsToTargeted(parseInt(option!.value) - 1);
               }}
               value={assignedSet}
             />
@@ -742,7 +761,7 @@ export default function SetCreator() {
           {Object.entries(columns).map(([columnId, column], index) => {
             return (
               <div style={DropContainer} key={columnId}>
-                <h2 style={HeadingStyle}>{column.name}</h2>
+                <h2 style={HeadingStyle}>{column!.name}</h2>
                 <div style={{ margin: 8 }}>
                   <Droppable droppableId={columnId} key={columnId}>
                     {(provided, snapshot) => {

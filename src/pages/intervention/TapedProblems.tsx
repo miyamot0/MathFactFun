@@ -98,14 +98,14 @@ export default function TapedProblems() {
   const [nRetries, setNRetries] = useState(0);
 
   const [loadedData, setLoadedData] = useState(false);
-  const [workingData, setWorkingData] = useState(null);
+  const [workingData, setWorkingData] = useState<string[]>();
   const [operatorSymbol, setOperatorSymbol] = useState("");
 
   const [coverProblemItem, setCoverProblemItem] = useState(true);
 
-  const [preTrialTime, setPreTrialTime] = useState(null);
-  const [startTime, setStartTime] = useState(null);
-  const [factModelList, setModelList] = useState([]);
+  const [preTrialTime, setPreTrialTime] = useState<Date>();
+  const [startTime, setStartTime] = useState<Date>();
+  const [factModelList, setModelList] = useState<FactModelInterface[]>();
 
   const [viewRepresentationInternal, setViewRepresentationInternal] =
     useState("");
@@ -131,7 +131,7 @@ export default function TapedProblems() {
     handler: (key: React.KeyboardEvent<HTMLElement>) => void,
     element: Window = window
   ): void {
-    const savedHandler = useRef(null);
+    const savedHandler = useRef({});
     useEffect(() => {
       savedHandler.current = handler;
     }, [handler]);
@@ -140,8 +140,10 @@ export default function TapedProblems() {
         const isSupported = element && element.addEventListener;
         if (!isSupported) return;
 
-        const eventListener = (event) => {
-          savedHandler.current(event);
+        const eventListener = (event: any) => {
+          if (typeof savedHandler.current === "function") {
+            savedHandler.current(event);
+          }
         };
 
         element.addEventListener(eventName, eventListener);
@@ -190,10 +192,10 @@ export default function TapedProblems() {
    * @param {boolean} trialError was there an error?
    * @returns {boolean}
    */
-  function shouldShowFeedback(trialError): boolean {
+  function shouldShowFeedback(trialError: boolean): boolean {
     return DetermineErrorCorrection(
       trialError,
-      (document as StudentDataInterface).currentErrorApproach
+      (document as StudentDataInterface).currentErrorApproach!
     );
   }
 
@@ -209,8 +211,8 @@ export default function TapedProblems() {
   useEffect(() => {
     if (document && !loadedData) {
       // Establish working set
-      setWorkingData((document as StudentDataInterface).factsTargeted);
-      setSecondsLeft((document as StudentDataInterface).minForTask * 60);
+      setWorkingData((document as StudentDataInterface).factsTargeted!);
+      setSecondsLeft((document as StudentDataInterface).minForTask! * 60);
 
       // Flag that data is loaded
       setLoadedData(true);
@@ -233,20 +235,22 @@ export default function TapedProblems() {
    * @param {FactModelInterface} finalFactObject final item completed
    */
   async function submitDataToFirebase(
-    finalFactObject: FactModelInterface
+    finalFactObject: FactModelInterface | null
   ): Promise<void> {
-    const finalEntries: FactModelInterface[] =
-      finalFactObject == null
-        ? [...factModelList]
-        : [...factModelList, finalFactObject];
+
+    let finalEntries = factModelList;
+
+    if (finalFactObject !== null) {
+      finalEntries?.push(finalFactObject)
+    }
 
     const end = new Date();
 
     let performanceInformation: PerformanceModelInterface = PerformanceModel();
 
     // Strings
-    performanceInformation.data.id = document.id;
-    performanceInformation.data.creator = user.uid;
+    performanceInformation.data.id = document!.id;
+    performanceInformation.data.creator = user!.uid;
     performanceInformation.data.target = (
       document as StudentDataInterface
     ).currentTarget;
@@ -258,7 +262,7 @@ export default function TapedProblems() {
     performanceInformation.data.nCorrectInitial = numberCorrectInitial;
     performanceInformation.data.nRetries = nRetries;
     performanceInformation.data.sessionDuration =
-      (end.getTime() - startTime.getTime()) / 1000;
+      (end.getTime() - startTime!.getTime()) / 1000;
     performanceInformation.data.setSize = (
       document as StudentDataInterface
     ).factsTargeted.length;
@@ -267,10 +271,10 @@ export default function TapedProblems() {
     // Timestamps
     performanceInformation.data.createdAt = timestamp.fromDate(new Date());
     performanceInformation.data.dateTimeEnd = end.toString();
-    performanceInformation.data.dateTimeStart = startTime.toString();
+    performanceInformation.data.dateTimeStart = startTime!.toString();
 
     // Arrays
-    performanceInformation.data.entries = finalEntries;
+    performanceInformation.data.entries = finalEntries!;
 
     // Sanity check for all required components
 
@@ -293,7 +297,7 @@ export default function TapedProblems() {
       };
 
       // Update field regarding last activity
-      await updateDocument(id, studentObject);
+      await updateDocument(id!, studentObject);
 
       // Push to home
       if (!response.error) {
@@ -320,9 +324,9 @@ export default function TapedProblems() {
         setStartTime(new Date());
       }
 
-      const listItem = workingData[0];
+      const listItem = workingData![0];
 
-      const updatedList = workingData.filter(function (item) {
+      const updatedList = workingData!.filter(function (item) {
         return item !== listItem;
       });
 
@@ -364,7 +368,7 @@ export default function TapedProblems() {
     }
 
     var current = new Date();
-    let secs = (current.getTime() - preTrialTime.getTime()) / 1000;
+    let secs = (current.getTime() - preTrialTime!.getTime()) / 1000;
 
     let holderPreTime = preTrialTime;
 
@@ -404,22 +408,22 @@ export default function TapedProblems() {
 
       currentItem.data.dateTimeEnd = timestamp.fromDate(new Date(current));
       currentItem.data.dateTimeStart = timestamp.fromDate(
-        new Date(holderPreTime)
+        new Date(holderPreTime!)
       );
 
       setIsOnInitialTry(true);
 
       // Note: issue where state change not fast enough to catch latest
-      if (workingData.length === 0) {
+      if (workingData!.length === 0) {
         // If finished, upload list w/ latest item
         submitDataToFirebase(currentItem);
       } else {
         // Otherise, add it to the existing list
-        setModelList([...factModelList, currentItem]);
+        setModelList([...factModelList!, currentItem]);
 
-        const listItem = workingData[0];
+        const listItem = workingData![0];
 
-        const updatedList = workingData.filter(function (item) {
+        const updatedList = workingData!.filter(function (item) {
           return item !== listItem;
         });
 

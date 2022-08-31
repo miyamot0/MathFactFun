@@ -39,10 +39,10 @@ export default function StudentComments({ student }: { student: StudentDataInter
     event.preventDefault();
 
     const usersComment = {
-      displayName: user.displayName,
+      displayName: user!.displayName,
       content: newComment,
       createdAt: timestamp.fromDate(new Date()),
-      createdBy: user.uid,
+      createdBy: user!.uid,
       id: Math.random(),
     };
 
