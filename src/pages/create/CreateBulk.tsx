@@ -13,7 +13,7 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import { useState } from "react";
-import Select from "react-select";
+import Select, { SingleValue } from "react-select";
 import { timestamp } from "../../firebase/config";
 import { useFirestore } from "../../firebase/useFirestore";
 import { useHistory } from "react-router-dom";
@@ -25,6 +25,7 @@ import {
   Contingencies,
   ErrorHandling,
 } from "../../maths/Facts";
+import { StudentDataInterface } from "../../models/StudentModel";
 
 const CreateFormStyle = {
   maxWidth: "600px",
@@ -38,31 +39,31 @@ interface RoutedAdminSet {
 export default function CreateBulk() {
   const history = useHistory();
   const { id } = useParams<RoutedAdminSet>();
-  const { addDocument, response } = useFirestore("students");
+  const { addDocument, response } = useFirestore("students", undefined, undefined);
 
   // field values
-  const [studentIdBank, setStudentIdBank] = useState("");
-  const [dueDate, setDueDate] = useState("");
-  const [currentGrade, setCurrentGrade] = useState({ value: "", label: "" });
-  const [currentApproach, setCurrentApproach] = useState({
+  const [studentIdBank, setStudentIdBank] = useState<string>("");
+  const [dueDate, setDueDate] = useState<string>("");
+  const [currentGrade, setCurrentGrade] = useState<SingleValue<{ value: string; label: string; }>>({ value: "", label: "" });
+  const [currentApproach, setCurrentApproach] = useState<SingleValue<{ value: string; label: string; }>>({
     value: "N/A",
     label: "No Current Intervention",
   });
-  const [currentBenchmarking, setCurrentBenchmarking] = useState(null);
-  const [currentTarget, setCurrentTarget] = useState({
+  const [currentBenchmarking, setCurrentBenchmarking] = useState<any>();
+  const [currentTarget, setCurrentTarget] = useState<SingleValue<{ value: string; label: string; }>>({
     value: "N/A",
     label: "No Current Target",
   });
-  const [currentErrorApproach, setCurrentErrorApproach] = useState({
+  const [currentErrorApproach, setCurrentErrorApproach] = useState<SingleValue<{ value: string; label: string; }>>({
     value: ErrorHandling.EveryTime,
     label: "Give feedback every time",
   });
-  const [currentSRApproach, setCurrentSRApproach] = useState({
+  const [currentSRApproach, setCurrentSRApproach] = useState<SingleValue<{ value: string; label: string; }>>({
     value: "None",
     label: "No programmed contingencies",
   });
 
-  const [formError, setFormError] = useState(null);
+  const [formError, setFormError] = useState<string>();
 
   const CoreOperations = Operations.filter((op) => op.value !== "N/A");
 
@@ -76,7 +77,7 @@ export default function CreateBulk() {
     event: React.FormEvent<HTMLFormElement>
   ): Promise<void> {
     event.preventDefault();
-    setFormError(null);
+    setFormError(undefined);
 
     if (!currentGrade) {
       setFormError("Please select current grade");
@@ -89,32 +90,32 @@ export default function CreateBulk() {
     }
 
     if (
-      currentTarget.value === undefined ||
-      currentTarget.value.trim().length < 1
+      currentTarget!.value === undefined ||
+      currentTarget!.value.trim().length < 1
     ) {
       setFormError("Please select a target");
       return;
     }
 
     if (
-      currentApproach.value === undefined ||
-      currentApproach.value.trim().length < 1
+      currentApproach!.value === undefined ||
+      currentApproach!.value.trim().length < 1
     ) {
       setFormError("Please select an intervention approach");
       return;
     }
 
     if (
-      currentErrorApproach.value === undefined ||
-      currentErrorApproach.value.trim().length < 1
+      currentErrorApproach!.value === undefined ||
+      currentErrorApproach!.value.trim().length < 1
     ) {
       setFormError("Please select an error correct approach");
       return;
     }
 
     if (
-      currentSRApproach.value === undefined ||
-      currentSRApproach.value.trim().length < 1
+      currentSRApproach!.value === undefined ||
+      currentSRApproach!.value.trim().length < 1
     ) {
       setFormError("Please select a reinforcement strategy");
       return;
@@ -123,10 +124,10 @@ export default function CreateBulk() {
     const laggedDate = new Date();
     laggedDate.setDate(laggedDate.getDate() - 1);
 
-    const comments = [];
-    const factsTargeted = [];
-    const factsMastered = [];
-    const factsSkipped = [];
+    const comments: any[] = [];
+    const factsTargeted: any[] = [];
+    const factsMastered: any[] = [];
+    const factsSkipped: any[] = [];
     const aimLine = 0;
     const minForTask = 2;
 
@@ -141,10 +142,10 @@ export default function CreateBulk() {
         name: currentStudentID,
         details: "",
         currentGrade: currentGrade.value,
-        currentTarget: currentTarget.value,
-        currentApproach: currentApproach.value,
-        currentErrorApproach: currentErrorApproach.value,
-        currentSRApproach: currentSRApproach.value,
+        currentTarget: currentTarget!.value,
+        currentApproach: currentApproach!.value,
+        currentErrorApproach: currentErrorApproach!.value,
+        currentSRApproach: currentSRApproach!.value,
         currentBenchmarking: currentBenchmarking.map(
           (benchmark) => benchmark.label
         ),
@@ -152,6 +153,7 @@ export default function CreateBulk() {
         creator: id,
         dueDate: timestamp.fromDate(new Date(dueDate)),
         lastActivity: timestamp.fromDate(laggedDate),
+        createdAt: timestamp.fromDate(new Date()),
         comments,
         factsTargeted,
         factsMastered,
@@ -160,7 +162,7 @@ export default function CreateBulk() {
         minForTask,
         problemSet: "A",
         id: undefined
-      };
+      } as StudentDataInterface;
 
       await addDocument(studentObject);
     }

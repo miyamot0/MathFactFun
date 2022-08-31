@@ -22,14 +22,14 @@ const CreateFormStyle = {
 // Page to create new students
 export default function CreateUser() {
   const history = useHistory();
-  const { addDocument, response } = useFirestore("tempUsers");
+  const { addDocument, response } = useFirestore("tempUsers", undefined, undefined);
 
   // field values
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
-  const [school, setSchool] = useState("");
-  const [formError, setFormError] = useState(null);
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [name, setName] = useState<string>("");
+  const [school, setSchool] = useState<string>("");
+  const [formError, setFormError] = useState<string>();
 
   /** handleCreateStudentSubmit
    *
@@ -41,7 +41,7 @@ export default function CreateUser() {
     event: React.FormEvent<HTMLFormElement>
   ): Promise<void> {
     event.preventDefault();
-    setFormError(null);
+    setFormError(undefined);
 
     if (!name) {
       setFormError("Please enter a name");

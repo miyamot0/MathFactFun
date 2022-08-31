@@ -23,7 +23,7 @@ import { StudentDataInterface } from "../../models/StudentModel";
 import "./StudentSummary.css";
 
 export default function StudentSummary({ student }: { student: StudentDataInterface }) {
-  const { deleteDocument, response } = useFirestore("students");
+  const { deleteDocument, response } = useFirestore("students", undefined, undefined);
   const { user, adminFlag } = useAuthorizationContext();
   const history = useHistory();
 

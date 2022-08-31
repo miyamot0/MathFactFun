@@ -83,7 +83,7 @@ export default function TapedProblems() {
 
   const { document } = useFirebaseDocument("students", id);
   const { addDocument, response } = useFirestore("", target, id);
-  const { updateDocument } = useFirestore("students");
+  const { updateDocument } = useFirestore("students", undefined, undefined);
 
   const [currentAction, setCurrentAction] = useState(ActionSequence.Start);
   const [buttonText, setButtonText] = useState("Start");

@@ -22,7 +22,7 @@ import { StudentDataInterface } from "../../models/StudentModel";
 import "./StudentComments.css";
 
 export default function StudentComments({ student }: { student: StudentDataInterface }) {
-  const { updateDocument, response } = useFirestore("students");
+  const { updateDocument, response } = useFirestore("students", undefined, undefined);
   const { user, adminFlag } = useAuthorizationContext();
 
   const [newComment, setNewComment] = useState("");

@@ -20,11 +20,12 @@ import {
 } from "@firebase/firestore-types";
 import { CommentInterface, StudentDataInterface } from "../models/StudentModel";
 import { PerformanceDataInterface } from "../models/PerformanceModel";
+import { UserDataInterface } from "../models/UserModel";
 
 const CollectionError = "Unable to retrieve data";
 
-type CurrentObjectTypes = StudentDataInterface | CommentInterface | PerformanceDataInterface;
-type CurrentObjectTypeArrays = StudentDataInterface[] | CommentInterface[] | PerformanceDataInterface[];
+export type CurrentObjectTypes = StudentDataInterface | CommentInterface | PerformanceDataInterface;
+export type CurrentObjectTypeArrays = StudentDataInterface[] | CommentInterface[] | PerformanceDataInterface[] | UserDataInterface[];
 
 interface UseFirebaseCollection {
   documents: CurrentObjectTypeArrays | null;
@@ -45,7 +46,7 @@ export function useFirebaseCollection(
   queryString: string[] | undefined,
   orderString: string[] | undefined
 ): UseFirebaseCollection {
-  const [documents, setDocuments] = useState<StudentDataInterface[] | CommentInterface[] | PerformanceDataInterface[] | null>(null);
+  const [documents, setDocuments] = useState<StudentDataInterface[] | CommentInterface[] | PerformanceDataInterface[] | UserDataInterface[] | null>(null);
   const [error, setError] = useState<string>();
 
   const query = useRef(queryString).current;
@@ -75,7 +76,7 @@ export function useFirebaseCollection(
           results.push(preDoc);
         });
 
-        setDocuments(results as StudentDataInterface[] | CommentInterface[] | PerformanceDataInterface[]);
+        setDocuments(results as StudentDataInterface[] | CommentInterface[] | PerformanceDataInterface[] | UserDataInterface[]);
         setError(undefined);
       },
       (error) => {

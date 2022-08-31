@@ -83,7 +83,7 @@ export default function ExplicitTiming() {
 
   const { document } = useFirebaseDocument("students", id);
   const { addDocument, response } = useFirestore("", target, id);
-  const { updateDocument } = useFirestore("students");
+  const { updateDocument } = useFirestore("students", undefined, undefined);
 
   const [currentAction, setCurrentAction] = useState(ActionSequence.Start);
   const [buttonText, setButtonText] = useState("Start");
@@ -105,7 +105,7 @@ export default function ExplicitTiming() {
 
   const [preTrialTime, setPreTrialTime] = useState<Date>();
   const [startTime, setStartTime] = useState<Date>();
-  const [factModelList, setModelList] = useState<FactModelInterface>();
+  const [factModelList, setModelList] = useState<FactModelInterface[]>();
 
   const [viewRepresentationInternal, setViewRepresentationInternal] =
     useState("");
@@ -131,7 +131,7 @@ export default function ExplicitTiming() {
     handler: (key: React.KeyboardEvent<HTMLElement>) => void,
     element: Window = window
   ): void {
-    const savedHandler = useRef();
+    const savedHandler = useRef({});
     useEffect(() => {
       savedHandler.current = handler;
     }, [handler]);
@@ -140,8 +140,10 @@ export default function ExplicitTiming() {
         const isSupported = element && element.addEventListener;
         if (!isSupported) return;
 
-        const eventListener = (event) => {
-          savedHandler.current(event);
+        const eventListener = (event: any) => {
+          if (typeof savedHandler.current === "function") {
+            savedHandler.current(event);
+          }
         };
 
         element.addEventListener(eventName, eventListener);
@@ -235,10 +237,12 @@ export default function ExplicitTiming() {
   async function submitDataToFirebase(
     finalFactObject: FactModelInterface | null
   ): Promise<void> {
-    const finalEntries: FactModelInterface[] =
-      finalFactObject == null
-        ? [...factModelList]
-        : [...factModelList, finalFactObject];
+
+    let finalEntries = factModelList;
+
+    if (finalFactObject !== null) {
+      finalEntries?.push(finalFactObject)
+    }
 
     const end = new Date();
 
@@ -246,7 +250,7 @@ export default function ExplicitTiming() {
 
     // Strings
     performanceInformation.data.id = document!.id;
-    performanceInformation.data.creator = user.uid;
+    performanceInformation.data.creator = user!.uid;
     performanceInformation.data.target = (
       document as StudentDataInterface
     ).currentTarget;
@@ -270,7 +274,7 @@ export default function ExplicitTiming() {
     performanceInformation.data.dateTimeStart = startTime!.toString();
 
     // Arrays
-    performanceInformation.data.entries = finalEntries;
+    performanceInformation.data.entries = finalEntries!;
 
     // Sanity check for all required components
 
@@ -415,7 +419,7 @@ export default function ExplicitTiming() {
         submitDataToFirebase(currentItem);
       } else {
         // Otherise, add it to the existing list
-        setModelList([...factModelList, currentItem]);
+        setModelList([...factModelList!, currentItem]);
 
         const listItem = workingData![0];
 

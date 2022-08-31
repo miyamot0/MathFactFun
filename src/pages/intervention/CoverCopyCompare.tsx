@@ -79,7 +79,7 @@ export default function CoverCopyCompare() {
 
   const { document } = useFirebaseDocument("students", id);
   const { addDocument, response } = useFirestore("", target, id);
-  const { updateDocument } = useFirestore("students");
+  const { updateDocument } = useFirestore("students", undefined, undefined);
 
   const [loadedData, setLoadedData] = useState(false);
   const [workingData, setWorkingData] = useState(null);

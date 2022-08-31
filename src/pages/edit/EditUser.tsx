@@ -30,7 +30,7 @@ export default function EditUser() {
   const history = useHistory();
   const { id } = useParams<RoutedAdminSet>();
   const { documentError, document } = useFirebaseDocument("users", id);
-  const { updateDocument, response } = useFirestore("users");
+  const { updateDocument, response } = useFirestore("users", undefined, undefined);
 
   // form field values
   const [name, setName] = useState("");

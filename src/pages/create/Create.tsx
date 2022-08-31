@@ -12,7 +12,7 @@
 
 import React from "react";
 import { useState } from "react";
-import Select from "react-select";
+import Select, { GroupBase, MultiValue, SingleValue } from "react-select";
 
 import { timestamp } from "../../firebase/config";
 import { useAuthorizationContext } from "../../context/useAuthorizationContext";
@@ -28,6 +28,15 @@ import {
 } from "../../maths/Facts";
 import { StudentModel } from "../../models/StudentModel";
 
+
+type SingleOptionType = { label: string, value: string }
+
+//import ValueType from 'react-select';
+//import { ActionMeta } from 'react-select';
+//type OnSingleChange = (value: ValueType, actionMeta: ActionMeta<SingleOptionType>) => void;
+
+//type OnChange = (value: ValueType<MyOptionType>, actionMeta: ActionMeta<MyOptionType>) => void;
+
 const CreateFormStyle = {
   maxWidth: "600px",
 };
@@ -35,33 +44,37 @@ const CreateFormStyle = {
 // Page to create new students
 export default function Create() {
   const history = useHistory();
-  const { addDocument, response } = useFirestore("students");
+  const { addDocument, response } = useFirestore("students", undefined, undefined);
   const { user } = useAuthorizationContext();
 
   // field values
-  const [name, setName] = useState("");
-  const [details, setDetails] = useState("");
-  const [dueDate, setDueDate] = useState("");
-  const [currentGrade, setCurrentGrade] = useState({ value: "", label: "" });
-  const [currentApproach, setCurrentApproach] = useState({
+  const [name, setName] = useState<string>("");
+  const [details, setDetails] = useState<string>("");
+  const [dueDate, setDueDate] = useState<string>("");
+
+  const [currentGrade, setCurrentGrade] = useState<SingleOptionType>({
+    value: "",
+    label: ""
+  });
+  const [currentApproach, setCurrentApproach] = useState<SingleOptionType>({
     value: "N/A",
     label: "No Current Intervention",
   });
-  const [currentBenchmarking, setCurrentBenchmarking] = useState(null);
-  const [currentTarget, setCurrentTarget] = useState({
+  const [currentBenchmarking, setCurrentBenchmarking] = useState<any>();
+  const [currentTarget, setCurrentTarget] = useState<SingleOptionType>({
     value: "N/A",
     label: "No Current Target",
   });
-  const [currentErrorApproach, setCurrentErrorApproach] = useState({
+  const [currentErrorApproach, setCurrentErrorApproach] = useState<SingleOptionType>({
     value: ErrorHandling.EveryTime,
     label: "Give feedback every time",
   });
-  const [currentSRApproach, setCurrentSRApproach] = useState({
+  const [currentSRApproach, setCurrentSRApproach] = useState<SingleOptionType>({
     value: "None",
     label: "No programmed contingencies",
   });
 
-  const [formError, setFormError] = useState(null);
+  const [formError, setFormError] = useState<string>();
 
   const CoreOperations = Operations.filter((op) => op.value !== "N/A");
 
@@ -75,45 +88,45 @@ export default function Create() {
     event: React.FormEvent<HTMLFormElement>
   ): Promise<void> {
     event.preventDefault();
-    setFormError(null);
+    setFormError(undefined);
 
     if (!currentGrade) {
       setFormError("Please select current grade");
       return;
     }
 
-    if (currentBenchmarking === undefined || currentBenchmarking.length < 1) {
+    if (currentBenchmarking === undefined || currentBenchmarking!.length < 1) {
       setFormError("Please select benchmarking options");
       return;
     }
 
     if (
-      currentTarget.value === undefined ||
-      currentTarget.value.trim().length < 1
+      currentTarget!.value === undefined ||
+      currentTarget!.value.trim().length < 1
     ) {
       setFormError("Please select a target");
       return;
     }
 
     if (
-      currentApproach.value === undefined ||
-      currentApproach.value.trim().length < 1
+      currentApproach!.value === undefined ||
+      currentApproach!.value.trim().length < 1
     ) {
       setFormError("Please select an intervention approach");
       return;
     }
 
     if (
-      currentErrorApproach.value === undefined ||
-      currentErrorApproach.value.trim().length < 1
+      currentErrorApproach!.value === undefined ||
+      currentErrorApproach!.value.trim().length < 1
     ) {
       setFormError("Please select an error correct approach");
       return;
     }
 
     if (
-      currentSRApproach.value === undefined ||
-      currentSRApproach.value.trim().length < 1
+      currentSRApproach!.value === undefined ||
+      currentSRApproach!.value.trim().length < 1
     ) {
       setFormError("Please select a reinforcement strategy");
       return;
@@ -126,14 +139,14 @@ export default function Create() {
     studentInformation.data.name = name;
     studentInformation.data.details = details;
     studentInformation.data.currentGrade = currentGrade.value;
-    studentInformation.data.currentTarget = currentTarget.value;
-    studentInformation.data.currentApproach = currentApproach.value;
-    studentInformation.data.currentErrorApproach = currentErrorApproach.value;
-    studentInformation.data.currentSRApproach = currentSRApproach.value;
-    studentInformation.data.currentBenchmarking = currentBenchmarking.map(
+    studentInformation.data.currentTarget = currentTarget!.value;
+    studentInformation.data.currentApproach = currentApproach!.value;
+    studentInformation.data.currentErrorApproach = currentErrorApproach!.value;
+    studentInformation.data.currentSRApproach = currentSRApproach!.value;
+    studentInformation.data.currentBenchmarking = currentBenchmarking!.map(
       (benchmark) => benchmark.label
     );
-    studentInformation.data.creator = user.uid;
+    studentInformation.data.creator = user!.uid;
     studentInformation.data.dueDate = timestamp.fromDate(new Date(dueDate));
     studentInformation.data.lastActivity = timestamp.fromDate(laggedDate);
     studentInformation.data.createdAt = timestamp.fromDate(new Date());
@@ -193,7 +206,9 @@ export default function Create() {
           <span>Target For Benchmarking</span>
           <Select
             options={CoreOperations}
-            onChange={(option) => setCurrentBenchmarking(option)}
+            onChange={(option: MultiValue<any>) => {
+              setCurrentBenchmarking(option)
+            }}
             value={currentBenchmarking}
             isMulti={true}
           />

@@ -31,7 +31,7 @@ import { RelevantKeys } from "../../maths/Facts";
 
 import { FactsOnFire } from "../../maths/Mind";
 import { PerformanceDataInterface, PerformanceModel } from "../../models/PerformanceModel";
-import { FactEntryModel } from "../../models/FactEntryModel";
+import { FactDataInterface, FactEntryModel } from "../../models/FactEntryModel";
 
 import { FactModelInterface } from "../../models/FactEntryModel";
 import { PerformanceModelInterface } from "../../models/PerformanceModel";
@@ -60,8 +60,8 @@ export default function Benchmark() {
   const history = useHistory();
 
   const { document } = useFirebaseDocument("students", id);
-  const { addDocument, response } = useFirestore("", target.split("-")[0], id);
-  const { updateDocument } = useFirestore("students");
+  const { addDocument, response } = useFirestore("", target!.split("-")[0], id);
+  const { updateDocument } = useFirestore("students", undefined, undefined);
 
   const [currentAction, setCurrentAction] = useState(ActionSequence.Start);
   const [buttonText, setButtonText] = useState("Start");
@@ -75,14 +75,14 @@ export default function Benchmark() {
   const [numberTrials, setNumberTrials] = useState(0);
 
   const [loadedData, setLoadedData] = useState(false);
-  const [workingData, setWorkingData] = useState(null);
+  const [workingData, setWorkingData] = useState<string[]>();
   const [operatorSymbol, setOperatorSymbol] = useState("");
 
   const [coverProblemItem, setCoverProblemItem] = useState(true);
 
-  const [preTrialTime, setPreTrialTime] = useState(null);
-  const [startTime, setStartTime] = useState(null);
-  const [factModelList, setModelList] = useState([]);
+  const [preTrialTime, setPreTrialTime] = useState<Date>();
+  const [startTime, setStartTime] = useState<Date>();
+  const [factModelList, setModelList] = useState<FactModelInterface[]>();
 
   const [viewRepresentationInternal, setViewRepresentationInternal] =
     useState("");
@@ -101,7 +101,7 @@ export default function Benchmark() {
    * @param {Window} element ...
    */
   function useEventListener(eventName: string, handler: (key: React.KeyboardEvent<HTMLElement>) => void, element: Window = window): void {
-    const savedHandler = useRef(null);
+    const savedHandler = useRef({});
     useEffect(() => {
       savedHandler.current = handler;
     }, [handler]);
@@ -110,8 +110,10 @@ export default function Benchmark() {
         const isSupported = element && element.addEventListener;
         if (!isSupported) return;
 
-        const eventListener = (event) => {
-          savedHandler.current(event);
+        const eventListener = (event: any) => {
+          if (typeof savedHandler.current === "function") {
+            savedHandler.current(event);
+          }
         };
 
         element.addEventListener(eventName, eventListener);
@@ -123,9 +125,6 @@ export default function Benchmark() {
       [eventName, element] // Re-run if eventName or element changes
     );
   }
-
-  /*
-   */
 
   /** keyHandler
    *
@@ -163,7 +162,7 @@ export default function Benchmark() {
    * @param {string} target target for probes
    * @returns {string[][]}
    */
-  function getCoreProblemSet(target): string[][] {
+  function getCoreProblemSet(target: string): string[][] {
     switch (target) {
       case "Addition":
         return FactsOnFire.Addition;
@@ -200,7 +199,11 @@ export default function Benchmark() {
       end = 17;
     }
 
-    return [].concat.apply([], array.slice(start, end));
+    let problems: string[][] = array.slice(start, end);
+
+    return problems.reduce((accumulator, value) => accumulator.concat(value), [] as string[]);
+
+    //return [].concat.apply([], array.slice(start, end));
   }
 
   /** getUniqueProblems
@@ -215,7 +218,7 @@ export default function Benchmark() {
     const firstWave = [...new Set(arrayProblems)];
     let secondWave = [...new Set(arrayProblems)];
 
-    let probsToRemove = [];
+    let probsToRemove: string[] = [];
 
     // First as truth
     firstWave.forEach((problem) => {
@@ -250,9 +253,9 @@ export default function Benchmark() {
   // Fire once individual data loaded, just once
   useEffect(() => {
     if (document && !loadedData) {
-      const targetTrim = target.split("-")[0];
+      const targetTrim = target!.split("-")[0];
       const coreItems = getCoreProblemSet(targetTrim);
-      const coreSet = getSetFromArray(coreItems, (document as StudentDataInterface).problemSet);
+      const coreSet = getSetFromArray(coreItems, (document as StudentDataInterface).problemSet!);
       const coreSetClean = getUniqueProblems(
         coreSet,
         GetOperatorFromLabel(targetTrim)
@@ -293,21 +296,23 @@ export default function Benchmark() {
    * @param {FactModelInterface} finalFactObject final item completed
    */
   async function submitDataToFirebase(
-    finalFactObject: FactModelInterface
+    finalFactObject: FactModelInterface | null
   ): Promise<void> {
-    const finalEntries: FactModelInterface[] =
-      finalFactObject == null
-        ? [...factModelList]
-        : [...factModelList, finalFactObject];
+
+    let finalEntries = factModelList;
+
+    if (finalFactObject !== null) {
+      finalEntries?.push(finalFactObject)
+    }
 
     const end = new Date();
-    const currentBenchmarkArea = target.split("-")[0];
+    const currentBenchmarkArea = target!.split("-")[0];
 
     let performanceInformation: PerformanceModelInterface = PerformanceModel();
 
     // Strings
-    performanceInformation.data.id = document.id;
-    performanceInformation.data.creator = user.uid;
+    performanceInformation.data.id = document!.id;
+    performanceInformation.data.creator = user!.uid;
     performanceInformation.data.target = currentBenchmarkArea;
     performanceInformation.data.method = "Benchmark";
 
@@ -317,17 +322,17 @@ export default function Benchmark() {
     performanceInformation.data.nCorrectInitial = numberCorrectInitial;
     performanceInformation.data.nRetries = 0;
     performanceInformation.data.sessionDuration =
-      (end.getTime() - startTime.getTime()) / 1000;
+      (end.getTime() - startTime!.getTime()) / 1000;
     performanceInformation.data.setSize = (document as StudentDataInterface).factsTargeted.length;
     performanceInformation.data.totalDigits = totalDigits;
 
     // Timestamps
     performanceInformation.data.createdAt = timestamp.fromDate(new Date());
     performanceInformation.data.dateTimeEnd = end.toString();
-    performanceInformation.data.dateTimeStart = startTime.toString();
+    performanceInformation.data.dateTimeStart = startTime!.toString();
 
     // Arrays
-    performanceInformation.data.entries = finalEntries;
+    performanceInformation.data.entries = finalEntries!;
 
     // Sanity check for all required components
     if (!performanceInformation.CheckObject()) {
@@ -346,7 +351,7 @@ export default function Benchmark() {
       let completedBenchmark = (document as StudentDataInterface).completedBenchmark;
 
       completedBenchmark.push(
-        `${target} ${(document as StudentDataInterface).dueDate.toDate().toDateString()}`
+        `${target} ${(document as StudentDataInterface).dueDate!.toDate().toDateString()}`
       );
 
       // Omit time updates
@@ -355,7 +360,7 @@ export default function Benchmark() {
       };
 
       // Update field regarding last activity
-      await updateDocument(id, studentObject);
+      await updateDocument(id!, studentObject);
 
       // Push to home
       if (!response.error) {
@@ -382,9 +387,9 @@ export default function Benchmark() {
         setStartTime(new Date());
       }
 
-      const listItem = workingData[0];
+      const listItem = workingData![0];
 
-      const updatedList = workingData.filter(function (item) {
+      const updatedList = workingData!.filter(function (item) {
         return item !== listItem;
       });
 
@@ -426,7 +431,7 @@ export default function Benchmark() {
     }
 
     var current = new Date();
-    let secs = (current.getTime() - preTrialTime.getTime()) / 1000;
+    let secs = (current.getTime() - preTrialTime!.getTime()) / 1000;
 
     let holderPreTime = preTrialTime;
 
@@ -461,22 +466,22 @@ export default function Benchmark() {
 
     currentItem.data.dateTimeEnd = timestamp.fromDate(new Date(current));
     currentItem.data.dateTimeStart = timestamp.fromDate(
-      new Date(holderPreTime)
+      new Date(holderPreTime!)
     );
 
     setIsOnInitialTry(true);
 
     // Potential issue: state change not fast enough to catch latest
-    if (workingData.length === 0) {
+    if (workingData!.length === 0) {
       // If finished, upload list w/ latest item
       submitDataToFirebase(currentItem);
     } else {
       // Otherise, add it to the existing list
-      setModelList([...factModelList, currentItem]);
+      setModelList([...factModelList!, currentItem]);
 
-      const listItem = workingData[0];
+      const listItem = workingData![0];
 
-      const updatedList = workingData.filter(function (item) {
+      const updatedList = workingData!.filter(function (item) {
         return item !== listItem;
       });
 
@@ -519,7 +524,7 @@ export default function Benchmark() {
           {document ? (
             <Timer
               secondsTotal={secondsLeft}
-              startTimerTime={startTime}
+              startTimerTime={startTime!}
               callbackFunction={callbackToSubmit}
             />
           ) : (

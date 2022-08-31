@@ -26,7 +26,7 @@ import {
 } from "../../utilities/LabelHelper";
 import { StudentDataInterface } from "../../models/StudentModel";
 import { PerformanceDataInterface } from "../../models/PerformanceModel";
-import { FactDataInterface, FactModelInterface } from "../../models/FactEntryModel";
+import { FactDataInterface } from "../../models/FactEntryModel";
 
 const TitleStyle = {
   color: "#444",
@@ -249,7 +249,7 @@ export default function SetCreator() {
     undefined,
     undefined
   );
-  const { updateDocument, response } = useFirestore("students");
+  const { updateDocument, response } = useFirestore("students", undefined, undefined);
 
   const [loadedData, setLoadedData] = useState(false);
   const [incomingChange, setIncomingChange] = useState(false);

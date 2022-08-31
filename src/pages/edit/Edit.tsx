@@ -48,7 +48,7 @@ export default function Edit() {
   const { id } = useParams<RoutedStudentSet>();
   const { documentError, document } = useFirebaseDocument("students", id);
   const history = useHistory();
-  const { updateDocument, response } = useFirestore("students");
+  const { updateDocument, response } = useFirestore("students", undefined, undefined);
 
   // form field values
   const [name, setName] = useState<string>();

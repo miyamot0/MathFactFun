@@ -108,8 +108,8 @@ function firestoreReducer(
  */
 export function useFirestore(
   collection: string,
-  targetSkill: string,
-  studentId: string
+  targetSkill: string | undefined,
+  studentId: string | undefined
 ): UseFirestore {
   const [response, dispatch] = useReducer(firestoreReducer, {
     document: null,
@@ -125,7 +125,7 @@ export function useFirestore(
       : projectFirestore
         .collection("performances")
         .doc(targetSkill)
-        .collection(studentId);
+        .collection(studentId!);
 
   // only dispatch is not cancelled
   function dispatchIfNotCancelled(action: FirestoreAction): void {
