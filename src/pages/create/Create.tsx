@@ -12,7 +12,7 @@
 
 import React from "react";
 import { useState } from "react";
-import Select, { GroupBase, MultiValue, SingleValue } from "react-select";
+import Select, { MultiValue } from "react-select";
 
 import { timestamp } from "../../firebase/config";
 import { useAuthorizationContext } from "../../context/useAuthorizationContext";
