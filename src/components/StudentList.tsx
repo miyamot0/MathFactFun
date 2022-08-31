@@ -31,8 +31,12 @@ interface StudentListInterface {
  * @returns {Bool}
  */
 function checkIfProgrammingCurrent(
-  date: firebase.firestore.Timestamp
+  date: firebase.firestore.Timestamp | null
 ): boolean {
+  if (date === null) {
+    return false;
+  }
+
   const dateObj = date.toDate();
   const dateNow = new Date();
   let difference = dateObj.getTime() - dateNow.getTime();
@@ -59,7 +63,7 @@ function checkIfBenchmarksCompleted(student: StudentDataInterface): boolean {
   student.currentBenchmarking.forEach((bm) => {
     if (!confirmedCompleted) return;
 
-    const tag = `${bm} ${student.dueDate.toDate().toDateString()}`;
+    const tag = `${bm} ${student.dueDate!.toDate().toDateString()}`;
 
     if (!student.completedBenchmark.includes(tag)) {
       confirmedCompleted = false;
@@ -86,7 +90,7 @@ function generateWrapper(student: StudentDataInterface): JSX.Element {
     return (
       <p>
         <span className="on-track"></span>
-        {""}Next Benchmark(s): {student.dueDate.toDate().toDateString()}
+        {""}Next Benchmark(s): {student.dueDate!.toDate().toDateString()}
       </p>
     );
   }

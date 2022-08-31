@@ -17,7 +17,7 @@ import { AuthorizationStates } from "../context/AuthorizationContext";
 
 interface FirebaseLogout {
   logout: () => Promise<void>;
-  logoutError: string;
+  logoutError: string | undefined;
   logoutPending: boolean;
 }
 
@@ -29,13 +29,13 @@ interface FirebaseLogout {
  */
 export function useFirebaseLogout(): FirebaseLogout {
   const [logoutCancelled, setLogoutCancelled] = useState(false);
-  const [logoutError, setLogoutError] = useState(null);
+  const [logoutError, setLogoutError] = useState(undefined);
   const [logoutPending, setLogoutPending] = useState(false);
 
   const { dispatch } = useAuthorizationContext();
 
   const logout = async () => {
-    setLogoutError(null);
+    setLogoutError(undefined);
     setLogoutPending(true);
 
     try {
@@ -47,9 +47,9 @@ export function useFirebaseLogout(): FirebaseLogout {
 
       if (!logoutCancelled) {
         setLogoutPending(false);
-        setLogoutError(null);
+        setLogoutError(undefined);
       }
-    } catch (err) {
+    } catch (err: any) {
       if (!logoutCancelled) {
         setLogoutError(err.message);
         setLogoutPending(false);

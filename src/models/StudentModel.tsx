@@ -23,19 +23,19 @@ export interface StudentDataInterface {
   // Strings
   id: string | undefined | null;
   creator?: string;
-  currentApproach?: string;
-  currentErrorApproach?: string;
+  currentApproach?: string | undefined;
+  currentErrorApproach?: string | undefined;
   currentGrade?: string;
-  currentSRApproach?: string;
-  currentTarget?: string;
+  currentSRApproach?: string | undefined;
+  currentTarget?: string | undefined;
   details?: string;
   name?: string;
   problemSet?: string;
 
   // Timestamps
-  createdAt?: firebase.firestore.Timestamp | null;
-  dueDate?: firebase.firestore.Timestamp | null;
-  lastActivity?: firebase.firestore.Timestamp | null;
+  createdAt: firebase.firestore.Timestamp | null;
+  dueDate: firebase.firestore.Timestamp | null;
+  lastActivity: firebase.firestore.Timestamp | null;
 
   // Arrays
   comments: CommentInterface[];

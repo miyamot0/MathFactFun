@@ -11,7 +11,7 @@ import React, { useState, useEffect } from "react";
 const timeIntervalTick = 1000;
 
 interface CallbackInterface {
-  (string): void;
+  (arg0: string): void;
 }
 
 interface TimerButtonInterface {
@@ -29,13 +29,15 @@ function Timer({
   const [trial, setTrial] = useState(0);
   const [isActive, setIsActive] = useState(false);
 
+  const [intervalId, setIntervalId] = useState<NodeJS.Timer>();
+
   if (!("speechSynthesis" in window)) {
     alert("TTS functionality not available");
   }
 
   const synthesis = new SpeechSynthesisUtterance();
 
-  function speak(msg): void {
+  function speak(msg: string): void {
     const plusser = parseInt(msg) + 1;
 
     synthesis.text = msg + "+ 1 =";
@@ -67,17 +69,20 @@ function Timer({
   }
 
   useEffect(() => {
-    let interval = null;
+
     if (isActive && seconds <= nProblems * delta) {
-      interval = setInterval(() => {
+      let interval: NodeJS.Timer = setInterval(() => {
         fire();
 
         setSeconds((seconds) => seconds + 1);
       }, timeIntervalTick);
+
+      setIntervalId(interval);
     } else {
-      clearInterval(interval);
+      clearInterval(intervalId);
     }
-    return () => clearInterval(interval);
+    return () => clearInterval(intervalId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isActive, seconds]);
 
   return (

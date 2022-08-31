@@ -37,7 +37,7 @@ function checkIfCompletedBenchmark(
     return false;
   }
 
-  const tag = `${benchmark} ${student.dueDate.toDate().toDateString()}`;
+  const tag = `${benchmark} ${student.dueDate!.toDate().toDateString()}`;
 
   if (student.completedBenchmark.includes(tag)) {
     return true;
@@ -50,10 +50,10 @@ function checkIfCompletedBenchmark(
  *
  * Wrap info in a link, if benchmark is due
  *
- * @param {Bool} isCompleted if probe completed
- * @returns {Span}
+ * @param {boolean} isCompleted if probe completed
+ * @returns {JSX.Element}
  */
-function generatedStyledFeedback(isCompleted): JSX.Element {
+function generatedStyledFeedback(isCompleted: boolean): JSX.Element {
   return isCompleted ? (
     <span style={{ color: "green" }}> Completed</span>
   ) : (
@@ -65,12 +65,12 @@ function generatedStyledFeedback(isCompleted): JSX.Element {
  *
  * Wrap info in a link, if benchmark is due
  *
- * @param {Student} student document info
+ * @param {StudentDataInterface} student document info
  * @param {string} benchmark benchmark string
  * @param {boolean} isCompleted boolean flag
  * @returns {Link}
  */
-function generateWrapper(student, benchmark, isCompleted): JSX.Element {
+function generateWrapper(student: StudentDataInterface, benchmark: string, isCompleted: boolean): JSX.Element {
   if (isCompleted)
     return <p className="benchmark-list-card-title">{benchmark}</p>;
 
@@ -102,7 +102,7 @@ export default function BenchmarkList({ student }: BenchmarkInterface) {
             {generateWrapper(student, benchmark, benchmarkCompleted)}
             <hr />
             <p>
-              <b>Due Date:</b> {student.dueDate.toDate().toDateString()}
+              <b>Due Date:</b> {student.dueDate!.toDate().toDateString()}
             </p>
             <p>
               <b>Status:</b> {generatedStyledFeedback(benchmarkCompleted)}

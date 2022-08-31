@@ -9,22 +9,29 @@
 import React from "react";
 import { useState, useEffect } from "react";
 
+interface TimerInterface {
+  secondsTotal: number,
+  startTimerTime: Date | null,
+  callbackFunction: () => void
+}
+
 export default function Timer({
   secondsTotal,
   startTimerTime,
   callbackFunction,
-}): JSX.Element {
-  const [secondCounter, setSecondCounter] = useState(0);
-  const [intervalId, setIntervalId] = useState(null);
+}: TimerInterface): JSX.Element {
+  const [secondCounter, setSecondCounter] = useState<number>(0);
+  const [intervalId, setIntervalId] = useState<NodeJS.Timer>();
   const [fireCallback, setFireCallback] = useState(false);
 
   useEffect(() => {
     if (startTimerTime) {
-      setIntervalId(
-        setInterval(() => {
-          setSecondCounter((secondCounter) => secondCounter + 1);
-        }, 1000)
-      );
+
+      let intervalIdValue: NodeJS.Timer = setInterval(() => {
+        setSecondCounter((secondCounter) => secondCounter + 1);
+      }, 1000);
+
+      setIntervalId(intervalIdValue);
       return () => clearInterval(intervalId);
     }
 

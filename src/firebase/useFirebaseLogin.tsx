@@ -17,7 +17,7 @@ import { AuthorizationStates } from "../context/AuthorizationContext";
 
 interface FirebaseLogin {
   login: (email: string, password: string) => Promise<void>;
-  loginError: string;
+  loginError: string | undefined;
   loginPending: boolean;
 }
 
@@ -29,7 +29,7 @@ interface FirebaseLogin {
  */
 export function useFirebaseLogin(): FirebaseLogin {
   const [loginCancelled, setLoginCancelled] = useState(false);
-  const [loginError, setLoginError] = useState(null);
+  const [loginError, setLoginError] = useState();
   const [loginPending, setPending] = useState(false);
 
   const { dispatch } = useAuthorizationContext();
@@ -43,7 +43,7 @@ export function useFirebaseLogin(): FirebaseLogin {
    * @returns {Promise<void>}
    */
   async function login(email: string, password: string): Promise<void> {
-    setLoginError(null);
+    setLoginError(undefined);
     setPending(true);
 
     try {
@@ -59,9 +59,9 @@ export function useFirebaseLogin(): FirebaseLogin {
 
       if (!loginCancelled) {
         setPending(false);
-        setLoginError(null);
+        setLoginError(undefined);
       }
-    } catch (error) {
+    } catch (error: any) {
       if (!loginCancelled) {
         setLoginError(error.message);
         setPending(false);

@@ -7,7 +7,7 @@
  */
 
 /**
- * Sidebar widget
+ * Nav widget
  */
 
 import React from "react";

@@ -31,12 +31,16 @@ const anchorStyle = {
  *
  * Generate a link to practice screen
  *
- * @param {String} strategy Intervention type
- * @param {String} target Intervention target
- * @param {String} id Personal id
- * @returns {String} path
+ * @param {string} strategy Intervention type
+ * @param {string} target Intervention target
+ * @param {string} id Personal id
+ * @returns {string} path
  */
-function generateRouteBaseOnStrategy(strategy, target, id): string {
+function generateRouteBaseOnStrategy(strategy: string | undefined, target: string | undefined, id: string | undefined | null): string {
+  if (strategy === undefined || target === undefined || id === undefined) {
+    return "#!";
+  }
+
   return `/${strategy}/${target}/${id}`;
 }
 
@@ -47,7 +51,11 @@ function generateRouteBaseOnStrategy(strategy, target, id): string {
  * @param {firebase.firestore.Timestamp} date Stored date, to compare with current
  * @returns {Bool}
  */
-function checkIfDateCurrent(date: firebase.firestore.Timestamp): boolean {
+function checkIfDateCurrent(date: firebase.firestore.Timestamp | null): boolean {
+  if (date === null) {
+    return false;
+  }
+
   let dateObj = date.toDate();
   dateObj.setHours(0, 0, 0, 0);
 
@@ -68,7 +76,7 @@ function dynamicallyGenerateLink(student: StudentDataInterface): JSX.Element {
   if (student.factsTargeted.length < 1) {
     return (
       <a
-        href="#"
+        href="#!"
         key={student.id}
         onClick={() =>
           alert("No math problems have been added to the targeted list yet.")
@@ -123,7 +131,7 @@ export default function PracticeList({
             ) : (
               <span className="needs-practice"> </span>
             )}{" "}
-            Last Practice: {student.lastActivity.toDate().toDateString()}
+            Last Practice: {student.lastActivity!.toDate().toDateString()}
           </p>
         </div>
       ))}

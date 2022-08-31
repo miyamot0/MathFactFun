@@ -10,16 +10,16 @@ import firebase from "firebase/app";
 
 export interface FactDataInterface {
   // Bools
-  factCorrect?: boolean;
-  initialTry?: boolean;
+  factCorrect?: boolean | null;
+  initialTry?: boolean | null;
 
   // Strings
-  factType?: string;
-  factString?: string;
-  factEntry?: string;
+  factType?: string | undefined;
+  factString?: string | undefined;
+  factEntry?: string | undefined;
 
   // Numerics
-  latencySeconds?: number;
+  latencySeconds?: number | null;
 
   // Timestamps
   dateTimeEnd?: firebase.firestore.Timestamp;
@@ -40,17 +40,17 @@ export function FactEntryModel(): FactModelInterface {
       initialTry: null,
 
       // Strings
-      factType: null,
-      factString: null,
-      factEntry: null,
+      factType: undefined,
+      factString: undefined,
+      factEntry: undefined,
 
       // Numerics
       latencySeconds: null,
 
       // Timestamps
-      dateTimeEnd: null,
-      dateTimeStart: null,
-    } as FactDataInterface,
+      dateTimeEnd: undefined,
+      dateTimeStart: undefined,
+    },
     CheckObject: function (): boolean {
       if (typeof this.data.factCorrect !== "boolean") return false;
       if (typeof this.data.initialTry !== "boolean") return false;

@@ -8,7 +8,7 @@
 
 import firebase from "firebase/app";
 
-import { FactModelInterface } from "./FactEntryModel";
+import { FactDataInterface, FactModelInterface } from "./FactEntryModel";
 
 export interface PerformanceDataInterface {
   // Numerics
@@ -21,18 +21,18 @@ export interface PerformanceDataInterface {
   totalDigits: number;
 
   // Timestamps
-  createdAt?: firebase.firestore.Timestamp;
+  createdAt?: firebase.firestore.Timestamp | null;
 
   // Arrays
-  entries: FactModelInterface[];
+  entries: FactModelInterface[] | FactDataInterface[];
 
   // Strings
-  id: string;
-  creator: string;
-  target: string;
-  method: string;
-  dateTimeEnd: string;
-  dateTimeStart: string;
+  id: string | undefined | null;
+  creator: string | undefined;
+  target: string | undefined;
+  method: string | undefined;
+  dateTimeEnd: string | undefined;
+  dateTimeStart: string | undefined;
 }
 
 export interface PerformanceModelInterface {
@@ -41,11 +41,11 @@ export interface PerformanceModelInterface {
   SubmitObject: () => PerformanceDataInterface;
 }
 
-export const PerformanceModel = () => {
+export function PerformanceModel(): PerformanceModelInterface {
   return {
     data: {
       // Numerics
-      correctDigits: null,
+      correctDigits: 0,
       errCount: 0,
       nCorrectInitial: 0,
       nRetries: 0,
@@ -55,39 +55,52 @@ export const PerformanceModel = () => {
 
       // Timestamps
       createdAt: null,
-      dateTimeEnd: null,
-      dateTimeStart: null,
+      dateTimeEnd: undefined,
+      dateTimeStart: undefined,
 
       // Arrays
       entries: [],
 
       // Strings
-      id: null,
-      creator: null,
-      target: null,
-      method: null,
+      id: undefined,
+      creator: undefined,
+      target: undefined,
+      method: undefined,
     },
     CheckObject: function () {
-      if (typeof this.data.correctDigits !== "number") return false;
-      if (typeof this.data.errCount !== "number") return false;
-      if (typeof this.data.nCorrectInitial !== "number") return false;
-      if (typeof this.data.nRetries !== "number") return false;
-      if (typeof this.data.sessionDuration !== "number") return false;
-      if (typeof this.data.setSize !== "number") return false;
-      if (typeof this.data.totalDigits !== "number") return false;
+      if (typeof this.data.correctDigits !== "number")
+        return false;
+      if (typeof this.data.errCount !== "number")
+        return false;
+      if (typeof this.data.nCorrectInitial !== "number")
+        return false;
+      if (typeof this.data.nRetries !== "number")
+        return false;
+      if (typeof this.data.sessionDuration !== "number")
+        return false;
+      if (typeof this.data.setSize !== "number")
+        return false;
+      if (typeof this.data.totalDigits !== "number")
+        return false;
 
-      if (typeof this.data.id !== "string") return false;
-      if (typeof this.data.creator !== "string") return false;
-      if (typeof this.data.target !== "string") return false;
-      if (typeof this.data.method !== "string") return false;
-      if (typeof this.data.dateTimeEnd !== "string") return false;
-      if (typeof this.data.dateTimeStart !== "string") return false;
+      if (typeof this.data.id !== "string")
+        return false;
+      if (typeof this.data.creator !== "string")
+        return false;
+      if (typeof this.data.target !== "string")
+        return false;
+      if (typeof this.data.method !== "string")
+        return false;
+      if (typeof this.data.dateTimeEnd !== "string")
+        return false;
+      if (typeof this.data.dateTimeStart !== "string")
+        return false;
 
       if (!(this.data.createdAt !== null))
         return false;
 
       for (let i = 0; i < this.data.entries.length; i++) {
-        if (!this.data.entries[i].CheckObject()) {
+        if (!(this.data.entries[i] as FactModelInterface).CheckObject()) {
           return false;
         }
       }
@@ -96,9 +109,9 @@ export const PerformanceModel = () => {
     },
     SubmitObject: function (): PerformanceDataInterface {
       let filteredData = this.data as PerformanceDataInterface;
-      filteredData.entries = this.data.entries.map((entry) => entry.data);
+      filteredData.entries = this.data.entries.map((entry) => (entry as FactModelInterface).data);
 
       return filteredData;
     },
   };
-};
+}

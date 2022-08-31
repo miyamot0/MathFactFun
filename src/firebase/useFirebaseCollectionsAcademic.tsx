@@ -18,27 +18,28 @@ import {
 } from "@firebase/firestore-types";
 
 import { projectFirestore } from "./config";
+import { PerformanceDataInterface } from "../models/PerformanceModel";
 
 const CollectionError = "Unable to retrieve data";
 
 interface UseFirebaseCollectionAddition {
   additionDocuments: any;
-  additionError: string;
+  additionError: string | undefined;
 }
 
 interface UseFirebaseCollectionSubtraction {
   subtractionDocuments: any;
-  subtractionError: string;
+  subtractionError: string | undefined;
 }
 
 interface UseFirebaseCollectionMultiplication {
   multiplicationDocuments: any;
-  multiplicationError: string;
+  multiplicationError: string | undefined;
 }
 
 interface UseFirebaseCollectionDivision {
   divisionDocuments: any;
-  divisionError: string;
+  divisionError: string | undefined;
 }
 
 /** useFirebaseCollectionAddition
@@ -55,8 +56,8 @@ export function useFirebaseCollectionAddition(
   queryString: string[],
   orderString: string[]
 ): UseFirebaseCollectionAddition {
-  const [additionDocuments, setAdditionDocuments] = useState(null);
-  const [additionError, setError] = useState(null);
+  const [additionDocuments, setAdditionDocuments] = useState<PerformanceDataInterface[]>();
+  const [additionError, setError] = useState<string>();
 
   const query = useRef(queryString).current;
   const orderBy = useRef(orderString).current;
@@ -79,13 +80,17 @@ export function useFirebaseCollectionAddition(
 
     const unsubscribe = ref.onSnapshot(
       (snapshot) => {
-        let results = [];
+
+        let results = Array<PerformanceDataInterface>();
+
         snapshot.docs.forEach((doc) => {
-          results.push({ ...doc.data(), id: doc.id });
+          let preDoc = doc.data() as PerformanceDataInterface;
+          preDoc.id = doc.id;
+          results.push(preDoc);
         });
 
         setAdditionDocuments(results);
-        setError(null);
+        setError(undefined);
       },
       (error) => {
         setError(CollectionError);
@@ -112,8 +117,8 @@ export function useFirebaseCollectionSubtraction(
   queryString: string[],
   orderString: string[]
 ): UseFirebaseCollectionSubtraction {
-  const [subtractionDocuments, setSubtractionDocuments] = useState(null);
-  const [subtractionError, setError] = useState(null);
+  const [subtractionDocuments, setSubtractionDocuments] = useState<PerformanceDataInterface[]>();
+  const [subtractionError, setError] = useState<string>();
 
   const query = useRef(queryString).current;
   const orderBy = useRef(orderString).current;
@@ -136,13 +141,16 @@ export function useFirebaseCollectionSubtraction(
 
     const unsubscribe = ref.onSnapshot(
       (snapshot) => {
-        let results = [];
+        let results = Array<PerformanceDataInterface>();
+
         snapshot.docs.forEach((doc) => {
-          results.push({ ...doc.data(), id: doc.id });
+          let preDoc = doc.data() as PerformanceDataInterface;
+          preDoc.id = doc.id;
+          results.push(preDoc);
         });
 
         setSubtractionDocuments(results);
-        setError(null);
+        setError(undefined);
       },
       (error) => {
         setError(CollectionError);
@@ -169,8 +177,8 @@ export function useFirebaseCollectionMultiplication(
   queryString: string[],
   orderString: string[]
 ): UseFirebaseCollectionMultiplication {
-  const [multiplicationDocuments, setMultiplicationDocuments] = useState(null);
-  const [multiplicationError, setError] = useState(null);
+  const [multiplicationDocuments, setMultiplicationDocuments] = useState<PerformanceDataInterface[]>();
+  const [multiplicationError, setError] = useState<string>();
 
   const query = useRef(queryString).current;
   const orderBy = useRef(orderString).current;
@@ -193,13 +201,16 @@ export function useFirebaseCollectionMultiplication(
 
     const unsubscribe = ref.onSnapshot(
       (snapshot) => {
-        let results = [];
+        let results = Array<PerformanceDataInterface>();
+
         snapshot.docs.forEach((doc) => {
-          results.push({ ...doc.data(), id: doc.id });
+          let preDoc = doc.data() as PerformanceDataInterface;
+          preDoc.id = doc.id;
+          results.push(preDoc);
         });
 
         setMultiplicationDocuments(results);
-        setError(null);
+        setError(undefined);
       },
       (error) => {
         setError(CollectionError);
@@ -226,8 +237,8 @@ export function useFirebaseCollectionDivision(
   queryString: string[],
   orderString: string[]
 ): UseFirebaseCollectionDivision {
-  const [divisionDocuments, setDivisionDocuments] = useState(null);
-  const [divisionError, setError] = useState(null);
+  const [divisionDocuments, setDivisionDocuments] = useState<PerformanceDataInterface[]>();
+  const [divisionError, setError] = useState<string>();
 
   const query = useRef(queryString).current;
   const orderBy = useRef(orderString).current;
@@ -250,13 +261,17 @@ export function useFirebaseCollectionDivision(
 
     const unsubscribe = ref.onSnapshot(
       (snapshot) => {
-        let results = [];
+
+        let results = Array<PerformanceDataInterface>();
+
         snapshot.docs.forEach((doc) => {
-          results.push({ ...doc.data(), id: doc.id });
+          let preDoc = doc.data() as PerformanceDataInterface;
+          preDoc.id = doc.id;
+          results.push(preDoc);
         });
 
         setDivisionDocuments(results);
-        setError(null);
+        setError(undefined);
       },
       (error) => {
         setError(CollectionError);

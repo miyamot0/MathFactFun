@@ -227,7 +227,7 @@ export function GetOperatorFromLabel(
  * @returns {String} Label
  */
 export function GetApproachStringFromLabel(
-  label: string
+  label: string | undefined
 ):
   | "Cover Copy Compare"
   | "Cloze"

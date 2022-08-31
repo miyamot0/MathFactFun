@@ -24,21 +24,21 @@ export enum AuthorizationStates {
 
 // TODO: remove any
 export interface AuthorizationContextInterface {
-  user: firebase.User;
+  user: firebase.User | null;
   authIsReady: boolean;
   adminFlag: boolean;
   dispatch: any;
 }
 
 export interface AuthorizationContextStateInterface {
-  user: firebase.User;
+  user: firebase.User | null;
   authIsReady: boolean;
   adminFlag: boolean;
 }
 
 interface FirebaseLoginAction {
   type: AuthorizationStates;
-  payload: firebase.User;
+  payload: firebase.User | null;
   payload2: boolean;
 }
 
@@ -48,7 +48,12 @@ export type Props = {
 
 // Context to inherit
 export const AuthorizationContext =
-  createContext<AuthorizationContextInterface>(undefined);
+  createContext<AuthorizationContextInterface>({
+    user: null,
+    authIsReady: false,
+    adminFlag: false,
+    dispatch: undefined,
+  });
 
 /** simplifyPrivilegeAccess
  *
@@ -102,11 +107,11 @@ export function authReducer(
  * @param {ReactNode} children Current state
  * @returns {AuthorizationContextStateInterface}
  */
-export function AuthorizationContextProvider({ children }): AppInterface {
+export function AuthorizationContextProvider({ children }: Props): AppInterface {
   const [state, dispatch] = useReducer(authReducer, {
     user: null,
     authIsReady: false,
-    adminFlag: null,
+    adminFlag: false,
   });
 
   useEffect(() => {

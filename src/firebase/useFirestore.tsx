@@ -28,13 +28,13 @@ interface FirestoreState {
   isPending: boolean;
   document: any;
   success: boolean;
-  error: string;
+  error: string | null;
 }
 
 interface FirestoreAction {
   type: FirestoreStates;
   payload: any;
-  error: string;
+  error: string | null;
 }
 
 interface UseFirestore {
@@ -108,14 +108,14 @@ function firestoreReducer(
  */
 export function useFirestore(
   collection: string,
-  targetSkill: string = null,
-  studentId: string = null
+  targetSkill: string,
+  studentId: string
 ): UseFirestore {
   const [response, dispatch] = useReducer(firestoreReducer, {
     document: null,
     isPending: false,
     error: null,
-    success: null,
+    success: false,
   });
   const [isCancelled, setIsCancelled] = useState(false);
 
@@ -157,7 +157,7 @@ export function useFirestore(
         payload: addedDocument,
         error: null,
       });
-    } catch (err) {
+    } catch (err: any) {
       dispatchIfNotCancelled({
         type: FirestoreStates.ERROR,
         payload: null,
@@ -219,13 +219,14 @@ export function useFirestore(
         error: null
       });
       return updatedDocument;
-    } catch (err) {
+    } catch (err: any) {
       dispatchIfNotCancelled({
         type: FirestoreStates.ERROR,
         payload: null,
         error: err.message,
       });
-      return null;
+
+      return;
     }
   }
 
