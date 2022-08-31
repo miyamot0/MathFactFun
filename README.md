@@ -1,6 +1,6 @@
 # Math Fact Fun (Technology Implementation of MIND Project)
 
-Math Fact Fun (MFF) is a 'high-tech' (i.e., without paper and pencil) translation of work done by Brian Poncy (mailto:brian.poncy@okstate.edu) to create the [Measures and Interventions for Numeracy Development (MIND)](https://brianponcy.wixsite.com/mind). At present, MFF is being designed and evaluated as a way to (1) support assist teachers in sampling student performance across a range of declarative and procedural math facts, (2) to identify students who may benefit from additional practice and instructional support, and (3) attempt to deliver 'high-tech' (i.e., without paper and pencil) forms of evidence-based interventions for basic math facts using computer technology. This is an open-source project, created using [React](https://github.com/facebook/create-react-app), and is under active development. Work in the future will include the involvement of other collaborators and community partners.
+Math Fact Fun (MFF) is a 'high-tech' (i.e., without paper and pencil) translation of work done by Brian Poncy ([mailto:brian.poncy\@okstate.edu](mailto:brian.poncy@okstate.edu){.uri}) to create the [Measures and Interventions for Numeracy Development (MIND)](https://brianponcy.wixsite.com/mind). At present, MFF is being designed and evaluated as a way to (1) support assist teachers in sampling student performance across a range of declarative and procedural math facts, (2) to identify students who may benefit from additional practice and instructional support, and (3) attempt to deliver 'high-tech' (i.e., without paper and pencil) forms of evidence-based interventions for basic math facts using computer technology. This is an open-source project, created using [React](https://github.com/facebook/create-react-app), and is under active development. Work in the future will include the involvement of other collaborators and community partners.
 
 ## MFF Project Core Team
 
@@ -16,7 +16,7 @@ The MFF project currently includes a total of four scientists working across mul
 
 ## Core Goals of MFF
 
-...
+The MFF project was launched as a potential means of addressing challenges associated with delivering curriculum-based measurement and progress monitoring for basic math facts. Specifically, the MFF software was constructed to (1) simplify the administration and scoring of basic math fact probes, (2) assist teachers in quickly and reliably accessing relevant indicators of math fluency, and (3) deliver instructional exercises via software that emulates existing evidence-based practices.
 
 ### Goal #1: Quick and Easy Benchmarking of Declarative and Procedural Math Facts
 
@@ -36,29 +36,41 @@ The MFF project currently includes a total of four scientists working across mul
 
 ## Illustrations of Functionality
 
-...
+The MFF software supports a range of different intervention and progress monitoring options. For example, which benchmarks to target, whether to intervene upon a specific skill (e.g., math fact fluency), which intervention to use (e.g., Cover Copy Compare), and the various parameters for that intervention (e.g., specific problems in set, error correction procedures, reinforcement contingencies, timing).
+
+Several representative visuals of the software are presented below.
 
 ### Benchmarking of Declarative and Procedural Math Facts
 
-...
+![Student Dashboard, Benchmarking Updates](screenshots/chrome_2022-08-30_17-19-46.png)
+
+![Student Information, Benchmarking Across Math Fact Types](screenshots/chrome_2022-08-30_17-31-22.png)
+
+### Individual Student-level Progress Monitor/Intervention Settings
+
+![Individual student settings panel](screenshots/chrome_2022-08-30_17-32-32.png)
 
 ### Facilitating Progress Monitoring
 
-...
+![Intensive Progress Monitoring](screenshots/chrome_2022-08-30_17-31-38.png)
+
+![Item-level Instructional Information for Students](screenshots/chrome_2022-08-30_17-31-42.png)
 
 ### Delivery of Tier II/Tier III Math Intervention for Fluency
 
-...
+![Explicit Timing Fluency Exercise](screenshots/chrome_2022-08-30_17-32-40.png)
+
+![Cover Copy Compare Fluency Exercise](screenshots/chrome_2022-08-30_17-33-00.png)
 
 ## Open Source Licenses
 
-...
+MFF functions by using several excellent open source packages. Each are presented below with attribution (relevant licenses embedded into repo).
 
 [Measures and Interventions for Numeracy Development (MIND)](https://brianponcy.wixsite.com/mind) - Brian Poncy
 
 [firebase](https://github.com/firebase/firebase-js-sdk) - Google (Apache 2.0)
 
-[highcharts](https://github.com/highcharts/highcharts-dist) - ???
+[highcharts](https://github.com/highcharts/highcharts-dist) - Non-Commercial License
 
 [highcharts-react-official](https://github.com/highcharts/highcharts-react) - Highsoft (MIT)
 
@@ -78,6 +90,6 @@ The MFF project currently includes a total of four scientists working across mul
 
 [react-select](https://github.com/JedWatson/react-select/tree/master/packages/react-select) - Jed Watson (MIT)
 
-## Software Licenses
+## Software License
 
 MIT-licensed (2022) - Shawn P. Gilroy, Louisiana State University
