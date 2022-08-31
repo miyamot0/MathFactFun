@@ -27,7 +27,15 @@ const filterList = [
   "6th",
 ];
 
-export default function StudentFilter({ changeFilter }) {
+interface CallbackInterface {
+  (arg0: string): void;
+}
+
+interface StudentFilterInterface {
+  changeFilter: CallbackInterface;
+}
+
+export default function StudentFilter({ changeFilter }: StudentFilterInterface) {
   const [currentFilter, setCurrentFilter] = useState("Mine");
 
   /** handleFilterEvent

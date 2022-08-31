@@ -31,7 +31,7 @@ import { RelevantKeys } from "../../maths/Facts";
 
 import { FactsOnFire } from "../../maths/Mind";
 import { PerformanceDataInterface, PerformanceModel } from "../../models/PerformanceModel";
-import { FactDataInterface, FactEntryModel } from "../../models/FactEntryModel";
+import { FactEntryModel } from "../../models/FactEntryModel";
 
 import { FactModelInterface } from "../../models/FactEntryModel";
 import { PerformanceModelInterface } from "../../models/PerformanceModel";

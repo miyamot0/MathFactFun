@@ -82,7 +82,7 @@ export default function CoverCopyCompare() {
   const { updateDocument } = useFirestore("students", undefined, undefined);
 
   const [loadedData, setLoadedData] = useState(false);
-  const [workingData, setWorkingData] = useState(null);
+  const [workingData, setWorkingData] = useState<string[]>();
   const [operatorSymbol, setOperatorSymbol] = useState("");
 
   const [currentAction, setCurrentAction] = useState(ActionSequence.Entry);
@@ -94,7 +94,7 @@ export default function CoverCopyCompare() {
   const [coverProblemItem, setCoverProblemItem] = useState(true);
   const [coverListViewItems, setCoverListViewItems] = useState(false);
   const [toVerify, setToVerify] = useState(false);
-  const [nextLiItem, setNextLiItem] = useState(null);
+  const [nextLiItem, setNextLiItem] = useState<string>();
 
   // quants
   const [numberCorrectInitial, setNumberCorrectInitial] = useState(0);
@@ -104,9 +104,9 @@ export default function CoverCopyCompare() {
   const [numberTrials, setNumberTrials] = useState(0);
   const [nRetries, setNRetries] = useState(0);
 
-  const [preTrialTime, setPreTrialTime] = useState(null);
-  const [startTime, setStartTime] = useState(null);
-  const [factModelList, setModelList] = useState([]);
+  const [preTrialTime, setPreTrialTime] = useState<Date>();
+  const [startTime, setStartTime] = useState<Date>();
+  const [factModelList, setModelList] = useState<FactModelInterface[]>();
 
   const [viewRepresentationInternal, setViewRepresentationInternal] =
     useState("");
@@ -125,7 +125,7 @@ export default function CoverCopyCompare() {
    * @param {Window} element ...
    */
   function useEventListener(eventName: string, handler: (key: React.KeyboardEvent<HTMLElement>) => void, element: Window = window): void {
-    const savedHandler = useRef(null);
+    const savedHandler = useRef({});
 
     useEffect(() => {
       savedHandler.current = handler;
@@ -135,8 +135,10 @@ export default function CoverCopyCompare() {
         const isSupported = element && element.addEventListener;
         if (!isSupported) return;
 
-        const eventListener = (event) => {
-          savedHandler.current(event);
+        const eventListener = (event: any) => {
+          if (typeof savedHandler.current === "function") {
+            savedHandler.current(event);
+          }
         };
 
         element.addEventListener(eventName, eventListener);
@@ -166,7 +168,7 @@ export default function CoverCopyCompare() {
           return;
         }
 
-        if (nextLiItem !== null) {
+        if (nextLiItem !== null && nextLiItem !== undefined) {
           captureItemClick(nextLiItem);
         }
 
@@ -190,8 +192,8 @@ export default function CoverCopyCompare() {
    * @param {boolean} trialError was there an error?
    * @returns {boolean}
    */
-  function shouldShowFeedback(trialError): boolean {
-    return DetermineErrorCorrection(trialError, (document as StudentDataInterface).currentErrorApproach);
+  function shouldShowFeedback(trialError: boolean): boolean {
+    return DetermineErrorCorrection(trialError, (document as StudentDataInterface).currentErrorApproach!);
   }
 
   function openModal(): void {
@@ -210,7 +212,7 @@ export default function CoverCopyCompare() {
 
       // Establish operator sign
       setOperatorSymbol(
-        GetOperatorFromLabel((document as StudentDataInterface).currentTarget.toString())
+        GetOperatorFromLabel((document as StudentDataInterface).currentTarget!.toString())
       );
 
       // Flag that data is loaded
@@ -227,13 +229,20 @@ export default function CoverCopyCompare() {
   async function submitDataToFirebase(
     finalFactObject: FactModelInterface
   ): Promise<void> {
+
+    let finalEntries = factModelList;
+
+    if (finalFactObject !== null) {
+      finalEntries?.push(finalFactObject)
+    }
+
     const end = new Date();
 
     let performanceInformation: PerformanceModelInterface = PerformanceModel();
 
     // Strings
-    performanceInformation.data.id = document.id;
-    performanceInformation.data.creator = user.uid;
+    performanceInformation.data.id = document!.id;
+    performanceInformation.data.creator = user!.uid;
     performanceInformation.data.target = (document as StudentDataInterface).currentTarget;
     performanceInformation.data.method = InterventionFormat.CoverCopyCompare;
 
@@ -243,20 +252,17 @@ export default function CoverCopyCompare() {
     performanceInformation.data.nCorrectInitial = numberCorrectInitial;
     performanceInformation.data.nRetries = nRetries;
     performanceInformation.data.sessionDuration =
-      (end.getTime() - startTime.getTime()) / 1000;
+      (end.getTime() - startTime!.getTime()) / 1000;
     performanceInformation.data.setSize = (document as StudentDataInterface).factsTargeted.length;
     performanceInformation.data.totalDigits = totalDigits;
 
     // Timestamps
     performanceInformation.data.createdAt = timestamp.fromDate(new Date());
     performanceInformation.data.dateTimeEnd = end.toString();
-    performanceInformation.data.dateTimeStart = startTime.toString();
+    performanceInformation.data.dateTimeStart = startTime!.toString();
 
     // Arrays
-    performanceInformation.data.entries = [
-      ...factModelList,
-      finalFactObject,
-    ] as FactModelInterface[];
+    performanceInformation.data.entries = finalEntries!;
 
     // Sanity check for all required components
     if (!performanceInformation.CheckObject()) {
@@ -278,7 +284,7 @@ export default function CoverCopyCompare() {
       };
 
       // Update field regarding last activity
-      await updateDocument(id, studentObject);
+      await updateDocument(id!, studentObject);
 
       // Push to home
       if (!response.error) {
@@ -340,7 +346,7 @@ export default function CoverCopyCompare() {
       }
 
       var current = new Date();
-      let secs = (current.getTime() - preTrialTime.getTime()) / 1000;
+      let secs = (current.getTime() - preTrialTime!.getTime()) / 1000;
 
       let holderPreTime = preTrialTime;
 
@@ -388,16 +394,16 @@ export default function CoverCopyCompare() {
 
         currentItem.data.dateTimeEnd = timestamp.fromDate(new Date(current));
         currentItem.data.dateTimeStart = timestamp.fromDate(
-          new Date(holderPreTime)
+          new Date(holderPreTime!)
         );
 
         // Note: isusue where state change not fast enough to catch latest
-        if (workingData.length === 0) {
+        if (workingData!.length === 0) {
           // If finished, upload list w/ latest item
           submitDataToFirebase(currentItem);
         } else {
           // Otherise, add it to the existing list
-          setModelList([...factModelList, currentItem]);
+          setModelList([...factModelList!, currentItem]);
         }
       }
     }
@@ -487,7 +493,7 @@ export default function CoverCopyCompare() {
     // Flag to remove cover for stimulus item
     setCoverStimulusItem(false);
 
-    const updatedList = workingData.filter(function (item) {
+    const updatedList = workingData!.filter(function (item) {
       return item !== listItem;
     });
 

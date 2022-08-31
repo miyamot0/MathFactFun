@@ -33,8 +33,8 @@ export default function EditUser() {
   const { updateDocument, response } = useFirestore("users", undefined, undefined);
 
   // form field values
-  const [name, setName] = useState("");
-  const [school, setSchool] = useState("");
+  const [name, setName] = useState<string>("");
+  const [school, setSchool] = useState<string>("");
 
   const [formError, setFormError] = useState<string>();
   const [didBuild, setDidBuild] = useState(false);
@@ -56,7 +56,7 @@ export default function EditUser() {
   ): Promise<any> {
     event.preventDefault();
 
-    setFormError(null);
+    setFormError(undefined);
 
     if (!name) {
       setFormError("Please enter a valid name");
@@ -73,7 +73,7 @@ export default function EditUser() {
       displaySchool: school,
     };
 
-    await updateDocument(id, teacherObject);
+    await updateDocument(id!, teacherObject);
 
     if (!response.error) {
       history.push("/admin");
