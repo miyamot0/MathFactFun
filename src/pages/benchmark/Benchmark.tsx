@@ -1,19 +1,27 @@
+/** @license
+ *
+ * Copyright (c) Shawn P. Gilroy, Louisiana State University.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
 import React from "react";
 import { useState, useEffect, useRef } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import { timestamp } from "../../firebase/config";
 
-// hooks
+// Hooks
 import { useFirestore } from "../../firebase/useFirestore";
 import { useFirebaseDocument } from "../../firebase/useFirebaseDocument";
 import { useAuthorizationContext } from "../../context/useAuthorizationContext";
 
-// widgets
+// Widgets
 import KeyPad from "../intervention/KeyPad";
 import Timer from "../../components/Timer";
 import SimpleProblemFrame from "../intervention/SimpleProblemFrame";
 
-// helpers
+// Helpers
 import {
   CalculateDigitsTotalAnswer,
   CalculateDigitsCorrectAnswer,
@@ -28,7 +36,7 @@ import { FactEntryModel } from "../../models/FactEntryModel";
 import { FactModelInterface } from "../../models/FactEntryModel";
 import { PerformanceModelInterface } from "../../models/PerformanceModel";
 
-// styles
+// Styles
 import "../intervention/ExplicitTiming.css";
 import { StudentDataInterface } from "../../models/StudentModel";
 

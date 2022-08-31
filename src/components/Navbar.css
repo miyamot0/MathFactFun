@@ -1,54 +1,61 @@
+/** @license
+ *
+ * Copyright (c) Shawn P. Gilroy, Louisiana State University.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
 .navbar {
-    width: 100%;
-    padding: 30px 0;
-    box-sizing: border-box;
-    margin-bottom: 80px;
-    display: flex;
-    justify-content: space-between;
+  width: 100%;
+  padding: 30px 0;
+  box-sizing: border-box;
+  margin-bottom: 80px;
+  display: flex;
+  justify-content: space-between;
 }
 
 .navbar ul {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    list-style: none;
-    float: right;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  list-style: none;
+  float: right;
 }
 
 .navbar li {
-    margin-left: 30px;
+  margin-left: 30px;
 }
 
 .navbar a {
-    text-decoration: none;
+  text-decoration: none;
 }
 
 .navbar p {
-    display: flex;
-    justify-content: center;
-    align-content: center;
-    flex-direction: column;
-    color: var(--text-style-color);
-    font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  flex-direction: column;
+  color: var(--text-style-color);
+  font-weight: bold;
 }
 
 .navbar-modal {
-    margin-top: "5px";
-    margin-bottom: "10px";
+  margin-top: "5px";
+  margin-bottom: "10px";
 }
 
-.navbar-modal>p {
-    color: var(--title-color);
-    margin-top: 10px;
+.navbar-modal > p {
+  color: var(--title-color);
+  margin-top: 10px;
 }
 
-.navbar-modal>ul {
-    list-style: circle;
+.navbar-modal > ul {
+  list-style: circle;
 }
 
-.navbar-modal>ul>li {
-    color: var(--text-style-color);
-    margin-top: 10px;
-    margin-left: 15px;
-
+.navbar-modal > ul > li {
+  color: var(--text-style-color);
+  margin-top: 10px;
+  margin-left: 15px;
 }

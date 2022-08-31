@@ -1,3 +1,11 @@
+/** @license
+ *
+ * Copyright (c) Shawn P. Gilroy, Louisiana State University.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
 /**
  * Global app file
  */
@@ -7,14 +15,11 @@ import { useEffect } from "react";
 import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
 import { useAuthorizationContext } from "./context/useAuthorizationContext";
 
-// styles
-import "./App.css";
-
-// components
+// Components
 import Navbar from "./components/Navbar";
 import SideBar from "./components/Sidebar";
 
-// pages
+// Pages
 import Edit from "./pages/edit/Edit";
 import Login from "./pages/login/Login";
 import Create from "./pages/create/Create";
@@ -42,9 +47,12 @@ import CoverCopyCompare from "./pages/intervention/CoverCopyCompare";
 import ExplicitTiming from "./pages/intervention/ExplicitTiming";
 import TapedProblems from "./pages/intervention/TapedProblems";
 
+// Styles
+import "./App.css";
+
 export type AppInterface = JSX.Element;
 
-function App() {
+function App(): AppInterface {
   const { user, authIsReady, adminFlag } = useAuthorizationContext();
 
   useEffect(() => {

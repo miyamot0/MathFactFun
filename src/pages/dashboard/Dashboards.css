@@ -1,41 +1,49 @@
+/** @license
+ *
+ * Copyright (c) Shawn P. Gilroy, Louisiana State University.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
 .student-filter {
-    margin-top: 30px;
-    margin-bottom: 30px;
-    width: 700px;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  width: 700px;
 }
 
 .student-filter nav {
-    display: flex;
-    padding: 10px;
-    background-color: #fff;
-    border-radius: 4px;
-    flex-direction: row;
+  display: flex;
+  padding: 10px;
+  background-color: #fff;
+  border-radius: 4px;
+  flex-direction: row;
 }
 
 .student-filter p {
-    flex: min;
-    font-size: 0.9em;
-    margin-right: 10px;
-    width: 150px;
+  flex: min;
+  font-size: 0.9em;
+  margin-right: 10px;
+  width: 150px;
 }
 
 .student-filter button {
-    flex: min;
-    background: transparent;
-    border: 0;
-    font-family: inherit;
-    font-weight: bold;
-    color: var(--text-style-color);
-    cursor: pointer;
-    border-right: 1px solid #e4e4e4;
-    font-size: 0.9em;
-    width: 60px;
+  flex: min;
+  background: transparent;
+  border: 0;
+  font-family: inherit;
+  font-weight: bold;
+  color: var(--text-style-color);
+  cursor: pointer;
+  border-right: 1px solid #e4e4e4;
+  font-size: 0.9em;
+  width: 60px;
 }
 
 .student-filter button:last-child {
-    border: 0;
+  border: 0;
 }
 
 .student-filter button.active {
-    color: var(--primary-style-color);
+  color: var(--primary-style-color);
 }

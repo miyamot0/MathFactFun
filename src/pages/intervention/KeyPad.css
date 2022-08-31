@@ -1,164 +1,172 @@
+/** @license
+ *
+ * Copyright (c) Shawn P. Gilroy, Louisiana State University.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
 .key-pad-wrapper {
-    display: grid;
-    column-gap: 10px;
-    row-gap: 10px;
-    grid-gap: 10px;
-    height: 100%;
+  display: grid;
+  column-gap: 10px;
+  row-gap: 10px;
+  grid-gap: 10px;
+  height: 100%;
 }
 
 .key-shared {
-    min-width: 80px;
-    text-align: center;
-    display: flex;
-    border: none;
-    border-radius: 1pt;
-    box-shadow: 0 0 0 1pt var(--text-style-color);
-    color: var(--heading-style-color);
-    font-weight: bold;
-    font-size: 1.25em;
+  min-width: 80px;
+  text-align: center;
+  display: flex;
+  border: none;
+  border-radius: 1pt;
+  box-shadow: 0 0 0 1pt var(--text-style-color);
+  color: var(--heading-style-color);
+  font-weight: bold;
+  font-size: 1.25em;
 }
 
 .key1 {
-    grid-column-start: 1;
-    grid-column-end: 2;
-    grid-row-start: 1;
-    grid-row-end: 2;
-    background-color: lightgreen;
+  grid-column-start: 1;
+  grid-column-end: 2;
+  grid-row-start: 1;
+  grid-row-end: 2;
+  background-color: lightgreen;
 }
 
 .key2 {
-    grid-column-start: 2;
-    grid-column-end: 3;
-    grid-row-start: 1;
-    grid-row-end: 2;
-    background-color: lightgreen;
+  grid-column-start: 2;
+  grid-column-end: 3;
+  grid-row-start: 1;
+  grid-row-end: 2;
+  background-color: lightgreen;
 }
 
 .key3 {
-    grid-column-start: 3;
-    grid-column-end: 4;
-    grid-row-start: 1;
-    grid-row-end: 2;
-    background-color: lightgreen;
+  grid-column-start: 3;
+  grid-column-end: 4;
+  grid-row-start: 1;
+  grid-row-end: 2;
+  background-color: lightgreen;
 }
 
 .key4 {
-    grid-column-start: 4;
-    grid-column-end: 5;
-    grid-row-start: 1;
-    grid-row-end: 2;
-    background-color: purple;
-    color: white
+  grid-column-start: 4;
+  grid-column-end: 5;
+  grid-row-start: 1;
+  grid-row-end: 2;
+  background-color: purple;
+  color: white;
 }
 
 .key5 {
-    grid-column-start: 1;
-    grid-column-end: 2;
-    grid-row-start: 2;
-    grid-row-end: 3;
-    background-color: lightgreen;
+  grid-column-start: 1;
+  grid-column-end: 2;
+  grid-row-start: 2;
+  grid-row-end: 3;
+  background-color: lightgreen;
 }
 
 .key6 {
-    grid-column-start: 2;
-    grid-column-end: 3;
-    grid-row-start: 2;
-    grid-row-end: 3;
-    background-color: lightgreen;
+  grid-column-start: 2;
+  grid-column-end: 3;
+  grid-row-start: 2;
+  grid-row-end: 3;
+  background-color: lightgreen;
 }
 
 .key7 {
-    grid-column-start: 3;
-    grid-column-end: 4;
-    grid-row-start: 2;
-    grid-row-end: 3;
-    background-color: lightgreen;
+  grid-column-start: 3;
+  grid-column-end: 4;
+  grid-row-start: 2;
+  grid-row-end: 3;
+  background-color: lightgreen;
 }
 
 .key8 {
-    grid-column-start: 4;
-    grid-column-end: 5;
-    grid-row-start: 2;
-    grid-row-end: 3;
-    background-color: purple;
-    color: white
+  grid-column-start: 4;
+  grid-column-end: 5;
+  grid-row-start: 2;
+  grid-row-end: 3;
+  background-color: purple;
+  color: white;
 }
 
 .key9 {
-    grid-column-start: 1;
-    grid-column-end: 2;
-    grid-row-start: 3;
-    grid-row-end: 4;
-    background-color: lightgreen;
+  grid-column-start: 1;
+  grid-column-end: 2;
+  grid-row-start: 3;
+  grid-row-end: 4;
+  background-color: lightgreen;
 }
 
 .key10 {
-    grid-column-start: 2;
-    grid-column-end: 3;
-    grid-row-start: 3;
-    grid-row-end: 4;
-    background-color: lightgreen;
+  grid-column-start: 2;
+  grid-column-end: 3;
+  grid-row-start: 3;
+  grid-row-end: 4;
+  background-color: lightgreen;
 }
 
 .key11 {
-    grid-column-start: 3;
-    grid-column-end: 4;
-    grid-row-start: 3;
-    grid-row-end: 4;
-    background-color: lightgreen;
+  grid-column-start: 3;
+  grid-column-end: 4;
+  grid-row-start: 3;
+  grid-row-end: 4;
+  background-color: lightgreen;
 }
 
 .key12 {
-    grid-column-start: 4;
-    grid-column-end: 5;
-    grid-row-start: 3;
-    grid-row-end: 4;
-    background-color: purple;
-    color: white
+  grid-column-start: 4;
+  grid-column-end: 5;
+  grid-row-start: 3;
+  grid-row-end: 4;
+  background-color: purple;
+  color: white;
 }
 
 .key13 {
-    grid-column-start: 1;
-    grid-column-end: 2;
-    grid-row-start: 4;
-    grid-row-end: 5;
-    background-color: lightcoral;
+  grid-column-start: 1;
+  grid-column-end: 2;
+  grid-row-start: 4;
+  grid-row-end: 5;
+  background-color: lightcoral;
 }
 
 .key14 {
-    grid-column-start: 2;
-    grid-column-end: 3;
-    grid-row-start: 4;
-    grid-row-end: 5;
-    background-color: lightgreen;
+  grid-column-start: 2;
+  grid-column-end: 3;
+  grid-row-start: 4;
+  grid-row-end: 5;
+  background-color: lightgreen;
 }
 
 .key15 {
-    grid-column-start: 3;
-    grid-column-end: 4;
-    grid-row-start: 4;
-    grid-row-end: 5;
-    background-color: lightblue;
+  grid-column-start: 3;
+  grid-column-end: 4;
+  grid-row-start: 4;
+  grid-row-end: 5;
+  background-color: lightblue;
 }
 
 .key16 {
-    grid-column-start: 4;
-    grid-column-end: 5;
-    grid-row-start: 4;
-    grid-row-end: 5;
-    background-color: purple;
-    color: white
+  grid-column-start: 4;
+  grid-column-end: 5;
+  grid-row-start: 4;
+  grid-row-end: 5;
+  background-color: purple;
+  color: white;
 }
 
 .key-button-section {
-    flex: 1;
-    display: grid;
-    justify-content: column;
-    margin: auto auto;
+  flex: 1;
+  display: grid;
+  justify-content: column;
+  margin: auto auto;
 }
 
 .key-btn {
-    justify-content: center;
-    align-content: center;
-    height: auto;
+  justify-content: center;
+  align-content: center;
+  height: auto;
 }

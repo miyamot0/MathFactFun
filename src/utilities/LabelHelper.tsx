@@ -1,9 +1,11 @@
-/**
- * Helper file
+/** @license
  *
- * https://www.youtube.com/watch?v=v-a7-w8preU&ab_channel=SitePen
+ * Copyright (c) Shawn P. Gilroy, Louisiana State University.
  *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  */
+
 
 /** formatDate
  *

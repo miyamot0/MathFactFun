@@ -1,11 +1,19 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;600;700;800;900&display=swap');
+/** @license
+ *
+ * Copyright (c) Shawn P. Gilroy, Louisiana State University.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;600;700;800;900&display=swap");
 
 /* Styles: for general applications */
 
 :root {
-  --heading-style-color: #5F686D;
+  --heading-style-color: #5f686d;
   --text-style-color: #939391;
-  --primary-style-color: #33A7E4;
+  --primary-style-color: #33a7e4;
   --background-style-color: #e4e2e2b6;
   --primary-border-radius: 5px;
 }
@@ -33,12 +41,12 @@ ul {
 }
 
 a:link {
-  color: #33A7E4;
+  color: #33a7e4;
 }
 
 /* visited link */
 a:visited {
-  color: #FF9439;
+  color: #ff9439;
 }
 
 .global-page-title {
@@ -65,23 +73,23 @@ a:visited {
 }
 
 .global-btn-red {
-  color: #FF5039;
-  border: 1px solid #FF5039;
+  color: #ff5039;
+  border: 1px solid #ff5039;
 }
 
 .global-btn-red:hover {
   color: #fff;
-  background-color: #FF5039;
+  background-color: #ff5039;
 }
 
 .global-btn-light-red {
-  color: #F43779;
-  border: 1px solid #F43779;
+  color: #f43779;
+  border: 1px solid #f43779;
 }
 
 .global-btn-light-red:hover {
   color: #fff;
-  background-color: #F43779;
+  background-color: #f43779;
 }
 
 .global-btn-green {
@@ -95,13 +103,13 @@ a:visited {
 }
 
 .global-btn-orange {
-  color: #FF9439 !important;
-  border: 1px solid #FF9439 !important;
+  color: #ff9439 !important;
+  border: 1px solid #ff9439 !important;
 }
 
 .global-btn-orange:hover {
   color: #fff !important;
-  background-color: #FF9439 !important;
+  background-color: #ff9439 !important;
 }
 
 /* Styles: for forms */

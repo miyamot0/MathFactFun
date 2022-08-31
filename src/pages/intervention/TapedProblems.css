@@ -1,72 +1,80 @@
+/** @license
+ *
+ * Copyright (c) Shawn P. Gilroy, Louisiana State University.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
 .wrapperTP {
-    display: grid;
-    column-gap: 10px;
-    row-gap: 10px;
-    grid-gap: 10px;
-    margin: 0 auto;
-    height: calc(100vh - 0px);
-    width: calc(100vw - 200px);  
-    text-align: center;
-    vertical-align: middle;
-    grid-template-rows: 5% 15% 20% 15% 15% 15%;
-    padding-top: 10px;
-  }
-  
-  .topBoxTP {
-    grid-column-start: 1;
-    grid-column-end: 6;
-    grid-row-start: 1;
-    grid-row-end: 2;
-    text-align: center;
-    justify-content: center;
-    align-content: center;
-  }
-  
-  .topBoxTP h2 {
-    color: var(--heading-style-color);
-    padding-top: 5px;
-    padding-bottom: 5px;
-  }
+  display: grid;
+  column-gap: 10px;
+  row-gap: 10px;
+  grid-gap: 10px;
+  margin: 0 auto;
+  height: calc(100vh - 0px);
+  width: calc(100vw - 200px);
+  text-align: center;
+  vertical-align: middle;
+  grid-template-rows: 5% 15% 20% 15% 15% 15%;
+  padding-top: 10px;
+}
 
-  .box1TP {
-    grid-column-start: 5;
-    grid-column-end: 7;
-    grid-row-start: 1;
-    grid-row-end: 2;
-    text-align: center;
-    justify-content: center;
-    align-content: center;
+.topBoxTP {
+  grid-column-start: 1;
+  grid-column-end: 6;
+  grid-row-start: 1;
+  grid-row-end: 2;
+  text-align: center;
+  justify-content: center;
+  align-content: center;
+}
 
-    padding-top: 5px;
-    padding-bottom: 5px;
-  }
-  
-  .box2TP {
-    grid-column-start: 2;
-    grid-column-end: 5;
-    grid-row-start: 2;
-    grid-row-end: 4;
-    text-align: center;
-    border: none;
-    border-radius: 2pt;
-    box-shadow: 0 0 0 1pt var(--text-style-color);
-    padding-top: 15px;
-  }
-  
-  .box3TP {
-    grid-column-start: 5;
-    grid-column-end: 7;
-    grid-row-start: 2;
-    grid-row-end: 7;
-    display: grid;
-    place-items: center;
-  }
-  
-  .box5TP {
-    grid-column-start: 3;
-    grid-column-end: 5;
-    grid-row-start: 4;
-    grid-row-end: 7;
-    text-align: center;
-    padding-top: 10px;
-  }
+.topBoxTP h2 {
+  color: var(--heading-style-color);
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.box1TP {
+  grid-column-start: 5;
+  grid-column-end: 7;
+  grid-row-start: 1;
+  grid-row-end: 2;
+  text-align: center;
+  justify-content: center;
+  align-content: center;
+
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.box2TP {
+  grid-column-start: 2;
+  grid-column-end: 5;
+  grid-row-start: 2;
+  grid-row-end: 4;
+  text-align: center;
+  border: none;
+  border-radius: 2pt;
+  box-shadow: 0 0 0 1pt var(--text-style-color);
+  padding-top: 15px;
+}
+
+.box3TP {
+  grid-column-start: 5;
+  grid-column-end: 7;
+  grid-row-start: 2;
+  grid-row-end: 7;
+  display: grid;
+  place-items: center;
+}
+
+.box5TP {
+  grid-column-start: 3;
+  grid-column-end: 5;
+  grid-row-start: 4;
+  grid-row-end: 7;
+  text-align: center;
+  padding-top: 10px;
+}
