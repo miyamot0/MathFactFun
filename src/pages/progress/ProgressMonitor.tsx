@@ -64,10 +64,10 @@ function modifyDate(newDate: Date = new Date()): Date {
  *
  * Map for chart
  *
- * @param {Float} accuracy Accuracy numbers
- * @returns {String} Color for marker
+ * @param {number} accuracy Accuracy numbers
+ * @returns {string} Color for marker
  */
-function getMappedColor(accuracy): "red" | "orange" | "green" {
+function getMappedColor(accuracy: number): "red" | "orange" | "green" {
   if (accuracy < 50) {
     return "red";
   } else if (accuracy < 80) {
@@ -81,12 +81,11 @@ function getMappedColor(accuracy): "red" | "orange" | "green" {
  *
  * Map for chart
  *
- * @param {*} latency Latency numbers
- * @returns {String} Shape for marker
- * @returns
+ * @param {number} latency Latency numbers
+ * @returns {string} Shape for marker
  */
 function getMappedMarker(
-  latency
+  latency: number
 ): "circle" | "triangle" | "diamond" | "square" {
   if (latency < 5) {
     return "circle";
@@ -111,8 +110,8 @@ export default function ProgressMonitor() {
   const { user, adminFlag } = useAuthorizationContext();
 
   // Limit scope if not an admin
-  const queryString = user && !adminFlag ? ["creator", "==", user.uid] : null;
-  const orderString = null;
+  const queryString = user && !adminFlag ? ["creator", "==", user.uid] : undefined;
+  const orderString = undefined;
 
   const { documents } = useFirebaseCollection(
     `performances/${target}/${id}`,
@@ -127,9 +126,9 @@ export default function ProgressMonitor() {
       // Generate object from document collection
       const mappedDocument = (documents as PerformanceDataInterface[]).map((doc) => {
         return {
-          Items: doc.entries,
-          Date: new Date(doc.dateTimeStart),
-          ShortDate: new Date(doc.dateTimeStart).toLocaleDateString("en-US"),
+          Items: doc.entries as FactDataInterface[],
+          Date: new Date(doc.dateTimeStart!),
+          ShortDate: new Date(doc.dateTimeStart!).toLocaleDateString("en-US"),
           Errors: doc.errCount,
           DigitsCorrect: doc.correctDigits,
           DigitsCorrectInitial: doc.nCorrectInitial,
@@ -171,7 +170,7 @@ export default function ProgressMonitor() {
         );
 
       // Extract all dates
-      const dateArr = mappedDocument.map((d) => d.Date);
+      const dateArr = mappedDocument.map((d) => d.Date.getTime());
       const maxDate = modifyDate(new Date(Math.max.apply(null, dateArr)));
       const minDate = modifyDate(new Date(Math.min.apply(null, dateArr)));
 
@@ -184,7 +183,7 @@ export default function ProgressMonitor() {
       );
 
       // Extend out, if aim line exceeds current max
-      maxYAxis = maxYAxis < parseInt(aim) ? parseInt(aim) + 1 : maxYAxis + 1;
+      maxYAxis = maxYAxis < parseInt(aim!) ? parseInt(aim!) + 1 : maxYAxis + 1;
 
       setChartOptions({
         chart: {
@@ -230,13 +229,13 @@ export default function ProgressMonitor() {
                 points: [
                   {
                     x: minDate.getTime(),
-                    y: parseInt(aim),
+                    y: parseInt(aim!),
                     xAxis: 0,
                     yAxis: 0,
                   },
                   {
                     x: maxDate.getTime(),
-                    y: parseInt(aim),
+                    y: parseInt(aim!),
                     xAxis: 0,
                     yAxis: 0,
                   },
@@ -252,8 +251,7 @@ export default function ProgressMonitor() {
         //.filter((obj) => obj.Method === method)
         .map((items) => items.Items);
 
-      // Flatten list to array of objects
-      const flatItemSummaries: FactDataInterface[] = [].concat(...itemSummaries);
+      const flatItemSummaries: FactDataInterface[] = itemSummaries.reduce((accumulator, value) => accumulator.concat(value));
 
       // Extract unique problems targeted
       const uniqueMathFacts = flatItemSummaries
@@ -275,15 +273,15 @@ export default function ProgressMonitor() {
 
         // Sum latency to correct responding
         const itemLatency = relevantPerformances
-          .map((item) => Math.abs(item.latencySeconds))
+          .map((item) => Math.abs(item.latencySeconds!))
           .reduce(Sum);
 
         // Construct object for plotting
         return {
           FactString: itemString,
-          X: parseInt(itemString.split(GetOperatorFromLabel(target))[0]),
+          X: parseInt(itemString!.split(GetOperatorFromLabel(target!))[0]),
           Y: parseInt(
-            itemString.split(GetOperatorFromLabel(target))[1].split("=")[0]
+            itemString!.split(GetOperatorFromLabel(target!))[1].split("=")[0]
           ),
           Latency: itemLatency / relevantPerformances.length,
           AverageCorrect: (itemsCorrect / relevantPerformances.length) * 100,
@@ -302,11 +300,11 @@ export default function ProgressMonitor() {
           height: "600px",
         },
         tooltip: {
-          formatter: function () {
+          formatter: function (this: Highcharts.Point): string {
             return (
               "Problem: " +
               this.x +
-              GetOperatorFromLabel(target) +
+              GetOperatorFromLabel(target!) +
               this.y +
               "</b>"
             );

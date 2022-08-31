@@ -23,8 +23,8 @@ export default function DashboardPractice() {
   const { user, adminFlag } = useAuthorizationContext();
 
   // Limit scope if not an admin
-  const queryString = user && !adminFlag ? ["creator", "==", user.uid] : null;
-  const orderString = null;
+  const queryString = user && !adminFlag ? ["creator", "==", user.uid] : undefined;
+  const orderString = undefined;
 
   const { documents, error } = useFirebaseCollection(
     "students",
@@ -40,7 +40,7 @@ export default function DashboardPractice() {
    *
    * @param {String} newFilter Filter criteria
    */
-  function changeFilter(newFilter): void {
+  function changeFilter(newFilter: string): void {
     setFilter(newFilter);
   }
 
@@ -51,7 +51,7 @@ export default function DashboardPractice() {
           return document.currentApproach !== "N/A";
         case "Mine":
           return (
-            document.creator === user.uid &&
+            document.creator === user!.uid &&
             document.currentApproach !== "N/A"
           );
         case "K":

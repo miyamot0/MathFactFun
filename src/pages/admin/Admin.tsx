@@ -12,8 +12,6 @@
 
 import React from "react";
 
-import firebase from "firebase/app";
-
 import { Link } from "react-router-dom";
 import { CurrentObjectTypeArrays, useFirebaseCollection } from "../../firebase/useFirebaseCollection";
 import { UserDataInterface } from "../../models/UserModel";

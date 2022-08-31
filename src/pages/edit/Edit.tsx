@@ -28,17 +28,14 @@ import {
 import { FormatDate } from "../../utilities/LabelHelper";
 
 // components
-import Select from "react-select";
+import Select, { MultiValue } from "react-select";
 import { StudentDataInterface } from "../../models/StudentModel";
 
 const EditFormStyle = {
   maxWidth: "600px",
 };
 
-interface SelectOption {
-  value: string;
-  label: string;
-}
+type SingleOptionType = { label: string, value: string }
 
 interface RoutedStudentSet {
   id?: string;
@@ -54,15 +51,15 @@ export default function Edit() {
   const [name, setName] = useState<string>();
   const [details, setDetails] = useState<string>();
   const [dueDate, setDueDate] = useState<string>();
-  const [currentGrade, setCurrentGrade] = useState<SelectOption>();
-  const [currentTarget, setCurrentTarget] = useState<SelectOption>();
-  const [currentApproach, setCurrentApproach] = useState<SelectOption>();
-  const [currentBenchmarking, setCurrentBenchmarking] = useState(null);
+  const [currentGrade, setCurrentGrade] = useState<SingleOptionType>();
+  const [currentTarget, setCurrentTarget] = useState<SingleOptionType>();
+  const [currentApproach, setCurrentApproach] = useState<SingleOptionType>();
+  const [currentBenchmarking, setCurrentBenchmarking] = useState<MultiValue<SingleOptionType>>();
   const [currentBenchmarkSet, setCurrentBenchmarkSet] =
-    useState<SelectOption>();
+    useState<SingleOptionType>();
   const [currentErrorApproach, setCurrentErrorApproach] =
-    useState<SelectOption>();
-  const [currentSRApproach, setCurrentSRApproach] = useState<SelectOption>();
+    useState<SingleOptionType>();
+  const [currentSRApproach, setCurrentSRApproach] = useState<SingleOptionType>();
   const [formError, setFormError] = useState<string>();
   const [didBuild, setDidBuild] = useState(false);
   const [aimLineValue, setAimLineValue] = useState(0);
@@ -74,13 +71,13 @@ export default function Edit() {
     setDidBuild(true);
     setName((document as StudentDataInterface).name);
     setDetails((document as StudentDataInterface).details);
-    setDueDate(FormatDate((document as StudentDataInterface).dueDate.toDate()));
-    setAimLineValue((document as StudentDataInterface).aimLine);
-    setDurationTask((document as StudentDataInterface).minForTask);
+    setDueDate(FormatDate((document as StudentDataInterface).dueDate!.toDate()));
+    setAimLineValue((document as StudentDataInterface).aimLine!);
+    setDurationTask((document as StudentDataInterface).minForTask!);
 
-    let benchmarkingAreas = [];
+    let benchmarkingAreas: any = [];
 
-    Operations.forEach((op) => {
+    Operations.forEach((op: SingleOptionType) => {
       if (op.value === (document as StudentDataInterface).currentTarget) {
         setCurrentTarget(op);
       }
@@ -92,31 +89,31 @@ export default function Edit() {
 
     setCurrentBenchmarking(benchmarkingAreas);
 
-    BenchmarkSets.forEach((set) => {
+    BenchmarkSets.forEach((set: SingleOptionType) => {
       if (set.value === (document as StudentDataInterface).problemSet) {
         setCurrentBenchmarkSet(set);
       }
     });
 
-    Grades.forEach((gr) => {
+    Grades.forEach((gr: SingleOptionType) => {
       if (gr.value === (document as StudentDataInterface).currentGrade) {
         setCurrentGrade(gr);
       }
     });
 
-    InterventionApproach.forEach((ia) => {
+    InterventionApproach.forEach((ia: SingleOptionType) => {
       if (ia.value === (document as StudentDataInterface).currentApproach) {
         setCurrentApproach(ia);
       }
     });
 
-    ErrorCorrection.forEach((ia) => {
+    ErrorCorrection.forEach((ia: SingleOptionType) => {
       if (ia.value === (document as StudentDataInterface).currentErrorApproach) {
         setCurrentErrorApproach(ia);
       }
     });
 
-    Contingencies.forEach((ia) => {
+    Contingencies.forEach((ia: SingleOptionType) => {
       if (ia.value === (document as StudentDataInterface).currentSRApproach) {
         setCurrentSRApproach(ia);
       }
@@ -134,7 +131,7 @@ export default function Edit() {
   ): Promise<any> {
     event.preventDefault();
 
-    setFormError(null);
+    setFormError(undefined);
 
     if (!currentGrade) {
       setFormError("Please select current grade");
@@ -142,23 +139,25 @@ export default function Edit() {
     }
 
     if (
-      currentApproach.value === undefined ||
-      currentApproach.value.trim().length < 1
+      currentApproach!.value === undefined ||
+      currentApproach!.value.trim().length < 1
     ) {
       setFormError("Please select an intervention approach");
       return;
     }
 
-    if (currentBenchmarking === undefined || currentBenchmarking.length < 1) {
+    if (currentBenchmarking === undefined ||
+      currentBenchmarking === null ||
+      (currentBenchmarking as any[]).length < 1) {
       setFormError("Please select benchmarking options");
       return;
     }
 
-    let date = new Date(dueDate);
+    let date = new Date(dueDate!);
     date.setTime(date.getTime() + date.getTimezoneOffset() * 60 * 1000);
 
     const targetedList =
-      currentTarget.value === (document as StudentDataInterface).currentTarget
+      currentTarget!.value === (document as StudentDataInterface).currentTarget
         ? (document as StudentDataInterface).factsTargeted
         : [];
 
@@ -166,21 +165,21 @@ export default function Edit() {
       name,
       details,
       currentGrade: currentGrade.value,
-      currentTarget: currentTarget.value,
-      currentApproach: currentApproach.value,
-      currentBenchmarking: currentBenchmarking.map(
-        (benchmark) => benchmark.label
+      currentTarget: currentTarget!.value,
+      currentApproach: currentApproach!.value,
+      currentBenchmarking: (currentBenchmarking as SingleOptionType[]).map(
+        (benchmark: SingleOptionType) => benchmark.label
       ),
-      currentErrorApproach: currentErrorApproach.value,
-      currentSRApproach: currentSRApproach.value,
+      currentErrorApproach: currentErrorApproach!.value,
+      currentSRApproach: currentSRApproach!.value,
       dueDate: timestamp.fromDate(date),
       aimLine: aimLineValue,
       minForTask: durationTask,
-      problemSet: currentBenchmarkSet.value,
+      problemSet: currentBenchmarkSet!.value,
       factsTargeted: targetedList,
     };
 
-    await updateDocument(id, studentObject);
+    await updateDocument(id!, studentObject);
 
     if (!response.error) {
       history.push(`/dashboard`);
@@ -232,7 +231,7 @@ export default function Edit() {
           <span>Current Grade</span>
           <Select
             options={Grades}
-            onChange={(option) => setCurrentGrade(option)}
+            onChange={(option) => setCurrentGrade(option!)}
             value={currentGrade}
           />
         </label>
@@ -240,7 +239,7 @@ export default function Edit() {
           <span>Target For Benchmarking</span>
           <Select
             options={CoreOperations}
-            onChange={(option) => setCurrentBenchmarking(option)}
+            onChange={(option: MultiValue<SingleOptionType>) => setCurrentBenchmarking(option)}
             value={currentBenchmarking}
             isMulti={true}
           />
@@ -249,7 +248,7 @@ export default function Edit() {
           <span>Benchmark Set</span>
           <Select
             options={BenchmarkSets}
-            onChange={(option) => setCurrentBenchmarkSet(option)}
+            onChange={(option) => setCurrentBenchmarkSet(option!)}
             value={currentBenchmarkSet}
           />
         </label>
@@ -257,7 +256,7 @@ export default function Edit() {
           <span>Target For Intervention</span>
           <Select
             options={Operations}
-            onChange={(option) => setCurrentTarget(option)}
+            onChange={(option) => setCurrentTarget(option!)}
             value={currentTarget}
           />
         </label>
@@ -265,7 +264,7 @@ export default function Edit() {
           <span>Intervention Approach</span>
           <Select
             options={InterventionApproach}
-            onChange={(option) => setCurrentApproach(option)}
+            onChange={(option) => setCurrentApproach(option!)}
             value={currentApproach}
           />
         </label>
@@ -273,7 +272,7 @@ export default function Edit() {
           <span>Error Correction Procedures</span>
           <Select
             options={ErrorCorrection}
-            onChange={(option) => setCurrentErrorApproach(option)}
+            onChange={(option) => setCurrentErrorApproach(option!)}
             value={currentErrorApproach}
           />
         </label>
@@ -281,7 +280,7 @@ export default function Edit() {
           <span>Reinforcement Procedures</span>
           <Select
             options={Contingencies}
-            onChange={(option) => setCurrentSRApproach(option)}
+            onChange={(option) => setCurrentSRApproach(option!)}
             value={currentSRApproach}
           />
         </label>

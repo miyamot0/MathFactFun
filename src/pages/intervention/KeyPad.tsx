@@ -12,7 +12,7 @@ import React from "react";
 import "./KeyPad.css";
 
 interface CallbackInterface {
-  (string): void;
+  (arg0: string): void;
 }
 
 interface KeypadInterface {

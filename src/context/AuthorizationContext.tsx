@@ -22,7 +22,6 @@ export enum AuthorizationStates {
   CLAIMS = "CLAIMS",
 }
 
-// TODO: remove any
 export interface AuthorizationContextInterface {
   user: firebase.User | null;
   authIsReady: boolean;

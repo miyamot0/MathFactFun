@@ -27,6 +27,8 @@ import moment from "moment";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import AnnotationsModule from "highcharts/modules/annotations";
+import { PerformanceDataInterface } from "../../models/PerformanceModel";
+import { FactDataInterface } from "../../models/FactEntryModel";
 
 require("highcharts/modules/annotations")(Highcharts);
 require("highcharts/modules/accessibility")(Highcharts);
@@ -43,12 +45,12 @@ const HeadingStyle = {
   marginBottom: "6px",
 };
 
-const reducerPerOperation = (doc) => {
-  const mappedDocument = doc.map((doc) => {
+function reducerPerOperation(doc: PerformanceDataInterface[] | undefined) {
+  const mappedDocument = doc!.map((doc) => {
     return {
-      Items: doc.entries,
-      Date: new Date(doc.dateTimeStart),
-      ShortDate: new Date(doc.dateTimeStart).toLocaleDateString("en-US"),
+      Items: doc.entries as FactDataInterface[],
+      Date: new Date(doc.dateTimeStart!),
+      ShortDate: new Date(doc.dateTimeStart!).toLocaleDateString("en-US"),
       Errors: doc.errCount,
       DigitsCorrect: doc.correctDigits,
       DigitsCorrectInitial: doc.nCorrectInitial,
@@ -63,26 +65,25 @@ const reducerPerOperation = (doc) => {
     .filter(OnlyUnique)
     .sort()
     .map((date) => {
+      // Pull in relevant content by date
       let relevantData = mappedDocument.filter((obj) => obj.ShortDate === date);
+
       let totalDigitsCorr = relevantData
         .map((obj) => obj.DigitsCorrect)
         .reduce(Sum);
       let totalDigits = relevantData.map((obj) => obj.DigitsTotal).reduce(Sum);
-      let totalTime =
-        relevantData.map((obj) => obj.SessionDuration).reduce(Sum) / 60.0;
+      let totalTime = relevantData.map((obj) => obj.SessionDuration).reduce(Sum) / 60.0;
 
       return {
         Date: date,
-        DateObj: relevantData[0].dateTimeStart,
         DCPM: totalDigitsCorr / totalTime,
         Accuracy: (totalDigitsCorr / totalDigits) * 100,
       };
     })
     .sort(
-      (a, b) =>
-        moment(b.Date).toDate().valueOf() - moment(a.Date).toDate().valueOf()
+      (a, b) => moment(b.Date).toDate().valueOf() - moment(a.Date).toDate().valueOf()
     );
-};
+}
 
 interface RoutedStudentSet {
   id?: string;
@@ -94,26 +95,26 @@ export default function Screening() {
   const [chartOptions, setChartOptions] = useState({});
 
   // Limit scope if not an admin
-  const queryString = user && !adminFlag ? ["creator", "==", user.uid] : null;
-  const orderString = null;
+  const queryString = user && !adminFlag ? ["creator", "==", user.uid] : undefined;
+  const orderString = undefined;
 
   const { additionDocuments } = useFirebaseCollectionAddition(
-    id,
+    id!,
     queryString,
     orderString
   );
   const { subtractionDocuments } = useFirebaseCollectionSubtraction(
-    id,
+    id!,
     queryString,
     orderString
   );
   const { multiplicationDocuments } = useFirebaseCollectionMultiplication(
-    id,
+    id!,
     queryString,
     orderString
   );
   const { divisionDocuments } = useFirebaseCollectionDivision(
-    id,
+    id!,
     queryString,
     orderString
   );

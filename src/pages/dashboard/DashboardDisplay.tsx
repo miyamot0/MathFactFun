@@ -24,8 +24,8 @@ export default function Dashboard() {
   const { user, adminFlag } = useAuthorizationContext();
 
   // Limit scope if not an admin
-  const queryString = user && !adminFlag ? ["creator", "==", user.uid] : null;
-  const orderString = null;
+  const queryString = user && !adminFlag ? ["creator", "==", user.uid] : undefined;
+  const orderString = undefined;
 
   const { documents, error } = useFirebaseCollection(
     "students",
@@ -51,7 +51,7 @@ export default function Dashboard() {
         case "All":
           return true;
         case "Mine":
-          return document.creator === user.uid;
+          return document.creator === user!.uid;
         case "K":
         case "1st":
         case "2nd":

@@ -147,7 +147,7 @@ export default function CreateBulk() {
         currentErrorApproach: currentErrorApproach!.value,
         currentSRApproach: currentSRApproach!.value,
         currentBenchmarking: currentBenchmarking.map(
-          (benchmark) => benchmark.label
+          (benchmark: any) => benchmark.label
         ),
         completedBenchmark: [],
         creator: id,
@@ -198,14 +198,14 @@ export default function CreateBulk() {
           <span>Current Grade for Student(s)</span>
           <Select
             options={Grades}
-            onChange={(option) => setCurrentGrade(option)}
+            onChange={(option) => setCurrentGrade(option!)}
           />
         </label>
         <label>
           <span>Target(s) For Benchmarking</span>
           <Select
             options={CoreOperations}
-            onChange={(option) => setCurrentBenchmarking(option)}
+            onChange={(option) => setCurrentBenchmarking(option!)}
             value={currentBenchmarking}
             isMulti={true}
           />
@@ -214,7 +214,7 @@ export default function CreateBulk() {
           <span>Target For Intervention</span>
           <Select
             options={Operations}
-            onChange={(option) => setCurrentTarget(option)}
+            onChange={(option) => setCurrentTarget(option!)}
             value={currentTarget}
           />
         </label>
@@ -222,7 +222,7 @@ export default function CreateBulk() {
           <span>Intervention Approach</span>
           <Select
             options={InterventionApproach}
-            onChange={(option) => setCurrentApproach(option)}
+            onChange={(option) => setCurrentApproach(option!)}
             value={currentApproach}
           />
         </label>
@@ -230,7 +230,7 @@ export default function CreateBulk() {
           <span>Error Correction Procedures</span>
           <Select
             options={ErrorCorrection}
-            onChange={(option) => setCurrentErrorApproach(option)}
+            onChange={(option) => setCurrentErrorApproach(option!)}
             value={currentErrorApproach}
           />
         </label>
@@ -238,7 +238,7 @@ export default function CreateBulk() {
           <span>Reinforcement Procedures</span>
           <Select
             options={Contingencies}
-            onChange={(option) => setCurrentSRApproach(option)}
+            onChange={(option) => setCurrentSRApproach(option!)}
             value={currentSRApproach}
           />
         </label>

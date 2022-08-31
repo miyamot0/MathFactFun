@@ -12,7 +12,7 @@
 
 import React from "react";
 import { useState } from "react";
-import Select, { GroupBase, MultiValue, SingleValue } from "react-select";
+import Select, { MultiValue } from "react-select";
 
 import { timestamp } from "../../firebase/config";
 import { useAuthorizationContext } from "../../context/useAuthorizationContext";
@@ -28,14 +28,7 @@ import {
 } from "../../maths/Facts";
 import { StudentModel } from "../../models/StudentModel";
 
-
 type SingleOptionType = { label: string, value: string }
-
-//import ValueType from 'react-select';
-//import { ActionMeta } from 'react-select';
-//type OnSingleChange = (value: ValueType, actionMeta: ActionMeta<SingleOptionType>) => void;
-
-//type OnChange = (value: ValueType<MyOptionType>, actionMeta: ActionMeta<MyOptionType>) => void;
 
 const CreateFormStyle = {
   maxWidth: "600px",
@@ -60,7 +53,7 @@ export default function Create() {
     value: "N/A",
     label: "No Current Intervention",
   });
-  const [currentBenchmarking, setCurrentBenchmarking] = useState<any>();
+  const [currentBenchmarking, setCurrentBenchmarking] = useState<MultiValue<SingleOptionType>>();
   const [currentTarget, setCurrentTarget] = useState<SingleOptionType>({
     value: "N/A",
     label: "No Current Target",
@@ -144,7 +137,7 @@ export default function Create() {
     studentInformation.data.currentErrorApproach = currentErrorApproach!.value;
     studentInformation.data.currentSRApproach = currentSRApproach!.value;
     studentInformation.data.currentBenchmarking = currentBenchmarking!.map(
-      (benchmark) => benchmark.label
+      (benchmark: SingleOptionType) => benchmark.label
     );
     studentInformation.data.creator = user!.uid;
     studentInformation.data.dueDate = timestamp.fromDate(new Date(dueDate));
@@ -199,16 +192,14 @@ export default function Create() {
           <span>Current Grade</span>
           <Select
             options={Grades}
-            onChange={(option) => setCurrentGrade(option)}
+            onChange={(option) => setCurrentGrade(option!)}
           />
         </label>
         <label>
           <span>Target For Benchmarking</span>
           <Select
             options={CoreOperations}
-            onChange={(option: MultiValue<any>) => {
-              setCurrentBenchmarking(option)
-            }}
+            onChange={(option: MultiValue<SingleOptionType>) => setCurrentBenchmarking(option)}
             value={currentBenchmarking}
             isMulti={true}
           />
@@ -217,7 +208,7 @@ export default function Create() {
           <span>Target For Intervention</span>
           <Select
             options={Operations}
-            onChange={(option) => setCurrentTarget(option)}
+            onChange={(option) => setCurrentTarget(option!)}
             value={currentTarget}
           />
         </label>
@@ -225,7 +216,7 @@ export default function Create() {
           <span>Intervention Approach</span>
           <Select
             options={InterventionApproach}
-            onChange={(option) => setCurrentApproach(option)}
+            onChange={(option) => setCurrentApproach(option!)}
             value={currentApproach}
           />
         </label>
@@ -233,7 +224,7 @@ export default function Create() {
           <span>Error Correction Procedures</span>
           <Select
             options={ErrorCorrection}
-            onChange={(option) => setCurrentErrorApproach(option)}
+            onChange={(option) => setCurrentErrorApproach(option!)}
             value={currentErrorApproach}
           />
         </label>
@@ -241,7 +232,7 @@ export default function Create() {
           <span>Reinforcement Procedures</span>
           <Select
             options={Contingencies}
-            onChange={(option) => setCurrentSRApproach(option)}
+            onChange={(option) => setCurrentSRApproach(option!)}
             value={currentSRApproach}
           />
         </label>

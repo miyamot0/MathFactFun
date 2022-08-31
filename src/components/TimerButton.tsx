@@ -93,6 +93,6 @@ function Timer({
 }
 
 export default Timer;
-function speak(msg: any) {
+function speak(msg: string) {
   throw new Error("Function not implemented.");
 }
