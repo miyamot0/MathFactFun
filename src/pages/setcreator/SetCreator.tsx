@@ -13,8 +13,8 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { useFirebaseDocument } from "../../firebase/useFirebaseDocument";
-import { useFirebaseCollection } from "../../firebase/useFirebaseCollection";
+import { useFirebaseDocument2 } from "../../firebase/useFirebaseDocument";
+import { useFirebaseCollection2 } from "../../firebase/useFirebaseCollection";
 import { useFirestore } from "../../firebase/useFirestore";
 import { FactsOnFire } from "../../maths/Mind";
 import Select from "react-select";
@@ -34,6 +34,26 @@ import {
   PerformanceDataInterface,
   StudentDataInterface,
 } from "../../firebase/types/GeneralTypes";
+import {
+  DragColumnsInterface,
+  FactStructure,
+  ItemHistory,
+  ItemMetrics,
+  SetItem,
+} from "./types/SetCreatorTypes";
+import {
+  RoutedIdTargetParam,
+  SingleOptionType,
+} from "../CommonTypes/CommonPageTypes";
+import {
+  formatBackgroundColor,
+  formatTextBox,
+  generateItemHistory,
+  getRelevantCCCSet,
+  loadMathFacts,
+  populateColumnMetrics,
+  StartingColumnValues,
+} from "./functionality/SetCreatorBehavior";
 
 const TitleStyle = {
   color: "#444",
@@ -73,40 +93,6 @@ const DropContainer = {
   flexDirection: "column" as const,
   alignItems: "center" as const,
 };
-
-type SingleOptionType = { label: string; value: string };
-
-interface FactStructure {
-  Answer: string;
-  id: string;
-}
-
-interface ItemHistory {
-  FactString: string;
-  X: number;
-  Y: number;
-  Latency: number;
-  AverageCorrect: number;
-  Correct: number;
-  Total: number;
-}
-
-interface SetItem {
-  Answer: string;
-  id: string;
-  OTRs: number;
-  Accuracy: number;
-  Latency: number;
-}
-
-interface DragColumnContents {
-  name: string;
-  items: SetItem[];
-}
-
-interface DragColumnsInterface {
-  [key: string]: DragColumnContents | null;
-}
 
 /** onDragEnd
  *
@@ -188,100 +174,19 @@ function onDragEnd(
   }
 }
 
-/** loadMathFacts
- *
- * Load relevant math facts
- *
- * @param {StudentDataInterface} student Student document from firestore
- * @returns {Array} Mind facts
- */
-function loadMathFacts(
-  student: StudentDataInterface | null
-): FactStructure[][] {
-  let factsOnFire = FactsOnFire.Addition;
-
-  switch (student!.currentTarget) {
-    case "Addition":
-      factsOnFire = FactsOnFire.Addition;
-      break;
-    case "Subtraction":
-      factsOnFire = FactsOnFire.Subtraction;
-      break;
-    case "Multiplication":
-      factsOnFire = FactsOnFire.Multiplication;
-      break;
-    case "Division":
-      factsOnFire = FactsOnFire.Division;
-      break;
-    default:
-      factsOnFire = FactsOnFire.Addition;
-      break;
-  }
-
-  return factsOnFire.map(function (array, setNum) {
-    return array.map(function (answer, posInArray) {
-      return {
-        Answer: answer,
-        id: `${answer}:${setNum}:${posInArray}`,
-      } as FactStructure;
-    });
-  });
-}
-
-/** formatTextBox
- *
- * Format text output regarding decimal points
- *
- * @param {number} entry Value supplied
- * @param {number} dec Decimal points
- * @returns {string} Formatted string
- */
-function formatTextBox(entry: number, dec: number) {
-  if (entry === undefined) {
-    return "---";
-  } else {
-    return entry.toFixed(dec);
-  }
-}
-
-/** formatBackgroundColor
- *
- * Formats the background color based on criteria
- *
- * @param {SetItem} entry Summarized math fact info
- * @returns {String} Color for background
- */
-const formatBackgroundColor = (entry: SetItem) => {
-  let backgroundColor = "#456C86";
-
-  if (
-    entry.OTRs === undefined ||
-    entry.Accuracy === undefined ||
-    entry.Latency === undefined
-  ) {
-    return backgroundColor;
-  }
-
-  if (entry.OTRs > 5 && entry.Accuracy > 80 && entry.Latency < 10) {
-    return "#42c966";
-  }
-
-  return backgroundColor;
-};
-
-interface RoutedStudentSet {
-  id?: string;
-  target?: string;
-}
-
 export default function SetCreator() {
-  const { target, id } = useParams<RoutedStudentSet>();
-  const { document } = useFirebaseDocument("students", id);
-  const { documents } = useFirebaseCollection(
+  const { target, id } = useParams<RoutedIdTargetParam>();
+  const { document } = useFirebaseDocument2<StudentDataInterface>(
+    "students",
+    id
+  );
+
+  const { documents } = useFirebaseCollection2<PerformanceDataInterface>(
     `performances/${target}/${id}`,
     undefined,
     undefined
   );
+
   const { updateDocument, response } = useFirestore(
     "students",
     undefined,
@@ -294,44 +199,22 @@ export default function SetCreator() {
   const [assignedSet, setAssignedSet] = useState<SingleOptionType>();
   const [itemHistory, setItemHistory] = useState<ItemHistory[]>();
 
-  const [columns, setColumns] = useState<DragColumnsInterface>({
-    Available: {
-      name: "Available",
-      items: [],
-    },
-    Targeted: {
-      name: "Targeted",
-      items: [],
-    },
-    Mastered: {
-      name: "Mastered",
-      items: [],
-    },
-    Skipped: {
-      name: "Skipped",
-      items: [],
-    },
-  });
+  const [columns, setColumns] =
+    useState<DragColumnsInterface>(StartingColumnValues);
 
   useEffect(() => {
     if (documents) {
       const mappedDocument = documents.map((doc) => {
-        // Obj saved on FS
-        const docAsObject = doc as PerformanceDataInterface;
-
         return {
-          // Pull in entries
-          Items: docAsObject.entries as FactDataInterface[],
-          Date: new Date(docAsObject.dateTimeStart!),
-          ShortDate: new Date(docAsObject.dateTimeStart!).toLocaleDateString(
-            "en-US"
-          ),
-          Errors: docAsObject.errCount,
-          DigitsCorrect: docAsObject.correctDigits,
-          DigitsCorrectInitial: docAsObject.nCorrectInitial,
-          DigitsTotal: docAsObject.totalDigits,
-          SessionDuration: docAsObject.sessionDuration,
-        };
+          Items: doc.entries as FactDataInterface[],
+          Date: new Date(doc.dateTimeStart!),
+          ShortDate: new Date(doc.dateTimeStart!).toLocaleDateString("en-US"),
+          Errors: doc.errCount,
+          DigitsCorrect: doc.correctDigits,
+          DigitsCorrectInitial: doc.nCorrectInitial,
+          DigitsTotal: doc.totalDigits,
+          SessionDuration: doc.sessionDuration,
+        } as ItemMetrics;
       });
 
       // Pull out fact models alone, array of array
@@ -347,31 +230,11 @@ export default function SetCreator() {
         .filter(OnlyUnique)
         .sort();
 
-      const uniqueQuants = uniqueProblems.map((itemString) => {
-        const relevantItems = flatItemSummaries.filter(
-          (obj) => obj.factString === itemString
-        );
-
-        const itemsCorrect = relevantItems
-          .map((item) => (item.factCorrect ? 1 : 0) as number)
-          .reduce(Sum);
-
-        const itemLatency = relevantItems
-          .map((item) => Math.abs(item.latencySeconds!))
-          .reduce(Sum);
-
-        return {
-          FactString: itemString,
-          X: parseInt(itemString.split(GetOperatorFromLabel(target!))[0]),
-          Y: parseInt(
-            itemString.split(GetOperatorFromLabel(target!))[1].split("=")[0]
-          ),
-          Latency: itemLatency / relevantItems.length,
-          AverageCorrect: (itemsCorrect / relevantItems.length) * 100,
-          Correct: itemsCorrect,
-          Total: relevantItems.length,
-        };
-      }) as ItemHistory[];
+      const uniqueQuants = generateItemHistory(
+        uniqueProblems,
+        flatItemSummaries,
+        target
+      );
 
       setItemHistory(uniqueQuants);
     }
@@ -415,9 +278,7 @@ export default function SetCreator() {
     if (document && itemHistory && !loadedData) {
       // Loads ALL facts
 
-      const mapped: FactStructure[][] = loadMathFacts(
-        document as StudentDataInterface
-      );
+      const mapped: FactStructure[][] = loadMathFacts(document);
       const mappedReduced: FactStructure[] = mapped.reduce(
         (accumulator, value) => accumulator.concat(value)
       );
@@ -449,87 +310,24 @@ export default function SetCreator() {
 
       var newColumns = columns;
 
-      const currTargetedSets = (
-        document as StudentDataInterface
-      ).factsTargeted.map((element) => {
-        let otrs = 0,
-          accuracy = 0,
-          latency = 0;
-
-        const releventResult = itemHistory.filter(
-          (obj) => obj.FactString === element.split(":")[0]
-        );
-
-        if (releventResult && releventResult.length === 1) {
-          otrs = releventResult[0].Total;
-          accuracy = releventResult[0].AverageCorrect;
-          latency = releventResult[0].Latency;
-        }
-
-        return {
-          Answer: element.split(":")[0],
-          id: element,
-          OTRs: otrs,
-          Accuracy: accuracy,
-          Latency: latency,
-        };
-      });
+      const currTargetedSets = populateColumnMetrics(
+        document.factsTargeted,
+        itemHistory
+      );
 
       newColumns.Targeted!.items = currTargetedSets;
 
-      const currMasteredSets = (
-        document as StudentDataInterface
-      ).factsMastered.map((element) => {
-        let otrs = 0,
-          accuracy = 0,
-          latency = 0;
-
-        const releventResult = itemHistory.filter(
-          (obj) => obj.FactString === element.split(":")[0]
-        );
-
-        if (releventResult && releventResult.length === 1) {
-          otrs = releventResult[0].Total;
-          accuracy = releventResult[0].AverageCorrect;
-          latency = releventResult[0].Latency;
-        }
-
-        return {
-          Answer: element.split(":")[0],
-          id: element,
-          OTRs: otrs,
-          Accuracy: accuracy,
-          Latency: latency,
-        };
-      });
+      const currMasteredSets = populateColumnMetrics(
+        document.factsMastered,
+        itemHistory
+      );
 
       newColumns.Mastered!.items = currMasteredSets;
 
-      const currSkippedSets = (
-        document as StudentDataInterface
-      ).factsSkipped.map((element) => {
-        let otrs = 0,
-          accuracy = 0,
-          latency = 0;
-
-        const releventResult = itemHistory.filter(
-          (obj) => obj.FactString === element.split(":")[0]
-        );
-
-        if (releventResult && releventResult.length === 1) {
-          otrs = releventResult[0].Total;
-          accuracy = releventResult[0].AverageCorrect;
-          latency = releventResult[0].Latency;
-        }
-
-        return {
-          Answer: element.split(":")[0],
-          id: element,
-          OTRs: otrs,
-          Accuracy: accuracy,
-          Latency: latency,
-        };
-      });
+      const currSkippedSets = populateColumnMetrics(
+        document.factsSkipped,
+        itemHistory
+      );
 
       newColumns.Skipped!.items = currSkippedSets;
 
@@ -631,9 +429,7 @@ export default function SetCreator() {
     let preSkipped = columns.Skipped!.items;
     let preMastered = columns.Mastered!.items;
 
-    const mapped = loadMathFacts(document as StudentDataInterface)[
-      setArray
-    ].map((item) => item.id);
+    const mapped = loadMathFacts(document)[setArray].map((item) => item.id);
 
     columns.Targeted!.items.forEach((item) => {
       preAvailable.push(item);
@@ -707,35 +503,13 @@ export default function SetCreator() {
     }
   }
 
-  /** getRelevantCCCSet
-   *
-   * Get the relevant set of problems from MIND
-   *
-   * @param {String} target Type of problem
-   * @returns {Object} Bank of math fact problems
-   */
-  function getRelevantCCCSet(target: string): string[][] {
-    switch (target) {
-      case "Addition":
-        return FactsOnFire.Addition;
-      case "Subtraction":
-        return FactsOnFire.Subtraction;
-      case "Multiplication":
-        return FactsOnFire.Multiplication;
-      case "Division":
-        return FactsOnFire.Division;
-      default:
-        return FactsOnFire.Addition;
-    }
-  }
-
   const relevantFOFSets = getRelevantCCCSet(target!);
 
   return (
     <div style={SetContainer}>
       <h2 style={TitleStyle}>
-        Item Set: {document ? (document as StudentDataInterface).name : ""} (
-        {document ? (document as StudentDataInterface).currentTarget : ""})
+        Item Set: {document ? document.name : ""} (
+        {document ? document.currentTarget : ""})
       </h2>
       <div style={SetEditForm}>
         <form>
@@ -801,7 +575,7 @@ export default function SetCreator() {
             onDragEnd(result, columns, setColumns, setIncomingChange)
           }
         >
-          {Object.entries(columns).map(([columnId, column], index) => {
+          {Object.entries(columns).map(([columnId, column]) => {
             return (
               <div style={DropContainer} key={columnId}>
                 <h2 style={HeadingStyle}>{column!.name}</h2>
