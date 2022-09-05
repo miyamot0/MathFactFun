@@ -28,7 +28,7 @@ import {
 } from "../../maths/Facts";
 import { StudentModel } from "../../models/StudentModel";
 
-type SingleOptionType = { label: string, value: string }
+type SingleOptionType = { label: string; value: string };
 
 const CreateFormStyle = {
   maxWidth: "600px",
@@ -37,7 +37,11 @@ const CreateFormStyle = {
 // Page to create new students
 export default function Create() {
   const history = useHistory();
-  const { addDocument, response } = useFirestore("students", undefined, undefined);
+  const { addDocument, response } = useFirestore(
+    "students",
+    undefined,
+    undefined
+  );
   const { user } = useAuthorizationContext();
 
   // field values
@@ -47,21 +51,23 @@ export default function Create() {
 
   const [currentGrade, setCurrentGrade] = useState<SingleOptionType>({
     value: "",
-    label: ""
+    label: "",
   });
   const [currentApproach, setCurrentApproach] = useState<SingleOptionType>({
     value: "N/A",
     label: "No Current Intervention",
   });
-  const [currentBenchmarking, setCurrentBenchmarking] = useState<MultiValue<SingleOptionType>>();
+  const [currentBenchmarking, setCurrentBenchmarking] =
+    useState<MultiValue<SingleOptionType>>();
   const [currentTarget, setCurrentTarget] = useState<SingleOptionType>({
     value: "N/A",
     label: "No Current Target",
   });
-  const [currentErrorApproach, setCurrentErrorApproach] = useState<SingleOptionType>({
-    value: ErrorHandling.EveryTime,
-    label: "Give feedback every time",
-  });
+  const [currentErrorApproach, setCurrentErrorApproach] =
+    useState<SingleOptionType>({
+      value: ErrorHandling.EveryTime,
+      label: "Give feedback every time",
+    });
   const [currentSRApproach, setCurrentSRApproach] = useState<SingleOptionType>({
     value: "None",
     label: "No programmed contingencies",
@@ -129,6 +135,9 @@ export default function Create() {
     laggedDate.setDate(laggedDate.getDate() - 1);
 
     let studentInformation = StudentModel();
+
+    /*
+    HACK
     studentInformation.data.name = name;
     studentInformation.data.details = details;
     studentInformation.data.currentGrade = currentGrade.value;
@@ -143,6 +152,8 @@ export default function Create() {
     studentInformation.data.dueDate = timestamp.fromDate(new Date(dueDate));
     studentInformation.data.lastActivity = timestamp.fromDate(laggedDate);
     studentInformation.data.createdAt = timestamp.fromDate(new Date());
+
+    */
 
     // Sanity check for all required components
     if (!studentInformation.CheckObject()) {
@@ -199,7 +210,9 @@ export default function Create() {
           <span>Target For Benchmarking</span>
           <Select
             options={CoreOperations}
-            onChange={(option: MultiValue<SingleOptionType>) => setCurrentBenchmarking(option)}
+            onChange={(option: MultiValue<SingleOptionType>) =>
+              setCurrentBenchmarking(option)
+            }
             value={currentBenchmarking}
             isMulti={true}
           />

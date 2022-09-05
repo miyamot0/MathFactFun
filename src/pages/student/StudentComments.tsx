@@ -17,16 +17,10 @@ import { useAuthorizationContext } from "../../context/useAuthorizationContext";
 import { useFirestore } from "../../firebase/useFirestore";
 
 import "./StudentComments.css";
-import {
-  CommentInterface,
-  StudentDataInterface,
-} from "../../firebase/types/GeneralTypes";
+import { CommentInterface } from "../../firebase/types/GeneralTypes";
+import { StudentWidgetInterface } from "./Types/StudentTypes";
 
-export default function StudentComments({
-  student,
-}: {
-  student: StudentDataInterface;
-}) {
+export default function StudentComments({ student }: StudentWidgetInterface) {
   const { updateDocument, response } = useFirestore(
     "students",
     undefined,
@@ -77,7 +71,7 @@ export default function StudentComments({
 
     if (response) {
       const newCommentObj: CommentInterface[] = student.comments.filter(
-        (com) => com.id !== currentComment.id
+        (com: CommentInterface) => com.id !== currentComment.id
       );
 
       await updateDocument(student.id as string, {
@@ -92,7 +86,7 @@ export default function StudentComments({
 
       <ul>
         {student.comments.length > 0 &&
-          student.comments.map((comment) => (
+          student.comments.map((comment: CommentInterface) => (
             <li key={comment.id} style={{ position: "relative" }}>
               {user && adminFlag && (
                 <div

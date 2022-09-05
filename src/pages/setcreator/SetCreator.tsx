@@ -29,9 +29,11 @@ import {
   GetOperatorFromLabel,
   Sum,
 } from "../../utilities/LabelHelper";
-import { PerformanceDataInterface } from "../../models/PerformanceModel";
-import { FactDataInterface } from "../../models/FactEntryModel";
-import { StudentDataInterface } from "../../firebase/types/GeneralTypes";
+import {
+  FactDataInterface,
+  PerformanceDataInterface,
+  StudentDataInterface,
+} from "../../firebase/types/GeneralTypes";
 
 const TitleStyle = {
   color: "#444",

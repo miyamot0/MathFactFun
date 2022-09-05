@@ -6,34 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import firebase from "firebase/app";
+import { PerformanceDataInterface } from "../firebase/types/GeneralTypes";
 
-import { FactDataInterface, FactModelInterface } from "./FactEntryModel";
-
-export interface PerformanceDataInterface {
-  // Numerics
-  correctDigits: number;
-  errCount: number;
-  nCorrectInitial: number;
-  nRetries: number;
-  sessionDuration: number;
-  setSize: number;
-  totalDigits: number;
-
-  // Timestamps
-  createdAt?: firebase.firestore.Timestamp | null;
-
-  // Arrays
-  entries: FactModelInterface[] | FactDataInterface[];
-
-  // Strings
-  id: string | undefined | null;
-  creator: string | undefined;
-  target: string | undefined;
-  method: string | undefined;
-  dateTimeEnd: string | undefined;
-  dateTimeStart: string | undefined;
-}
+import { FactModelInterface } from "./FactEntryModel";
 
 export interface PerformanceModelInterface {
   data: PerformanceDataInterface;
@@ -68,36 +43,22 @@ export function PerformanceModel(): PerformanceModelInterface {
       method: undefined,
     },
     CheckObject: function () {
-      if (typeof this.data.correctDigits !== "number")
-        return false;
-      if (typeof this.data.errCount !== "number")
-        return false;
-      if (typeof this.data.nCorrectInitial !== "number")
-        return false;
-      if (typeof this.data.nRetries !== "number")
-        return false;
-      if (typeof this.data.sessionDuration !== "number")
-        return false;
-      if (typeof this.data.setSize !== "number")
-        return false;
-      if (typeof this.data.totalDigits !== "number")
-        return false;
+      if (typeof this.data.correctDigits !== "number") return false;
+      if (typeof this.data.errCount !== "number") return false;
+      if (typeof this.data.nCorrectInitial !== "number") return false;
+      if (typeof this.data.nRetries !== "number") return false;
+      if (typeof this.data.sessionDuration !== "number") return false;
+      if (typeof this.data.setSize !== "number") return false;
+      if (typeof this.data.totalDigits !== "number") return false;
 
-      if (typeof this.data.id !== "string")
-        return false;
-      if (typeof this.data.creator !== "string")
-        return false;
-      if (typeof this.data.target !== "string")
-        return false;
-      if (typeof this.data.method !== "string")
-        return false;
-      if (typeof this.data.dateTimeEnd !== "string")
-        return false;
-      if (typeof this.data.dateTimeStart !== "string")
-        return false;
+      if (typeof this.data.id !== "string") return false;
+      if (typeof this.data.creator !== "string") return false;
+      if (typeof this.data.target !== "string") return false;
+      if (typeof this.data.method !== "string") return false;
+      if (typeof this.data.dateTimeEnd !== "string") return false;
+      if (typeof this.data.dateTimeStart !== "string") return false;
 
-      if (!(this.data.createdAt !== null))
-        return false;
+      if (!(this.data.createdAt !== null)) return false;
 
       for (let i = 0; i < this.data.entries.length; i++) {
         if (!(this.data.entries[i] as FactModelInterface).CheckObject()) {
@@ -109,7 +70,12 @@ export function PerformanceModel(): PerformanceModelInterface {
     },
     SubmitObject: function (): PerformanceDataInterface {
       let filteredData = this.data as PerformanceDataInterface;
-      filteredData.entries = this.data.entries.map((entry) => (entry as FactModelInterface).data);
+      /*
+      HACK
+      filteredData.entries = this.data.entries.map(
+        (entry) => (entry as FactModelInterface).data
+      );
+      */
 
       return filteredData;
     },

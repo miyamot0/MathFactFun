@@ -18,10 +18,7 @@ import { GetApproachStringFromLabel } from "../utilities/LabelHelper";
 
 import "./StudentList.css";
 import { StudentDataInterface } from "../firebase/types/GeneralTypes";
-
-interface StudentListInterface {
-  students: StudentDataInterface[];
-}
+import { StudentListInterface } from "../pages/dashboard/Types/DashboardTypes";
 
 /** checkIfProgrammingCurrent
  *
@@ -83,8 +80,6 @@ function checkIfBenchmarksCompleted(student: StudentDataInterface): boolean {
 function generateWrapper(student: StudentDataInterface): JSX.Element {
   const isBenchmarkingCurrent = checkIfProgrammingCurrent(student.dueDate);
   const isBenchmarkingCompleted = checkIfBenchmarksCompleted(student);
-
-  console.log(student);
 
   if (isBenchmarkingCurrent) {
     return (

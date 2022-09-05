@@ -7,24 +7,7 @@
  */
 
 import firebase from "firebase/app";
-
-export interface FactDataInterface {
-  // Bools
-  factCorrect?: boolean | null;
-  initialTry?: boolean | null;
-
-  // Strings
-  factType?: string | undefined;
-  factString?: string | undefined;
-  factEntry?: string | undefined;
-
-  // Numerics
-  latencySeconds?: number | null;
-
-  // Timestamps
-  dateTimeEnd?: firebase.firestore.Timestamp;
-  dateTimeStart?: firebase.firestore.Timestamp;
-}
+import { FactDataInterface } from "../firebase/types/GeneralTypes";
 
 export interface FactModelInterface {
   data: FactDataInterface;

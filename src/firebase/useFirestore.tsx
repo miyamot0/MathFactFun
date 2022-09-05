@@ -11,10 +11,12 @@
  */
 
 import { useReducer, useEffect, useState } from "react";
-import { PerformanceDataInterface } from "../models/PerformanceModel";
 import { UserDataInterface } from "../models/UserModel";
 import { projectFirestore, timestamp } from "./config";
-import { StudentDataInterface } from "./types/GeneralTypes";
+import {
+  PerformanceDataInterface,
+  StudentDataInterface,
+} from "./types/GeneralTypes";
 
 export enum FirestoreCollections {
   Students = "students",

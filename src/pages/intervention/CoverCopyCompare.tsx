@@ -32,7 +32,6 @@ import {
 import { RelevantKeys, InterventionFormat } from "../../maths/Facts";
 import { DetermineErrorCorrection } from "../../utilities/Logic";
 import {
-  PerformanceDataInterface,
   PerformanceModel,
   PerformanceModelInterface,
 } from "../../models/PerformanceModel";
@@ -43,7 +42,10 @@ import {
 
 // styles
 import "./CoverCopyCompare.css";
-import { StudentDataInterface } from "../../firebase/types/GeneralTypes";
+import {
+  PerformanceDataInterface,
+  StudentDataInterface,
+} from "../../firebase/types/GeneralTypes";
 
 const ActionSequence = {
   Entry: "ActionSequence.Entry",
@@ -248,6 +250,9 @@ export default function CoverCopyCompare() {
 
     let performanceInformation: PerformanceModelInterface = PerformanceModel();
 
+    /*
+    HACK
+
     // Strings
     performanceInformation.data.id = document!.id;
     performanceInformation.data.creator = user!.uid;
@@ -275,6 +280,8 @@ export default function CoverCopyCompare() {
 
     // Arrays
     performanceInformation.data.entries = finalEntries!;
+
+    */
 
     // Sanity check for all required components
     if (!performanceInformation.CheckObject()) {
@@ -395,6 +402,9 @@ export default function CoverCopyCompare() {
         setIsOnInitialTry(true);
 
         let currentItem = FactEntryModel();
+
+        /*
+        HACK
         currentItem.data.factCorrect = isMatching;
         currentItem.data.initialTry = isOnInitialTry;
 
@@ -410,6 +420,7 @@ export default function CoverCopyCompare() {
         currentItem.data.dateTimeStart = timestamp.fromDate(
           new Date(holderPreTime!)
         );
+        */
 
         // Note: isusue where state change not fast enough to catch latest
         if (workingData!.length === 0) {

@@ -30,10 +30,7 @@ import {
 import { RelevantKeys } from "../../maths/Facts";
 
 import { FactsOnFire } from "../../maths/Mind";
-import {
-  PerformanceDataInterface,
-  PerformanceModel,
-} from "../../models/PerformanceModel";
+import { PerformanceModel } from "../../models/PerformanceModel";
 import { FactEntryModel } from "../../models/FactEntryModel";
 
 import { FactModelInterface } from "../../models/FactEntryModel";
@@ -41,7 +38,10 @@ import { PerformanceModelInterface } from "../../models/PerformanceModel";
 
 // Styles
 import "../intervention/ExplicitTiming.css";
-import { StudentDataInterface } from "../../firebase/types/GeneralTypes";
+import {
+  PerformanceDataInterface,
+  StudentDataInterface,
+} from "../../firebase/types/GeneralTypes";
 
 const ActionSequence = {
   Start: "ActionSequence.Start",
@@ -322,6 +322,9 @@ export default function Benchmark() {
 
     let performanceInformation: PerformanceModelInterface = PerformanceModel();
 
+    /*
+    HACK
+
     // Strings
     performanceInformation.data.id = document!.id;
     performanceInformation.data.creator = user!.uid;
@@ -347,6 +350,8 @@ export default function Benchmark() {
 
     // Arrays
     performanceInformation.data.entries = finalEntries!;
+
+    */
 
     // Sanity check for all required components
     if (!performanceInformation.CheckObject()) {
@@ -471,6 +476,9 @@ export default function Benchmark() {
     setNumberTrials(numberTrials + 1);
 
     let currentItem = FactEntryModel();
+
+    /*
+    HACK
     currentItem.data.factCorrect = isMatching;
     currentItem.data.initialTry = isOnInitialTry;
 
@@ -487,6 +495,7 @@ export default function Benchmark() {
     currentItem.data.dateTimeStart = timestamp.fromDate(
       new Date(holderPreTime!)
     );
+    */
 
     setIsOnInitialTry(true);
 

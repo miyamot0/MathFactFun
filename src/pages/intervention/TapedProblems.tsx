@@ -36,7 +36,6 @@ import { RelevantKeys, InterventionFormat } from "../../maths/Facts";
 
 import { DetermineErrorCorrection } from "../../utilities/Logic";
 import {
-  PerformanceDataInterface,
   PerformanceModel,
   PerformanceModelInterface,
 } from "../../models/PerformanceModel";
@@ -47,7 +46,10 @@ import {
 
 // styles
 import "./TapedProblems.css";
-import { StudentDataInterface } from "../../firebase/types/GeneralTypes";
+import {
+  PerformanceDataInterface,
+  StudentDataInterface,
+} from "../../firebase/types/GeneralTypes";
 
 const ActionSequence = {
   Start: "ActionSequence.Start",
@@ -247,6 +249,8 @@ export default function TapedProblems() {
 
     let performanceInformation: PerformanceModelInterface = PerformanceModel();
 
+    /*
+    HACK
     // Strings
     performanceInformation.data.id = document!.id;
     performanceInformation.data.creator = user!.uid;
@@ -274,6 +278,7 @@ export default function TapedProblems() {
 
     // Arrays
     performanceInformation.data.entries = finalEntries!;
+    */
 
     // Sanity check for all required components
 
@@ -394,6 +399,8 @@ export default function TapedProblems() {
       setNumberTrials(numberTrials + 1);
 
       let currentItem = FactEntryModel();
+      /*
+      HACK
       currentItem.data.factCorrect = isMatching;
       currentItem.data.initialTry = isOnInitialTry;
 
@@ -409,6 +416,7 @@ export default function TapedProblems() {
       currentItem.data.dateTimeStart = timestamp.fromDate(
         new Date(holderPreTime!)
       );
+      */
 
       setIsOnInitialTry(true);
 

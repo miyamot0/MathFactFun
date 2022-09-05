@@ -26,8 +26,10 @@ import moment from "moment";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import AnnotationsModule from "highcharts/modules/annotations";
-import { PerformanceDataInterface } from "../../models/PerformanceModel";
-import { FactDataInterface } from "../../models/FactEntryModel";
+import {
+  FactDataInterface,
+  PerformanceDataInterface,
+} from "../../firebase/types/GeneralTypes";
 
 require("highcharts/modules/annotations")(Highcharts);
 require("highcharts/modules/accessibility")(Highcharts);
@@ -103,14 +105,15 @@ interface RoutedStudentProgressSet {
   target?: string;
   method?: string;
   aim?: string;
-};
+}
 
 export default function ProgressMonitor() {
   const { id, target, method, aim } = useParams<RoutedStudentProgressSet>();
   const { user, adminFlag } = useAuthorizationContext();
 
   // Limit scope if not an admin
-  const queryString = user && !adminFlag ? ["creator", "==", user.uid] : undefined;
+  const queryString =
+    user && !adminFlag ? ["creator", "==", user.uid] : undefined;
   const orderString = undefined;
 
   const { documents } = useFirebaseCollection(
@@ -124,19 +127,21 @@ export default function ProgressMonitor() {
   useEffect(() => {
     if (documents) {
       // Generate object from document collection
-      const mappedDocument = (documents as PerformanceDataInterface[]).map((doc) => {
-        return {
-          Items: doc.entries as FactDataInterface[],
-          Date: new Date(doc.dateTimeStart!),
-          ShortDate: new Date(doc.dateTimeStart!).toLocaleDateString("en-US"),
-          Errors: doc.errCount,
-          DigitsCorrect: doc.correctDigits,
-          DigitsCorrectInitial: doc.nCorrectInitial,
-          DigitsTotal: doc.totalDigits,
-          SessionDuration: doc.sessionDuration,
-          Method: doc.method,
-        };
-      });
+      const mappedDocument = (documents as PerformanceDataInterface[]).map(
+        (doc) => {
+          return {
+            Items: doc.entries as FactDataInterface[],
+            Date: new Date(doc.dateTimeStart!),
+            ShortDate: new Date(doc.dateTimeStart!).toLocaleDateString("en-US"),
+            Errors: doc.errCount,
+            DigitsCorrect: doc.correctDigits,
+            DigitsCorrectInitial: doc.nCorrectInitial,
+            DigitsTotal: doc.totalDigits,
+            SessionDuration: doc.sessionDuration,
+            Method: doc.method,
+          };
+        }
+      );
 
       // Bring together all performances, by day
       const aggregatePerformancesDaily = mappedDocument
@@ -251,7 +256,9 @@ export default function ProgressMonitor() {
         //.filter((obj) => obj.Method === method)
         .map((items) => items.Items);
 
-      const flatItemSummaries: FactDataInterface[] = itemSummaries.reduce((accumulator, value) => accumulator.concat(value));
+      const flatItemSummaries: FactDataInterface[] = itemSummaries.reduce(
+        (accumulator, value) => accumulator.concat(value)
+      );
 
       // Extract unique problems targeted
       const uniqueMathFacts = flatItemSummaries

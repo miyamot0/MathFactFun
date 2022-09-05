@@ -14,6 +14,7 @@ import React from "react";
 import { useState } from "react";
 
 import "./Dashboards.css";
+import { StudentFilterInterface } from "./Types/DashboardTypes";
 
 const filterList = [
   "All",
@@ -27,15 +28,9 @@ const filterList = [
   "6th",
 ];
 
-interface CallbackInterface {
-  (arg0: string): void;
-}
-
-interface StudentFilterInterface {
-  changeFilter: CallbackInterface;
-}
-
-export default function StudentFilter({ changeFilter }: StudentFilterInterface) {
+export default function StudentFilter({
+  changeFilter,
+}: StudentFilterInterface) {
   const [currentFilter, setCurrentFilter] = useState("Mine");
 
   /** handleFilterEvent

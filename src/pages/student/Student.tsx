@@ -13,22 +13,19 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import StudentComments from "./StudentComments";
-import { useFirebaseDocument } from "../../firebase/useFirebaseDocument";
+import { useFirebaseDocument2 } from "../../firebase/useFirebaseDocument";
 
 import StudentSummary from "./StudentSummary";
 
 import "./Student.css";
 import { StudentDataInterface } from "../../firebase/types/GeneralTypes";
-
-interface RoutedStudent {
-  id?: string;
-}
+import { RoutedStudent } from "../CommonTypes/CommonPageTypes";
 
 export default function Student() {
   const { id } = useParams<RoutedStudent>();
 
-  console.log(id);
-  const { documentError, document } = useFirebaseDocument("students", id);
+  const { document, documentError } =
+    useFirebaseDocument2<StudentDataInterface>("students", id);
 
   if (documentError) {
     return <div className="error">{documentError}</div>;
@@ -40,8 +37,8 @@ export default function Student() {
 
   return (
     <div className="student-details-style">
-      <StudentSummary student={document as StudentDataInterface} />
-      <StudentComments student={document as StudentDataInterface} />
+      <StudentSummary student={document} />
+      <StudentComments student={document} />
     </div>
   );
 }

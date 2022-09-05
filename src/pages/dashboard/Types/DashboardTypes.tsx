@@ -1,0 +1,13 @@
+import { StudentDataInterface } from "../../../firebase/types/GeneralTypes";
+
+export interface CallbackInterface {
+  (arg0: string): void;
+}
+
+export interface StudentFilterInterface {
+  changeFilter: CallbackInterface;
+}
+
+export interface StudentListInterface {
+  students: StudentDataInterface[];
+}

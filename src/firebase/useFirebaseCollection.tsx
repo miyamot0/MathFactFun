@@ -18,17 +18,20 @@ import {
   WhereFilterOp,
   OrderByDirection,
 } from "@firebase/firestore-types";
-import { PerformanceDataInterface } from "../models/PerformanceModel";
 import { UserDataInterface } from "../models/UserModel";
 import {
-  CommentInterface,
-  CurrentObjectTypes,
+  CurrentObjectTypeArrays,
+  PerformanceDataInterface,
   PossibleCollectionType,
   StudentDataInterface,
   UseFirebaseCollection,
 } from "./types/GeneralTypes";
 import { FirestoreCollections } from "./useFirestore";
-import { commentConverter } from "./converters/GeneralConverters";
+import {
+  commentConverter,
+  performanceConverter,
+  studentConverter,
+} from "./converters/GeneralConverters";
 
 const CollectionError = "Unable to retrieve data";
 
@@ -46,7 +49,9 @@ export function useFirebaseCollection(
   queryString: string[] | undefined,
   orderString: string[] | undefined
 ): UseFirebaseCollection {
-  const [documents, setDocuments] = useState<PossibleCollectionType>(null);
+  const [documents, setDocuments] = useState<CurrentObjectTypeArrays | null>(
+    null
+  );
   const [error, setError] = useState<string>();
 
   const query = useRef(queryString).current;
@@ -66,17 +71,150 @@ export function useFirebaseCollection(
       ref = ref.orderBy(fieldPath, direction as OrderByDirection);
     }
 
-    if (collectionString === "-1") {
-      //ref = ref.withConverter(commentConverter);
+    if (collectionString === FirestoreCollections.Students) {
+      const unsubscribe = ref.withConverter(studentConverter).onSnapshot(
+        (snapshot) => {
+          setDocuments(
+            snapshot.docs.map((doc) => {
+              return {
+                ...doc.data(),
+                id: doc.id,
+              };
+            })
+          );
+          setError(undefined);
+        },
+        (error) => {
+          setError(CollectionError);
+        }
+      );
+
+      return () => unsubscribe();
     }
 
+    if (collectionString === FirestoreCollections.Performances) {
+      const unsubscribe = ref.withConverter(performanceConverter).onSnapshot(
+        (snapshot) => {
+          setDocuments(
+            snapshot.docs.map((doc) => {
+              return {
+                ...doc.data(),
+                id: doc.id,
+              };
+            })
+          );
+          setError(undefined);
+        },
+        (error) => {
+          setError(CollectionError);
+        }
+      );
+
+      return () => unsubscribe();
+    }
+  }, [collectionString, query, orderBy]);
+
+  return { documents, error };
+}
+
+export type CurrentObjectTypeArrays2 =
+  | StudentDataInterface[]
+  | PerformanceDataInterface[]
+  | UserDataInterface[]
+  | null;
+
+export interface UseFirebaseCollection2 {
+  documents: CurrentObjectTypeArrays | null;
+  error: string | undefined;
+}
+
+/** useFirebaseCollection
+ *
+ * Access a collection
+ *
+ * @param {string} collectionString collection address
+ * @param {string[]} queryString string array for query
+ * @param {string[]} orderString string array for order
+ * @returns {UseFirebaseCollection}
+ */
+export function useFirebaseCollection2<T>(
+  collectionString: string,
+  queryString: string[] | undefined,
+  orderString: string[] | undefined
+): {
+  documents: T[] | null;
+  error: string | undefined;
+} {
+  const [documents, setDocuments] = useState<T[] | null>(null);
+  const [error, setError] = useState<string>();
+
+  const query = useRef(queryString).current;
+  const orderBy = useRef(orderString).current;
+
+  useEffect(() => {
+    let ref: Query = projectFirestore.collection(collectionString);
+
+    if (query) {
+      const [fieldPath, opString, value] = query;
+
+      ref = ref.where(fieldPath, opString as WhereFilterOp, value);
+    }
+    if (orderBy) {
+      const [fieldPath, direction] = orderBy;
+
+      ref = ref.orderBy(fieldPath, direction as OrderByDirection);
+    }
+
+    if (collectionString === FirestoreCollections.Students) {
+      const unsubscribe = ref.withConverter(studentConverter).onSnapshot(
+        (snapshot) => {
+          setDocuments(
+            snapshot.docs.map((doc) => {
+              return {
+                ...doc.data(),
+                id: doc.id,
+              } as unknown as T;
+            })
+          );
+          setError(undefined);
+        },
+        (error) => {
+          setError(CollectionError);
+        }
+      );
+
+      return () => unsubscribe();
+    }
+
+    if (collectionString === FirestoreCollections.Performances) {
+      const unsubscribe = ref.withConverter(performanceConverter).onSnapshot(
+        (snapshot) => {
+          setDocuments(
+            snapshot.docs.map((doc) => {
+              return {
+                ...doc.data(),
+                id: doc.id,
+              } as unknown as T;
+            })
+          );
+          setError(undefined);
+        },
+        (error) => {
+          setError(CollectionError);
+        }
+      );
+
+      return () => unsubscribe();
+    }
+
+    /*
     const unsubscribe = ref.onSnapshot(
       (snapshot) => {
         let results = Array<CurrentObjectTypes | null>();
 
         snapshot.docs.forEach((doc) => {
           let preDoc = doc.data() as CurrentObjectTypes;
-          preDoc.id = doc.id;
+          //preDoc.id = doc.id;
           results.push(preDoc);
         });
 
@@ -95,6 +233,7 @@ export function useFirebaseCollection(
     );
 
     return () => unsubscribe();
+    */
   }, [collectionString, query, orderBy]);
 
   return { documents, error };

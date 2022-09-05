@@ -12,7 +12,7 @@
 
 import React from "react";
 import { useState } from "react";
-import { useFirebaseCollection } from "../../firebase/useFirebaseCollection";
+import { useFirebaseCollection2 } from "../../firebase/useFirebaseCollection";
 import { useAuthorizationContext } from "../../context/useAuthorizationContext";
 
 // Components
@@ -28,7 +28,7 @@ export default function Dashboard() {
     user && !adminFlag ? ["creator", "==", user.uid] : undefined;
   const orderString = undefined;
 
-  const { documents, error } = useFirebaseCollection(
+  const { documents, error } = useFirebaseCollection2<StudentDataInterface>(
     "students",
     queryString,
     orderString
@@ -47,7 +47,7 @@ export default function Dashboard() {
   }
 
   const students = documents
-    ? (documents as StudentDataInterface[]).filter((document) => {
+    ? documents.filter((document) => {
         switch (filter) {
           case "All":
             return true;

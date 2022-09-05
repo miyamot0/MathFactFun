@@ -27,8 +27,10 @@ import moment from "moment";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import AnnotationsModule from "highcharts/modules/annotations";
-import { PerformanceDataInterface } from "../../models/PerformanceModel";
-import { FactDataInterface } from "../../models/FactEntryModel";
+import {
+  FactDataInterface,
+  PerformanceDataInterface,
+} from "../../firebase/types/GeneralTypes";
 
 require("highcharts/modules/annotations")(Highcharts);
 require("highcharts/modules/accessibility")(Highcharts);
@@ -72,7 +74,8 @@ function reducerPerOperation(doc: PerformanceDataInterface[] | undefined) {
         .map((obj) => obj.DigitsCorrect)
         .reduce(Sum);
       let totalDigits = relevantData.map((obj) => obj.DigitsTotal).reduce(Sum);
-      let totalTime = relevantData.map((obj) => obj.SessionDuration).reduce(Sum) / 60.0;
+      let totalTime =
+        relevantData.map((obj) => obj.SessionDuration).reduce(Sum) / 60.0;
 
       return {
         Date: date,
@@ -81,13 +84,14 @@ function reducerPerOperation(doc: PerformanceDataInterface[] | undefined) {
       };
     })
     .sort(
-      (a, b) => moment(b.Date).toDate().valueOf() - moment(a.Date).toDate().valueOf()
+      (a, b) =>
+        moment(b.Date).toDate().valueOf() - moment(a.Date).toDate().valueOf()
     );
 }
 
 interface RoutedStudentSet {
   id?: string;
-};
+}
 
 export default function Screening() {
   const { id } = useParams<RoutedStudentSet>();
@@ -95,7 +99,8 @@ export default function Screening() {
   const [chartOptions, setChartOptions] = useState({});
 
   // Limit scope if not an admin
-  const queryString = user && !adminFlag ? ["creator", "==", user.uid] : undefined;
+  const queryString =
+    user && !adminFlag ? ["creator", "==", user.uid] : undefined;
   const orderString = undefined;
 
   const { additionDocuments } = useFirebaseCollectionAddition(

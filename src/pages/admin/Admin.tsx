@@ -21,7 +21,7 @@ import { UserDataInterface } from "../../models/UserModel";
 import "./Admin.css";
 
 const userConverter = (userArray: CurrentObjectTypeArrays) => {
-  return userArray.map((usr) => usr as unknown as UserDataInterface);
+  return userArray!.map((usr) => usr as unknown as UserDataInterface);
 };
 
 export default function Admin(): JSX.Element {

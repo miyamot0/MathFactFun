@@ -16,16 +16,12 @@ import { useFirestore } from "../../firebase/useFirestore";
 import { useHistory } from "react-router-dom";
 import { useAuthorizationContext } from "../../context/useAuthorizationContext";
 import { GetApproachStringFromLabel } from "../../utilities/LabelHelper";
+import { StudentWidgetInterface } from "./Types/StudentTypes";
 
 // styles
 import "./StudentSummary.css";
-import { StudentDataInterface } from "../../firebase/types/GeneralTypes";
 
-export default function StudentSummary({
-  student,
-}: {
-  student: StudentDataInterface;
-}) {
+export default function StudentSummary({ student }: StudentWidgetInterface) {
   const { deleteDocument, response } = useFirestore(
     "students",
     undefined,
