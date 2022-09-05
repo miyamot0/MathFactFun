@@ -13,7 +13,7 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useFirebaseCollection } from "../../firebase/useFirebaseCollection";
+import { useFirebaseCollection2 } from "../../firebase/useFirebaseCollection";
 import { useAuthorizationContext } from "../../context/useAuthorizationContext";
 import { GetOperatorFromLabel } from "../../utilities/LabelHelper";
 import {
@@ -30,6 +30,18 @@ import {
   FactDataInterface,
   PerformanceDataInterface,
 } from "../../firebase/types/GeneralTypes";
+import {
+  DailyPerformanceMetrics,
+  RoutedStudentProgressSet,
+} from "./types/ProgressTypes";
+import {
+  aggregateItemLevelPerformances,
+  aggregatePerformances,
+  getMappedColor,
+  getMappedMarker,
+  modifyDate,
+  remapPerformances,
+} from "./functionality/ProgressBehavior";
 
 require("highcharts/modules/annotations")(Highcharts);
 require("highcharts/modules/accessibility")(Highcharts);
@@ -46,67 +58,6 @@ const HeadingStyle = {
   marginBottom: "6px",
 };
 
-/** modifyDate
- *
- * Modify the date to standardize for days
- *
- * @param {Date} newDate Raw date object
- * @returns {Date} Amended date object
- */
-function modifyDate(newDate: Date = new Date()): Date {
-  let modDate = newDate;
-  modDate.setHours(0);
-  modDate.setMinutes(0);
-  modDate.setSeconds(0);
-
-  return modDate;
-}
-
-/** getMappedColor
- *
- * Map for chart
- *
- * @param {number} accuracy Accuracy numbers
- * @returns {string} Color for marker
- */
-function getMappedColor(accuracy: number): "red" | "orange" | "green" {
-  if (accuracy < 50) {
-    return "red";
-  } else if (accuracy < 80) {
-    return "orange";
-  } else {
-    return "green";
-  }
-}
-
-/** getMappedMarker
- *
- * Map for chart
- *
- * @param {number} latency Latency numbers
- * @returns {string} Shape for marker
- */
-function getMappedMarker(
-  latency: number
-): "circle" | "triangle" | "diamond" | "square" {
-  if (latency < 5) {
-    return "circle";
-  } else if (latency < 10) {
-    return "triangle";
-  } else if (latency < 15) {
-    return "diamond";
-  } else {
-    return "square";
-  }
-}
-
-interface RoutedStudentProgressSet {
-  id?: string;
-  target?: string;
-  method?: string;
-  aim?: string;
-}
-
 export default function ProgressMonitor() {
   const { id, target, method, aim } = useParams<RoutedStudentProgressSet>();
   const { user, adminFlag } = useAuthorizationContext();
@@ -116,63 +67,23 @@ export default function ProgressMonitor() {
     user && !adminFlag ? ["creator", "==", user.uid] : undefined;
   const orderString = undefined;
 
-  const { documents } = useFirebaseCollection(
+  const { documents } = useFirebaseCollection2<PerformanceDataInterface>(
     `performances/${target}/${id}`,
     queryString,
     orderString
   );
+
   const [chartOptions, setChartOptions] = useState({});
   const [itemChartOptions, setItemChartOptions] = useState({});
 
   useEffect(() => {
     if (documents) {
+      //console.log(documents);
       // Generate object from document collection
-      const mappedDocument = (documents as PerformanceDataInterface[]).map(
-        (doc) => {
-          return {
-            Items: doc.entries as FactDataInterface[],
-            Date: new Date(doc.dateTimeStart!),
-            ShortDate: new Date(doc.dateTimeStart!).toLocaleDateString("en-US"),
-            Errors: doc.errCount,
-            DigitsCorrect: doc.correctDigits,
-            DigitsCorrectInitial: doc.nCorrectInitial,
-            DigitsTotal: doc.totalDigits,
-            SessionDuration: doc.sessionDuration,
-            Method: doc.method,
-          };
-        }
-      );
+      const mappedDocument = remapPerformances(documents);
 
       // Bring together all performances, by day
-      const aggregatePerformancesDaily = mappedDocument
-        .map((obj) => obj.ShortDate)
-        .filter(OnlyUnique)
-        .sort()
-        .map((date) => {
-          let relevantData = mappedDocument.filter(
-            (obj) => obj.ShortDate === date
-          );
-
-          let totalDigitsCorr = relevantData
-            .map((obj) => obj.DigitsCorrect)
-            .reduce(Sum);
-          let totalDigits = relevantData
-            .map((obj) => obj.DigitsTotal)
-            .reduce(Sum);
-          let totalTime =
-            relevantData.map((obj) => obj.SessionDuration).reduce(Sum) / 60.0;
-
-          return {
-            Date: date,
-            DCPM: totalDigitsCorr / totalTime,
-            Accuracy: (totalDigitsCorr / totalDigits) * 100,
-          };
-        })
-        .sort(
-          (a, b) =>
-            moment(b.Date).toDate().valueOf() -
-            moment(a.Date).toDate().valueOf()
-        );
+      const aggregatePerformancesDaily = aggregatePerformances(mappedDocument);
 
       // Extract all dates
       const dateArr = mappedDocument.map((d) => d.Date.getTime());
@@ -252,9 +163,7 @@ export default function ProgressMonitor() {
       });
 
       // Extract items from document collection
-      const itemSummaries = mappedDocument
-        //.filter((obj) => obj.Method === method)
-        .map((items) => items.Items);
+      let itemSummaries = mappedDocument.map(({ Items }) => Items);
 
       const flatItemSummaries: FactDataInterface[] = itemSummaries.reduce(
         (accumulator, value) => accumulator.concat(value)
@@ -267,35 +176,11 @@ export default function ProgressMonitor() {
         .sort();
 
       // Map properties based on facts in collection
-      const uniqueQuants = uniqueMathFacts.map((itemString) => {
-        // Select matching performances from array of objects
-        const relevantPerformances = flatItemSummaries.filter(
-          (obj) => obj.factString === itemString
-        );
-
-        // Sum problems correctly copied
-        const itemsCorrect = relevantPerformances
-          .map((item) => (item.factCorrect ? 1.0 : 0.0) as number)
-          .reduce(Sum);
-
-        // Sum latency to correct responding
-        const itemLatency = relevantPerformances
-          .map((item) => Math.abs(item.latencySeconds!))
-          .reduce(Sum);
-
-        // Construct object for plotting
-        return {
-          FactString: itemString,
-          X: parseInt(itemString!.split(GetOperatorFromLabel(target!))[0]),
-          Y: parseInt(
-            itemString!.split(GetOperatorFromLabel(target!))[1].split("=")[0]
-          ),
-          Latency: itemLatency / relevantPerformances.length,
-          AverageCorrect: (itemsCorrect / relevantPerformances.length) * 100,
-          Correct: itemsCorrect,
-          Total: relevantPerformances.length,
-        };
-      });
+      const uniqueQuants = aggregateItemLevelPerformances(
+        uniqueMathFacts,
+        flatItemSummaries,
+        target
+      );
 
       setItemChartOptions({
         title: {

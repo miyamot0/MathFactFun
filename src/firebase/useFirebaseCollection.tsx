@@ -186,7 +186,12 @@ export function useFirebaseCollection2<T>(
       return () => unsubscribe();
     }
 
-    if (collectionString === FirestoreCollections.Performances) {
+    const stringSplit: string[] = collectionString.split("/");
+
+    if (
+      stringSplit.length > 0 &&
+      stringSplit[0] === FirestoreCollections.Performances
+    ) {
       const unsubscribe = ref.withConverter(performanceConverter).onSnapshot(
         (snapshot) => {
           setDocuments(

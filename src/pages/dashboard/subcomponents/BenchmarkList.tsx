@@ -13,13 +13,10 @@
 import React from "react";
 
 import { Link } from "react-router-dom";
-import { StudentDataInterface } from "../firebase/types/GeneralTypes";
+import { StudentDataInterface } from "../../../firebase/types/GeneralTypes";
+import { BenchmarkInterface } from "../types/DashboardTypes";
 
 import "./BenchmarkList.css";
-
-interface BenchmarkInterface {
-  student: StudentDataInterface;
-}
 
 /** checkIfCompletedBenchmark
  *

@@ -168,6 +168,7 @@ export const performanceConverter: PerformanceConverterType = {
     options: firebase.firestore.SnapshotOptions
   ): PerformanceDataInterface {
     const data = snapshot.data(options);
+
     return new PerformanceDataInterface(
       data.correctDigits,
       data.errCount,
@@ -176,9 +177,6 @@ export const performanceConverter: PerformanceConverterType = {
       data.sessionDuration,
       data.setSize,
       data.totalDigits,
-
-      // Timestamps
-      data.createdAt,
 
       // Arrays
       data.entries,
@@ -189,7 +187,10 @@ export const performanceConverter: PerformanceConverterType = {
       data.target,
       data.method,
       data.dateTimeEnd,
-      data.dateTimeStart
+      data.dateTimeStart,
+
+      // Timestamps
+      data.createdAt
     );
   },
 };

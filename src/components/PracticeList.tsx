@@ -18,10 +18,7 @@ import { GetApproachStringFromLabel } from "../utilities/LabelHelper";
 
 import "./PracticeList.css";
 import { StudentDataInterface } from "../firebase/types/GeneralTypes";
-
-interface PracticeListInterface {
-  students: StudentDataInterface[];
-}
+import { PracticeListInterface } from "../pages/dashboard/types/DashboardTypes";
 
 const anchorStyle = {
   marginTop: "5px",

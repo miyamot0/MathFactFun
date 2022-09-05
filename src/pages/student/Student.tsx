@@ -19,10 +19,10 @@ import StudentSummary from "./StudentSummary";
 
 import "./Student.css";
 import { StudentDataInterface } from "../../firebase/types/GeneralTypes";
-import { RoutedStudent } from "../CommonTypes/CommonPageTypes";
+import { RoutedIdParam } from "../CommonTypes/CommonPageTypes";
 
 export default function Student() {
-  const { id } = useParams<RoutedStudent>();
+  const { id } = useParams<RoutedIdParam>();
 
   const { document, documentError } =
     useFirebaseDocument2<StudentDataInterface>("students", id);

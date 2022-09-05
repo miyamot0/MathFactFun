@@ -12,10 +12,10 @@
 
 import React from "react";
 import { useState } from "react";
-import { useFirebaseCollection } from "../../firebase/useFirebaseCollection";
+import { useFirebaseCollection2 } from "../../firebase/useFirebaseCollection";
 import { useAuthorizationContext } from "../../context/useAuthorizationContext";
 
-import StudentFilter from "./StudentFilter";
+import StudentFilter from "./functionality/StudentFilter";
 import PracticeList from "../../components/PracticeList";
 import { StudentDataInterface } from "../../firebase/types/GeneralTypes";
 
@@ -27,7 +27,7 @@ export default function DashboardPractice() {
     user && !adminFlag ? ["creator", "==", user.uid] : undefined;
   const orderString = undefined;
 
-  const { documents, error } = useFirebaseCollection(
+  const { documents, error } = useFirebaseCollection2<StudentDataInterface>(
     "students",
     queryString,
     orderString
@@ -46,7 +46,7 @@ export default function DashboardPractice() {
   }
 
   const students = documents
-    ? (documents as StudentDataInterface[]).filter((document) => {
+    ? documents.filter((document) => {
         switch (filter) {
           case "All":
             return document.currentApproach !== "N/A";

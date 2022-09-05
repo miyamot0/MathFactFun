@@ -12,20 +12,18 @@
 
 import React from "react";
 import { useParams } from "react-router-dom";
-import { useFirebaseDocument } from "../../firebase/useFirebaseDocument";
-import BenchmarkList from "../../components/BenchmarkList";
+import { useFirebaseDocument2 } from "../../firebase/useFirebaseDocument";
+import BenchmarkList from "./subcomponents/BenchmarkList";
 
 // styles
 import "./Dashboards.css";
 import { StudentDataInterface } from "../../firebase/types/GeneralTypes";
-
-interface RoutedTeacherSet {
-  id?: string;
-}
+import { RoutedIdParam } from "../CommonTypes/CommonPageTypes";
 
 export default function DashboardBenchmark() {
-  const { id } = useParams<RoutedTeacherSet>();
-  const { documentError, document } = useFirebaseDocument("students", id);
+  const { id } = useParams<RoutedIdParam>();
+  const { document, documentError } =
+    useFirebaseDocument2<StudentDataInterface>("students", id);
 
   if (documentError) {
     return <div className="error">{documentError}</div>;
@@ -38,10 +36,10 @@ export default function DashboardBenchmark() {
   return (
     <div>
       <h2 className="global-page-title">
-        Benchmark Dashboard: {(document as StudentDataInterface).name}
+        Benchmark Dashboard: {document.name}
       </h2>
       {documentError && <p className="error">{documentError}</p>}
-      {document && <BenchmarkList student={document as StudentDataInterface} />}
+      {document && <BenchmarkList student={document} />}
     </div>
   );
 }

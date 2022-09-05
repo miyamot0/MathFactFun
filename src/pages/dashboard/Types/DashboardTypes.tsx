@@ -11,3 +11,11 @@ export interface StudentFilterInterface {
 export interface StudentListInterface {
   students: StudentDataInterface[];
 }
+
+export interface PracticeListInterface {
+  students: StudentDataInterface[];
+}
+
+export interface BenchmarkInterface {
+  student: StudentDataInterface;
+}

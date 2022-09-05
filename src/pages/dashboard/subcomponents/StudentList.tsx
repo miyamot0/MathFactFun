@@ -14,11 +14,11 @@ import React from "react";
 import firebase from "firebase/app";
 
 import { Link } from "react-router-dom";
-import { GetApproachStringFromLabel } from "../utilities/LabelHelper";
+import { GetApproachStringFromLabel } from "../../../utilities/LabelHelper";
 
 import "./StudentList.css";
-import { StudentDataInterface } from "../firebase/types/GeneralTypes";
-import { StudentListInterface } from "../pages/dashboard/Types/DashboardTypes";
+import { StudentDataInterface } from "../../../firebase/types/GeneralTypes";
+import { StudentListInterface } from "../types/DashboardTypes";
 
 /** checkIfProgrammingCurrent
  *

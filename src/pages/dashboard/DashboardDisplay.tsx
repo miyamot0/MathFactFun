@@ -16,8 +16,8 @@ import { useFirebaseCollection2 } from "../../firebase/useFirebaseCollection";
 import { useAuthorizationContext } from "../../context/useAuthorizationContext";
 
 // Components
-import StudentList from "../../components/StudentList";
-import StudentFilter from "./StudentFilter";
+import StudentList from "./subcomponents/StudentList";
+import StudentFilter from "./functionality/StudentFilter";
 import { StudentDataInterface } from "../../firebase/types/GeneralTypes";
 
 export default function Dashboard() {

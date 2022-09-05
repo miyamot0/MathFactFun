@@ -15,22 +15,15 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { useAuthorizationContext } from "../../context/useAuthorizationContext";
-import {
-  useFirebaseCollectionAddition,
-  useFirebaseCollectionDivision,
-  useFirebaseCollectionMultiplication,
-  useFirebaseCollectionSubtraction,
-} from "../../firebase/useFirebaseCollectionsAcademic";
-import { OnlyUnique, Sum } from "../../utilities/LabelHelper";
 
 import moment from "moment";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import AnnotationsModule from "highcharts/modules/annotations";
-import {
-  FactDataInterface,
-  PerformanceDataInterface,
-} from "../../firebase/types/GeneralTypes";
+import { PerformanceDataInterface } from "../../firebase/types/GeneralTypes";
+import { RoutedIdParam } from "../CommonTypes/CommonPageTypes";
+import { reducerPerOperation } from "./functionality/ScreeningBehavior";
+import { useFirebaseCollection2 } from "../../firebase/useFirebaseCollection";
 
 require("highcharts/modules/annotations")(Highcharts);
 require("highcharts/modules/accessibility")(Highcharts);
@@ -47,54 +40,8 @@ const HeadingStyle = {
   marginBottom: "6px",
 };
 
-function reducerPerOperation(doc: PerformanceDataInterface[] | undefined) {
-  const mappedDocument = doc!.map((doc) => {
-    return {
-      Items: doc.entries as FactDataInterface[],
-      Date: new Date(doc.dateTimeStart!),
-      ShortDate: new Date(doc.dateTimeStart!).toLocaleDateString("en-US"),
-      Errors: doc.errCount,
-      DigitsCorrect: doc.correctDigits,
-      DigitsCorrectInitial: doc.nCorrectInitial,
-      DigitsTotal: doc.totalDigits,
-      SessionDuration: doc.sessionDuration,
-      Method: doc.method,
-    };
-  });
-
-  return mappedDocument
-    .map((obj) => obj.ShortDate)
-    .filter(OnlyUnique)
-    .sort()
-    .map((date) => {
-      // Pull in relevant content by date
-      let relevantData = mappedDocument.filter((obj) => obj.ShortDate === date);
-
-      let totalDigitsCorr = relevantData
-        .map((obj) => obj.DigitsCorrect)
-        .reduce(Sum);
-      let totalDigits = relevantData.map((obj) => obj.DigitsTotal).reduce(Sum);
-      let totalTime =
-        relevantData.map((obj) => obj.SessionDuration).reduce(Sum) / 60.0;
-
-      return {
-        Date: date,
-        DCPM: totalDigitsCorr / totalTime,
-        Accuracy: (totalDigitsCorr / totalDigits) * 100,
-      };
-    })
-    .sort(
-      (a, b) =>
-        moment(b.Date).toDate().valueOf() - moment(a.Date).toDate().valueOf()
-    );
-}
-
-interface RoutedStudentSet {
-  id?: string;
-}
-
 export default function Screening() {
-  const { id } = useParams<RoutedStudentSet>();
+  const { id } = useParams<RoutedIdParam>();
   const { user, adminFlag } = useAuthorizationContext();
   const [chartOptions, setChartOptions] = useState({});
 
@@ -103,26 +50,33 @@ export default function Screening() {
     user && !adminFlag ? ["creator", "==", user.uid] : undefined;
   const orderString = undefined;
 
-  const { additionDocuments } = useFirebaseCollectionAddition(
-    id!,
-    queryString,
-    orderString
-  );
-  const { subtractionDocuments } = useFirebaseCollectionSubtraction(
-    id!,
-    queryString,
-    orderString
-  );
-  const { multiplicationDocuments } = useFirebaseCollectionMultiplication(
-    id!,
-    queryString,
-    orderString
-  );
-  const { divisionDocuments } = useFirebaseCollectionDivision(
-    id!,
-    queryString,
-    orderString
-  );
+  const { documents: additionDocuments } =
+    useFirebaseCollection2<PerformanceDataInterface>(
+      `performances/Addition/${id}`,
+      queryString,
+      orderString
+    );
+
+  const { documents: subtractionDocuments } =
+    useFirebaseCollection2<PerformanceDataInterface>(
+      `performances/Subtraction/${id}`,
+      queryString,
+      orderString
+    );
+
+  const { documents: multiplicationDocuments } =
+    useFirebaseCollection2<PerformanceDataInterface>(
+      `performances/Multiplication/${id}`,
+      queryString,
+      orderString
+    );
+
+  const { documents: divisionDocuments } =
+    useFirebaseCollection2<PerformanceDataInterface>(
+      `performances/Division/${id}`,
+      queryString,
+      orderString
+    );
 
   useEffect(() => {
     if (

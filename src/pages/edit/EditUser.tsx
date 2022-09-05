@@ -17,20 +17,21 @@ import { useFirestore } from "../../firebase/useFirestore";
 import { useHistory } from "react-router-dom";
 import { useFirebaseDocument } from "../../firebase/useFirebaseDocument";
 import { UserDataInterface } from "../../models/UserModel";
+import { RoutedIdParam } from "../CommonTypes/CommonPageTypes";
 
 const EditFormStyle = {
   maxWidth: "600px",
 };
 
-interface RoutedAdminSet {
-  id?: string;
-};
-
 export default function EditUser() {
   const history = useHistory();
-  const { id } = useParams<RoutedAdminSet>();
+  const { id } = useParams<RoutedIdParam>();
   const { documentError, document } = useFirebaseDocument("users", id);
-  const { updateDocument, response } = useFirestore("users", undefined, undefined);
+  const { updateDocument, response } = useFirestore(
+    "users",
+    undefined,
+    undefined
+  );
 
   // form field values
   const [name, setName] = useState<string>("");

@@ -13,8 +13,8 @@
 import React from "react";
 import { useState } from "react";
 
-import "./Dashboards.css";
-import { StudentFilterInterface } from "./Types/DashboardTypes";
+import "./../Dashboards.css";
+import { StudentFilterInterface } from "../types/DashboardTypes";
 
 const filterList = [
   "All",

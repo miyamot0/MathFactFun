@@ -16,7 +16,7 @@ import { useParams } from "react-router-dom";
 import { timestamp } from "../../firebase/config";
 import { useFirestore } from "../../firebase/useFirestore";
 import { useHistory } from "react-router-dom";
-import { useFirebaseDocument } from "../../firebase/useFirebaseDocument";
+import { useFirebaseDocument2 } from "../../firebase/useFirebaseDocument";
 import {
   Grades,
   Operations,
@@ -30,20 +30,21 @@ import { FormatDate } from "../../utilities/LabelHelper";
 // components
 import Select, { MultiValue } from "react-select";
 import { StudentDataInterface } from "../../firebase/types/GeneralTypes";
+import {
+  RoutedIdParam,
+  SingleOptionType,
+} from "../CommonTypes/CommonPageTypes";
 
 const EditFormStyle = {
   maxWidth: "600px",
 };
 
-type SingleOptionType = { label: string; value: string };
-
-interface RoutedStudentSet {
-  id?: string;
-}
+// TODO: reducer
 
 export default function Edit() {
-  const { id } = useParams<RoutedStudentSet>();
-  const { documentError, document } = useFirebaseDocument("students", id);
+  const { id } = useParams<RoutedIdParam>();
+  const { document, documentError } =
+    useFirebaseDocument2<StudentDataInterface>("students", id);
   const history = useHistory();
   const { updateDocument, response } = useFirestore(
     "students",
@@ -75,26 +76,20 @@ export default function Edit() {
 
   if (document && !didBuild) {
     setDidBuild(true);
-    setName((document as StudentDataInterface).name);
-    setDetails((document as StudentDataInterface).details);
-    setDueDate(
-      FormatDate((document as StudentDataInterface).dueDate!.toDate())
-    );
-    setAimLineValue((document as StudentDataInterface).aimLine!);
-    setDurationTask((document as StudentDataInterface).minForTask!);
+    setName(document.name);
+    setDetails(document.details);
+    setDueDate(FormatDate(document.dueDate!.toDate()));
+    setAimLineValue(document.aimLine!);
+    setDurationTask(document.minForTask!);
 
     let benchmarkingAreas: any = [];
 
     Operations.forEach((op: SingleOptionType) => {
-      if (op.value === (document as StudentDataInterface).currentTarget) {
+      if (op.value === document.currentTarget) {
         setCurrentTarget(op);
       }
 
-      if (
-        (document as StudentDataInterface).currentBenchmarking.includes(
-          op.label
-        )
-      ) {
+      if (document.currentBenchmarking.includes(op.label)) {
         benchmarkingAreas.push(op);
       }
     });
@@ -102,33 +97,31 @@ export default function Edit() {
     setCurrentBenchmarking(benchmarkingAreas);
 
     BenchmarkSets.forEach((set: SingleOptionType) => {
-      if (set.value === (document as StudentDataInterface).problemSet) {
+      if (set.value === document.problemSet) {
         setCurrentBenchmarkSet(set);
       }
     });
 
     Grades.forEach((gr: SingleOptionType) => {
-      if (gr.value === (document as StudentDataInterface).currentGrade) {
+      if (gr.value === document.currentGrade) {
         setCurrentGrade(gr);
       }
     });
 
     InterventionApproach.forEach((ia: SingleOptionType) => {
-      if (ia.value === (document as StudentDataInterface).currentApproach) {
+      if (ia.value === document.currentApproach) {
         setCurrentApproach(ia);
       }
     });
 
     ErrorCorrection.forEach((ia: SingleOptionType) => {
-      if (
-        ia.value === (document as StudentDataInterface).currentErrorApproach
-      ) {
+      if (ia.value === document.currentErrorApproach) {
         setCurrentErrorApproach(ia);
       }
     });
 
     Contingencies.forEach((ia: SingleOptionType) => {
-      if (ia.value === (document as StudentDataInterface).currentSRApproach) {
+      if (ia.value === document.currentSRApproach) {
         setCurrentSRApproach(ia);
       }
     });
@@ -146,6 +139,8 @@ export default function Edit() {
     event.preventDefault();
 
     setFormError(undefined);
+
+    if (!document) return;
 
     if (!currentGrade) {
       setFormError("Please select current grade");
@@ -173,8 +168,8 @@ export default function Edit() {
     date.setTime(date.getTime() + date.getTimezoneOffset() * 60 * 1000);
 
     const targetedList =
-      currentTarget!.value === (document as StudentDataInterface).currentTarget
-        ? (document as StudentDataInterface).factsTargeted
+      currentTarget!.value === document.currentTarget
+        ? document.factsTargeted
         : [];
 
     const studentObject = {
