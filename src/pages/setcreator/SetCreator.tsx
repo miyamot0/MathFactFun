@@ -17,7 +17,7 @@ import { useFirebaseDocument2 } from "../../firebase/useFirebaseDocument";
 import { useFirebaseCollection2 } from "../../firebase/useFirebaseCollection";
 import { useFirestore } from "../../firebase/useFirestore";
 import Select from "react-select";
-import { DragDropContext, DropResult } from "react-beautiful-dnd";
+import { DragDropContext } from "react-beautiful-dnd";
 import { OnlyUnique } from "../../utilities/LabelHelper";
 import {
   FactDataInterface,

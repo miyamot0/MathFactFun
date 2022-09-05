@@ -14,11 +14,11 @@ import React from "react";
 import firebase from "firebase/app";
 
 import { Link } from "react-router-dom";
-import { GetApproachStringFromLabel } from "../utilities/LabelHelper";
+import { GetApproachStringFromLabel } from "../../../utilities/LabelHelper";
 
 import "./PracticeList.css";
-import { StudentDataInterface } from "../firebase/types/GeneralTypes";
-import { PracticeListInterface } from "../pages/dashboard/types/DashboardTypes";
+import { StudentDataInterface } from "../../../firebase/types/GeneralTypes";
+import { PracticeListInterface } from "../types/DashboardTypes";
 
 const anchorStyle = {
   marginTop: "5px",

@@ -16,7 +16,7 @@ import { useFirebaseCollection2 } from "../../firebase/useFirebaseCollection";
 import { useAuthorizationContext } from "../../context/useAuthorizationContext";
 
 import StudentFilter from "./functionality/StudentFilter";
-import PracticeList from "../../components/PracticeList";
+import PracticeList from "./subcomponents/PracticeList";
 import { StudentDataInterface } from "../../firebase/types/GeneralTypes";
 
 export default function DashboardPractice() {
