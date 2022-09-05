@@ -1,5 +1,34 @@
 import { FactDataInterface } from "../../../firebase/types/GeneralTypes";
 
+/**
+ * Actions for reducer
+ */
+export enum DragDropActions {
+  Load = "Load",
+  SetItemHistory = "SetItemHistory",
+  SetBaseItems = "SetBaseItems",
+  UpdateColumns = "UpdateColumns",
+  ToggleLoaded = "ToggleLoaded",
+}
+
+export type ColumnVector = {
+  name: string;
+  items: any[];
+};
+
+export type ColumnObject = {
+  [key: string]: ColumnVector;
+};
+
+export type ColumnsObject = {
+  columns: {
+    [key: string]: ColumnVector;
+  };
+  ItemHistory: ItemHistory[] | null;
+  BaseItems: SetItem[] | null;
+  LoadedData: boolean;
+};
+
 export interface FactStructure {
   Answer: string;
   id: string;

@@ -10,32 +10,23 @@
  * Set Creator file
  */
 
-import React from "react";
+import React, { useReducer } from "react";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useFirebaseDocument2 } from "../../firebase/useFirebaseDocument";
 import { useFirebaseCollection2 } from "../../firebase/useFirebaseCollection";
 import { useFirestore } from "../../firebase/useFirestore";
-import { FactsOnFire } from "../../maths/Mind";
 import Select from "react-select";
-import {
-  DragDropContext,
-  Droppable,
-  Draggable,
-  DropResult,
-} from "react-beautiful-dnd";
-import {
-  OnlyUnique,
-  GetOperatorFromLabel,
-  Sum,
-} from "../../utilities/LabelHelper";
+import { DragDropContext, DropResult } from "react-beautiful-dnd";
+import { OnlyUnique } from "../../utilities/LabelHelper";
 import {
   FactDataInterface,
   PerformanceDataInterface,
   StudentDataInterface,
 } from "../../firebase/types/GeneralTypes";
 import {
-  DragColumnsInterface,
+  ColumnsObject,
+  DragDropActions,
   FactStructure,
   ItemHistory,
   ItemMetrics,
@@ -46,133 +37,21 @@ import {
   SingleOptionType,
 } from "../CommonTypes/CommonPageTypes";
 import {
-  formatBackgroundColor,
-  formatTextBox,
   generateItemHistory,
   getRelevantCCCSet,
+  InitialSetCreatorState,
   loadMathFacts,
+  onDragEnd,
   populateColumnMetrics,
-  StartingColumnValues,
 } from "./functionality/SetCreatorBehavior";
-
-const TitleStyle = {
-  color: "#444",
-  height: "100%",
-  textAlign: "center" as const,
-  marginBottom: "10px",
-};
-
-const HeadingStyle = {
-  color: "#444",
-};
-
-const SetContainer = {
-  display: "block",
-};
-
-const SetEditForm = {
-  maxWidth: "600px",
-  justifyContent: "center",
-  textAlign: "center" as const,
-  margin: "auto",
-};
-
-const ClearBtn = {
-  marginTop: "5px",
-  marginBottom: "20px",
-};
-
-const DragDropContainer = {
-  display: "flex",
-  justifyContent: "center",
-  height: "100%",
-};
-
-const DropContainer = {
-  display: "flex",
-  flexDirection: "column" as const,
-  alignItems: "center" as const,
-};
-
-/** onDragEnd
- *
- * Event after drag ends
- *
- * @param {DraggableObject} result Results from event (Source + Destination)
- * @param {DragColumnsInterface} columns Current column state
- * @param {(value: React.SetStateAction<DragColumnsInterface>) => void} setColumns Callback for trigger column change
- * @param {(value: React.SetStateAction<boolean>) => void} setIncomingChange Callback for triggering change
- */
-function onDragEnd(
-  result: DropResult,
-  columns: DragColumnsInterface,
-  setColumns: (value: React.SetStateAction<DragColumnsInterface>) => void,
-  setIncomingChange: (value: React.SetStateAction<boolean>) => void
-): void {
-  if (!result.destination) return;
-  const { source, destination } = result;
-
-  let columnObject: DragColumnsInterface = {
-    Available: null,
-    Targeted: null,
-    Mastered: null,
-    Skipped: null,
-  };
-
-  // Source and destination differ
-  if (source.droppableId !== destination.droppableId) {
-    const sourceColumn = columns[source.droppableId];
-    const destColumn = columns[destination.droppableId];
-    const sourceItems = [...sourceColumn!.items];
-    const destItems = [...destColumn!.items];
-    const [removed] = sourceItems.splice(source.index, 1);
-    destItems.splice(destination.index, 0, removed);
-
-    setIncomingChange(true);
-
-    columnObject = {
-      ...columns,
-      [source.droppableId]: {
-        ...sourceColumn,
-        items: sourceItems,
-      },
-      [destination.droppableId]: {
-        ...destColumn,
-        items: destItems,
-      },
-    } as DragColumnsInterface;
-
-    columnObject.Available!.name = `Available (${
-      columnObject.Available!.items.length
-    })`;
-    columnObject.Targeted!.name = `Targeted (${
-      columnObject.Targeted!.items.length
-    })`;
-    columnObject.Mastered!.name = `Mastered (${
-      columnObject.Mastered!.items.length
-    })`;
-    columnObject.Skipped!.name = `Skipped (${
-      columnObject.Skipped!.items.length
-    })`;
-
-    setColumns(columnObject);
-  } else {
-    const column = columns[source.droppableId];
-    const copiedItems = [...column!.items];
-    const [removed] = copiedItems.splice(source.index, 1);
-    copiedItems.splice(destination.index, 0, removed);
-
-    columnObject = {
-      ...columns,
-      [source.droppableId]: {
-        ...column,
-        items: copiedItems,
-      },
-    } as DragColumnsInterface;
-
-    setColumns(columnObject);
-  }
-}
+import {
+  ClearBtn,
+  DragDropContainer,
+  generateDroppable,
+  SetContainer,
+  SetEditForm,
+  TitleStyle,
+} from "./views/SetCreatorViews";
 
 export default function SetCreator() {
   const { target, id } = useParams<RoutedIdTargetParam>();
@@ -193,18 +72,45 @@ export default function SetCreator() {
     undefined
   );
 
-  const [loadedData, setLoadedData] = useState(false);
-  const [incomingChange, setIncomingChange] = useState(false);
-  const [baseItems, setBaseItems] = useState<any>();
   const [assignedSet, setAssignedSet] = useState<SingleOptionType>();
-  const [itemHistory, setItemHistory] = useState<ItemHistory[]>();
 
-  const [columns, setColumns] =
-    useState<DragColumnsInterface>(StartingColumnValues);
+  /**
+   * Reducer for submission
+   *
+   * @param {ColumnsObject} state
+   * @param {any} action
+   * @returns {ColumnsObject}
+   */
+  const SetCreatorReducer = (
+    state: ColumnsObject,
+    action: any
+  ): ColumnsObject => {
+    switch (action.type) {
+      case DragDropActions.Load:
+        return { ...state, columns: action.payload };
+      case DragDropActions.SetItemHistory:
+        return { ...state, ItemHistory: action.payload };
+      case DragDropActions.SetBaseItems:
+        return { ...state, BaseItems: action.payload };
+      case DragDropActions.UpdateColumns:
+        saveUpdatedInformation({ ...state, columns: action.payload });
+        return { ...state, columns: action.payload };
+      case DragDropActions.ToggleLoaded:
+        return { ...state, LoadedData: action.payload };
+
+      default:
+        throw new Error();
+    }
+  };
+
+  const [state, dispatch] = useReducer(
+    SetCreatorReducer,
+    InitialSetCreatorState
+  );
 
   useEffect(() => {
     if (documents) {
-      const mappedDocument = documents.map((doc) => {
+      const mappedDocument = documents!.map((doc) => {
         return {
           Items: doc.entries as FactDataInterface[],
           Date: new Date(doc.dateTimeStart!),
@@ -236,17 +142,24 @@ export default function SetCreator() {
         target
       );
 
-      setItemHistory(uniqueQuants);
+      dispatch({ type: DragDropActions.SetItemHistory, payload: uniqueQuants });
     }
-  }, [documents, target]);
+  }, [documents]);
 
-  useEffect(() => {
-    if (loadedData && incomingChange) {
-      setIncomingChange(false);
-
-      let factsTargeted = columns.Targeted!.items.map((a) => a.id);
-      var factsSkipped = columns.Skipped!.items.map((a) => a.id);
-      var factsMastered = columns.Mastered!.items.map((a) => a.id);
+  /**
+   * Save information to firestore
+   */
+  async function saveUpdatedInformation(objectToSave: ColumnsObject) {
+    if (objectToSave !== null) {
+      let factsTargeted = objectToSave.columns.Targeted!.items.map(
+        (a: FactStructure) => a.id
+      );
+      var factsSkipped = objectToSave.columns.Skipped!.items.map(
+        (a: FactStructure) => a.id
+      );
+      var factsMastered = objectToSave.columns.Mastered!.items.map(
+        (a: FactStructure) => a.id
+      );
 
       const studentObject = {
         factsTargeted,
@@ -254,28 +167,16 @@ export default function SetCreator() {
         factsMastered,
       };
 
-      const uploadData = async () => {
-        await updateDocument(id!, studentObject);
-      };
-
-      uploadData();
+      await updateDocument(id!, studentObject);
 
       if (response.error) {
         window.alert("There was an error saving to the database");
       }
     }
-  }, [
-    id,
-    incomingChange,
-    loadedData,
-    updateDocument,
-    columns,
-    setIncomingChange,
-    response,
-  ]);
+  }
 
   useEffect(() => {
-    if (document && itemHistory && !loadedData) {
+    if (document && state.ItemHistory && !state.LoadedData) {
       // Loads ALL facts
 
       const mapped: FactStructure[][] = loadMathFacts(document);
@@ -288,8 +189,8 @@ export default function SetCreator() {
           accuracy = 0,
           latency = 0;
 
-        const releventResult = itemHistory.filter(
-          (obj) => obj.FactString === entry.Answer
+        const releventResult = state.ItemHistory!.filter(
+          (obj: ItemHistory) => obj.FactString === entry.Answer
         );
 
         if (releventResult && releventResult.length === 1) {
@@ -306,27 +207,27 @@ export default function SetCreator() {
         } as SetItem;
       });
 
-      setBaseItems(flattened);
+      dispatch({ type: DragDropActions.SetBaseItems, payload: flattened });
 
-      var newColumns = columns;
+      var newColumns = state.columns;
 
       const currTargetedSets = populateColumnMetrics(
-        document.factsTargeted,
-        itemHistory
+        document!.factsTargeted,
+        state.ItemHistory!
       );
 
       newColumns.Targeted!.items = currTargetedSets;
 
       const currMasteredSets = populateColumnMetrics(
-        document.factsMastered,
-        itemHistory
+        document!.factsMastered,
+        state.ItemHistory!
       );
 
       newColumns.Mastered!.items = currMasteredSets;
 
       const currSkippedSets = populateColumnMetrics(
-        document.factsSkipped,
-        itemHistory
+        document!.factsSkipped,
+        state.ItemHistory!
       );
 
       newColumns.Skipped!.items = currSkippedSets;
@@ -356,10 +257,10 @@ export default function SetCreator() {
         newColumns.Skipped!.items.length
       })`;
 
-      setColumns(newColumns);
-      setLoadedData(true);
+      dispatch({ type: DragDropActions.UpdateColumns, payload: newColumns });
+      dispatch({ type: DragDropActions.ToggleLoaded, payload: true });
     }
-  }, [document, documents, itemHistory, columns, loadedData, setColumns]);
+  }, [document, documents, state.ItemHistory, state.columns, state.LoadedData]);
 
   /** moveTargetedItems
    *
@@ -368,34 +269,34 @@ export default function SetCreator() {
    * @param {String} value Column to receive
    */
   function moveTargetedItems(value: string): void {
-    let newColumns = columns;
-    let preAvailable = columns.Available!.items;
-    let preTargeted = columns.Targeted!.items;
-    let preMastered = columns.Mastered!.items;
-    let preSkipped = columns.Skipped!.items;
+    let newColumns = state.columns;
+    let preAvailable = state.columns.Available!.items;
+    let preTargeted = state.columns.Targeted!.items;
+    let preMastered = state.columns.Mastered!.items;
+    let preSkipped = state.columns.Skipped!.items;
 
     switch (value) {
       case "Mastered":
-        preTargeted.forEach((item) => {
+        preTargeted.forEach((item: FactStructure) => {
           preMastered.push(item);
         });
 
         break;
 
       case "Available":
-        preTargeted.forEach((item) => {
+        preTargeted.forEach((item: FactStructure) => {
           preAvailable.push(item);
         });
         break;
 
       case "Skipped":
-        preTargeted.forEach((item) => {
+        preTargeted.forEach((item: FactStructure) => {
           preSkipped.push(item);
         });
         break;
 
       default:
-        preTargeted.forEach((item) => {
+        preTargeted.forEach((item: FactStructure) => {
           preAvailable.push(item);
         });
         break;
@@ -412,8 +313,7 @@ export default function SetCreator() {
     newColumns.Skipped!.items = preSkipped;
     newColumns.Skipped!.name = `Skipped (${preSkipped.length})`;
 
-    setIncomingChange(true);
-    setColumns(newColumns);
+    dispatch({ type: DragDropActions.UpdateColumns, payload: newColumns });
   }
 
   /** moveItemsToTargeted
@@ -423,45 +323,45 @@ export default function SetCreator() {
    * @param {number} setArray Index of set
    */
   function moveItemsToTargeted(setArray: number): void {
-    let newColumns = columns;
-    let preAvailable = columns.Available!.items;
-    let preTargeted = columns.Targeted!.items;
-    let preSkipped = columns.Skipped!.items;
-    let preMastered = columns.Mastered!.items;
+    let newColumns = state.columns;
+    let preAvailable = state.columns.Available!.items;
+    let preTargeted = state.columns.Targeted!.items;
+    let preSkipped = state.columns.Skipped!.items;
+    let preMastered = state.columns.Mastered!.items;
 
     const mapped = loadMathFacts(document)[setArray].map((item) => item.id);
 
-    columns.Targeted!.items.forEach((item) => {
+    state.columns.Targeted!.items.forEach((item: FactStructure) => {
       preAvailable.push(item);
     });
 
     preTargeted = [];
 
-    columns.Available!.items.forEach((item) => {
+    state.columns.Available!.items.forEach((item: FactStructure) => {
       if (mapped.includes(item.id)) {
         preTargeted.push(item);
 
-        preAvailable = preAvailable.filter((fact) => {
+        preAvailable = preAvailable.filter((fact: FactStructure) => {
           return fact.id !== item.id;
         });
       }
     });
 
-    columns.Skipped!.items.forEach((item) => {
+    state.columns.Skipped!.items.forEach((item: FactStructure) => {
       if (mapped.includes(item.id)) {
         preTargeted.push(item);
 
-        preSkipped = preSkipped.filter((fact) => {
+        preSkipped = preSkipped.filter((fact: FactStructure) => {
           return fact.id !== item.id;
         });
       }
     });
 
-    columns.Mastered!.items.forEach((item) => {
+    state.columns.Mastered!.items.forEach((item: FactStructure) => {
       if (mapped.includes(item.id)) {
         preTargeted.push(item);
 
-        preMastered = preMastered.filter((fact) => {
+        preMastered = preMastered.filter((fact: FactStructure) => {
           return fact.id !== item.id;
         });
       }
@@ -476,8 +376,7 @@ export default function SetCreator() {
     newColumns.Skipped!.items = preSkipped;
     newColumns.Skipped!.name = `Skipped (${preSkipped.length})`;
 
-    setIncomingChange(true);
-    setColumns(newColumns);
+    dispatch({ type: DragDropActions.UpdateColumns, payload: newColumns });
   }
 
   /** resetItems
@@ -487,19 +386,18 @@ export default function SetCreator() {
    */
   function resetItems(): void {
     if (window.confirm("Are you sure you want to reset?") === true) {
-      let newColumns = columns;
-      newColumns.Available!.items = baseItems;
+      let newColumns = state.columns;
+      newColumns.Available!.items = state.BaseItems!;
       newColumns.Mastered!.items = [];
       newColumns.Skipped!.items = [];
       newColumns.Targeted!.items = [];
 
-      newColumns.Available!.name = `Available (${baseItems.length})`;
+      newColumns.Available!.name = `Available (${state.BaseItems!.length})`;
       newColumns.Targeted!.name = `Targeted (0)`;
       newColumns.Mastered!.name = `Mastered (0)`;
       newColumns.Skipped!.name = `Skipped (0)`;
 
-      setIncomingChange(true);
-      setColumns(newColumns);
+      dispatch({ type: DragDropActions.UpdateColumns, payload: newColumns });
     }
   }
 
@@ -546,14 +444,12 @@ export default function SetCreator() {
           <label>
             <span>Move Current Targets to: </span>
             <Select
-              options={["Mastered", "Available", "Skipped"].map(
-                (opt, index) => {
-                  return {
-                    value: opt,
-                    label: "Move to: " + opt,
-                  };
-                }
-              )}
+              options={["Mastered", "Available", "Skipped"].map((opt) => {
+                return {
+                  value: opt,
+                  label: "Move to: " + opt,
+                };
+              })}
               onChange={(option) => {
                 moveTargetedItems(option!.value);
               }}
@@ -571,117 +467,9 @@ export default function SetCreator() {
 
       <div style={DragDropContainer}>
         <DragDropContext
-          onDragEnd={(result) =>
-            onDragEnd(result, columns, setColumns, setIncomingChange)
-          }
+          onDragEnd={(result) => onDragEnd(result, state.columns, dispatch)}
         >
-          {Object.entries(columns).map(([columnId, column]) => {
-            return (
-              <div style={DropContainer} key={columnId}>
-                <h2 style={HeadingStyle}>{column!.name}</h2>
-                <div style={{ margin: 8 }}>
-                  <Droppable droppableId={columnId} key={columnId}>
-                    {(provided, snapshot) => {
-                      return (
-                        <div
-                          {...provided.droppableProps}
-                          ref={provided.innerRef}
-                          style={{
-                            background: snapshot.isDraggingOver
-                              ? "lightblue"
-                              : "lightgrey",
-                            padding: 4,
-                            width: 250,
-                            minHeight: 500,
-                          }}
-                        >
-                          {column!.items.map((item, index) => {
-                            return (
-                              <Draggable
-                                key={item.id}
-                                draggableId={item.id}
-                                index={index}
-                              >
-                                {(provided, snapshot) => {
-                                  let setNumber = parseInt(
-                                    item.id.split(":")[1]
-                                  );
-
-                                  let label = "B";
-                                  let valueAdjustment = 6;
-
-                                  if (setNumber <= 5) {
-                                    label = "A";
-                                    valueAdjustment = 0;
-                                  }
-
-                                  if (setNumber >= 12) {
-                                    label = "C";
-                                    valueAdjustment = 12;
-                                  }
-
-                                  return (
-                                    <div
-                                      ref={provided.innerRef}
-                                      {...provided.draggableProps}
-                                      {...provided.dragHandleProps}
-                                      style={{
-                                        userSelect: "none",
-                                        padding: 16,
-                                        margin: "0 0 8px 0",
-                                        minHeight: "50px",
-                                        display: "flex",
-                                        borderRadius: "10px",
-                                        verticalAlign: "middle",
-                                        backgroundColor: snapshot.isDragging
-                                          ? "#263B4A"
-                                          : formatBackgroundColor(item),
-                                        color: "white",
-                                        textAlign: "center",
-                                        alignItems: "center",
-                                        justifyContent: "center",
-                                        fontSize: "1em",
-                                        ...provided.draggableProps.style,
-                                      }}
-                                    >
-                                      <p>
-                                        {item.Answer}
-                                        <br />
-                                        {`Set: ${label}${(
-                                          setNumber +
-                                          1 -
-                                          valueAdjustment
-                                        ).toString()} Item: ${
-                                          parseInt(item.id.split(":")[2]) + 1
-                                        }`}
-                                        <br />
-                                        {`OTRs: ${formatTextBox(item.OTRs, 0)}`}
-                                        <br />
-                                        {`Accuracy: ${formatTextBox(
-                                          item.Accuracy,
-                                          2
-                                        )} %`}
-                                        <br />
-                                        {`Latency: ${formatTextBox(
-                                          item.Latency,
-                                          2
-                                        )}s`}
-                                      </p>
-                                    </div>
-                                  );
-                                }}
-                              </Draggable>
-                            );
-                          })}
-                          {provided.placeholder}
-                        </div>
-                      );
-                    }}
-                  </Droppable>
-                </div>
-              </div>
-            );
-          })}
+          {generateDroppable(state.columns)}
         </DragDropContext>
       </div>
     </div>
