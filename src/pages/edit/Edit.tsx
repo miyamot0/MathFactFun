@@ -29,23 +29,27 @@ import { FormatDate } from "../../utilities/LabelHelper";
 
 // components
 import Select, { MultiValue } from "react-select";
-import { StudentDataInterface } from "../../models/StudentModel";
+import { StudentDataInterface } from "../../firebase/types/GeneralTypes";
 
 const EditFormStyle = {
   maxWidth: "600px",
 };
 
-type SingleOptionType = { label: string, value: string }
+type SingleOptionType = { label: string; value: string };
 
 interface RoutedStudentSet {
   id?: string;
-};
+}
 
 export default function Edit() {
   const { id } = useParams<RoutedStudentSet>();
   const { documentError, document } = useFirebaseDocument("students", id);
   const history = useHistory();
-  const { updateDocument, response } = useFirestore("students", undefined, undefined);
+  const { updateDocument, response } = useFirestore(
+    "students",
+    undefined,
+    undefined
+  );
 
   // form field values
   const [name, setName] = useState<string>();
@@ -54,12 +58,14 @@ export default function Edit() {
   const [currentGrade, setCurrentGrade] = useState<SingleOptionType>();
   const [currentTarget, setCurrentTarget] = useState<SingleOptionType>();
   const [currentApproach, setCurrentApproach] = useState<SingleOptionType>();
-  const [currentBenchmarking, setCurrentBenchmarking] = useState<MultiValue<SingleOptionType>>();
+  const [currentBenchmarking, setCurrentBenchmarking] =
+    useState<MultiValue<SingleOptionType>>();
   const [currentBenchmarkSet, setCurrentBenchmarkSet] =
     useState<SingleOptionType>();
   const [currentErrorApproach, setCurrentErrorApproach] =
     useState<SingleOptionType>();
-  const [currentSRApproach, setCurrentSRApproach] = useState<SingleOptionType>();
+  const [currentSRApproach, setCurrentSRApproach] =
+    useState<SingleOptionType>();
   const [formError, setFormError] = useState<string>();
   const [didBuild, setDidBuild] = useState(false);
   const [aimLineValue, setAimLineValue] = useState(0);
@@ -71,7 +77,9 @@ export default function Edit() {
     setDidBuild(true);
     setName((document as StudentDataInterface).name);
     setDetails((document as StudentDataInterface).details);
-    setDueDate(FormatDate((document as StudentDataInterface).dueDate!.toDate()));
+    setDueDate(
+      FormatDate((document as StudentDataInterface).dueDate!.toDate())
+    );
     setAimLineValue((document as StudentDataInterface).aimLine!);
     setDurationTask((document as StudentDataInterface).minForTask!);
 
@@ -82,7 +90,11 @@ export default function Edit() {
         setCurrentTarget(op);
       }
 
-      if ((document as StudentDataInterface).currentBenchmarking.includes(op.label)) {
+      if (
+        (document as StudentDataInterface).currentBenchmarking.includes(
+          op.label
+        )
+      ) {
         benchmarkingAreas.push(op);
       }
     });
@@ -108,7 +120,9 @@ export default function Edit() {
     });
 
     ErrorCorrection.forEach((ia: SingleOptionType) => {
-      if (ia.value === (document as StudentDataInterface).currentErrorApproach) {
+      if (
+        ia.value === (document as StudentDataInterface).currentErrorApproach
+      ) {
         setCurrentErrorApproach(ia);
       }
     });
@@ -146,9 +160,11 @@ export default function Edit() {
       return;
     }
 
-    if (currentBenchmarking === undefined ||
+    if (
+      currentBenchmarking === undefined ||
       currentBenchmarking === null ||
-      (currentBenchmarking as any[]).length < 1) {
+      (currentBenchmarking as any[]).length < 1
+    ) {
       setFormError("Please select benchmarking options");
       return;
     }
@@ -239,7 +255,9 @@ export default function Edit() {
           <span>Target For Benchmarking</span>
           <Select
             options={CoreOperations}
-            onChange={(option: MultiValue<SingleOptionType>) => setCurrentBenchmarking(option)}
+            onChange={(option: MultiValue<SingleOptionType>) =>
+              setCurrentBenchmarking(option)
+            }
             value={currentBenchmarking}
             isMulti={true}
           />

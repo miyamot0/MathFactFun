@@ -7,50 +7,13 @@
  */
 
 import firebase from "firebase/app";
+import { StudentDataInterface } from "../firebase/types/GeneralTypes";
 
-export interface CommentInterface {
-  content?: string;
-  displayName?: string;
-  createdAt?: any;
-  createdBy?: any;
-  id?: number;
-}
-
-export interface StudentDataInterface {
-  aimLine?: number;
-  minForTask?: number;
-
-  // Strings
-  id: string | undefined | null;
-  creator?: string;
-  currentApproach?: string | undefined;
-  currentErrorApproach?: string | undefined;
-  currentGrade?: string;
-  currentSRApproach?: string | undefined;
-  currentTarget?: string | undefined;
-  details?: string;
-  name?: string;
-  problemSet?: string;
-
-  // Timestamps
-  createdAt: firebase.firestore.Timestamp | null;
-  dueDate: firebase.firestore.Timestamp | null;
-  lastActivity: firebase.firestore.Timestamp | null;
-
-  // Arrays
-  comments: CommentInterface[];
-  completedBenchmark: string[];
-  currentBenchmarking: string[];
-  factsMastered: string[];
-  factsSkipped: string[];
-  factsTargeted: string[];
-}
-
-interface StudentModelInterface {
+type StudentModelInterface = {
   data: StudentDataInterface;
   CheckObject: () => boolean;
   SubmitObject: () => StudentDataInterface;
-}
+};
 
 /** StudentModel
  *

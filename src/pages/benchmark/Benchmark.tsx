@@ -30,7 +30,10 @@ import {
 import { RelevantKeys } from "../../maths/Facts";
 
 import { FactsOnFire } from "../../maths/Mind";
-import { PerformanceDataInterface, PerformanceModel } from "../../models/PerformanceModel";
+import {
+  PerformanceDataInterface,
+  PerformanceModel,
+} from "../../models/PerformanceModel";
 import { FactEntryModel } from "../../models/FactEntryModel";
 
 import { FactModelInterface } from "../../models/FactEntryModel";
@@ -38,7 +41,7 @@ import { PerformanceModelInterface } from "../../models/PerformanceModel";
 
 // Styles
 import "../intervention/ExplicitTiming.css";
-import { StudentDataInterface } from "../../models/StudentModel";
+import { StudentDataInterface } from "../../firebase/types/GeneralTypes";
 
 const ActionSequence = {
   Start: "ActionSequence.Start",
@@ -51,8 +54,8 @@ const DelCode = "Del";
 
 interface RoutedStudentSet {
   id?: string;
-  target?: string
-};
+  target?: string;
+}
 
 export default function Benchmark() {
   const { id, target } = useParams<RoutedStudentSet>();
@@ -100,7 +103,11 @@ export default function Benchmark() {
    * @param {(key: React.KeyboardEvent<HTMLElement>) => void} handler ...
    * @param {Window} element ...
    */
-  function useEventListener(eventName: string, handler: (key: React.KeyboardEvent<HTMLElement>) => void, element: Window = window): void {
+  function useEventListener(
+    eventName: string,
+    handler: (key: React.KeyboardEvent<HTMLElement>) => void,
+    element: Window = window
+  ): void {
     const savedHandler = useRef({});
     useEffect(() => {
       savedHandler.current = handler;
@@ -150,7 +157,7 @@ export default function Benchmark() {
 
       captureKeyClick(modKey);
     }
-  };
+  }
 
   // Add event listener to hook
   useEventListener("keydown", keyHandler);
@@ -201,7 +208,10 @@ export default function Benchmark() {
 
     let problems: string[][] = array.slice(start, end);
 
-    return problems.reduce((accumulator, value) => accumulator.concat(value), [] as string[]);
+    return problems.reduce(
+      (accumulator, value) => accumulator.concat(value),
+      [] as string[]
+    );
 
     //return [].concat.apply([], array.slice(start, end));
   }
@@ -255,7 +265,10 @@ export default function Benchmark() {
     if (document && !loadedData) {
       const targetTrim = target!.split("-")[0];
       const coreItems = getCoreProblemSet(targetTrim);
-      const coreSet = getSetFromArray(coreItems, (document as StudentDataInterface).problemSet!);
+      const coreSet = getSetFromArray(
+        coreItems,
+        (document as StudentDataInterface).problemSet!
+      );
       const coreSetClean = getUniqueProblems(
         coreSet,
         GetOperatorFromLabel(targetTrim)
@@ -298,11 +311,10 @@ export default function Benchmark() {
   async function submitDataToFirebase(
     finalFactObject: FactModelInterface | null
   ): Promise<void> {
-
     let finalEntries = factModelList;
 
     if (finalFactObject !== null) {
-      finalEntries?.push(finalFactObject)
+      finalEntries?.push(finalFactObject);
     }
 
     const end = new Date();
@@ -323,7 +335,9 @@ export default function Benchmark() {
     performanceInformation.data.nRetries = 0;
     performanceInformation.data.sessionDuration =
       (end.getTime() - startTime!.getTime()) / 1000;
-    performanceInformation.data.setSize = (document as StudentDataInterface).factsTargeted.length;
+    performanceInformation.data.setSize = (
+      document as StudentDataInterface
+    ).factsTargeted.length;
     performanceInformation.data.totalDigits = totalDigits;
 
     // Timestamps
@@ -348,10 +362,13 @@ export default function Benchmark() {
 
     // If added without issue, update timestamp
     if (!response.error) {
-      let completedBenchmark = (document as StudentDataInterface).completedBenchmark;
+      let completedBenchmark = (document as StudentDataInterface)
+        .completedBenchmark;
 
       completedBenchmark.push(
-        `${target} ${(document as StudentDataInterface).dueDate!.toDate().toDateString()}`
+        `${target} ${(document as StudentDataInterface)
+          .dueDate!.toDate()
+          .toDateString()}`
       );
 
       // Omit time updates
@@ -457,7 +474,9 @@ export default function Benchmark() {
     currentItem.data.factCorrect = isMatching;
     currentItem.data.initialTry = isOnInitialTry;
 
-    currentItem.data.factType = (document as StudentDataInterface).currentTarget;
+    currentItem.data.factType = (
+      document as StudentDataInterface
+    ).currentTarget;
     currentItem.data.factString = viewRepresentationInternal;
     currentItem.data.factType = target;
     currentItem.data.factEntry = combinedResponse;
@@ -520,7 +539,8 @@ export default function Benchmark() {
     <div className="wrapperET">
       <div className="topBoxET">
         <h2 style={{ display: "inline-block" }}>
-          Benchmark: ({document ? (document as StudentDataInterface).name : <></>}), Time:{" "}
+          Benchmark: (
+          {document ? (document as StudentDataInterface).name : <></>}), Time:{" "}
           {document ? (
             <Timer
               secondsTotal={secondsLeft}

@@ -17,13 +17,20 @@ import { useHistory } from "react-router-dom";
 import { useAuthorizationContext } from "../../context/useAuthorizationContext";
 import { GetApproachStringFromLabel } from "../../utilities/LabelHelper";
 
-import { StudentDataInterface } from "../../models/StudentModel";
-
 // styles
 import "./StudentSummary.css";
+import { StudentDataInterface } from "../../firebase/types/GeneralTypes";
 
-export default function StudentSummary({ student }: { student: StudentDataInterface }) {
-  const { deleteDocument, response } = useFirestore("students", undefined, undefined);
+export default function StudentSummary({
+  student,
+}: {
+  student: StudentDataInterface;
+}) {
+  const { deleteDocument, response } = useFirestore(
+    "students",
+    undefined,
+    undefined
+  );
   const { user, adminFlag } = useAuthorizationContext();
   const history = useHistory();
 

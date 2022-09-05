@@ -13,7 +13,8 @@
 import React from "react";
 
 import { Link } from "react-router-dom";
-import { CurrentObjectTypeArrays, useFirebaseCollection } from "../../firebase/useFirebaseCollection";
+import { CurrentObjectTypeArrays } from "../../firebase/types/GeneralTypes";
+import { useFirebaseCollection } from "../../firebase/useFirebaseCollection";
 import { UserDataInterface } from "../../models/UserModel";
 
 // styles
@@ -24,7 +25,11 @@ const userConverter = (userArray: CurrentObjectTypeArrays) => {
 };
 
 export default function Admin(): JSX.Element {
-  const { documents, error } = useFirebaseCollection("users", undefined, undefined);
+  const { documents, error } = useFirebaseCollection(
+    "users",
+    undefined,
+    undefined
+  );
 
   return (
     <div>

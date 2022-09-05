@@ -17,11 +17,11 @@ import BenchmarkList from "../../components/BenchmarkList";
 
 // styles
 import "./Dashboards.css";
-import { StudentDataInterface } from "../../models/StudentModel";
+import { StudentDataInterface } from "../../firebase/types/GeneralTypes";
 
 interface RoutedTeacherSet {
   id?: string;
-};
+}
 
 export default function DashboardBenchmark() {
   const { id } = useParams<RoutedTeacherSet>();
@@ -41,7 +41,7 @@ export default function DashboardBenchmark() {
         Benchmark Dashboard: {(document as StudentDataInterface).name}
       </h2>
       {documentError && <p className="error">{documentError}</p>}
-      {document && <BenchmarkList student={(document as StudentDataInterface)} />}
+      {document && <BenchmarkList student={document as StudentDataInterface} />}
     </div>
   );
 }

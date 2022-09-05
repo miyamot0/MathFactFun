@@ -18,13 +18,14 @@ import { useAuthorizationContext } from "../../context/useAuthorizationContext";
 // Components
 import StudentList from "../../components/StudentList";
 import StudentFilter from "./StudentFilter";
-import { StudentDataInterface } from "../../models/StudentModel";
+import { StudentDataInterface } from "../../firebase/types/GeneralTypes";
 
 export default function Dashboard() {
   const { user, adminFlag } = useAuthorizationContext();
 
   // Limit scope if not an admin
-  const queryString = user && !adminFlag ? ["creator", "==", user.uid] : undefined;
+  const queryString =
+    user && !adminFlag ? ["creator", "==", user.uid] : undefined;
   const orderString = undefined;
 
   const { documents, error } = useFirebaseCollection(
@@ -47,23 +48,23 @@ export default function Dashboard() {
 
   const students = documents
     ? (documents as StudentDataInterface[]).filter((document) => {
-      switch (filter) {
-        case "All":
-          return true;
-        case "Mine":
-          return document.creator === user!.uid;
-        case "K":
-        case "1st":
-        case "2nd":
-        case "3rd":
-        case "4th":
-        case "5th":
-        case "6th":
-          return document.currentGrade === filter;
-        default:
-          return true;
-      }
-    })
+        switch (filter) {
+          case "All":
+            return true;
+          case "Mine":
+            return document.creator === user!.uid;
+          case "K":
+          case "1st":
+          case "2nd":
+          case "3rd":
+          case "4th":
+          case "5th":
+          case "6th":
+            return document.currentGrade === filter;
+          default:
+            return true;
+        }
+      })
     : null;
 
   return (

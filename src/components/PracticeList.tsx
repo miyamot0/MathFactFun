@@ -15,9 +15,9 @@ import firebase from "firebase/app";
 
 import { Link } from "react-router-dom";
 import { GetApproachStringFromLabel } from "../utilities/LabelHelper";
-import { StudentDataInterface } from "../models/StudentModel";
 
 import "./PracticeList.css";
+import { StudentDataInterface } from "../firebase/types/GeneralTypes";
 
 interface PracticeListInterface {
   students: StudentDataInterface[];
@@ -36,7 +36,11 @@ const anchorStyle = {
  * @param {string} id Personal id
  * @returns {string} path
  */
-function generateRouteBaseOnStrategy(strategy: string | undefined, target: string | undefined, id: string | undefined | null): string {
+function generateRouteBaseOnStrategy(
+  strategy: string | undefined,
+  target: string | undefined,
+  id: string | undefined | null
+): string {
   if (strategy === undefined || target === undefined || id === undefined) {
     return "#!";
   }
@@ -51,7 +55,9 @@ function generateRouteBaseOnStrategy(strategy: string | undefined, target: strin
  * @param {firebase.firestore.Timestamp} date Stored date, to compare with current
  * @returns {Bool}
  */
-function checkIfDateCurrent(date: firebase.firestore.Timestamp | null): boolean {
+function checkIfDateCurrent(
+  date: firebase.firestore.Timestamp | null
+): boolean {
   if (date === null) {
     return false;
   }

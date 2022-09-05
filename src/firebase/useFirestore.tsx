@@ -12,9 +12,15 @@
 
 import { useReducer, useEffect, useState } from "react";
 import { PerformanceDataInterface } from "../models/PerformanceModel";
-import { StudentDataInterface } from "../models/StudentModel";
 import { UserDataInterface } from "../models/UserModel";
 import { projectFirestore, timestamp } from "./config";
+import { StudentDataInterface } from "./types/GeneralTypes";
+
+export enum FirestoreCollections {
+  Students = "students",
+  Performances = "performances",
+  Users = "users",
+}
 
 export enum FirestoreStates {
   PENDING = "PENDING",
@@ -38,7 +44,9 @@ interface FirestoreAction {
 }
 
 interface UseFirestore {
-  addDocument: (doc: StudentDataInterface | UserDataInterface | PerformanceDataInterface) => Promise<void>;
+  addDocument: (
+    doc: StudentDataInterface | UserDataInterface | PerformanceDataInterface
+  ) => Promise<void>;
   deleteDocument: (id: string) => Promise<void>;
   updateDocument: (id: string, updates: {}) => Promise<void>;
   response: FirestoreState;
@@ -123,9 +131,9 @@ export function useFirestore(
     collection !== ""
       ? projectFirestore.collection(collection)
       : projectFirestore
-        .collection("performances")
-        .doc(targetSkill)
-        .collection(studentId!);
+          .collection("performances")
+          .doc(targetSkill)
+          .collection(studentId!);
 
   // only dispatch is not cancelled
   function dispatchIfNotCancelled(action: FirestoreAction): void {
@@ -141,7 +149,9 @@ export function useFirestore(
    * @param {StudentModel | PerformanceModel} doc document to upload
    * @returns {Promise<void>}
    */
-  async function addDocument(doc: StudentDataInterface | UserDataInterface | PerformanceDataInterface): Promise<void> {
+  async function addDocument(
+    doc: StudentDataInterface | UserDataInterface | PerformanceDataInterface
+  ): Promise<void> {
     dispatch({
       type: FirestoreStates.PENDING,
       payload: null,
@@ -216,7 +226,7 @@ export function useFirestore(
       dispatchIfNotCancelled({
         type: FirestoreStates.UPDATED,
         payload: null,
-        error: null
+        error: null,
       });
       return updatedDocument;
     } catch (err: any) {

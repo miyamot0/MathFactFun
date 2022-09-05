@@ -18,19 +18,19 @@ import {
   WhereFilterOp,
   OrderByDirection,
 } from "@firebase/firestore-types";
-import { CommentInterface, StudentDataInterface } from "../models/StudentModel";
 import { PerformanceDataInterface } from "../models/PerformanceModel";
 import { UserDataInterface } from "../models/UserModel";
+import {
+  CommentInterface,
+  CurrentObjectTypes,
+  PossibleCollectionType,
+  StudentDataInterface,
+  UseFirebaseCollection,
+} from "./types/GeneralTypes";
+import { FirestoreCollections } from "./useFirestore";
+import { commentConverter } from "./converters/GeneralConverters";
 
 const CollectionError = "Unable to retrieve data";
-
-export type CurrentObjectTypes = StudentDataInterface | CommentInterface | PerformanceDataInterface;
-export type CurrentObjectTypeArrays = StudentDataInterface[] | CommentInterface[] | PerformanceDataInterface[] | UserDataInterface[];
-
-interface UseFirebaseCollection {
-  documents: CurrentObjectTypeArrays | null;
-  error: string | undefined;
-}
 
 /** useFirebaseCollection
  *
@@ -46,7 +46,7 @@ export function useFirebaseCollection(
   queryString: string[] | undefined,
   orderString: string[] | undefined
 ): UseFirebaseCollection {
-  const [documents, setDocuments] = useState<StudentDataInterface[] | CommentInterface[] | PerformanceDataInterface[] | UserDataInterface[] | null>(null);
+  const [documents, setDocuments] = useState<PossibleCollectionType>(null);
   const [error, setError] = useState<string>();
 
   const query = useRef(queryString).current;
@@ -66,6 +66,10 @@ export function useFirebaseCollection(
       ref = ref.orderBy(fieldPath, direction as OrderByDirection);
     }
 
+    if (collectionString === "-1") {
+      //ref = ref.withConverter(commentConverter);
+    }
+
     const unsubscribe = ref.onSnapshot(
       (snapshot) => {
         let results = Array<CurrentObjectTypes | null>();
@@ -76,7 +80,13 @@ export function useFirebaseCollection(
           results.push(preDoc);
         });
 
-        setDocuments(results as StudentDataInterface[] | CommentInterface[] | PerformanceDataInterface[] | UserDataInterface[]);
+        setDocuments(
+          results as
+            | StudentDataInterface[]
+            //| CommentInterface[]
+            | PerformanceDataInterface[]
+            | UserDataInterface[]
+        );
         setError(undefined);
       },
       (error) => {

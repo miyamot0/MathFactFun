@@ -18,15 +18,20 @@ import { useFirebaseCollection } from "../../firebase/useFirebaseCollection";
 import { useFirestore } from "../../firebase/useFirestore";
 import { FactsOnFire } from "../../maths/Mind";
 import Select from "react-select";
-import { DragDropContext, Droppable, Draggable, DropResult } from "react-beautiful-dnd";
+import {
+  DragDropContext,
+  Droppable,
+  Draggable,
+  DropResult,
+} from "react-beautiful-dnd";
 import {
   OnlyUnique,
   GetOperatorFromLabel,
   Sum,
 } from "../../utilities/LabelHelper";
-import { StudentDataInterface } from "../../models/StudentModel";
 import { PerformanceDataInterface } from "../../models/PerformanceModel";
 import { FactDataInterface } from "../../models/FactEntryModel";
+import { StudentDataInterface } from "../../firebase/types/GeneralTypes";
 
 const TitleStyle = {
   color: "#444",
@@ -67,7 +72,7 @@ const DropContainer = {
   alignItems: "center" as const,
 };
 
-type SingleOptionType = { label: string, value: string }
+type SingleOptionType = { label: string; value: string };
 
 interface FactStructure {
   Answer: string;
@@ -82,7 +87,7 @@ interface ItemHistory {
   AverageCorrect: number;
   Correct: number;
   Total: number;
-};
+}
 
 interface SetItem {
   Answer: string;
@@ -98,7 +103,7 @@ interface DragColumnContents {
 }
 
 interface DragColumnsInterface {
-  [key: string]: DragColumnContents | null
+  [key: string]: DragColumnContents | null;
 }
 
 /** onDragEnd
@@ -116,7 +121,6 @@ function onDragEnd(
   setColumns: (value: React.SetStateAction<DragColumnsInterface>) => void,
   setIncomingChange: (value: React.SetStateAction<boolean>) => void
 ): void {
-
   if (!result.destination) return;
   const { source, destination } = result;
 
@@ -150,10 +154,18 @@ function onDragEnd(
       },
     } as DragColumnsInterface;
 
-    columnObject.Available!.name = `Available (${columnObject.Available!.items.length})`;
-    columnObject.Targeted!.name = `Targeted (${columnObject.Targeted!.items.length})`;
-    columnObject.Mastered!.name = `Mastered (${columnObject.Mastered!.items.length})`;
-    columnObject.Skipped!.name = `Skipped (${columnObject.Skipped!.items.length})`;
+    columnObject.Available!.name = `Available (${
+      columnObject.Available!.items.length
+    })`;
+    columnObject.Targeted!.name = `Targeted (${
+      columnObject.Targeted!.items.length
+    })`;
+    columnObject.Mastered!.name = `Mastered (${
+      columnObject.Mastered!.items.length
+    })`;
+    columnObject.Skipped!.name = `Skipped (${
+      columnObject.Skipped!.items.length
+    })`;
 
     setColumns(columnObject);
   } else {
@@ -181,7 +193,9 @@ function onDragEnd(
  * @param {StudentDataInterface} student Student document from firestore
  * @returns {Array} Mind facts
  */
-function loadMathFacts(student: StudentDataInterface | null): FactStructure[][] {
+function loadMathFacts(
+  student: StudentDataInterface | null
+): FactStructure[][] {
   let factsOnFire = FactsOnFire.Addition;
 
   switch (student!.currentTarget) {
@@ -255,8 +269,8 @@ const formatBackgroundColor = (entry: SetItem) => {
 
 interface RoutedStudentSet {
   id?: string;
-  target?: string
-};
+  target?: string;
+}
 
 export default function SetCreator() {
   const { target, id } = useParams<RoutedStudentSet>();
@@ -266,7 +280,11 @@ export default function SetCreator() {
     undefined,
     undefined
   );
-  const { updateDocument, response } = useFirestore("students", undefined, undefined);
+  const { updateDocument, response } = useFirestore(
+    "students",
+    undefined,
+    undefined
+  );
 
   const [loadedData, setLoadedData] = useState(false);
   const [incomingChange, setIncomingChange] = useState(false);
@@ -296,7 +314,6 @@ export default function SetCreator() {
   useEffect(() => {
     if (documents) {
       const mappedDocument = documents.map((doc) => {
-
         // Obj saved on FS
         const docAsObject = doc as PerformanceDataInterface;
 
@@ -304,7 +321,9 @@ export default function SetCreator() {
           // Pull in entries
           Items: docAsObject.entries as FactDataInterface[],
           Date: new Date(docAsObject.dateTimeStart!),
-          ShortDate: new Date(docAsObject.dateTimeStart!).toLocaleDateString("en-US"),
+          ShortDate: new Date(docAsObject.dateTimeStart!).toLocaleDateString(
+            "en-US"
+          ),
           Errors: docAsObject.errCount,
           DigitsCorrect: docAsObject.correctDigits,
           DigitsCorrectInitial: docAsObject.nCorrectInitial,
@@ -314,8 +333,12 @@ export default function SetCreator() {
       });
 
       // Pull out fact models alone, array of array
-      const itemSummaries: FactDataInterface[][] = mappedDocument.map((items) => items.Items);
-      const flatItemSummaries: FactDataInterface[] = itemSummaries.reduce((accumulator, value) => accumulator.concat(value));
+      const itemSummaries: FactDataInterface[][] = mappedDocument.map(
+        (items) => items.Items
+      );
+      const flatItemSummaries: FactDataInterface[] = itemSummaries.reduce(
+        (accumulator, value) => accumulator.concat(value)
+      );
 
       const uniqueProblems: string[] = flatItemSummaries
         .map((obj) => obj.factString!)
@@ -390,7 +413,9 @@ export default function SetCreator() {
     if (document && itemHistory && !loadedData) {
       // Loads ALL facts
 
-      const mapped: FactStructure[][] = loadMathFacts(document as StudentDataInterface);
+      const mapped: FactStructure[][] = loadMathFacts(
+        document as StudentDataInterface
+      );
       const mappedReduced: FactStructure[] = mapped.reduce(
         (accumulator, value) => accumulator.concat(value)
       );
@@ -422,7 +447,9 @@ export default function SetCreator() {
 
       var newColumns = columns;
 
-      const currTargetedSets = (document as StudentDataInterface).factsTargeted.map((element) => {
+      const currTargetedSets = (
+        document as StudentDataInterface
+      ).factsTargeted.map((element) => {
         let otrs = 0,
           accuracy = 0,
           latency = 0;
@@ -448,7 +475,9 @@ export default function SetCreator() {
 
       newColumns.Targeted!.items = currTargetedSets;
 
-      const currMasteredSets = (document as StudentDataInterface).factsMastered.map((element) => {
+      const currMasteredSets = (
+        document as StudentDataInterface
+      ).factsMastered.map((element) => {
         let otrs = 0,
           accuracy = 0,
           latency = 0;
@@ -474,7 +503,9 @@ export default function SetCreator() {
 
       newColumns.Mastered!.items = currMasteredSets;
 
-      const currSkippedSets = (document as StudentDataInterface).factsSkipped.map((element) => {
+      const currSkippedSets = (
+        document as StudentDataInterface
+      ).factsSkipped.map((element) => {
         let otrs = 0,
           accuracy = 0,
           latency = 0;
@@ -512,10 +543,18 @@ export default function SetCreator() {
 
       newColumns.Available!.items = filteredMap;
 
-      newColumns.Available!.name = `Available (${newColumns.Available!.items.length})`;
-      newColumns.Targeted!.name = `Targeted (${newColumns.Targeted!.items.length})`;
-      newColumns.Mastered!.name = `Mastered (${newColumns.Mastered!.items.length})`;
-      newColumns.Skipped!.name = `Skipped (${newColumns.Skipped!.items.length})`;
+      newColumns.Available!.name = `Available (${
+        newColumns.Available!.items.length
+      })`;
+      newColumns.Targeted!.name = `Targeted (${
+        newColumns.Targeted!.items.length
+      })`;
+      newColumns.Mastered!.name = `Mastered (${
+        newColumns.Mastered!.items.length
+      })`;
+      newColumns.Skipped!.name = `Skipped (${
+        newColumns.Skipped!.items.length
+      })`;
 
       setColumns(newColumns);
       setLoadedData(true);
@@ -590,7 +629,9 @@ export default function SetCreator() {
     let preSkipped = columns.Skipped!.items;
     let preMastered = columns.Mastered!.items;
 
-    const mapped = loadMathFacts(document as StudentDataInterface)[setArray].map((item) => item.id);
+    const mapped = loadMathFacts(document as StudentDataInterface)[
+      setArray
+    ].map((item) => item.id);
 
     columns.Targeted!.items.forEach((item) => {
       preAvailable.push(item);
@@ -834,8 +875,9 @@ export default function SetCreator() {
                                           setNumber +
                                           1 -
                                           valueAdjustment
-                                        ).toString()} Item: ${parseInt(item.id.split(":")[2]) + 1
-                                          }`}
+                                        ).toString()} Item: ${
+                                          parseInt(item.id.split(":")[2]) + 1
+                                        }`}
                                         <br />
                                         {`OTRs: ${formatTextBox(item.OTRs, 0)}`}
                                         <br />

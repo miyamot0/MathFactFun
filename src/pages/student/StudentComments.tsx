@@ -15,14 +15,23 @@ import { useState } from "react";
 import { timestamp } from "../../firebase/config";
 import { useAuthorizationContext } from "../../context/useAuthorizationContext";
 import { useFirestore } from "../../firebase/useFirestore";
-import { CommentInterface } from "../../models/StudentModel";
-
-import { StudentDataInterface } from "../../models/StudentModel";
 
 import "./StudentComments.css";
+import {
+  CommentInterface,
+  StudentDataInterface,
+} from "../../firebase/types/GeneralTypes";
 
-export default function StudentComments({ student }: { student: StudentDataInterface }) {
-  const { updateDocument, response } = useFirestore("students", undefined, undefined);
+export default function StudentComments({
+  student,
+}: {
+  student: StudentDataInterface;
+}) {
+  const { updateDocument, response } = useFirestore(
+    "students",
+    undefined,
+    undefined
+  );
   const { user, adminFlag } = useAuthorizationContext();
 
   const [newComment, setNewComment] = useState("");
@@ -101,7 +110,8 @@ export default function StudentComments({ student }: { student: StudentDataInter
 
               <div className="comment-author">
                 <p>
-                  {comment.displayName?.split(" ")
+                  {comment.displayName
+                    ?.split(" ")
                     .map(
                       (w) => w[0].toUpperCase() + w.substring(1).toLowerCase()
                     )

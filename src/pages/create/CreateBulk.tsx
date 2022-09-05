@@ -25,7 +25,7 @@ import {
   Contingencies,
   ErrorHandling,
 } from "../../maths/Facts";
-import { StudentDataInterface } from "../../models/StudentModel";
+import { StudentDataInterface } from "../../firebase/types/GeneralTypes";
 
 const CreateFormStyle = {
   maxWidth: "600px",
@@ -33,32 +33,46 @@ const CreateFormStyle = {
 
 interface RoutedAdminSet {
   id?: string;
-};
+}
 
 // Page to create new students
 export default function CreateBulk() {
   const history = useHistory();
   const { id } = useParams<RoutedAdminSet>();
-  const { addDocument, response } = useFirestore("students", undefined, undefined);
+  const { addDocument, response } = useFirestore(
+    "students",
+    undefined,
+    undefined
+  );
 
   // field values
   const [studentIdBank, setStudentIdBank] = useState<string>("");
   const [dueDate, setDueDate] = useState<string>("");
-  const [currentGrade, setCurrentGrade] = useState<SingleValue<{ value: string; label: string; }>>({ value: "", label: "" });
-  const [currentApproach, setCurrentApproach] = useState<SingleValue<{ value: string; label: string; }>>({
+  const [currentGrade, setCurrentGrade] = useState<
+    SingleValue<{ value: string; label: string }>
+  >({ value: "", label: "" });
+  const [currentApproach, setCurrentApproach] = useState<
+    SingleValue<{ value: string; label: string }>
+  >({
     value: "N/A",
     label: "No Current Intervention",
   });
   const [currentBenchmarking, setCurrentBenchmarking] = useState<any>();
-  const [currentTarget, setCurrentTarget] = useState<SingleValue<{ value: string; label: string; }>>({
+  const [currentTarget, setCurrentTarget] = useState<
+    SingleValue<{ value: string; label: string }>
+  >({
     value: "N/A",
     label: "No Current Target",
   });
-  const [currentErrorApproach, setCurrentErrorApproach] = useState<SingleValue<{ value: string; label: string; }>>({
+  const [currentErrorApproach, setCurrentErrorApproach] = useState<
+    SingleValue<{ value: string; label: string }>
+  >({
     value: ErrorHandling.EveryTime,
     label: "Give feedback every time",
   });
-  const [currentSRApproach, setCurrentSRApproach] = useState<SingleValue<{ value: string; label: string; }>>({
+  const [currentSRApproach, setCurrentSRApproach] = useState<
+    SingleValue<{ value: string; label: string }>
+  >({
     value: "None",
     label: "No programmed contingencies",
   });
@@ -161,7 +175,7 @@ export default function CreateBulk() {
         aimLine,
         minForTask,
         problemSet: "A",
-        id: undefined
+        id: undefined,
       } as StudentDataInterface;
 
       await addDocument(studentObject);

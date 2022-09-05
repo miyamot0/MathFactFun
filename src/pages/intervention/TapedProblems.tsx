@@ -47,7 +47,7 @@ import {
 
 // styles
 import "./TapedProblems.css";
-import { StudentDataInterface } from "../../models/StudentModel";
+import { StudentDataInterface } from "../../firebase/types/GeneralTypes";
 
 const ActionSequence = {
   Start: "ActionSequence.Start",
@@ -74,7 +74,7 @@ Modal.setAppElement("#root");
 interface RoutedStudentSet {
   id?: string;
   target?: string;
-};
+}
 
 export default function TapedProblems() {
   const { id, target } = useParams<RoutedStudentSet>();
@@ -237,11 +237,10 @@ export default function TapedProblems() {
   async function submitDataToFirebase(
     finalFactObject: FactModelInterface | null
   ): Promise<void> {
-
     let finalEntries = factModelList;
 
     if (finalFactObject !== null) {
-      finalEntries?.push(finalFactObject)
+      finalEntries?.push(finalFactObject);
     }
 
     const end = new Date();

@@ -18,16 +18,16 @@ import { useFirebaseDocument } from "../../firebase/useFirebaseDocument";
 import StudentSummary from "./StudentSummary";
 
 import "./Student.css";
-import { StudentDataInterface } from "../../models/StudentModel";
+import { StudentDataInterface } from "../../firebase/types/GeneralTypes";
 
 interface RoutedStudent {
   id?: string;
-};
+}
 
 export default function Student() {
   const { id } = useParams<RoutedStudent>();
 
-  console.log(id)
+  console.log(id);
   const { documentError, document } = useFirebaseDocument("students", id);
 
   if (documentError) {

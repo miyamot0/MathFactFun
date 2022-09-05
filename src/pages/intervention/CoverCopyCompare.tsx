@@ -43,7 +43,7 @@ import {
 
 // styles
 import "./CoverCopyCompare.css";
-import { StudentDataInterface } from "../../models/StudentModel";
+import { StudentDataInterface } from "../../firebase/types/GeneralTypes";
 
 const ActionSequence = {
   Entry: "ActionSequence.Entry",
@@ -70,7 +70,7 @@ Modal.setAppElement("#root");
 interface RoutedStudentSet {
   id?: string;
   target?: string;
-};
+}
 
 export default function CoverCopyCompare() {
   const { id, target } = useParams<RoutedStudentSet>();
@@ -124,7 +124,11 @@ export default function CoverCopyCompare() {
    * @param {(key: React.KeyboardEvent<HTMLElement>) => void} handler ...
    * @param {Window} element ...
    */
-  function useEventListener(eventName: string, handler: (key: React.KeyboardEvent<HTMLElement>) => void, element: Window = window): void {
+  function useEventListener(
+    eventName: string,
+    handler: (key: React.KeyboardEvent<HTMLElement>) => void,
+    element: Window = window
+  ): void {
     const savedHandler = useRef({});
 
     useEffect(() => {
@@ -193,7 +197,10 @@ export default function CoverCopyCompare() {
    * @returns {boolean}
    */
   function shouldShowFeedback(trialError: boolean): boolean {
-    return DetermineErrorCorrection(trialError, (document as StudentDataInterface).currentErrorApproach!);
+    return DetermineErrorCorrection(
+      trialError,
+      (document as StudentDataInterface).currentErrorApproach!
+    );
   }
 
   function openModal(): void {
@@ -212,7 +219,9 @@ export default function CoverCopyCompare() {
 
       // Establish operator sign
       setOperatorSymbol(
-        GetOperatorFromLabel((document as StudentDataInterface).currentTarget!.toString())
+        GetOperatorFromLabel(
+          (document as StudentDataInterface).currentTarget!.toString()
+        )
       );
 
       // Flag that data is loaded
@@ -229,11 +238,10 @@ export default function CoverCopyCompare() {
   async function submitDataToFirebase(
     finalFactObject: FactModelInterface
   ): Promise<void> {
-
     let finalEntries = factModelList;
 
     if (finalFactObject !== null) {
-      finalEntries?.push(finalFactObject)
+      finalEntries?.push(finalFactObject);
     }
 
     const end = new Date();
@@ -243,7 +251,9 @@ export default function CoverCopyCompare() {
     // Strings
     performanceInformation.data.id = document!.id;
     performanceInformation.data.creator = user!.uid;
-    performanceInformation.data.target = (document as StudentDataInterface).currentTarget;
+    performanceInformation.data.target = (
+      document as StudentDataInterface
+    ).currentTarget;
     performanceInformation.data.method = InterventionFormat.CoverCopyCompare;
 
     // Numerics
@@ -253,7 +263,9 @@ export default function CoverCopyCompare() {
     performanceInformation.data.nRetries = nRetries;
     performanceInformation.data.sessionDuration =
       (end.getTime() - startTime!.getTime()) / 1000;
-    performanceInformation.data.setSize = (document as StudentDataInterface).factsTargeted.length;
+    performanceInformation.data.setSize = (
+      document as StudentDataInterface
+    ).factsTargeted.length;
     performanceInformation.data.totalDigits = totalDigits;
 
     // Timestamps
@@ -386,7 +398,9 @@ export default function CoverCopyCompare() {
         currentItem.data.factCorrect = isMatching;
         currentItem.data.initialTry = isOnInitialTry;
 
-        currentItem.data.factType = (document as StudentDataInterface).currentTarget;
+        currentItem.data.factType = (
+          document as StudentDataInterface
+        ).currentTarget;
         currentItem.data.factString = viewRepresentationInternal;
         currentItem.data.factEntry = entryRepresentationInternal;
 
@@ -547,7 +561,10 @@ export default function CoverCopyCompare() {
         </button>
       </Modal>
       <div className="topBox">
-        <h2>Cover Copy Compare: ({document ? (document as StudentDataInterface).name : <></>})</h2>
+        <h2>
+          Cover Copy Compare: (
+          {document ? (document as StudentDataInterface).name : <></>})
+        </h2>
       </div>
       <div
         className="box1"

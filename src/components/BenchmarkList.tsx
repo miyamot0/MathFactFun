@@ -13,7 +13,7 @@
 import React from "react";
 
 import { Link } from "react-router-dom";
-import { StudentDataInterface } from "../models/StudentModel";
+import { StudentDataInterface } from "../firebase/types/GeneralTypes";
 
 import "./BenchmarkList.css";
 
@@ -70,7 +70,11 @@ function generatedStyledFeedback(isCompleted: boolean): JSX.Element {
  * @param {boolean} isCompleted boolean flag
  * @returns {Link}
  */
-function generateWrapper(student: StudentDataInterface, benchmark: string, isCompleted: boolean): JSX.Element {
+function generateWrapper(
+  student: StudentDataInterface,
+  benchmark: string,
+  isCompleted: boolean
+): JSX.Element {
   if (isCompleted)
     return <p className="benchmark-list-card-title">{benchmark}</p>;
 

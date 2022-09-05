@@ -11,17 +11,15 @@
  */
 
 import { useEffect, useState } from "react";
-import { StudentDataInterface } from "../models/StudentModel";
 import { UserDataInterface } from "../models/UserModel";
 import { projectFirestore } from "./config";
+import {
+  StudentDataInterface,
+  UseFirebaseDocument,
+} from "./types/GeneralTypes";
 
 const ErrorNoData = "There was not a document at this location";
 const ErrorSnapshot = "Unable to get the document";
-
-interface UseFirebaseDocument {
-  document: StudentDataInterface | UserDataInterface | null;
-  documentError: string | undefined;
-}
 
 /** useFirebaseDocument
  *
@@ -35,7 +33,9 @@ export function useFirebaseDocument(
   collectionString: string,
   idString: string | undefined
 ): UseFirebaseDocument {
-  const [document, setDocument] = useState<null | StudentDataInterface | UserDataInterface>(null);
+  const [document, setDocument] = useState<
+    null | StudentDataInterface | UserDataInterface
+  >(null);
   const [documentError, setError] = useState<string>();
 
   function pullDocs() {
@@ -44,7 +44,6 @@ export function useFirebaseDocument(
     const unsubscribe = ref.onSnapshot(
       (snapshot) => {
         if (snapshot.data()) {
-
           let id = snapshot.id as string;
 
           if (snapshot.data() as StudentDataInterface) {

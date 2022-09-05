@@ -15,9 +15,9 @@ import firebase from "firebase/app";
 
 import { Link } from "react-router-dom";
 import { GetApproachStringFromLabel } from "../utilities/LabelHelper";
-import { StudentDataInterface } from "../models/StudentModel";
 
 import "./StudentList.css";
+import { StudentDataInterface } from "../firebase/types/GeneralTypes";
 
 interface StudentListInterface {
   students: StudentDataInterface[];
@@ -84,7 +84,7 @@ function generateWrapper(student: StudentDataInterface): JSX.Element {
   const isBenchmarkingCurrent = checkIfProgrammingCurrent(student.dueDate);
   const isBenchmarkingCompleted = checkIfBenchmarksCompleted(student);
 
-  console.log(student)
+  console.log(student);
 
   if (isBenchmarkingCurrent) {
     return (
