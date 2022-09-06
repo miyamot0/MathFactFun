@@ -1,0 +1,390 @@
+/** @license
+ *
+ * Copyright (c) Shawn P. Gilroy, Louisiana State University.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+import React, { useReducer } from "react";
+import { useEffect } from "react";
+import { useParams, useHistory } from "react-router-dom";
+
+// Hooks
+import { useFirestore } from "../../firebase/useFirestore";
+import { useFirebaseDocument2 } from "../../firebase/useFirebaseDocument";
+
+// Widgets
+import KeyPad from "./KeyPad";
+import Timer from "./subcomponents/Timer";
+import SimpleProblemFrame from "./SimpleProblemFrame";
+
+// Helpers
+import {
+  CalculateDigitsTotalAnswer,
+  CalculateDigitsCorrectAnswer,
+} from "../../utilities/LabelHelper";
+import { RelevantKeys } from "../../maths/Facts";
+
+// Styles
+import "../intervention/ExplicitTiming.css";
+import {
+  FactDataInterface,
+  StudentDataInterface,
+} from "../../firebase/types/GeneralTypes";
+import { timestamp } from "../../firebase/config";
+import { RoutedIdTargetParam } from "../CommonTypes/CommonPageTypes";
+import { useAuthorizationContext } from "../../context/useAuthorizationContext";
+import {
+  BenchmarkReducer,
+  DelCode,
+  InitialBenchmarkState,
+  loadWorkingDataBenchmark,
+  useEventListener,
+} from "./functionality/InterventionBehavior";
+import { BenchmarkActions, BenchmarkState } from "./types/InterventionTypes";
+
+const ActionSequence = {
+  Start: "ActionSequence.Start",
+  Answer: "ActionSequence.Answer",
+  Entry: "ActionSequence.Entry",
+  Begin: "ActionSequence.Begin",
+};
+
+export default function Benchmark() {
+  const { id, target } = useParams<RoutedIdTargetParam>();
+  const history = useHistory();
+  const { document } = useFirebaseDocument2<StudentDataInterface>(
+    "students",
+    id
+  );
+  const { user } = useAuthorizationContext();
+  const { addDocument2, response: addResponse } = useFirestore(
+    "",
+    target!.split("-")[0],
+    id
+  );
+  const { updateDocument, response: updateResponse } = useFirestore(
+    "students",
+    undefined,
+    undefined
+  );
+
+  const [state, dispatch] = useReducer(BenchmarkReducer, InitialBenchmarkState);
+
+  /** keyHandler
+   *
+   * Handle keyboard input
+   *
+   * @param {React.KeyboardEvent<HTMLElement>} key keyevent
+   */
+  function keyHandler(key: React.KeyboardEvent<HTMLElement>): void {
+    if (key.key === "Enter") return;
+
+    if (RelevantKeys.includes(key.key)) {
+      let modKey = key.key === "Backspace" ? "Del" : key.key;
+      modKey = key.key === "Delete" ? "Del" : modKey;
+
+      if (modKey === " ") {
+        if (state.CurrentAction !== ActionSequence.Entry) {
+          captureButtonAction();
+          return;
+        }
+
+        return;
+      }
+
+      captureKeyClick(modKey);
+    }
+  }
+
+  // Add event listener to hook
+  useEventListener("keydown", keyHandler);
+
+  // Fire once individual data loaded, just once
+  useEffect(() => {
+    if (document && !state.LoadedData) {
+      const coreSetClean = loadWorkingDataBenchmark(document, target!);
+
+      dispatch({
+        type: BenchmarkActions.BatchStartPreflight,
+        payload: {
+          uWorkingData: coreSetClean,
+          uTimer: 120,
+          uLoadedData: true,
+        },
+      });
+    }
+  }, [document, state.LoadedData, target]);
+
+  /** callbackToSubmit
+   *
+   * Caller, linked to submission to firebase
+   *
+   */
+  function callbackToSubmit() {
+    submitDataToFirebase(null);
+  }
+
+  /** submitDataToFirebase
+   *
+   * Push data to server
+   *
+   * @param {FactModelInterface} finalFactObject final item completed
+   */
+  async function submitDataToFirebase(
+    finalFactObject: FactDataInterface | null
+  ): Promise<void> {
+    let finalEntries = state.FactModelList;
+
+    if (finalFactObject !== null) {
+      finalEntries?.push(finalFactObject);
+    }
+
+    const end = new Date();
+    const currentBenchmarkArea = target!.split("-")[0];
+
+    const uploadObject = {
+      correctDigits: state.TotalDigitsCorrect,
+      errCount: state.NumErrors,
+      nCorrectInitial: state.NumCorrectInitial,
+      nRetries: 0,
+      sessionDuration: (end.getTime() - state.StartTime!.getTime()) / 1000,
+      setSize: document!.factsTargeted.length,
+      totalDigits: state.TotalDigits,
+      entries: finalEntries.map((entry) => Object.assign({}, entry)),
+      id: document!.id,
+      creator: user!.uid,
+      target: currentBenchmarkArea,
+      method: "Benchmark",
+      dateTimeEnd: end.toString(),
+      dateTimeStart: state.StartTime!.toString(),
+      createdAd: timestamp.fromDate(new Date()),
+    };
+
+    // Update collection with latest performance
+    await addDocument2(uploadObject);
+
+    // If added without issue, update timestamp
+    if (!addResponse.error) {
+      let completedBenchmark = document!.completedBenchmark;
+
+      completedBenchmark.push(
+        `${target} ${document!.dueDate!.toDate().toDateString()}`
+      );
+
+      // Omit time updates
+      const studentObject = {
+        completedBenchmark,
+      };
+
+      // Update field regarding last activity
+      await updateDocument(id!, studentObject);
+
+      // Push to home
+      if (!updateResponse.error) {
+        history.push(`/probe/${id}`);
+      }
+    }
+  }
+
+  /** captureButtonAction
+   *
+   * Button interactions to fire
+   *
+   */
+  function captureButtonAction(): void {
+    if (
+      state.CurrentAction === ActionSequence.Start ||
+      state.CurrentAction === ActionSequence.Begin
+    ) {
+      const listItem = state.WorkingData![0];
+      const updatedList = state.WorkingData!.filter(function (item) {
+        return item !== listItem;
+      });
+
+      dispatch({
+        type: BenchmarkActions.BatchStartBegin,
+        payload: {
+          ButtonText: "Check",
+          CoverProblem: false,
+          UpdateEntry: "",
+          UpdateView: listItem.split(":")[0],
+          WorkingData: updatedList,
+          StartTime: state.StartTime === null ? new Date() : state.StartTime,
+          TrialTime: new Date(),
+          CurrentAction: ActionSequence.Answer,
+        },
+      });
+
+      return;
+    }
+
+    const combinedResponse =
+      state.ViewRepresentationInternal.split("=")[0] +
+      "=" +
+      state.EntryRepresentationInternal;
+
+    // Compare if internal and inputted string match
+    let isMatching =
+      state.ViewRepresentationInternal.trim() === combinedResponse.trim();
+
+    let uNumberCorrectInitial = state.NumCorrectInitial;
+    let uNumberErrors = state.NumErrors;
+
+    // Increment initial attempt, if correct
+    if (state.OnInitialTry && isMatching) {
+      uNumberCorrectInitial = uNumberCorrectInitial + 1;
+    }
+
+    // Increment errors, if incorrect
+    if (!isMatching) {
+      uNumberErrors = state.NumErrors + 1;
+    }
+
+    var current = new Date();
+    let secs = (current.getTime() - state.PreTrialTime!.getTime()) / 1000;
+
+    let holderPreTime = state.PreTrialTime;
+
+    let uTotalDigits =
+      state.TotalDigits +
+      CalculateDigitsTotalAnswer(state.ViewRepresentationInternal);
+
+    let uTotalDigitsCorrect =
+      state.TotalDigitsCorrect +
+      CalculateDigitsCorrectAnswer(
+        combinedResponse,
+        state.ViewRepresentationInternal
+      );
+
+    let uNumberTrials = state.NumbTrials + 1;
+
+    const currentItem = new FactDataInterface(
+      isMatching,
+      state.OnInitialTry,
+      document!.currentTarget!,
+      state.ViewRepresentationInternal,
+      state.EntryRepresentationInternal,
+      secs,
+      timestamp.fromDate(new Date(current)),
+      timestamp.fromDate(new Date(holderPreTime!))
+    );
+
+    let uInitialTry = true;
+
+    dispatch({
+      type: BenchmarkActions.BatchStartIncrement,
+      payload: {
+        uNumberCorrectInitial,
+        uNumberErrors,
+        uTotalDigits,
+        uTotalDigitsCorrect,
+        uNumberTrials,
+        uInitialTry,
+        uTrialTime: new Date(),
+      },
+    });
+
+    // Potential issue: state change not fast enough to catch latest
+    if (state.WorkingData!.length === 0) {
+      // If finished, upload list w/ latest item
+      submitDataToFirebase(currentItem);
+    } else {
+      // Otherise, add it to the existing list
+
+      const listItem = state.WorkingData![0];
+      const updatedList = state.WorkingData!.filter(function (item) {
+        return item !== listItem;
+      });
+
+      dispatch({
+        type: BenchmarkActions.BatchStartIncrementPost,
+        payload: {
+          uFactModel: [...state.FactModelList!, currentItem],
+          uWorkingData: updatedList,
+          uView: listItem.split(":")[0],
+          uEntry: "",
+        },
+      });
+    }
+  }
+
+  /** captureKeyClick
+   *
+   * Process incoming key
+   *
+   * @param {string} char
+   */
+  function captureKeyClick(char: string): void {
+    // Processing add/remove of character
+    if (char === DelCode) {
+      // # Rule #7: Exit out if nothin to delete
+      if (state.EntryRepresentationInternal.length === 0) return;
+
+      // Lop off end of string
+      dispatch({
+        type: BenchmarkActions.UpdateEntry,
+        payload: state.EntryRepresentationInternal.slice(0, -1),
+      });
+    } else {
+      // Add to end of string
+      dispatch({
+        type: BenchmarkActions.UpdateEntry,
+        payload: state.EntryRepresentationInternal + char,
+      });
+    }
+  }
+
+  return (
+    <div className="wrapperET">
+      <div className="topBoxET">
+        <h2 style={{ display: "inline-block" }}>
+          Benchmark: ({document ? document.name : <></>}), Time:{" "}
+          {document ? (
+            <Timer
+              secondsTotal={state.SecondsLeft}
+              startTimerTime={state.StartTime!}
+              callbackFunction={callbackToSubmit}
+            />
+          ) : (
+            <></>
+          )}
+        </h2>
+      </div>
+      <div
+        className="box2ET"
+        style={{
+          opacity: state.CoverProblemItem ? 0.5 : 1,
+          backgroundColor: state.CoverProblemItem ? "gray" : "transparent",
+        }}
+      >
+        <SimpleProblemFrame
+          problemStem={state.ViewRepresentationInternal}
+          coverProblemSpace={state.CoverProblemItem}
+          entryString={state.EntryRepresentationInternal}
+        />
+      </div>
+      <div className="box3ET">
+        <section>
+          <button className="global-btn " onClick={() => captureButtonAction()}>
+            {state.ButtonText}
+          </button>
+        </section>
+      </div>
+
+      <div
+        className="box5ET"
+        style={{
+          opacity: state.CoverProblemItem ? 0.5 : 1,
+        }}
+      >
+        <KeyPad
+          callBackFunction={captureKeyClick}
+          operatorSymbol={state.OperatorSymbol}
+          showEquals={false}
+        />
+      </div>
+    </div>
+  );
+}

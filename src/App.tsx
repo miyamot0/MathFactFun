@@ -42,7 +42,7 @@ import CreateUser from "./pages/create/CreateUser";
 import CreateBulk from "./pages/create/CreateBulk";
 
 // Intervention/Probes
-import Benchmark from "./pages/benchmark/Benchmark";
+import Benchmark from "./pages/intervention/Benchmark";
 import CoverCopyCompare from "./pages/intervention/CoverCopyCompare";
 import ExplicitTiming from "./pages/intervention/ExplicitTiming";
 import TapedProblems from "./pages/intervention/TapedProblems";

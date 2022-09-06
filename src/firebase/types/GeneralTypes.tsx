@@ -76,20 +76,20 @@ export class StudentDataInterface {
 export class FactDataInterface {
   constructor(
     // Bools
-    readonly factCorrect?: boolean | null,
-    readonly initialTry?: boolean | null,
+    readonly factCorrect: boolean | null,
+    readonly initialTry: boolean | null,
 
     // Strings
-    readonly factType?: string | undefined,
-    readonly factString?: string | undefined,
-    readonly factEntry?: string | undefined,
+    readonly factType: string | undefined,
+    readonly factString: string | undefined,
+    readonly factEntry: string | undefined,
 
     // Numerics
-    readonly latencySeconds?: number | null,
+    readonly latencySeconds: number | null,
 
     // Timestamps
-    readonly dateTimeEnd?: firebase.firestore.Timestamp,
-    readonly dateTimeStart?: firebase.firestore.Timestamp
+    readonly dateTimeEnd: firebase.firestore.Timestamp,
+    readonly dateTimeStart: firebase.firestore.Timestamp
   ) {
     this.factCorrect = factCorrect;
     this.initialTry = initialTry;
@@ -116,7 +116,7 @@ export class PerformanceDataInterface {
     readonly totalDigits: number,
 
     // Arrays
-    readonly entries: FactModelInterface[] | FactDataInterface[],
+    readonly entries: FactDataInterface[],
 
     // Strings
     readonly id: string | undefined | null,

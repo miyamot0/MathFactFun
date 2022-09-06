@@ -49,6 +49,9 @@ interface UseFirestore {
   addDocument: (
     doc: StudentDataInterface | UserDataInterface | PerformanceDataInterface
   ) => Promise<void>;
+  addDocument2: (
+    doc: StudentDataInterface | UserDataInterface | PerformanceDataInterface
+  ) => Promise<void>;
   deleteDocument: (id: string) => Promise<void>;
   updateDocument: (id: string, updates: {}) => Promise<void>;
   response: FirestoreState;
@@ -161,8 +164,11 @@ export function useFirestore(
     });
 
     try {
+      console.log("in try");
       const createdAt = timestamp.fromDate(new Date());
       const addedDocument = await ref.add({ ...doc, createdAt });
+
+      console.log("post ad try");
 
       dispatchIfNotCancelled({
         type: FirestoreStates.ADDED,
@@ -170,6 +176,50 @@ export function useFirestore(
         error: null,
       });
     } catch (err: any) {
+      console.log(err);
+
+      dispatchIfNotCancelled({
+        type: FirestoreStates.ERROR,
+        payload: null,
+        error: err.message,
+      });
+    }
+  }
+
+  /** addDocument
+   *
+   * add a document
+   *
+   * @param {StudentModel | PerformanceModel} doc document to upload
+   * @returns {Promise<void>}
+   */
+  async function addDocument2<T>(
+    doc: StudentDataInterface | UserDataInterface | PerformanceDataInterface
+  ): Promise<void> {
+    dispatch({
+      type: FirestoreStates.PENDING,
+      payload: null,
+      error: null,
+    });
+
+    try {
+      const createdAt = timestamp.fromDate(new Date());
+      let addedDocument;
+
+      if (doc instanceof PerformanceDataInterface) {
+        addedDocument = await ref.add({ ...doc, createdAt });
+      } else {
+        addedDocument = await ref.add({ ...doc, createdAt });
+      }
+
+      dispatchIfNotCancelled({
+        type: FirestoreStates.ADDED,
+        payload: addedDocument,
+        error: null,
+      });
+    } catch (err: any) {
+      console.log(err);
+
       dispatchIfNotCancelled({
         type: FirestoreStates.ERROR,
         payload: null,
@@ -246,5 +296,11 @@ export function useFirestore(
     return () => setIsCancelled(true);
   }, []);
 
-  return { addDocument, deleteDocument, updateDocument, response };
+  return {
+    addDocument,
+    addDocument2,
+    deleteDocument,
+    updateDocument,
+    response,
+  };
 }

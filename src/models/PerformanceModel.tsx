@@ -61,9 +61,9 @@ export function PerformanceModel(): PerformanceModelInterface {
       if (!(this.data.createdAt !== null)) return false;
 
       for (let i = 0; i < this.data.entries.length; i++) {
-        if (!(this.data.entries[i] as FactModelInterface).CheckObject()) {
-          return false;
-        }
+        //if (!(this.data.entries[i] as FactModelInterface).CheckObject()) {
+        //  return false;
+        //}
       }
 
       return true;

@@ -24,7 +24,7 @@ import { useAuthorizationContext } from "../../context/useAuthorizationContext";
 
 // widgets
 import KeyPad from "./KeyPad";
-import Timer from "../../components/Timer";
+import Timer from "./subcomponents/Timer";
 import SimpleProblemFrame from "./SimpleProblemFrame";
 
 // helpers

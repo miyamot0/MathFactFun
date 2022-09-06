@@ -10,9 +10,9 @@ import React from "react";
 import { useState, useEffect } from "react";
 
 interface TimerInterface {
-  secondsTotal: number,
-  startTimerTime: Date | null,
-  callbackFunction: () => void
+  secondsTotal: number;
+  startTimerTime: Date | null;
+  callbackFunction: () => void;
 }
 
 export default function Timer({
@@ -26,7 +26,6 @@ export default function Timer({
 
   useEffect(() => {
     if (startTimerTime) {
-
       let intervalIdValue: NodeJS.Timer = setInterval(() => {
         setSecondCounter((secondCounter) => secondCounter + 1);
       }, 1000);
