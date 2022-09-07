@@ -36,20 +36,13 @@ import { timestamp } from "../../firebase/config";
 import { RoutedIdTargetParam } from "../CommonTypes/CommonPageTypes";
 import { useAuthorizationContext } from "../../context/useAuthorizationContext";
 import {
-  BenchmarkReducer,
   DelCode,
   InitialBenchmarkState,
+  InterventionReducer,
   loadWorkingDataBenchmark,
   useEventListener,
 } from "./functionality/InterventionBehavior";
-import { BenchmarkActions } from "./types/InterventionTypes";
-
-const ActionSequence = {
-  Start: "ActionSequence.Start",
-  Answer: "ActionSequence.Answer",
-  Entry: "ActionSequence.Entry",
-  Begin: "ActionSequence.Begin",
-};
+import { BenchmarkActions, SharedActionSequence } from "./types/InterventionTypes";
 
 export default function Benchmark() {
   const { id, target } = useParams<RoutedIdTargetParam>();
@@ -68,7 +61,7 @@ export default function Benchmark() {
     undefined
   );
 
-  const [state, dispatch] = useReducer(BenchmarkReducer, InitialBenchmarkState);
+  const [state, dispatch] = useReducer(InterventionReducer, InitialBenchmarkState);
 
   /** keyHandler
    *
@@ -84,7 +77,7 @@ export default function Benchmark() {
       modKey = key.key === "Delete" ? "Del" : modKey;
 
       if (modKey === " ") {
-        if (state.CurrentAction !== ActionSequence.Entry) {
+        if (state.CurrentAction !== SharedActionSequence.Entry) {
           captureButtonAction();
           return;
         }
@@ -105,7 +98,7 @@ export default function Benchmark() {
       const coreSetClean = loadWorkingDataBenchmark(document, target!);
 
       dispatch({
-        type: BenchmarkActions.BatchStartPreflight,
+        type: BenchmarkActions.BenchmarkBatchStartPreflight,
         payload: {
           uWorkingData: coreSetClean,
           uTimer: 120,
@@ -193,8 +186,8 @@ export default function Benchmark() {
    */
   function captureButtonAction(): void {
     if (
-      state.CurrentAction === ActionSequence.Start ||
-      state.CurrentAction === ActionSequence.Begin
+      state.CurrentAction === SharedActionSequence.Start ||
+      state.CurrentAction === SharedActionSequence.Begin
     ) {
       const listItem = state.WorkingData![0];
       const updatedList = state.WorkingData!.filter(function (item) {
@@ -202,7 +195,7 @@ export default function Benchmark() {
       });
 
       dispatch({
-        type: BenchmarkActions.BatchStartBegin,
+        type: BenchmarkActions.BenchmarkBatchStartBegin,
         payload: {
           ButtonText: "Check",
           CoverProblem: false,
@@ -211,7 +204,7 @@ export default function Benchmark() {
           WorkingData: updatedList,
           StartTime: state.StartTime === null ? new Date() : state.StartTime,
           TrialTime: new Date(),
-          CurrentAction: ActionSequence.Answer,
+          CurrentAction: SharedActionSequence.Answer,
         },
       });
 
@@ -272,7 +265,7 @@ export default function Benchmark() {
     let uInitialTry = true;
 
     dispatch({
-      type: BenchmarkActions.BatchStartIncrement,
+      type: BenchmarkActions.BenchmarkBatchStartIncrement,
       payload: {
         uNumberCorrectInitial,
         uNumberErrors,
@@ -297,7 +290,7 @@ export default function Benchmark() {
       });
 
       dispatch({
-        type: BenchmarkActions.BatchStartIncrementPost,
+        type: BenchmarkActions.BenchmarkBatchStartIncrementPost,
         payload: {
           uFactModel: [...state.FactModelList!, currentItem],
           uWorkingData: updatedList,
@@ -322,13 +315,13 @@ export default function Benchmark() {
 
       // Lop off end of string
       dispatch({
-        type: BenchmarkActions.UpdateEntry,
+        type: BenchmarkActions.BenchmarkUpdateEntry,
         payload: state.EntryRepresentationInternal.slice(0, -1),
       });
     } else {
       // Add to end of string
       dispatch({
-        type: BenchmarkActions.UpdateEntry,
+        type: BenchmarkActions.BenchmarkUpdateEntry,
         payload: state.EntryRepresentationInternal + char,
       });
     }

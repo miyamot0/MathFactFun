@@ -173,6 +173,8 @@ export const InitialBenchmarkState: BenchmarkState = {
   TotalDigits: 0,
   TotalDigitsCorrect: 0,
   NumbTrials: 0,
+  NumRetries: 0,
+  ModalIsOpen: false,
 };
 
 /**
@@ -182,21 +184,21 @@ export const InitialBenchmarkState: BenchmarkState = {
  * @param {any} action
  * @returns {BenchmarkState}
  */
-export const BenchmarkReducer = (
+export const InterventionReducer = (
   state: BenchmarkState,
   action: any
 ): BenchmarkState => {
   switch (action.type) {
-    case BenchmarkActions.UpdateEntry:
+    case BenchmarkActions.BenchmarkUpdateEntry:
       return { ...state, EntryRepresentationInternal: action.payload };
-    case BenchmarkActions.BatchStartPreflight:
+    case BenchmarkActions.BenchmarkBatchStartPreflight:
       return {
         ...state,
         WorkingData: action.payload.uWorkingData,
         SecondsLeft: action.payload.uTimer,
         LoadedData: action.payload.uLoadedData,
       };
-    case BenchmarkActions.BatchStartBegin:
+    case BenchmarkActions.BenchmarkBatchStartBegin:
       return {
         ...state,
         ButtonText: action.payload.ButtonText,
@@ -208,7 +210,7 @@ export const BenchmarkReducer = (
         PreTrialTime: action.payload.TrialTime,
         CurrentAction: action.payload.CurrentAction,
       };
-    case BenchmarkActions.BatchStartIncrement:
+    case BenchmarkActions.BenchmarkBatchStartIncrement:
       return {
         ...state,
         NumCorrectInitial: action.payload.uNumberCorrectInitial,
@@ -219,7 +221,7 @@ export const BenchmarkReducer = (
         OnInitialTry: action.payload.uInitialTry,
         PreTrialTime: action.payload.uTrialTime,
       };
-    case BenchmarkActions.BatchStartIncrementPost:
+    case BenchmarkActions.BenchmarkBatchStartIncrementPost:
       return {
         ...state,
         FactModelList: action.payload.uFactModel,

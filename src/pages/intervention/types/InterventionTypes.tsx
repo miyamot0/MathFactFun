@@ -4,11 +4,13 @@ import { FactDataInterface } from "../../../firebase/types/GeneralTypes";
  * Actions for reducer
  */
 export enum BenchmarkActions {
-  UpdateEntry = "UpdateEntry",
-  BatchStartPreflight = "BatchStartPreflight",
-  BatchStartBegin = "ActionStartOrBegin",
-  BatchStartIncrement = "BatchStartIncrement",
-  BatchStartIncrementPost = "BatchStartIncrementPost",
+  BenchmarkUpdateEntry = "BenchmarkUpdateEntry",
+  BenchmarkBatchStartPreflight = "BenchmarkBatchStartPreflight",
+  BenchmarkBatchStartBegin = "BenchmarkActionStartOrBegin",
+  BenchmarkBatchStartIncrement = "BenchmarkBatchStartIncrement",
+  BenchmarkBatchStartIncrementPost = "BenchmarkBatchStartIncrementPost",
+
+  ExplicitTimingBatchStartPreflight = "BenchmarkBatchStartPreflight",
 }
 
 export interface BenchmarkState {
@@ -30,4 +32,13 @@ export interface BenchmarkState {
   TotalDigits: number;
   TotalDigitsCorrect: number;
   NumbTrials: number;
+  NumRetries: number;
+  ModalIsOpen: boolean;
 }
+
+export const SharedActionSequence = {
+  Start: "ActionSequence.Start",
+  Answer: "ActionSequence.Answer",
+  Entry: "ActionSequence.Entry",
+  Begin: "ActionSequence.Begin",
+};

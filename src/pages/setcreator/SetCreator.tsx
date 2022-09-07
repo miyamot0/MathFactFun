@@ -105,7 +105,7 @@ export default function SetCreator() {
   );
 
   useEffect(() => {
-    if (documents) {
+    if (documents && target) {
       const mappedDocument = documents!.map((doc) => {
         return {
           Items: doc.entries as FactDataInterface[],
@@ -140,7 +140,7 @@ export default function SetCreator() {
 
       dispatch({ type: DragDropActions.SetItemHistory, payload: uniqueQuants });
     }
-  }, [documents]);
+  }, [documents, target]);
 
   /**
    * Save information to firestore

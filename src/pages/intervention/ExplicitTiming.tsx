@@ -10,7 +10,7 @@
  * Explicit Timing intervention
  */
 
-import React from "react";
+import React, { useReducer } from "react";
 
 import { useState, useEffect, useRef } from "react";
 import { useParams, useHistory } from "react-router-dom";
@@ -50,13 +50,9 @@ import {
   PerformanceDataInterface,
   StudentDataInterface,
 } from "../../firebase/types/GeneralTypes";
-
-const ActionSequence = {
-  Start: "ActionSequence.Start",
-  Answer: "ActionSequence.Answer",
-  Entry: "ActionSequence.Entry",
-  Begin: "ActionSequence.Begin",
-};
+import { RoutedIdTargetParam } from "../CommonTypes/CommonPageTypes";
+import { BenchmarkActions, SharedActionSequence } from "./types/InterventionTypes";
+import { InitialBenchmarkState, InterventionReducer, useEventListener } from "./functionality/InterventionBehavior";
 
 const DelCode = "Del";
 
@@ -73,13 +69,8 @@ const customStyles = {
 
 Modal.setAppElement("#root");
 
-interface RoutedStudentSet {
-  id?: string;
-  target?: string;
-}
-
 export default function ExplicitTiming() {
-  const { id, target } = useParams<RoutedStudentSet>();
+  const { id, target } = useParams<RoutedIdTargetParam>();
   const { user } = useAuthorizationContext();
   const history = useHistory();
 
@@ -88,79 +79,43 @@ export default function ExplicitTiming() {
       collectionString: "students",
       idString: id
     });
-  const { addDocument, response } = useFirestore("", target, id);
+  const { addDocument2, response } = useFirestore("", target, id);
   const { updateDocument } = useFirestore("students", undefined, undefined);
 
-  const [currentAction, setCurrentAction] = useState(ActionSequence.Start);
-  const [buttonText, setButtonText] = useState("Start");
-  const [isOnInitialTry, setIsOnInitialTry] = useState(true);
+  const [state, dispatch] = useReducer(InterventionReducer, InitialBenchmarkState);
+
+  //const [currentAction, setCurrentAction] = useState(SharedActionSequence.Start);
+  //const [buttonText, setButtonText] = useState("Start");
+  //const [isOnInitialTry, setIsOnInitialTry] = useState(true);
 
   // quants
-  const [numberCorrectInitial, setNumberCorrectInitial] = useState(0);
-  const [numberErrors, setNumberErrors] = useState(0);
-  const [totalDigits, setTotalDigits] = useState(0);
-  const [totalCorrectDigits, setCorrectTotalDigits] = useState(0);
-  const [numberTrials, setNumberTrials] = useState(0);
-  const [nRetries, setNRetries] = useState(0);
+  //const [numberCorrectInitial, setNumberCorrectInitial] = useState(0);
+  //const [numberErrors, setNumberErrors] = useState(0);
+  //const [totalDigits, setTotalDigits] = useState(0);
+  //const [totalCorrectDigits, setCorrectTotalDigits] = useState(0);
+  //const [numberTrials, setNumberTrials] = useState(0);
+  //const [nRetries, setNRetries] = useState(0);
 
-  const [loadedData, setLoadedData] = useState(false);
-  const [workingData, setWorkingData] = useState<string[]>();
-  const [operatorSymbol, setOperatorSymbol] = useState("");
+  //const [loadedData, setLoadedData] = useState(false);
+  //const [workingData, setWorkingData] = useState<string[]>();
+  //const [operatorSymbol, setOperatorSymbol] = useState("");
 
-  const [coverProblemItem, setCoverProblemItem] = useState(true);
+  //const [coverProblemItem, setCoverProblemItem] = useState(true);
 
-  const [preTrialTime, setPreTrialTime] = useState<Date>();
-  const [startTime, setStartTime] = useState<Date>();
-  const [factModelList, setModelList] = useState<FactModelInterface[]>();
+  //const [preTrialTime, setPreTrialTime] = useState<Date>();
+  //const [startTime, setStartTime] = useState<Date>();
+  //const [factModelList, setModelList] = useState<FactModelInterface[]>();
 
-  const [viewRepresentationInternal, setViewRepresentationInternal] =
-    useState("");
-  const [entryRepresentationInternal, setEntryRepresentationInternal] =
-    useState("");
+  //const [viewRepresentationInternal, setViewRepresentationInternal] =
+  //  useState("");
+  //const [entryRepresentationInternal, setEntryRepresentationInternal] =
+  //  useState("");
 
   /// modal stuff
-  const [modalIsOpen, setIsOpen] = useState(false);
+  //const [modalIsOpen, setIsOpen] = useState(false);
 
   // Timer Stuff
-  const [secondsLeft, setSecondsLeft] = useState(0);
-
-  /** useEventListener
-   *
-   * listener for events
-   *
-   * @param {string} eventName ...
-   * @param {(key: React.KeyboardEvent<HTMLElement>) => void} handler ...
-   * @param {Window} element ...
-   */
-  function useEventListener(
-    eventName: string,
-    handler: (key: React.KeyboardEvent<HTMLElement>) => void,
-    element: Window = window
-  ): void {
-    const savedHandler = useRef({});
-    useEffect(() => {
-      savedHandler.current = handler;
-    }, [handler]);
-    useEffect(
-      () => {
-        const isSupported = element && element.addEventListener;
-        if (!isSupported) return;
-
-        const eventListener = (event: any) => {
-          if (typeof savedHandler.current === "function") {
-            savedHandler.current(event);
-          }
-        };
-
-        element.addEventListener(eventName, eventListener);
-
-        return () => {
-          element.removeEventListener(eventName, eventListener);
-        };
-      },
-      [eventName, element] // Re-run if eventName or element changes
-    );
-  }
+  //const [secondsLeft, setSecondsLeft] = useState(0);
 
   /** keyHandler
    *
@@ -176,7 +131,7 @@ export default function ExplicitTiming() {
       modKey = key.key === "Delete" ? "Del" : modKey;
 
       if (modKey === " ") {
-        if (currentAction !== ActionSequence.Entry) {
+        if (state.CurrentAction !== SharedActionSequence.Entry) {
           captureButtonAction();
           return;
         }
@@ -205,25 +160,27 @@ export default function ExplicitTiming() {
     );
   }
 
-  function openModal(): void {
-    setIsOpen(true);
-  }
+  //function openModal(): void {
+  //  setIsOpen(true);
+  //}
 
-  function closeModal(): void {
-    setIsOpen(false);
-  }
+  //function closeModal(): void {
+  //  setIsOpen(false);
+  //}
 
   // Fire once individual data loaded, just once
   useEffect(() => {
-    if (document && !loadedData) {
-      // Establish working set
-      setWorkingData((document as StudentDataInterface).factsTargeted);
-      setSecondsLeft((document as StudentDataInterface).minForTask! * 60);
-
-      // Flag that data is loaded
-      setLoadedData(true);
+    if (document && !state.LoadedData) {
+      dispatch({
+        type: BenchmarkActions.ExplicitTimingBatchStartPreflight,
+        payload: {
+          uWorkingData: document.factsTargeted,
+          uTimer: document.minForTask! * 60,
+          uLoadedData: true,
+        },
+      });
     }
-  }, [document, loadedData, setLoadedData, operatorSymbol, setOperatorSymbol]);
+  }, [document, state.LoadedData, state.OperatorSymbol]);
 
   /** callbackToSubmit
    *
@@ -238,12 +195,12 @@ export default function ExplicitTiming() {
    *
    * Push data to server
    *
-   * @param {FactModelInterface} finalFactObject final item completed
+   * @param {FactDataInterface} finalFactObject final item completed
    */
   async function submitDataToFirebase(
-    finalFactObject: FactModelInterface | null
+    finalFactObject: FactDataInterface | null
   ): Promise<void> {
-    let finalEntries = factModelList;
+    let finalEntries = state.FactModelList;
 
     if (finalFactObject !== null) {
       finalEntries?.push(finalFactObject);
@@ -252,11 +209,30 @@ export default function ExplicitTiming() {
     const end = new Date();
 
     let performanceInformation: PerformanceModelInterface = PerformanceModel();
+
+    const uploadObject = {
+      correctDigits: state.TotalDigitsCorrect,
+      errCount: state.NumErrors,
+      nCorrectInitial: state.NumCorrectInitial,
+      nRetries: 0,
+      sessionDuration: (end.getTime() - state.StartTime!.getTime()) / 1000,
+      setSize: document!.factsTargeted.length,
+      totalDigits: state.TotalDigits,
+      entries: finalEntries.map((entry) => Object.assign({}, entry)),
+      id: document!.id,
+      creator: user!.uid,
+      target: document!.currentTarget,
+      method: "Benchmark",
+      dateTimeEnd: end.toString(),
+      dateTimeStart: state.StartTime!.toString(),
+      createdAd: timestamp.fromDate(new Date()),
+    };
+
     /*
     HACK
     // Strings
-    performanceInformation.data.id = document!.id;
-    performanceInformation.data.creator = user!.uid;
+    performanceInformation.data.id = ;
+    performanceInformation.data.creator = ;
     performanceInformation.data.target = (
       document as StudentDataInterface
     ).currentTarget;
@@ -285,16 +261,17 @@ export default function ExplicitTiming() {
 
     // Sanity check for all required components
 
-    if (!performanceInformation.CheckObject()) {
-      alert("Firebase data was not well-formed");
-      return;
-    }
+    //if (!performanceInformation.CheckObject()) {
+    //  alert("Firebase data was not well-formed");
+    //  return;
+    //}
 
-    const objectToSend: PerformanceDataInterface =
-      performanceInformation.SubmitObject();
+    //const objectToSend: PerformanceDataInterface =
+    //  performanceInformation.SubmitObject();
 
     // Update collection with latest performance
-    await addDocument(objectToSend);
+    //await addDocument(objectToSend);
+    await addDocument2(uploadObject);
 
     // If added without issue, update timestamp
     if (!response.error) {
@@ -320,86 +297,80 @@ export default function ExplicitTiming() {
    */
   function captureButtonAction(): void {
     if (
-      currentAction === ActionSequence.Start ||
-      currentAction === ActionSequence.Begin
+      state.CurrentAction === SharedActionSequence.Start ||
+      state.CurrentAction === SharedActionSequence.Begin
     ) {
-      // Establish start of math fact
-      setPreTrialTime(new Date());
 
-      if (startTime === null) {
-        // Establish start of session
-        setStartTime(new Date());
-      }
+      const listItem = state.WorkingData![0];
 
-      const listItem = workingData![0];
-
-      const updatedList = workingData!.filter(function (item) {
+      const updatedList = state.WorkingData!.filter(function (item) {
         return item !== listItem;
       });
 
-      // Update the collection--remove current item from list
-      setWorkingData(updatedList);
+      dispatch({
+        type: BenchmarkActions.BenchmarkBatchStartBegin,
+        payload: {
+          ButtonText: "Check",
+          CoverProblem: false,
+          UpdateEntry: "",
+          UpdateView: listItem.split(":")[0],
+          WorkingData: updatedList,
+          StartTime: state.StartTime === null ? new Date() : state.StartTime,
+          TrialTime: new Date(),
+          CurrentAction: SharedActionSequence.Answer,
+        },
+      });
 
-      // Set the 'true' item, less set-level coding component
-      setViewRepresentationInternal(listItem.split(":")[0]);
-
-      // Set the 'true' item, less set-level coding component
-      setEntryRepresentationInternal("");
-
-      setCoverProblemItem(false);
-
-      setCurrentAction(ActionSequence.Answer);
-
-      setButtonText("Check");
 
       return;
     }
 
     const combinedResponse =
-      viewRepresentationInternal.split("=")[0] +
+      state.ViewRepresentationInternal.split("=")[0] +
       "=" +
-      entryRepresentationInternal;
+      state.EntryRepresentationInternal;
 
     // Compare if internal and inputted string match
     let isMatching =
-      viewRepresentationInternal.trim() === combinedResponse.trim();
+      state.ViewRepresentationInternal.trim() === combinedResponse.trim();
 
     // Increment initial attempt, if correct
-    if (isOnInitialTry && isMatching) {
-      setNumberCorrectInitial(numberCorrectInitial + 1);
+    if (state.OnInitialTry && isMatching) {
+      setNumberCorrectInitial(state.NumCorrectInitial + 1);
     }
 
     // Increment errors, if incorrect
     if (!isMatching) {
-      setNumberErrors(numberErrors + 1);
+      setNumberErrors(state.NumErrors + 1);
     }
 
     var current = new Date();
-    let secs = (current.getTime() - preTrialTime!.getTime()) / 1000;
+    let secs = (current.getTime() - state.PreTrialTime!.getTime()) / 1000;
 
-    let holderPreTime = preTrialTime;
+    let holderPreTime = state.PreTrialTime;
 
     // Update time for trial
     setPreTrialTime(new Date());
 
     if (shouldShowFeedback(!isMatching)) {
       // Error correction prompt
+
       openModal();
     } else {
       let totalDigitsShown = CalculateDigitsTotalAnswer(
-        viewRepresentationInternal
+        state.ViewRepresentationInternal
       );
 
-      setTotalDigits(totalDigits + totalDigitsShown);
+      setTotalDigits(state.TotalDigits + totalDigitsShown);
 
       let totalDigitsCorrect = CalculateDigitsCorrectAnswer(
         combinedResponse,
-        viewRepresentationInternal
+        state.ViewRepresentationInternal
       );
 
-      setCorrectTotalDigits(totalCorrectDigits + totalDigitsCorrect);
+      setCorrectTotalDigits(state.TotalDigitsCorrect + totalDigitsCorrect);
 
-      setNumberTrials(numberTrials + 1);
+      setNumberTrials(state.NumbTrials + 1);
 
       let currentItem: FactModelInterface = FactEntryModel();
       /*
@@ -424,16 +395,16 @@ export default function ExplicitTiming() {
       setIsOnInitialTry(true);
 
       // Note: issue where state change not fast enough to catch latest
-      if (workingData!.length === 0) {
+      if (state.WorkingData!.length === 0) {
         // If finished, upload list w/ latest item
         submitDataToFirebase(currentItem);
       } else {
         // Otherise, add it to the existing list
         setModelList([...factModelList!, currentItem]);
 
-        const listItem = workingData![0];
+        const listItem = state.WorkingData![0];
 
-        const updatedList = workingData!.filter(function (item) {
+        const updatedList = state.WorkingData!.filter(function (item) {
           return item !== listItem;
         });
 
@@ -459,20 +430,20 @@ export default function ExplicitTiming() {
     // Processing add/remove of character
     if (char === DelCode) {
       // # Rule #7: Exit out if nothin to delete
-      if (entryRepresentationInternal.length === 0) return;
+      if (state.EntryRepresentationInternal.length === 0) return;
 
       // Lop off end of string
-      setEntryRepresentationInternal(entryRepresentationInternal.slice(0, -1));
+      setEntryRepresentationInternal(state.EntryRepresentationInternal.slice(0, -1));
     } else {
       // Add to end of string
-      setEntryRepresentationInternal(entryRepresentationInternal + char);
+      setEntryRepresentationInternal(state.EntryRepresentationInternal + char);
     }
   }
 
   return (
     <div className="wrapperET">
       <Modal
-        isOpen={modalIsOpen}
+        isOpen={state.ModalIsOpen}
         onRequestClose={closeModal}
         shouldCloseOnOverlayClick={false}
         preventScroll={true}
@@ -490,7 +461,7 @@ export default function ExplicitTiming() {
           style={{ float: "right" }}
           onClick={() => {
             setEntryRepresentationInternal("");
-            setNRetries(nRetries + 1);
+            setNRetries(state.NumRetries + 1);
             closeModal();
           }}
         >
@@ -503,8 +474,8 @@ export default function ExplicitTiming() {
           {document ? (document as StudentDataInterface).name : <></>}), Time:{" "}
           {document ? (
             <Timer
-              secondsTotal={secondsLeft}
-              startTimerTime={startTime!}
+              secondsTotal={state.SecondsLeft}
+              startTimerTime={state.StartTime!}
               callbackFunction={callbackToSubmit}
             />
           ) : (
@@ -515,20 +486,20 @@ export default function ExplicitTiming() {
       <div
         className="box2ET"
         style={{
-          opacity: coverProblemItem ? 0.5 : 1,
-          backgroundColor: coverProblemItem ? "gray" : "transparent",
+          opacity: state.CoverProblemItem ? 0.5 : 1,
+          backgroundColor: state.CoverProblemItem ? "gray" : "transparent",
         }}
       >
         <SimpleProblemFrame
-          problemStem={viewRepresentationInternal}
-          coverProblemSpace={coverProblemItem}
-          entryString={entryRepresentationInternal}
+          problemStem={state.ViewRepresentationInternal}
+          coverProblemSpace={state.CoverProblemItem}
+          entryString={state.EntryRepresentationInternal}
         />
       </div>
       <div className="box3ET">
         <section>
           <button className="global-btn " onClick={() => captureButtonAction()}>
-            {buttonText}
+            {state.ButtonText}
           </button>
         </section>
       </div>
@@ -536,12 +507,12 @@ export default function ExplicitTiming() {
       <div
         className="box5ET"
         style={{
-          opacity: coverProblemItem ? 0.5 : 1,
+          opacity: state.CoverProblemItem ? 0.5 : 1,
         }}
       >
         <KeyPad
           callBackFunction={captureKeyClick}
-          operatorSymbol={operatorSymbol}
+          operatorSymbol={state.OperatorSymbol}
           showEquals={false}
         />
       </div>
