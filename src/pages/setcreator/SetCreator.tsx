@@ -14,7 +14,7 @@ import React, { useReducer } from "react";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useFirebaseDocument2 } from "../../firebase/useFirebaseDocument";
-import { useFirebaseCollection2 } from "../../firebase/useFirebaseCollection";
+import { useFirebaseCollectionTyped } from "../../firebase/useFirebaseCollection";
 import { useFirestore } from "../../firebase/useFirestore";
 import Select from "react-select";
 import { DragDropContext } from "react-beautiful-dnd";
@@ -60,7 +60,7 @@ export default function SetCreator() {
     id
   );
 
-  const { documents } = useFirebaseCollection2<PerformanceDataInterface>(
+  const { documents } = useFirebaseCollectionTyped<PerformanceDataInterface>(
     `performances/${target}/${id}`,
     undefined,
     undefined
@@ -244,18 +244,14 @@ export default function SetCreator() {
 
       newColumns.Available!.items = filteredMap;
 
-      newColumns.Available!.name = `Available (${
-        newColumns.Available!.items.length
-      })`;
-      newColumns.Targeted!.name = `Targeted (${
-        newColumns.Targeted!.items.length
-      })`;
-      newColumns.Mastered!.name = `Mastered (${
-        newColumns.Mastered!.items.length
-      })`;
-      newColumns.Skipped!.name = `Skipped (${
-        newColumns.Skipped!.items.length
-      })`;
+      newColumns.Available!.name = `Available (${newColumns.Available!.items.length
+        })`;
+      newColumns.Targeted!.name = `Targeted (${newColumns.Targeted!.items.length
+        })`;
+      newColumns.Mastered!.name = `Mastered (${newColumns.Mastered!.items.length
+        })`;
+      newColumns.Skipped!.name = `Skipped (${newColumns.Skipped!.items.length
+        })`;
 
       dispatch({ type: DragDropActions.UpdateColumns, payload: newColumns });
       dispatch({ type: DragDropActions.ToggleLoaded, payload: true });

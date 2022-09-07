@@ -22,13 +22,11 @@ import { UserDataInterface } from "../models/UserModel";
 import {
   CurrentObjectTypeArrays,
   PerformanceDataInterface,
-  PossibleCollectionType,
   StudentDataInterface,
   UseFirebaseCollection,
 } from "./types/GeneralTypes";
 import { FirestoreCollections } from "./useFirestore";
 import {
-  commentConverter,
   performanceConverter,
   studentConverter,
 } from "./converters/GeneralConverters";
@@ -123,7 +121,7 @@ export type CurrentObjectTypeArrays2 =
   | UserDataInterface[]
   | null;
 
-export interface UseFirebaseCollection2 {
+export interface useFirebaseCollectionTyped {
   documents: CurrentObjectTypeArrays | null;
   error: string | undefined;
 }
@@ -137,7 +135,7 @@ export interface UseFirebaseCollection2 {
  * @param {string[]} orderString string array for order
  * @returns {UseFirebaseCollection}
  */
-export function useFirebaseCollection2<T>(
+export function useFirebaseCollectionTyped<T>(
   collectionString: string,
   queryString: string[] | undefined,
   orderString: string[] | undefined

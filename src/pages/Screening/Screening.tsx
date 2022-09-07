@@ -23,7 +23,7 @@ import AnnotationsModule from "highcharts/modules/annotations";
 import { PerformanceDataInterface } from "../../firebase/types/GeneralTypes";
 import { RoutedIdParam } from "../CommonTypes/CommonPageTypes";
 import { reducerPerOperation } from "./functionality/ScreeningBehavior";
-import { useFirebaseCollection2 } from "../../firebase/useFirebaseCollection";
+import { useFirebaseCollectionTyped } from "../../firebase/useFirebaseCollection";
 
 require("highcharts/modules/annotations")(Highcharts);
 require("highcharts/modules/accessibility")(Highcharts);
@@ -51,28 +51,28 @@ export default function Screening() {
   const orderString = undefined;
 
   const { documents: additionDocuments } =
-    useFirebaseCollection2<PerformanceDataInterface>(
+    useFirebaseCollectionTyped<PerformanceDataInterface>(
       `performances/Addition/${id}`,
       queryString,
       orderString
     );
 
   const { documents: subtractionDocuments } =
-    useFirebaseCollection2<PerformanceDataInterface>(
+    useFirebaseCollectionTyped<PerformanceDataInterface>(
       `performances/Subtraction/${id}`,
       queryString,
       orderString
     );
 
   const { documents: multiplicationDocuments } =
-    useFirebaseCollection2<PerformanceDataInterface>(
+    useFirebaseCollectionTyped<PerformanceDataInterface>(
       `performances/Multiplication/${id}`,
       queryString,
       orderString
     );
 
   const { documents: divisionDocuments } =
-    useFirebaseCollection2<PerformanceDataInterface>(
+    useFirebaseCollectionTyped<PerformanceDataInterface>(
       `performances/Division/${id}`,
       queryString,
       orderString

@@ -12,7 +12,7 @@
 
 import React from "react";
 import { useState } from "react";
-import { useFirebaseCollection2 } from "../../firebase/useFirebaseCollection";
+import { useFirebaseCollectionTyped } from "../../firebase/useFirebaseCollection";
 import { useAuthorizationContext } from "../../context/useAuthorizationContext";
 
 import StudentFilter from "./functionality/StudentFilter";
@@ -27,7 +27,7 @@ export default function DashboardPractice() {
     user && !adminFlag ? ["creator", "==", user.uid] : undefined;
   const orderString = undefined;
 
-  const { documents, error } = useFirebaseCollection2<StudentDataInterface>(
+  const { documents, error } = useFirebaseCollectionTyped<StudentDataInterface>(
     "students",
     queryString,
     orderString
@@ -47,29 +47,29 @@ export default function DashboardPractice() {
 
   const students = documents
     ? documents.filter((document) => {
-        switch (filter) {
-          case "All":
-            return document.currentApproach !== "N/A";
-          case "Mine":
-            return (
-              document.creator === user!.uid &&
-              document.currentApproach !== "N/A"
-            );
-          case "K":
-          case "1st":
-          case "2nd":
-          case "3rd":
-          case "4th":
-          case "5th":
-          case "6th":
-            return (
-              document.currentGrade === filter &&
-              document.currentApproach !== "N/A"
-            );
-          default:
-            return document.currentApproach !== "N/A";
-        }
-      })
+      switch (filter) {
+        case "All":
+          return document.currentApproach !== "N/A";
+        case "Mine":
+          return (
+            document.creator === user!.uid &&
+            document.currentApproach !== "N/A"
+          );
+        case "K":
+        case "1st":
+        case "2nd":
+        case "3rd":
+        case "4th":
+        case "5th":
+        case "6th":
+          return (
+            document.currentGrade === filter &&
+            document.currentApproach !== "N/A"
+          );
+        default:
+          return document.currentApproach !== "N/A";
+      }
+    })
     : null;
 
   return (

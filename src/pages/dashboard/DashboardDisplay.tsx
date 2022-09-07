@@ -12,7 +12,7 @@
 
 import React from "react";
 import { useState } from "react";
-import { useFirebaseCollection2 } from "../../firebase/useFirebaseCollection";
+import { useFirebaseCollectionTyped } from "../../firebase/useFirebaseCollection";
 import { useAuthorizationContext } from "../../context/useAuthorizationContext";
 
 // Components
@@ -28,7 +28,7 @@ export default function Dashboard() {
     user && !adminFlag ? ["creator", "==", user.uid] : undefined;
   const orderString = undefined;
 
-  const { documents, error } = useFirebaseCollection2<StudentDataInterface>(
+  const { documents, error } = useFirebaseCollectionTyped<StudentDataInterface>(
     "students",
     queryString,
     orderString
@@ -48,23 +48,23 @@ export default function Dashboard() {
 
   const students = documents
     ? documents.filter((document) => {
-        switch (filter) {
-          case "All":
-            return true;
-          case "Mine":
-            return document.creator === user!.uid;
-          case "K":
-          case "1st":
-          case "2nd":
-          case "3rd":
-          case "4th":
-          case "5th":
-          case "6th":
-            return document.currentGrade === filter;
-          default:
-            return true;
-        }
-      })
+      switch (filter) {
+        case "All":
+          return true;
+        case "Mine":
+          return document.creator === user!.uid;
+        case "K":
+        case "1st":
+        case "2nd":
+        case "3rd":
+        case "4th":
+        case "5th":
+        case "6th":
+          return document.currentGrade === filter;
+        default:
+          return true;
+      }
+    })
     : null;
 
   return (

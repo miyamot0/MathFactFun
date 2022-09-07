@@ -8,7 +8,7 @@ export interface StudentFilterInterface {
   changeFilter: CallbackInterface;
 }
 
-export interface StudentListInterface {
+export type StudentListInterface = {
   students: StudentDataInterface[];
 }
 

@@ -13,7 +13,7 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useFirebaseCollection2 } from "../../firebase/useFirebaseCollection";
+import { useFirebaseCollectionTyped } from "../../firebase/useFirebaseCollection";
 import { useAuthorizationContext } from "../../context/useAuthorizationContext";
 import { GetOperatorFromLabel } from "../../utilities/LabelHelper";
 import {
@@ -67,7 +67,7 @@ export default function ProgressMonitor() {
     user && !adminFlag ? ["creator", "==", user.uid] : undefined;
   const orderString = undefined;
 
-  const { documents } = useFirebaseCollection2<PerformanceDataInterface>(
+  const { documents } = useFirebaseCollectionTyped<PerformanceDataInterface>(
     `performances/${target}/${id}`,
     queryString,
     orderString
