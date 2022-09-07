@@ -28,10 +28,7 @@ export default function DashboardPractice() {
   const orderString = undefined;
 
   const { documents, error } = useFirebaseCollectionTyped<StudentDataInterface>(
-    "students",
-    queryString,
-    orderString
-  );
+    { collectionString: "students", queryString, orderString });
 
   const [filter, setFilter] = useState("Mine");
 

@@ -52,31 +52,19 @@ export default function Screening() {
 
   const { documents: additionDocuments } =
     useFirebaseCollectionTyped<PerformanceDataInterface>(
-      `performances/Addition/${id}`,
-      queryString,
-      orderString
-    );
+      { collectionString: `performances/Addition/${id}`, queryString, orderString });
 
   const { documents: subtractionDocuments } =
     useFirebaseCollectionTyped<PerformanceDataInterface>(
-      `performances/Subtraction/${id}`,
-      queryString,
-      orderString
-    );
+      { collectionString: `performances/Subtraction/${id}`, queryString, orderString });
 
   const { documents: multiplicationDocuments } =
     useFirebaseCollectionTyped<PerformanceDataInterface>(
-      `performances/Multiplication/${id}`,
-      queryString,
-      orderString
-    );
+      { collectionString: `performances/Multiplication/${id}`, queryString, orderString });
 
   const { documents: divisionDocuments } =
     useFirebaseCollectionTyped<PerformanceDataInterface>(
-      `performances/Division/${id}`,
-      queryString,
-      orderString
-    );
+      { collectionString: `performances/Division/${id}`, queryString, orderString });
 
   useEffect(() => {
     if (

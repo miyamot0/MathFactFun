@@ -68,10 +68,7 @@ export default function ProgressMonitor() {
   const orderString = undefined;
 
   const { documents } = useFirebaseCollectionTyped<PerformanceDataInterface>(
-    `performances/${target}/${id}`,
-    queryString,
-    orderString
-  );
+    { collectionString: `performances/${target}/${id}`, queryString, orderString });
 
   const [chartOptions, setChartOptions] = useState({});
   const [itemChartOptions, setItemChartOptions] = useState({});

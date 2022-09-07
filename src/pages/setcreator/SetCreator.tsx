@@ -61,9 +61,7 @@ export default function SetCreator() {
   );
 
   const { documents } = useFirebaseCollectionTyped<PerformanceDataInterface>(
-    `performances/${target}/${id}`,
-    undefined,
-    undefined
+    { collectionString: `performances/${target}/${id}`, queryString: undefined, orderString: undefined }
   );
 
   const { updateDocument, response } = useFirestore(

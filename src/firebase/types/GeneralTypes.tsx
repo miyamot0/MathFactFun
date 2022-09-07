@@ -1,5 +1,4 @@
 import firebase from "firebase/app";
-import { FactModelInterface } from "../../models/FactEntryModel";
 
 import { UserDataInterface } from "../../models/UserModel";
 
@@ -171,6 +170,12 @@ export interface UseFirebaseDocument {
 }
 
 export interface UseFirebaseCollection {
-  documents: CurrentObjectTypeArrays | null;
+  documents: any[] | null;
   error: string | undefined;
+}
+
+export interface CollectionInputInterface {
+  collectionString: string;
+  queryString: string[] | undefined;
+  orderString: string[] | undefined;
 }

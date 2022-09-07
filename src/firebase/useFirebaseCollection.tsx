@@ -18,17 +18,12 @@ import {
   WhereFilterOp,
   OrderByDirection,
 } from "@firebase/firestore-types";
-import { UserDataInterface } from "../models/UserModel";
 import {
-  CurrentObjectTypeArrays,
-  PerformanceDataInterface,
-  StudentDataInterface,
-  UseFirebaseCollection,
+  CollectionInputInterface,
 } from "./types/GeneralTypes";
 import { FirestoreCollections } from "./useFirestore";
 import {
-  performanceConverter,
-  studentConverter,
+  performanceConverter, studentConverter,
 } from "./converters/GeneralConverters";
 
 const CollectionError = "Unable to retrieve data";
@@ -40,109 +35,17 @@ const CollectionError = "Unable to retrieve data";
  * @param {string} collectionString collection address
  * @param {string[]} queryString string array for query
  * @param {string[]} orderString string array for order
- * @returns {UseFirebaseCollection}
+ * @returns {useFirebaseCollectionTyped}
  */
-export function useFirebaseCollection(
-  collectionString: string,
-  queryString: string[] | undefined,
-  orderString: string[] | undefined
-): UseFirebaseCollection {
-  const [documents, setDocuments] = useState<CurrentObjectTypeArrays | null>(
-    null
-  );
-  const [error, setError] = useState<string>();
-
-  const query = useRef(queryString).current;
-  const orderBy = useRef(orderString).current;
-
-  useEffect(() => {
-    let ref: Query = projectFirestore.collection(collectionString);
-
-    if (query) {
-      const [fieldPath, opString, value] = query;
-
-      ref = ref.where(fieldPath, opString as WhereFilterOp, value);
-    }
-    if (orderBy) {
-      const [fieldPath, direction] = orderBy;
-
-      ref = ref.orderBy(fieldPath, direction as OrderByDirection);
-    }
-
-    if (collectionString === FirestoreCollections.Students) {
-      const unsubscribe = ref.withConverter(studentConverter).onSnapshot(
-        (snapshot) => {
-          setDocuments(
-            snapshot.docs.map((doc) => {
-              return {
-                ...doc.data(),
-                id: doc.id,
-              };
-            })
-          );
-          setError(undefined);
-        },
-        (error) => {
-          setError(CollectionError);
-        }
-      );
-
-      return () => unsubscribe();
-    }
-
-    if (collectionString === FirestoreCollections.Performances) {
-      const unsubscribe = ref.withConverter(performanceConverter).onSnapshot(
-        (snapshot) => {
-          setDocuments(
-            snapshot.docs.map((doc) => {
-              return {
-                ...doc.data(),
-                id: doc.id,
-              };
-            })
-          );
-          setError(undefined);
-        },
-        (error) => {
-          setError(CollectionError);
-        }
-      );
-
-      return () => unsubscribe();
-    }
-  }, [collectionString, query, orderBy]);
-
-  return { documents, error };
-}
-
-export type CurrentObjectTypeArrays2 =
-  | StudentDataInterface[]
-  | PerformanceDataInterface[]
-  | UserDataInterface[]
-  | null;
-
-export interface useFirebaseCollectionTyped {
-  documents: CurrentObjectTypeArrays | null;
-  error: string | undefined;
-}
-
-/** useFirebaseCollection
- *
- * Access a collection
- *
- * @param {string} collectionString collection address
- * @param {string[]} queryString string array for query
- * @param {string[]} orderString string array for order
- * @returns {UseFirebaseCollection}
- */
+// eslint-disable-next-line @typescript-eslint/no-redeclare
 export function useFirebaseCollectionTyped<T>(
-  collectionString: string,
-  queryString: string[] | undefined,
-  orderString: string[] | undefined
-): {
-  documents: T[] | null;
-  error: string | undefined;
-} {
+  { collectionString,
+    queryString,
+    orderString
+  }: CollectionInputInterface): {
+    documents: T[] | null;
+    error: string | undefined;
+  } {
   const [documents, setDocuments] = useState<T[] | null>(null);
   const [error, setError] = useState<string>();
 
