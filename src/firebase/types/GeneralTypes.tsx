@@ -179,3 +179,8 @@ export interface CollectionInputInterface {
   queryString: string[] | undefined;
   orderString: string[] | undefined;
 }
+
+export interface DocumentInputInterface {
+  collectionString: string;
+  idString: string | undefined;
+}

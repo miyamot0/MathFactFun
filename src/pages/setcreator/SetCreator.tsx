@@ -13,7 +13,7 @@
 import React, { useReducer } from "react";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { useFirebaseDocument2 } from "../../firebase/useFirebaseDocument";
+import { useFirebaseDocumentTyped } from "../../firebase/useFirebaseDocument";
 import { useFirebaseCollectionTyped } from "../../firebase/useFirebaseCollection";
 import { useFirestore } from "../../firebase/useFirestore";
 import Select from "react-select";
@@ -55,10 +55,8 @@ import {
 
 export default function SetCreator() {
   const { target, id } = useParams<RoutedIdTargetParam>();
-  const { document } = useFirebaseDocument2<StudentDataInterface>(
-    "students",
-    id
-  );
+  const { document } = useFirebaseDocumentTyped<StudentDataInterface>(
+    { collectionString: "students", idString: id });
 
   const { documents } = useFirebaseCollectionTyped<PerformanceDataInterface>(
     { collectionString: `performances/${target}/${id}`, queryString: undefined, orderString: undefined }

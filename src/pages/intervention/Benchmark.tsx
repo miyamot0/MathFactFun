@@ -12,7 +12,7 @@ import { useParams, useHistory } from "react-router-dom";
 
 // Hooks
 import { useFirestore } from "../../firebase/useFirestore";
-import { useFirebaseDocument2 } from "../../firebase/useFirebaseDocument";
+import { useFirebaseDocumentTyped } from "../../firebase/useFirebaseDocument";
 
 // Widgets
 import KeyPad from "./KeyPad";
@@ -42,7 +42,7 @@ import {
   loadWorkingDataBenchmark,
   useEventListener,
 } from "./functionality/InterventionBehavior";
-import { BenchmarkActions, BenchmarkState } from "./types/InterventionTypes";
+import { BenchmarkActions } from "./types/InterventionTypes";
 
 const ActionSequence = {
   Start: "ActionSequence.Start",
@@ -54,10 +54,8 @@ const ActionSequence = {
 export default function Benchmark() {
   const { id, target } = useParams<RoutedIdTargetParam>();
   const history = useHistory();
-  const { document } = useFirebaseDocument2<StudentDataInterface>(
-    "students",
-    id
-  );
+  const { document } = useFirebaseDocumentTyped<StudentDataInterface>(
+    { collectionString: "students", idString: id });
   const { user } = useAuthorizationContext();
   const { addDocument2, response: addResponse } = useFirestore(
     "",

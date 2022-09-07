@@ -15,7 +15,7 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useFirestore } from "../../firebase/useFirestore";
 import { useHistory } from "react-router-dom";
-import { useFirebaseDocument } from "../../firebase/useFirebaseDocument";
+import { useFirebaseDocumentTyped } from "../../firebase/useFirebaseDocument";
 import { UserDataInterface } from "../../models/UserModel";
 import { RoutedIdParam } from "../CommonTypes/CommonPageTypes";
 
@@ -26,7 +26,13 @@ const EditFormStyle = {
 export default function EditUser() {
   const history = useHistory();
   const { id } = useParams<RoutedIdParam>();
-  const { documentError, document } = useFirebaseDocument("users", id);
+
+  const { document, documentError } = useFirebaseDocumentTyped<UserDataInterface>(
+    {
+      collectionString: "users",
+      idString: id
+    });
+
   const { updateDocument, response } = useFirestore(
     "users",
     undefined,

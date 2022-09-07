@@ -18,7 +18,6 @@ import { useAuthorizationContext } from "../../context/useAuthorizationContext";
 import { GetOperatorFromLabel } from "../../utilities/LabelHelper";
 import {
   OnlyUnique,
-  Sum,
   GetApproachStringFromLabel,
 } from "../../utilities/LabelHelper";
 
@@ -31,7 +30,6 @@ import {
   PerformanceDataInterface,
 } from "../../firebase/types/GeneralTypes";
 import {
-  DailyPerformanceMetrics,
   RoutedStudentProgressSet,
 } from "./types/ProgressTypes";
 import {

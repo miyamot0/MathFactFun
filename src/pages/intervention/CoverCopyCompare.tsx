@@ -14,7 +14,7 @@ import Modal from "react-modal";
 
 // hooks
 import { useFirestore } from "../../firebase/useFirestore";
-import { useFirebaseDocument } from "../../firebase/useFirebaseDocument";
+import { useFirebaseDocumentTyped } from "../../firebase/useFirebaseDocument";
 import { useAuthorizationContext } from "../../context/useAuthorizationContext";
 import { timestamp } from "../../firebase/config";
 
@@ -79,7 +79,11 @@ export default function CoverCopyCompare() {
   const { user } = useAuthorizationContext();
   const history = useHistory();
 
-  const { document } = useFirebaseDocument("students", id);
+  const { document } = useFirebaseDocumentTyped<StudentDataInterface>(
+    {
+      collectionString: "students",
+      idString: id
+    });
   const { addDocument, response } = useFirestore("", target, id);
   const { updateDocument } = useFirestore("students", undefined, undefined);
 

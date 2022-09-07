@@ -16,7 +16,7 @@ import { useParams } from "react-router-dom";
 import { timestamp } from "../../firebase/config";
 import { useFirestore } from "../../firebase/useFirestore";
 import { useHistory } from "react-router-dom";
-import { useFirebaseDocument2 } from "../../firebase/useFirebaseDocument";
+import { useFirebaseDocumentTyped } from "../../firebase/useFirebaseDocument";
 import {
   Grades,
   Operations,
@@ -44,7 +44,7 @@ const EditFormStyle = {
 export default function Edit() {
   const { id } = useParams<RoutedIdParam>();
   const { document, documentError } =
-    useFirebaseDocument2<StudentDataInterface>("students", id);
+    useFirebaseDocumentTyped<StudentDataInterface>({ collectionString: "students", idString: id });
   const history = useHistory();
   const { updateDocument, response } = useFirestore(
     "students",

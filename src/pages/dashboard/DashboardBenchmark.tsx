@@ -12,7 +12,7 @@
 
 import React from "react";
 import { useParams } from "react-router-dom";
-import { useFirebaseDocument2 } from "../../firebase/useFirebaseDocument";
+import { useFirebaseDocumentTyped } from "../../firebase/useFirebaseDocument";
 import BenchmarkList from "./subcomponents/BenchmarkList";
 
 // styles
@@ -23,7 +23,7 @@ import { RoutedIdParam } from "../CommonTypes/CommonPageTypes";
 export default function DashboardBenchmark() {
   const { id } = useParams<RoutedIdParam>();
   const { document, documentError } =
-    useFirebaseDocument2<StudentDataInterface>("students", id);
+    useFirebaseDocumentTyped<StudentDataInterface>({ collectionString: "students", idString: id });
 
   if (documentError) {
     return <div className="error">{documentError}</div>;
