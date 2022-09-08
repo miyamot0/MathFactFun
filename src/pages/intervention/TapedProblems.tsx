@@ -23,8 +23,8 @@ import { useFirebaseDocumentTyped } from "../../firebase/useFirebaseDocument";
 import { useAuthorizationContext } from "../../context/useAuthorizationContext";
 
 // widgets
-import KeyPad from "./KeyPad";
-import SimpleProblemFrame from "./SimpleProblemFrame";
+import KeyPad from "./subcomponents/KeyPad";
+import SimpleProblemFrame from "./subcomponents/SimpleProblemFrame";
 import TimerButton from "./subcomponents/TimerButton";
 
 // helpers

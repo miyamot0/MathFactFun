@@ -16,6 +16,15 @@ export enum BenchmarkActions {
   ExplicitTimingBatchStartPreflight = "ExplicitTimingBatchStartPreflight",
   ExplicitTimingBatchIncrement = "ExplicitTimingBatchIncrement",
   ExplicitTimingModalRetry = "ExplicitTimingModalRetry",
+
+  CoverCopyCompareBatchStartPreflight = "CoverCopyCompareBatchStartPreflight",
+  CoverCopyCompareBatchStartBegin = "CoverCopyCompareBatchStartBegin",
+  CoverCopyCompareTaskIncrement = "CoverCopyCompareTaskIncrement",
+  CoverCopyCompareTaskReset = "CoverCopyCompareTaskReset",
+  CoverCopyCompareBatchIncrement = "CoverCopyCompareBatchStartBegin",
+  CoverCopyCompareBatchStartIncrementPost = "CoverCopyCompareBatchStartIncrementPost",
+  CoverCopyCompareModalRetry = "CoverCopyCompareModalRetry",
+  CoverCopyCompareItemIncrement = "CoverCopyCompareItemIncrement"
 }
 
 export interface BenchmarkState {
@@ -28,7 +37,13 @@ export interface BenchmarkState {
   SecondsLeft: number;
   LoadedData: false;
   CoverProblemItem: false;
+  CoverStimulusItem: false;
+  CoverListViewItems: false;
+  ShowButton: false;
+  IsOngoing: false;
+  ToVerify: false;
   FactModelList: FactDataInterface[];
+  NextLiItem: string,
   StartTime: Date | null;
   PreTrialTime: Date | null;
   OnInitialTry: boolean;
@@ -45,5 +60,7 @@ export const SharedActionSequence = {
   Start: "ActionSequence.Start",
   Answer: "ActionSequence.Answer",
   Entry: "ActionSequence.Entry",
+  CoverCopy: "ActionSequence.CoverCopy",
+  Compare: "ActionSequence.Compare",
   Begin: "ActionSequence.Begin",
 };

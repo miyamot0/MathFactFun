@@ -15,19 +15,16 @@ import { useFirestore } from "../../firebase/useFirestore";
 import { useFirebaseDocumentTyped } from "../../firebase/useFirebaseDocument";
 
 // Widgets
-import KeyPad from "./KeyPad";
+import KeyPad from "./subcomponents/KeyPad";
 import Timer from "./subcomponents/Timer";
-import SimpleProblemFrame from "./SimpleProblemFrame";
+import SimpleProblemFrame from "./subcomponents/SimpleProblemFrame";
 
 // Helpers
 import {
   CalculateDigitsTotalAnswer,
   CalculateDigitsCorrectAnswer,
 } from "../../utilities/LabelHelper";
-import { RelevantKeys } from "../../maths/Facts";
 
-// Styles
-import "../intervention/ExplicitTiming.css";
 import {
   FactDataInterface,
   StudentDataInterface,
@@ -46,6 +43,9 @@ import {
   BenchmarkActions,
   SharedActionSequence,
 } from "./types/InterventionTypes";
+
+// Styles
+import "../intervention/ExplicitTiming.css";
 
 export default function Benchmark() {
   const { id, target } = useParams<RoutedIdTargetParam>();

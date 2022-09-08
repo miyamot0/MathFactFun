@@ -6,9 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from "react";
-
-import { useState, useEffect, useRef } from "react";
+import React, { useReducer, useState, useEffect } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import Modal from "react-modal";
 
@@ -19,63 +17,41 @@ import { useAuthorizationContext } from "../../context/useAuthorizationContext";
 import { timestamp } from "../../firebase/config";
 
 // widgets
-import KeyPad from "./KeyPad";
-import ProblemFrame from "./ProblemFrame";
-import StimulusFrame from "./StimulusFrame";
+import KeyPad from "./subcomponents/KeyPad";
+import ProblemFrame from "./subcomponents/ProblemFrame";
+import StimulusFrame from "./subcomponents/StimulusFrame";
 
 // helpers
 import {
   CalculateDigitsTotal,
   CalculateDigitsCorrect,
   GetOperatorFromLabel,
+  CalculateDigitsTotalAnswer,
 } from "../../utilities/LabelHelper";
-import { RelevantKeys, InterventionFormat } from "../../maths/Facts";
+import { RelevantKeys } from "../../maths/Facts";
 import { DetermineErrorCorrection } from "../../utilities/Logic";
 import {
   PerformanceModel,
   PerformanceModelInterface,
 } from "../../models/PerformanceModel";
-import {
-  FactEntryModel,
-  FactModelInterface,
-} from "../../models/FactEntryModel";
 
 // styles
 import "./CoverCopyCompare.css";
 import {
+  FactDataInterface,
   PerformanceDataInterface,
   StudentDataInterface,
 } from "../../firebase/types/GeneralTypes";
 
-const ActionSequence = {
-  Entry: "ActionSequence.Entry",
-  Begin: "ActionSequence.Begin",
-  CoverCopy: "ActionSequence.CoverCopy",
-  Compare: "ActionSequence.Compare",
-};
-
-const DelCode = "Del";
-
-const customStyles = {
-  content: {
-    top: "50%",
-    left: "50%",
-    right: "auto",
-    bottom: "auto",
-    marginRight: "-50%",
-    transform: "translate(-50%, -50%)",
-  },
-};
+import { ErrorModalCustomStyle } from "./subcomponents/ModalStyles";
+import { BenchmarkActions, SharedActionSequence } from "./types/InterventionTypes";
+import { DelCode, InitialBenchmarkState, InterventionReducer, useEventListener } from "./functionality/InterventionBehavior";
+import { RoutedIdTargetParam } from "../CommonTypes/CommonPageTypes";
 
 Modal.setAppElement("#root");
 
-interface RoutedStudentSet {
-  id?: string;
-  target?: string;
-}
-
 export default function CoverCopyCompare() {
-  const { id, target } = useParams<RoutedStudentSet>();
+  const { id, target } = useParams<RoutedIdTargetParam>();
   const { user } = useAuthorizationContext();
   const history = useHistory();
 
@@ -86,79 +62,13 @@ export default function CoverCopyCompare() {
   const { addDocument, response } = useFirestore("", target, id);
   const { updateDocument } = useFirestore("students", undefined, undefined);
 
-  const [loadedData, setLoadedData] = useState(false);
-  const [workingData, setWorkingData] = useState<string[]>();
-  const [operatorSymbol, setOperatorSymbol] = useState("");
+  const [state, dispatch] = useReducer(
+    InterventionReducer,
+    InitialBenchmarkState
+  );
 
-  const [currentAction, setCurrentAction] = useState(ActionSequence.Entry);
-  const [buttonText, setButtonText] = useState("Cover");
-  const [showButton, setShowButton] = useState(false);
-  const [isOngoing, setIsOngoing] = useState(false);
-  const [isOnInitialTry, setIsOnInitialTry] = useState(true);
-  const [coverStimulusItem, setCoverStimulusItem] = useState(true);
-  const [coverProblemItem, setCoverProblemItem] = useState(true);
-  const [coverListViewItems, setCoverListViewItems] = useState(false);
-  const [toVerify, setToVerify] = useState(false);
-  const [nextLiItem, setNextLiItem] = useState<string>();
-
-  // quants
-  const [numberCorrectInitial, setNumberCorrectInitial] = useState(0);
-  const [numberErrors, setNumberErrors] = useState(0);
-  const [totalDigits, setTotalDigits] = useState(0);
-  const [totalCorrectDigits, setCorrectTotalDigits] = useState(0);
-  const [numberTrials, setNumberTrials] = useState(0);
-  const [nRetries, setNRetries] = useState(0);
-
-  const [preTrialTime, setPreTrialTime] = useState<Date>();
-  const [startTime, setStartTime] = useState<Date>();
-  const [factModelList, setModelList] = useState<FactModelInterface[]>();
-
-  const [viewRepresentationInternal, setViewRepresentationInternal] =
-    useState("");
-  const [entryRepresentationInternal, setEntryRepresentationInternal] =
-    useState("");
-
-  /// modal stuff
+  // modal stuff
   const [modalIsOpen, setIsOpen] = useState(false);
-
-  /** useEventListener
-   *
-   * listener for events
-   *
-   * @param {string} eventName ...
-   * @param {(key: React.KeyboardEvent<HTMLElement>) => void} handler ...
-   * @param {Window} element ...
-   */
-  function useEventListener(
-    eventName: string,
-    handler: (key: React.KeyboardEvent<HTMLElement>) => void,
-    element: Window = window
-  ): void {
-    const savedHandler = useRef({});
-
-    useEffect(() => {
-      savedHandler.current = handler;
-    }, [handler]);
-    useEffect(
-      () => {
-        const isSupported = element && element.addEventListener;
-        if (!isSupported) return;
-
-        const eventListener = (event: any) => {
-          if (typeof savedHandler.current === "function") {
-            savedHandler.current(event);
-          }
-        };
-
-        element.addEventListener(eventName, eventListener);
-
-        return () => {
-          element.removeEventListener(eventName, eventListener);
-        };
-      },
-      [eventName, element] // Re-run if eventName or element changes
-    );
-  }
 
   /** keyHandler
    *
@@ -167,18 +77,19 @@ export default function CoverCopyCompare() {
    * @param {React.KeyboardEvent<HTMLElement>} key keyevent
    */
   function keyHandler(key: React.KeyboardEvent<HTMLElement>): void {
+    console.log('keyHandler fired')
     if (RelevantKeys.includes(key.key)) {
       let modKey = key.key === "Backspace" ? "Del" : key.key;
       modKey = key.key === "Delete" ? "Del" : modKey;
 
       if (modKey === " ") {
-        if (currentAction !== ActionSequence.Entry) {
+        if (state.CurrentAction !== SharedActionSequence.Entry) {
           captureButtonAction();
           return;
         }
 
-        if (nextLiItem !== null && nextLiItem !== undefined) {
-          captureItemClick(nextLiItem);
+        if (state.NextLiItem !== null && state.NextLiItem !== undefined) {
+          captureItemClick(state.NextLiItem);
         }
 
         return;
@@ -204,7 +115,7 @@ export default function CoverCopyCompare() {
   function shouldShowFeedback(trialError: boolean): boolean {
     return DetermineErrorCorrection(
       trialError,
-      (document as StudentDataInterface).currentErrorApproach!
+      document!.currentErrorApproach!
     );
   }
 
@@ -218,32 +129,31 @@ export default function CoverCopyCompare() {
 
   // Fire once individual data loaded, just once
   useEffect(() => {
-    if (document && !loadedData) {
-      // Establish working set
-      setWorkingData((document as StudentDataInterface).factsTargeted);
-
-      // Establish operator sign
-      setOperatorSymbol(
-        GetOperatorFromLabel(
-          (document as StudentDataInterface).currentTarget!.toString()
-        )
-      );
-
-      // Flag that data is loaded
-      setLoadedData(true);
+    if (document && !state.LoadedData) {
+      dispatch({
+        type: BenchmarkActions.CoverCopyCompareBatchStartPreflight,
+        payload: {
+          uAction: SharedActionSequence.Entry,
+          uWorkingData: document.factsTargeted,
+          uLoadedData: true,
+          uOperator: GetOperatorFromLabel(
+            document.currentTarget!.toString()
+          )
+        },
+      });
     }
-  }, [document, loadedData, setLoadedData, operatorSymbol, setOperatorSymbol]);
+  }, [document, state.LoadedData, state.OperatorSymbol]);
 
   /** submitDataToFirebase
    *
    * Push data to server
    *
-   * @param {FactModelInterface} finalFactObject final item completed
+   * @param {FactDataInterface} finalFactObject final item completed
    */
   async function submitDataToFirebase(
-    finalFactObject: FactModelInterface
+    finalFactObject: FactDataInterface
   ): Promise<void> {
-    let finalEntries = factModelList;
+    let finalEntries = state.FactModelList;
 
     if (finalFactObject !== null) {
       finalEntries?.push(finalFactObject);
@@ -265,21 +175,21 @@ export default function CoverCopyCompare() {
     performanceInformation.data.method = InterventionFormat.CoverCopyCompare;
 
     // Numerics
-    performanceInformation.data.correctDigits = totalCorrectDigits;
-    performanceInformation.data.errCount = numberErrors;
-    performanceInformation.data.nCorrectInitial = numberCorrectInitial;
-    performanceInformation.data.nRetries = nRetries;
+    performanceInformation.data.correctDigits = state.TotalDigitsCorrect;
+    performanceInformation.data.errCount = state.NumErrors;
+    performanceInformation.data.nCorrectInitial = state.NumCorrectInitial;
+    performanceInformation.data.nRetries = state.NumRetries;
     performanceInformation.data.sessionDuration =
-      (end.getTime() - startTime!.getTime()) / 1000;
+      (end.getTime() - state.StartTime!.getTime()) / 1000;
     performanceInformation.data.setSize = (
       document as StudentDataInterface
     ).factsTargeted.length;
-    performanceInformation.data.totalDigits = totalDigits;
+    performanceInformation.data.totalDigits = state.TotalDigits;
 
     // Timestamps
     performanceInformation.data.createdAt = timestamp.fromDate(new Date());
     performanceInformation.data.dateTimeEnd = end.toString();
-    performanceInformation.data.dateTimeStart = startTime!.toString();
+    performanceInformation.data.dateTimeStart = state.StartTime!.toString();
 
     // Arrays
     performanceInformation.data.entries = finalEntries!;
@@ -321,117 +231,153 @@ export default function CoverCopyCompare() {
    *
    */
   function captureButtonAction(): void {
-    // Note: need a flag for update w/o waiting for state change
+    // HACK: need a flag for update w/o waiting for state change
     let quickCheck = false;
 
-    if (currentAction === ActionSequence.Entry) {
-      // From entry, to begin
-      setCurrentAction(ActionSequence.Begin);
-      setButtonText("Cover");
-      setCoverStimulusItem(false);
-      setCoverProblemItem(true);
-    } else if (currentAction === ActionSequence.Begin) {
-      // From begin, to cover copy
-      setCurrentAction(ActionSequence.CoverCopy);
-      setCoverStimulusItem(true);
-      setCoverProblemItem(false);
-      setButtonText("Copied");
-    } else if (currentAction === ActionSequence.CoverCopy) {
-      // From cover copy, to compare
-      setCurrentAction(ActionSequence.Compare);
-      setButtonText("Compared");
-      setCoverStimulusItem(false);
-      setCoverProblemItem(false);
+    if (state.CurrentAction === SharedActionSequence.Entry) {
+      dispatch({
+        type: BenchmarkActions.CoverCopyCompareTaskIncrement,
+        payload: {
+          uAction: SharedActionSequence.Begin,
+          uButtonText: "Cover",
+          uCoverStimulusItem: false,
+          uCoverProblemItem: true
+        },
+      });
+
+    } else if (state.CurrentAction === SharedActionSequence.Begin) {
+      dispatch({
+        type: BenchmarkActions.CoverCopyCompareTaskIncrement,
+        payload: {
+          uAction: SharedActionSequence.CoverCopy,
+          uButtonText: "Copied",
+          uCoverStimulusItem: true,
+          uCoverProblemItem: false
+        },
+      });
+
+    } else if (state.CurrentAction === SharedActionSequence.CoverCopy) {
+      dispatch({
+        type: BenchmarkActions.CoverCopyCompareTaskIncrement,
+        payload: {
+          uAction: SharedActionSequence.Compare,
+          uButtonText: "Compared",
+          uCoverStimulusItem: false,
+          uCoverProblemItem: false
+        },
+      });
+
     } else {
-      setCurrentAction(ActionSequence.Entry);
-      setToVerify(true);
+      dispatch({
+        type: BenchmarkActions.CoverCopyCompareTaskIncrement,
+        payload: {
+          uAction: SharedActionSequence.Entry,
+          uVerify: true
+        },
+      });
+
       quickCheck = true;
     }
 
     // Fire if ready to check response
-    if (toVerify || quickCheck) {
-      setToVerify(false);
+    if (state.ToVerify || quickCheck) {
+
+      dispatch({
+        type: BenchmarkActions.CoverCopyCompareTaskIncrement,
+        payload: {
+          uAction: state.CurrentAction,
+          uVerify: false
+        },
+      });
+
+      //let uVerify = false
+      //setToVerify(false);
 
       // Compare if internal and inputted string match
       let isMatching =
-        viewRepresentationInternal.trim() ===
-        entryRepresentationInternal.trim();
+        state.ViewRepresentationInternal.trim() ===
+        state.EntryRepresentationInternal.trim();
+
+      let uNumberCorrectInitial = state.NumCorrectInitial;
+      let uNumberErrors = state.NumErrors;
 
       // Increment initial attempt, if correct
-      if (isOnInitialTry && isMatching) {
-        setNumberCorrectInitial(numberCorrectInitial + 1);
+      if (state.OnInitialTry && isMatching) {
+        uNumberCorrectInitial = uNumberCorrectInitial + 1;
       }
 
       // Increment errors, if incorrect
       if (!isMatching) {
-        setNumberErrors(numberErrors + 1);
+        uNumberErrors = state.NumErrors + 1;
       }
 
       var current = new Date();
-      let secs = (current.getTime() - preTrialTime!.getTime()) / 1000;
+      let secs = (current.getTime() - state.PreTrialTime!.getTime()) / 1000;
 
-      let holderPreTime = preTrialTime;
+      let holderPreTime = state.PreTrialTime;
 
       // Update time for trial
-      setPreTrialTime(new Date());
+      //setPreTrialTime(new Date());
 
       if (shouldShowFeedback(!isMatching)) {
         // Error correction prompt
         openModal();
       } else {
-        let totalDigitsShown = CalculateDigitsTotal(viewRepresentationInternal);
-
-        setTotalDigits(totalDigits + totalDigitsShown);
+        let totalDigitsShown = CalculateDigitsTotalAnswer(
+          state.ViewRepresentationInternal
+        );
 
         let totalDigitsCorrect = CalculateDigitsCorrect(
-          entryRepresentationInternal,
-          viewRepresentationInternal,
-          operatorSymbol
+          state.EntryRepresentationInternal,
+          state.ViewRepresentationInternal,
+          state.OperatorSymbol
         );
 
-        setCorrectTotalDigits(totalCorrectDigits + totalDigitsCorrect);
+        let currentItem2: FactDataInterface = {
+          factCorrect: isMatching,
+          initialTry: state.OnInitialTry,
+          factType: document!.currentTarget,
+          factString: state.ViewRepresentationInternal,
+          factEntry: state.EntryRepresentationInternal,
+          latencySeconds: secs,
+          dateTimeEnd: timestamp.fromDate(new Date(current)),
+          dateTimeStart: timestamp.fromDate(new Date(holderPreTime!)),
+        };
 
-        setNumberTrials(numberTrials + 1);
-
-        // Reset logic to default
-        setViewRepresentationInternal("");
-        setEntryRepresentationInternal("");
-        setButtonText("Cover");
-        setShowButton(false);
-        setIsOngoing(false);
-        setCoverListViewItems(false);
-        setCoverStimulusItem(true);
-        setCoverProblemItem(true);
-        setIsOnInitialTry(true);
-
-        let currentItem = FactEntryModel();
-
-        /*
-        HACK
-        currentItem.data.factCorrect = isMatching;
-        currentItem.data.initialTry = isOnInitialTry;
-
-        currentItem.data.factType = (
-          document as StudentDataInterface
-        ).currentTarget;
-        currentItem.data.factString = viewRepresentationInternal;
-        currentItem.data.factEntry = entryRepresentationInternal;
-
-        currentItem.data.latencySeconds = secs;
-
-        currentItem.data.dateTimeEnd = timestamp.fromDate(new Date(current));
-        currentItem.data.dateTimeStart = timestamp.fromDate(
-          new Date(holderPreTime!)
-        );
-        */
+        dispatch({
+          type: BenchmarkActions.CoverCopyCompareBatchIncrement,
+          payload: {
+            uNumberCorrectInitial,
+            uNumberErrors,
+            uTotalDigits: state.TotalDigits + totalDigitsShown,
+            uTotalDigitsCorrect: state.TotalDigitsCorrect + totalDigitsCorrect,
+            uNumberTrials: state.NumbTrials + 1,
+            uInitialTry: state.OnInitialTry,
+            uTrialTime: new Date(),
+          },
+        });
 
         // Note: isusue where state change not fast enough to catch latest
-        if (workingData!.length === 0) {
+        if (state.WorkingData!.length === 0) {
           // If finished, upload list w/ latest item
-          submitDataToFirebase(currentItem);
+          submitDataToFirebase(currentItem2);
         } else {
-          // Otherise, add it to the existing list
-          setModelList([...factModelList!, currentItem]);
+
+          dispatch({
+            type: BenchmarkActions.CoverCopyCompareBatchStartIncrementPost,
+            payload: {
+              uCoverStimulusItem: true,
+              uCoverProblemItem: true,
+              uEntryRepresentationInternal: "",
+              uViewRepresentationInternal: "",
+              uButtonText: "Cover",
+              uShowButton: false,
+              uIsOngoing: true,
+              uCoverListViewItems: false,
+              uOnInitialTry: true,
+              uFactModelList: [...state.FactModelList!, currentItem2],
+            },
+          });
         }
       }
     }
@@ -445,25 +391,25 @@ export default function CoverCopyCompare() {
    */
   function captureKeyClick(char: string): void {
     // Rule 1: Exit out if not in Covered/Copying sequence
-    if (currentAction !== ActionSequence.CoverCopy) return;
+    if (state.CurrentAction !== SharedActionSequence.CoverCopy) return;
 
     // Rule 2: Exit out if multiple operators
     if (
-      char === operatorSymbol &&
-      entryRepresentationInternal.includes(operatorSymbol)
+      char === state.OperatorSymbol &&
+      state.EntryRepresentationInternal.includes(state.OperatorSymbol)
     )
       return;
 
     // Rule 3: Like #2, but no multiple equals sign
-    if (char === "=" && entryRepresentationInternal.includes("=")) return;
+    if (char === "=" && state.EntryRepresentationInternal.includes("=")) return;
 
     // Rule #4: No '=' before an operator
-    if (char === "=" && !entryRepresentationInternal.includes(operatorSymbol))
+    if (char === "=" && !state.EntryRepresentationInternal.includes(state.OperatorSymbol))
       return;
 
     // Rule #5/#6: No '=', before an digit AFTER operator
-    if (char === "=" && entryRepresentationInternal.includes(operatorSymbol)) {
-      let problemParts = entryRepresentationInternal.split(operatorSymbol);
+    if (char === "=" && state.EntryRepresentationInternal.includes(state.OperatorSymbol)) {
+      let problemParts = state.EntryRepresentationInternal.split(state.OperatorSymbol);
 
       // Rule #5: If just 1 part, disregard (i.e., no operator)
       if (problemParts.length <= 1) return;
@@ -472,16 +418,21 @@ export default function CoverCopyCompare() {
       if (problemParts[1].trim().length === 0) return;
     }
 
-    // Processing add/remove of character
     if (char === DelCode) {
       // # Rule #7: Exit out if nothin to delete
-      if (entryRepresentationInternal.length === 0) return;
+      if (state.EntryRepresentationInternal.length === 0) return;
 
       // Lop off end of string
-      setEntryRepresentationInternal(entryRepresentationInternal.slice(0, -1));
+      dispatch({
+        type: BenchmarkActions.GeneralUpdateEntry,
+        payload: state.EntryRepresentationInternal.slice(0, -1),
+      });
     } else {
       // Add to end of string
-      setEntryRepresentationInternal(entryRepresentationInternal + char);
+      dispatch({
+        type: BenchmarkActions.GeneralUpdateEntry,
+        payload: state.EntryRepresentationInternal + char,
+      });
     }
   }
 
@@ -493,45 +444,30 @@ export default function CoverCopyCompare() {
    */
   function captureItemClick(listItem: string): void {
     // If a problem is loaded, exit out of event
-    if (isOngoing) return;
+    if (state.IsOngoing) return;
 
-    // Establish start of math fact
-    setPreTrialTime(new Date());
-
-    if (startTime === null) {
-      // Establish start of session
-      setStartTime(new Date());
-    }
-
-    // Set the 'true' item, less set-level coding component
-    setViewRepresentationInternal(listItem.split(":")[0]);
-
-    // Flag that a problem is loaded
-    setIsOngoing(true);
-
-    // Update button text
-    setButtonText("Cover");
-
-    // Update button display status:
-    setShowButton(true);
-
-    // Flag to remove cover for stimulus item
-    setCoverStimulusItem(false);
-
-    const updatedList = workingData!.filter(function (item) {
+    const updatedList = state.WorkingData!.filter(function (item) {
       return item !== listItem;
     });
 
-    // Update the collection--remove current item from list
-    setWorkingData(updatedList);
+    dispatch({
+      type: BenchmarkActions.CoverCopyCompareBatchStartBegin,
+      payload: {
+        uButtonText: "Cover",
+        uTrialTime: new Date(),
+        uStartTime: state.StartTime === null ? new Date() : state.StartTime,
+        uViewRepresentationInternal: listItem.split(":")[0],
+        uCoverProblemItem: false,
+        uCoverListViewItems: true,
+        uWorkingData: updatedList,
+        uIsOngoing: true,
+        uShowButton: true,
+        uNextLiItem: updatedList[0],
+        uEntryRepresentationInternal: "",
+        uCurrentAction: SharedActionSequence.Answer,
+      },
+    });
 
-    // Queue up next LI
-    setNextLiItem(updatedList[0]);
-
-    // Flag to cover up list items (to dim them)
-    setCoverListViewItems(true);
-
-    // Force a call to update status
     captureButtonAction();
   }
 
@@ -542,7 +478,7 @@ export default function CoverCopyCompare() {
         onRequestClose={closeModal}
         shouldCloseOnOverlayClick={false}
         preventScroll={true}
-        style={customStyles}
+        style={ErrorModalCustomStyle}
         contentLabel="Example Modal"
       >
         <h2>Double-check your math!</h2>
@@ -553,17 +489,20 @@ export default function CoverCopyCompare() {
           className="global-btn "
           style={{ float: "right" }}
           onClick={() => {
-            setEntryRepresentationInternal("");
-            setIsOngoing(true);
-            setToVerify(false);
-            setIsOnInitialTry(false);
-
-            setCurrentAction(ActionSequence.Begin);
-            setButtonText("Cover");
-            setCoverStimulusItem(false);
-            setCoverProblemItem(true);
-
-            setNRetries(nRetries + 1);
+            dispatch({
+              type: BenchmarkActions.CoverCopyCompareModalRetry,
+              payload: {
+                uEntryRepresentationInternal: "",
+                uIsOngoing: true,
+                uToVerify: false,
+                uOnInitialTry: false,
+                uCurrentAction: SharedActionSequence.Begin,
+                uButtonText: "Cover",
+                uCoverProblemItem: true,
+                uCoverStimulusItem: false,
+                uNumRetries: state.NumRetries + 1,
+              },
+            });
 
             closeModal();
           }}
@@ -574,58 +513,58 @@ export default function CoverCopyCompare() {
       <div className="topBox">
         <h2>
           Cover Copy Compare: (
-          {document ? (document as StudentDataInterface).name : <></>})
+          {document ? document.name : <></>})
         </h2>
       </div>
       <div
         className="box1"
         style={{
-          opacity: coverStimulusItem ? 0.5 : 1,
-          backgroundColor: coverStimulusItem ? "gray" : "transparent",
+          opacity: state.CoverStimulusItem ? 0.5 : 1,
+          backgroundColor: state.CoverStimulusItem ? "gray" : "transparent",
         }}
       >
         <h2>Problem to Copy</h2>
         <StimulusFrame
-          itemString={viewRepresentationInternal}
-          operator={operatorSymbol}
-          coverStimulusItem={coverStimulusItem}
+          itemString={state.ViewRepresentationInternal}
+          operator={state.OperatorSymbol}
+          coverStimulusItem={state.CoverStimulusItem}
         />
       </div>
       <div
         className="box2"
         style={{
-          opacity: coverProblemItem ? 0.5 : 1,
-          backgroundColor: coverProblemItem ? "gray" : "transparent",
+          opacity: state.CoverProblemItem ? 0.5 : 1,
+          backgroundColor: state.CoverProblemItem ? "gray" : "transparent",
         }}
       >
         <h2>My Answer</h2>
         <ProblemFrame
-          entryString={entryRepresentationInternal}
-          coverProblemSpace={coverProblemItem}
+          entryString={state.EntryRepresentationInternal}
+          coverProblemSpace={state.CoverProblemItem}
         />
       </div>
       <div className="box3">
         <section>
           <button
             className="global-btn "
-            style={{ visibility: showButton ? "visible" : "hidden" }}
+            style={{ visibility: state.ShowButton ? "visible" : "hidden" }}
             onClick={() => captureButtonAction()}
           >
-            {buttonText}
+            {state.ButtonText}
           </button>
         </section>
       </div>
       <div
         className="box4"
         style={{
-          opacity: coverListViewItems ? 0.5 : 1,
-          backgroundColor: coverListViewItems ? "gray" : "transparent",
+          opacity: state.CoverListViewItems ? 0.5 : 1,
+          backgroundColor: state.CoverListViewItems ? "gray" : "transparent",
         }}
       >
         <h2>Items in Stimulus Set</h2>
         <ul className="list-styling">
-          {workingData ? (
-            workingData.map((fact) => {
+          {state.WorkingData ? (
+            state.WorkingData.map((fact) => {
               return (
                 <li
                   className="list-styling"
@@ -644,12 +583,12 @@ export default function CoverCopyCompare() {
       <div
         className="box5"
         style={{
-          opacity: coverProblemItem ? 0.5 : 1,
+          opacity: state.CoverProblemItem ? 0.5 : 1,
         }}
       >
         <KeyPad
           callBackFunction={captureKeyClick}
-          operatorSymbol={operatorSymbol}
+          operatorSymbol={state.OperatorSymbol}
           showEquals={true}
         />
       </div>

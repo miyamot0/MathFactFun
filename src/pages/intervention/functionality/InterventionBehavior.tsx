@@ -200,7 +200,13 @@ export const InitialBenchmarkState: BenchmarkState = {
   SecondsLeft: 0,
   LoadedData: false,
   CoverProblemItem: false,
+  CoverStimulusItem: false,
+  CoverListViewItems: false,
+  ShowButton: false,
+  IsOngoing: false,
+  ToVerify: false,
   FactModelList: [],
+  NextLiItem: "",
   StartTime: null,
   PreTrialTime: null,
   OnInitialTry: true,
@@ -224,12 +230,17 @@ export const InterventionReducer = (
   state: BenchmarkState,
   action: any
 ): BenchmarkState => {
+
+  console.log(action)
+  console.log(state)
   switch (action.type) {
     case BenchmarkActions.GeneralUpdateEntry:
       return { ...state, EntryRepresentationInternal: action.payload };
+    // Benchmarking
     case BenchmarkActions.BenchmarkBatchStartPreflight:
       return {
         ...state,
+        CurrentAction: action.payload.uAction,
         WorkingData: action.payload.uWorkingData,
         SecondsLeft: action.payload.uTimer,
         LoadedData: action.payload.uLoadedData,
@@ -265,7 +276,7 @@ export const InterventionReducer = (
         ViewRepresentationInternal: action.payload.uView,
         EntryRepresentationInternal: action.payload.uEntry,
       };
-    ///
+    // Explicit Timing
     case BenchmarkActions.ExplicitTimingBatchStartPreflight:
       return {
         ...state,
@@ -292,6 +303,89 @@ export const InterventionReducer = (
         NumbTrials: action.payload.uNumberTrials,
         OnInitialTry: action.payload.uInitialTry,
         PreTrialTime: action.payload.uTrialTime,
+      };
+    // Cover Copy Compare
+    case BenchmarkActions.CoverCopyCompareBatchStartPreflight:
+      return {
+        ...state,
+        CurrentAction: action.payload.uAction,
+        WorkingData: action.payload.uWorkingData,
+        OperatorSymbol: action.payload.uOperator,
+        LoadedData: action.payload.uLoadedData,
+      };
+
+    case BenchmarkActions.CoverCopyCompareBatchStartBegin:
+      return {
+        ...state,
+        ButtonText: action.payload.uButtonText,
+        CoverProblemItem: action.payload.uCoverProblemItem,
+        PreTrialTime: action.payload.uTrialTime,
+        EntryRepresentationInternal: action.payload.uEntryRepresentationInternal,
+        ShowButton: action.payload.uShowButton,
+        IsOngoing: action.payload.uIsOngoing,
+        StartTime: action.payload.uStartTime,
+        ViewRepresentationInternal: action.payload.uViewRepresentationInternal,
+        CoverListViewItems: action.payload.uCoverListViewItems,
+        WorkingData: action.payload.uWorkingData,
+        CurrentAction: action.payload.uCurrentAction,
+        NextLiItem: action.payload.uNextLiItem
+      }
+
+    case BenchmarkActions.CoverCopyCompareTaskIncrement:
+      return {
+        ...state,
+        CurrentAction: action.payload.uAction,
+        ButtonText: action.payload.uButtonText,
+        CoverProblemItem: action.payload.uCoverProblemItem,
+        CoverStimulusItem: action.payload.CoverStimulusItem
+      };
+
+    case BenchmarkActions.CoverCopyCompareModalRetry:
+      return {
+        ...state,
+        EntryRepresentationInternal: action.payload.uEntryRepresentationInternal,
+        IsOngoing: action.payload.uIsOngoing,
+        ToVerify: action.payload.uToVerify,
+        OnInitialTry: action.payload.uOnInitialTry,
+        CurrentAction: action.payload.uCurrentAction,
+        ButtonText: action.payload.uButtonText,
+        CoverProblemItem: action.payload.uCoverProblemItem,
+        CoverStimulusItem: action.payload.uCoverStimulusItem,
+        NumRetries: action.payload.uNumRetries,
+      };
+
+    case BenchmarkActions.CoverCopyCompareBatchIncrement:
+      return {
+        ...state,
+        NumCorrectInitial: action.payload.uNumberCorrectInitial,
+        NumErrors: action.payload.uNumberErrors,
+        TotalDigits: action.payload.uTotalDigits,
+        TotalDigitsCorrect: action.payload.uTotalDigitsCorrect,
+        NumbTrials: action.payload.uNumberTrials,
+        OnInitialTry: action.payload.uInitialTry,
+        PreTrialTime: action.payload.uTrialTime,
+      };
+
+    case BenchmarkActions.CoverCopyCompareBatchStartIncrementPost:
+      return {
+        ...state,
+        CoverStimulusItem: action.payload.uCoverStimulusItem,
+        CoverProblemItem: action.payload.uCoverProblemItem,
+        EntryRepresentationInternal: action.payload.uEntryRepresentationInternal,
+        ViewRepresentationInternal: action.payload.uViewRepresentationInternal,
+        ButtonText: action.payload.uButtonText,
+        ShowButton: action.payload.uShowButton,
+        IsOngoing: action.payload.uIsOngoing,
+        CoverListViewItems: action.payload.uCoverListViewItems,
+        OnInitialTry: action.payload.uOnInitialTry,
+        FactModelList: action.payload.uFactModelList,
+      }
+
+    case BenchmarkActions.CoverCopyCompareTaskReset:
+      return {
+        ...state,
+        CurrentAction: action.payload.uAction,
+        ToVerify: action.payload.uVerify
       };
 
     default:

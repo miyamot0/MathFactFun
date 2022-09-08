@@ -10,9 +10,8 @@
  * Explicit Timing intervention
  */
 
-import React, { useReducer, useState } from "react";
+import React, { useReducer, useState, useEffect } from "react";
 
-import { useEffect } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import { timestamp } from "../../firebase/config";
 import Modal from "react-modal";
@@ -23,21 +22,18 @@ import { useFirebaseDocumentTyped } from "../../firebase/useFirebaseDocument";
 import { useAuthorizationContext } from "../../context/useAuthorizationContext";
 
 // widgets
-import KeyPad from "./KeyPad";
+import KeyPad from "./subcomponents/KeyPad";
 import Timer from "./subcomponents/Timer";
-import SimpleProblemFrame from "./SimpleProblemFrame";
+import SimpleProblemFrame from "./subcomponents/SimpleProblemFrame";
 
 // helpers
 import {
   CalculateDigitsTotalAnswer,
   CalculateDigitsCorrectAnswer,
 } from "../../utilities/LabelHelper";
-import { RelevantKeys } from "../../maths/Facts";
 
 import { DetermineErrorCorrection } from "../../utilities/Logic";
 
-// styles
-import "./ExplicitTiming.css";
 import {
   FactDataInterface,
   StudentDataInterface,
@@ -48,24 +44,16 @@ import {
   SharedActionSequence,
 } from "./types/InterventionTypes";
 import {
+  DelCode,
   InitialBenchmarkState,
   InterventionReducer,
   keyHandler,
   useEventListener,
 } from "./functionality/InterventionBehavior";
 
-const DelCode = "Del";
-
-const customStyles = {
-  content: {
-    top: "50%",
-    left: "50%",
-    right: "auto",
-    bottom: "auto",
-    marginRight: "-50%",
-    transform: "translate(-50%, -50%)",
-  },
-};
+// styles
+import "./ExplicitTiming.css";
+import { ErrorModalCustomStyle } from "./subcomponents/ModalStyles";
 
 Modal.setAppElement("#root");
 
@@ -111,7 +99,7 @@ export default function ExplicitTiming() {
   function shouldShowFeedback(trialError: boolean): boolean {
     return DetermineErrorCorrection(
       trialError,
-      (document as StudentDataInterface).currentErrorApproach!
+      document!.currentErrorApproach!
     );
   }
 
@@ -344,7 +332,7 @@ export default function ExplicitTiming() {
         onRequestClose={closeModal}
         shouldCloseOnOverlayClick={false}
         preventScroll={true}
-        style={customStyles}
+        style={ErrorModalCustomStyle}
         contentLabel="Example Modal"
       >
         <h2 style={{ color: "#5F686D" }}>Double-check your math!</h2>
@@ -366,10 +354,6 @@ export default function ExplicitTiming() {
             });
 
             closeModal();
-
-            //setEntryRepresentationInternal("");
-            //setNRetries(state.NumRetries + 1);
-            //closeModal();
           }}
         >
           Close Window
@@ -378,7 +362,7 @@ export default function ExplicitTiming() {
       <div className="topBoxET">
         <h2 style={{ display: "inline-block" }}>
           Explicit Timing: (
-          {document ? (document as StudentDataInterface).name : <></>}), Time:{" "}
+          {document ? document.name : <></>}), Time:{" "}
           {document ? (
             <Timer
               secondsTotal={state.SecondsLeft}
