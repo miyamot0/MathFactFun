@@ -79,11 +79,10 @@ export default function CoverCopyCompare() {
   const { user } = useAuthorizationContext();
   const history = useHistory();
 
-  const { document } = useFirebaseDocumentTyped<StudentDataInterface>(
-    {
-      collectionString: "students",
-      idString: id
-    });
+  const { document } = useFirebaseDocumentTyped<StudentDataInterface>({
+    collectionString: "students",
+    idString: id,
+  });
   const { addDocument, response } = useFirestore("", target, id);
   const { updateDocument } = useFirestore("students", undefined, undefined);
 
@@ -447,9 +446,6 @@ export default function CoverCopyCompare() {
   function captureKeyClick(char: string): void {
     // Rule 1: Exit out if not in Covered/Copying sequence
     if (currentAction !== ActionSequence.CoverCopy) return;
-
-    //console.log(char + " " + currentAction);
-    //console.log(entryRepresentationInternal + " " + currentAction);
 
     // Rule 2: Exit out if multiple operators
     if (

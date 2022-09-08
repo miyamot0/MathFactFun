@@ -170,8 +170,6 @@ export function useFirestore(
         error: null,
       });
     } catch (err: any) {
-      console.log(err);
-
       dispatchIfNotCancelled({
         type: FirestoreStates.ERROR,
         payload: null,

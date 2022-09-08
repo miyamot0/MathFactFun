@@ -29,9 +29,7 @@ import {
   FactDataInterface,
   PerformanceDataInterface,
 } from "../../firebase/types/GeneralTypes";
-import {
-  RoutedStudentProgressSet,
-} from "./types/ProgressTypes";
+import { RoutedStudentProgressSet } from "./types/ProgressTypes";
 import {
   aggregateItemLevelPerformances,
   aggregatePerformances,
@@ -65,15 +63,17 @@ export default function ProgressMonitor() {
     user && !adminFlag ? ["creator", "==", user.uid] : undefined;
   const orderString = undefined;
 
-  const { documents } = useFirebaseCollectionTyped<PerformanceDataInterface>(
-    { collectionString: `performances/${target}/${id}`, queryString, orderString });
+  const { documents } = useFirebaseCollectionTyped<PerformanceDataInterface>({
+    collectionString: `performances/${target}/${id}`,
+    queryString,
+    orderString,
+  });
 
   const [chartOptions, setChartOptions] = useState({});
   const [itemChartOptions, setItemChartOptions] = useState({});
 
   useEffect(() => {
     if (documents) {
-      //console.log(documents);
       // Generate object from document collection
       const mappedDocument = remapPerformances(documents);
 
