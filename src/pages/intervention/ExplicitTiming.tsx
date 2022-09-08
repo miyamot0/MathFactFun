@@ -50,6 +50,7 @@ import {
 import {
   InitialBenchmarkState,
   InterventionReducer,
+  keyHandler,
   useEventListener,
 } from "./functionality/InterventionBehavior";
 
@@ -95,34 +96,10 @@ export default function ExplicitTiming() {
     setIsOpen(false);
   }
 
-  /** keyHandler
-   *
-   * Handle keyboard input
-   *
-   * @param {React.KeyboardEvent<HTMLElement>} key keyevent
-   */
-  function keyHandler(key: React.KeyboardEvent<HTMLElement>): void {
-    if (key.key === "Enter") return;
-
-    if (RelevantKeys.includes(key.key)) {
-      let modKey = key.key === "Backspace" ? "Del" : key.key;
-      modKey = key.key === "Delete" ? "Del" : modKey;
-
-      if (modKey === " ") {
-        if (state.CurrentAction !== SharedActionSequence.Entry) {
-          captureButtonAction();
-          return;
-        }
-
-        return;
-      }
-
-      captureKeyClick(modKey);
-    }
-  }
-
   // Add event listener to hook
-  useEventListener("keydown", keyHandler);
+  useEventListener("keydown", (key) =>
+    keyHandler(key, captureKeyClick, captureButtonAction, state.CurrentAction)
+  );
 
   /** shouldShowFeedback
    *

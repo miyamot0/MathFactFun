@@ -71,34 +71,10 @@ export default function Benchmark() {
     InitialBenchmarkState
   );
 
-  /** keyHandler
-   *
-   * Handle keyboard input
-   *
-   * @param {React.KeyboardEvent<HTMLElement>} key keyevent
-   */
-  function keyHandler(key: React.KeyboardEvent<HTMLElement>): void {
-    if (key.key === "Enter") return;
-
-    if (RelevantKeys.includes(key.key)) {
-      let modKey = key.key === "Backspace" ? "Del" : key.key;
-      modKey = key.key === "Delete" ? "Del" : modKey;
-
-      if (modKey === " ") {
-        if (state.CurrentAction !== SharedActionSequence.Entry) {
-          captureButtonAction();
-          return;
-        }
-
-        return;
-      }
-
-      captureKeyClick(modKey);
-    }
-  }
-
   // Add event listener to hook
-  useEventListener("keydown", keyHandler);
+  useEventListener("keydown", (key) =>
+    keyHandler(key, captureKeyClick, captureButtonAction, state.CurrentAction)
+  );
 
   // Fire once individual data loaded, just once
   useEffect(() => {
@@ -386,4 +362,12 @@ export default function Benchmark() {
       </div>
     </div>
   );
+}
+function keyHandler(
+  key: React.KeyboardEvent<HTMLElement>,
+  captureKeyClick: (char: string) => void,
+  captureButtonAction: () => void,
+  CurrentAction: string
+): void {
+  throw new Error("Function not implemented.");
 }

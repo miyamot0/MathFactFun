@@ -161,11 +161,8 @@ export function useFirestore(
     });
 
     try {
-      console.log("in try");
       const createdAt = timestamp.fromDate(new Date());
       const addedDocument = await ref.add({ ...doc, createdAt });
-
-      console.log("post ad try");
 
       dispatchIfNotCancelled({
         type: FirestoreStates.ADDED,

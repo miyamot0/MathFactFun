@@ -1,8 +1,13 @@
 import { useEffect, useRef } from "react";
 import { StudentDataInterface } from "../../../firebase/types/GeneralTypes";
+import { RelevantKeys } from "../../../maths/Facts";
 import { FactsOnFire } from "../../../maths/Mind";
 import { GetOperatorFromLabel } from "../../../utilities/LabelHelper";
-import { BenchmarkActions, BenchmarkState } from "../types/InterventionTypes";
+import {
+  BenchmarkActions,
+  BenchmarkState,
+  SharedActionSequence,
+} from "../types/InterventionTypes";
 
 export const DelCode = "Del";
 
@@ -154,6 +159,37 @@ export function useEventListener(
   );
 }
 
+/** keyHandler
+ *
+ * Handle keyboard input
+ *
+ * @param {React.KeyboardEvent<HTMLElement>} key keyevent
+ */
+export function keyHandler(
+  key: React.KeyboardEvent<HTMLElement>,
+  captureKeyClick2: (char: string) => void,
+  captureButtonAction2: () => void,
+  currentAction: string
+): void {
+  if (key.key === "Enter") return;
+
+  if (RelevantKeys.includes(key.key)) {
+    let modKey = key.key === "Backspace" ? "Del" : key.key;
+    modKey = key.key === "Delete" ? "Del" : modKey;
+
+    if (modKey === " ") {
+      if (currentAction !== SharedActionSequence.Entry) {
+        captureButtonAction2();
+        return;
+      }
+
+      return;
+    }
+
+    captureKeyClick2(modKey);
+  }
+}
+
 export const InitialBenchmarkState: BenchmarkState = {
   ViewRepresentationInternal: "",
   EntryRepresentationInternal: "",
@@ -188,20 +224,7 @@ export const InterventionReducer = (
   state: BenchmarkState,
   action: any
 ): BenchmarkState => {
-  console.log(action);
-
   switch (action.type) {
-    //case BenchmarkActions.GeneralOpenModal:
-    //  return {
-    //    ...state,
-    //    ModalIsOpen: true,
-    //  };
-    //case BenchmarkActions.GeneralCloseModal:
-    //  return {
-    //    ...state,
-    //    ModalIsOpen: false,
-    //  };
-    // general?
     case BenchmarkActions.GeneralUpdateEntry:
       return { ...state, EntryRepresentationInternal: action.payload };
     case BenchmarkActions.BenchmarkBatchStartPreflight:
