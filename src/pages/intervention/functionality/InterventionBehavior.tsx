@@ -189,6 +189,18 @@ export const InterventionReducer = (
   action: any
 ): BenchmarkState => {
   switch (action.type) {
+    case BenchmarkActions.GeneralOpenModel:
+      return {
+        ...state,
+        ModalIsOpen: true,
+      };
+    case BenchmarkActions.GeneralCloseModel:
+      return {
+        ...state,
+        ModalIsOpen: false,
+      };
+
+    // general?
     case BenchmarkActions.BenchmarkUpdateEntry:
       return { ...state, EntryRepresentationInternal: action.payload };
     case BenchmarkActions.BenchmarkBatchStartPreflight:
@@ -228,6 +240,26 @@ export const InterventionReducer = (
         WorkingData: action.payload.uWorkingData,
         ViewRepresentationInternal: action.payload.uView,
         EntryRepresentationInternal: action.payload.uEntry,
+      };
+
+    case BenchmarkActions.ExplicitTimingModalRetry:
+      return {
+        ...state,
+        EntryRepresentationInternal: action.payload.EntryRepresentationInternal,
+        NumRetries: action.payload.NumRetries,
+        ModalIsOpen: action.payload.ModalIsOpen,
+      };
+
+    case BenchmarkActions.ExplicitTimingBatchIncrement:
+      return {
+        ...state,
+        NumCorrectInitial: action.payload.uNumberCorrectInitial,
+        NumErrors: action.payload.uNumberErrors,
+        TotalDigits: action.payload.uTotalDigits,
+        TotalDigitsCorrect: action.payload.uTotalDigitsCorrect,
+        NumbTrials: action.payload.uNumberTrials,
+        OnInitialTry: action.payload.uInitialTry,
+        PreTrialTime: action.payload.uTrialTime,
       };
 
     default:

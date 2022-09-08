@@ -12,7 +12,7 @@
 
 import React, { useReducer } from "react";
 
-import { useState, useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import { timestamp } from "../../firebase/config";
 import Modal from "react-modal";
@@ -32,27 +32,26 @@ import {
   CalculateDigitsTotalAnswer,
   CalculateDigitsCorrectAnswer,
 } from "../../utilities/LabelHelper";
-import { RelevantKeys, InterventionFormat } from "../../maths/Facts";
+import { RelevantKeys } from "../../maths/Facts";
 
 import { DetermineErrorCorrection } from "../../utilities/Logic";
-import {
-  PerformanceModel,
-  PerformanceModelInterface,
-} from "../../models/PerformanceModel";
-import {
-  FactEntryModel,
-  FactModelInterface,
-} from "../../models/FactEntryModel";
 
 // styles
 import "./ExplicitTiming.css";
 import {
-  PerformanceDataInterface,
+  FactDataInterface,
   StudentDataInterface,
 } from "../../firebase/types/GeneralTypes";
 import { RoutedIdTargetParam } from "../CommonTypes/CommonPageTypes";
-import { BenchmarkActions, SharedActionSequence } from "./types/InterventionTypes";
-import { InitialBenchmarkState, InterventionReducer, useEventListener } from "./functionality/InterventionBehavior";
+import {
+  BenchmarkActions,
+  SharedActionSequence,
+} from "./types/InterventionTypes";
+import {
+  InitialBenchmarkState,
+  InterventionReducer,
+  useEventListener,
+} from "./functionality/InterventionBehavior";
 
 const DelCode = "Del";
 
@@ -74,48 +73,17 @@ export default function ExplicitTiming() {
   const { user } = useAuthorizationContext();
   const history = useHistory();
 
-  const { document } = useFirebaseDocumentTyped<StudentDataInterface>(
-    {
-      collectionString: "students",
-      idString: id
-    });
+  const { document } = useFirebaseDocumentTyped<StudentDataInterface>({
+    collectionString: "students",
+    idString: id,
+  });
   const { addDocument2, response } = useFirestore("", target, id);
   const { updateDocument } = useFirestore("students", undefined, undefined);
 
-  const [state, dispatch] = useReducer(InterventionReducer, InitialBenchmarkState);
-
-  //const [currentAction, setCurrentAction] = useState(SharedActionSequence.Start);
-  //const [buttonText, setButtonText] = useState("Start");
-  //const [isOnInitialTry, setIsOnInitialTry] = useState(true);
-
-  // quants
-  //const [numberCorrectInitial, setNumberCorrectInitial] = useState(0);
-  //const [numberErrors, setNumberErrors] = useState(0);
-  //const [totalDigits, setTotalDigits] = useState(0);
-  //const [totalCorrectDigits, setCorrectTotalDigits] = useState(0);
-  //const [numberTrials, setNumberTrials] = useState(0);
-  //const [nRetries, setNRetries] = useState(0);
-
-  //const [loadedData, setLoadedData] = useState(false);
-  //const [workingData, setWorkingData] = useState<string[]>();
-  //const [operatorSymbol, setOperatorSymbol] = useState("");
-
-  //const [coverProblemItem, setCoverProblemItem] = useState(true);
-
-  //const [preTrialTime, setPreTrialTime] = useState<Date>();
-  //const [startTime, setStartTime] = useState<Date>();
-  //const [factModelList, setModelList] = useState<FactModelInterface[]>();
-
-  //const [viewRepresentationInternal, setViewRepresentationInternal] =
-  //  useState("");
-  //const [entryRepresentationInternal, setEntryRepresentationInternal] =
-  //  useState("");
-
-  /// modal stuff
-  //const [modalIsOpen, setIsOpen] = useState(false);
-
-  // Timer Stuff
-  //const [secondsLeft, setSecondsLeft] = useState(0);
+  const [state, dispatch] = useReducer(
+    InterventionReducer,
+    InitialBenchmarkState
+  );
 
   /** keyHandler
    *
@@ -160,14 +128,6 @@ export default function ExplicitTiming() {
     );
   }
 
-  //function openModal(): void {
-  //  setIsOpen(true);
-  //}
-
-  //function closeModal(): void {
-  //  setIsOpen(false);
-  //}
-
   // Fire once individual data loaded, just once
   useEffect(() => {
     if (document && !state.LoadedData) {
@@ -208,8 +168,6 @@ export default function ExplicitTiming() {
 
     const end = new Date();
 
-    let performanceInformation: PerformanceModelInterface = PerformanceModel();
-
     const uploadObject = {
       correctDigits: state.TotalDigitsCorrect,
       errCount: state.NumErrors,
@@ -228,49 +186,6 @@ export default function ExplicitTiming() {
       createdAd: timestamp.fromDate(new Date()),
     };
 
-    /*
-    HACK
-    // Strings
-    performanceInformation.data.id = ;
-    performanceInformation.data.creator = ;
-    performanceInformation.data.target = (
-      document as StudentDataInterface
-    ).currentTarget;
-    performanceInformation.data.method = InterventionFormat.ExplicitTiming;
-
-    // Numerics
-    performanceInformation.data.correctDigits = totalCorrectDigits;
-    performanceInformation.data.errCount = numberErrors;
-    performanceInformation.data.nCorrectInitial = numberCorrectInitial;
-    performanceInformation.data.nRetries = nRetries;
-    performanceInformation.data.sessionDuration =
-      (end.getTime() - startTime!.getTime()) / 1000;
-    performanceInformation.data.setSize = (
-      document as StudentDataInterface
-    ).factsTargeted.length;
-    performanceInformation.data.totalDigits = totalDigits;
-
-    // Timestamps
-    performanceInformation.data.createdAt = timestamp.fromDate(new Date());
-    performanceInformation.data.dateTimeEnd = end.toString();
-    performanceInformation.data.dateTimeStart = startTime!.toString();
-
-    // Arrays
-    performanceInformation.data.entries = finalEntries!;
-    */
-
-    // Sanity check for all required components
-
-    //if (!performanceInformation.CheckObject()) {
-    //  alert("Firebase data was not well-formed");
-    //  return;
-    //}
-
-    //const objectToSend: PerformanceDataInterface =
-    //  performanceInformation.SubmitObject();
-
-    // Update collection with latest performance
-    //await addDocument(objectToSend);
     await addDocument2(uploadObject);
 
     // If added without issue, update timestamp
@@ -300,7 +215,6 @@ export default function ExplicitTiming() {
       state.CurrentAction === SharedActionSequence.Start ||
       state.CurrentAction === SharedActionSequence.Begin
     ) {
-
       const listItem = state.WorkingData![0];
 
       const updatedList = state.WorkingData!.filter(function (item) {
@@ -321,7 +235,6 @@ export default function ExplicitTiming() {
         },
       });
 
-
       return;
     }
 
@@ -334,14 +247,17 @@ export default function ExplicitTiming() {
     let isMatching =
       state.ViewRepresentationInternal.trim() === combinedResponse.trim();
 
+    let uNumberCorrectInitial = state.NumCorrectInitial;
+    let uNumberErrors = state.NumErrors;
+
     // Increment initial attempt, if correct
     if (state.OnInitialTry && isMatching) {
-      setNumberCorrectInitial(state.NumCorrectInitial + 1);
+      uNumberCorrectInitial = uNumberCorrectInitial + 1;
     }
 
     // Increment errors, if incorrect
     if (!isMatching) {
-      setNumberErrors(state.NumErrors + 1);
+      uNumberErrors = state.NumErrors + 1;
     }
 
     var current = new Date();
@@ -350,72 +266,90 @@ export default function ExplicitTiming() {
     let holderPreTime = state.PreTrialTime;
 
     // Update time for trial
-    setPreTrialTime(new Date());
+    //setPreTrialTime(new Date());
+
+    // TODO HERE
 
     if (shouldShowFeedback(!isMatching)) {
       // Error correction prompt
 
-      openModal();
+      dispatch({ action: BenchmarkActions.GeneralOpenModel, payload: true });
+      //openModal();
     } else {
       let totalDigitsShown = CalculateDigitsTotalAnswer(
         state.ViewRepresentationInternal
       );
 
-      setTotalDigits(state.TotalDigits + totalDigitsShown);
+      //setTotalDigits(state.TotalDigits + totalDigitsShown);
 
       let totalDigitsCorrect = CalculateDigitsCorrectAnswer(
         combinedResponse,
         state.ViewRepresentationInternal
       );
 
-      setCorrectTotalDigits(state.TotalDigitsCorrect + totalDigitsCorrect);
+      //setCorrectTotalDigits(state.TotalDigitsCorrect + totalDigitsCorrect);
 
-      setNumberTrials(state.NumbTrials + 1);
+      //setNumberTrials(state.NumbTrials + 1);
 
-      let currentItem: FactModelInterface = FactEntryModel();
-      /*
-      HACK
-      currentItem.data.factCorrect = isMatching;
-      currentItem.data.initialTry = isOnInitialTry;
+      //let currentItem: FactModelInterface = FactEntryModel();
 
-      currentItem.data.factType = (
-        document as StudentDataInterface
-      ).currentTarget;
-      currentItem.data.factString = viewRepresentationInternal;
-      currentItem.data.factEntry = combinedResponse;
+      let currentItem2: FactDataInterface = {
+        factCorrect: isMatching,
+        initialTry: state.OnInitialTry,
+        factType: document!.currentTarget,
+        factString: state.ViewRepresentationInternal,
+        factEntry: combinedResponse,
+        latencySeconds: secs,
+        dateTimeEnd: timestamp.fromDate(new Date(current)),
+        dateTimeStart: timestamp.fromDate(new Date(holderPreTime!)),
+      };
 
-      currentItem.data.latencySeconds = secs;
+      //setIsOnInitialTry(true);
 
-      currentItem.data.dateTimeEnd = timestamp.fromDate(new Date(current));
-      currentItem.data.dateTimeStart = timestamp.fromDate(
-        new Date(holderPreTime!)
-      );
-      */
-
-      setIsOnInitialTry(true);
+      dispatch({
+        type: BenchmarkActions.ExplicitTimingBatchIncrement,
+        payload: {
+          uNumberCorrectInitial,
+          uNumberErrors,
+          uTotalDigits: state.TotalDigits + totalDigitsShown,
+          uTotalDigitsCorrect: state.TotalDigitsCorrect + totalDigitsCorrect,
+          uNumberTrials: state.NumbTrials + 1,
+          uInitialTry: state.OnInitialTry,
+          uTrialTime: new Date(),
+        },
+      });
 
       // Note: issue where state change not fast enough to catch latest
       if (state.WorkingData!.length === 0) {
         // If finished, upload list w/ latest item
-        submitDataToFirebase(currentItem);
+        submitDataToFirebase(currentItem2);
       } else {
         // Otherise, add it to the existing list
-        setModelList([...factModelList!, currentItem]);
+        //setModelList([...factModelList!, currentItem2]);
 
         const listItem = state.WorkingData![0];
-
         const updatedList = state.WorkingData!.filter(function (item) {
           return item !== listItem;
         });
 
         // Update the collection--remove current item from list
-        setWorkingData(updatedList);
+        //setWorkingData(updatedList);
 
         // Set the 'true' item, less set-level coding component
-        setViewRepresentationInternal(listItem.split(":")[0]);
+        //setViewRepresentationInternal(listItem.split(":")[0]);
 
         // Set the 'true' item, less set-level coding component
-        setEntryRepresentationInternal("");
+        //setEntryRepresentationInternal("");
+
+        dispatch({
+          type: BenchmarkActions.BenchmarkBatchStartIncrementPost,
+          payload: {
+            uFactModel: [...state.FactModelList!, currentItem2],
+            uWorkingData: updatedList,
+            uView: listItem.split(":")[0],
+            uEntry: "",
+          },
+        });
       }
     }
   }
@@ -433,10 +367,16 @@ export default function ExplicitTiming() {
       if (state.EntryRepresentationInternal.length === 0) return;
 
       // Lop off end of string
-      setEntryRepresentationInternal(state.EntryRepresentationInternal.slice(0, -1));
+      dispatch({
+        type: BenchmarkActions.BenchmarkUpdateEntry,
+        payload: state.EntryRepresentationInternal.slice(0, -1),
+      });
     } else {
       // Add to end of string
-      setEntryRepresentationInternal(state.EntryRepresentationInternal + char);
+      dispatch({
+        type: BenchmarkActions.BenchmarkUpdateEntry,
+        payload: state.EntryRepresentationInternal + char,
+      });
     }
   }
 
@@ -444,7 +384,12 @@ export default function ExplicitTiming() {
     <div className="wrapperET">
       <Modal
         isOpen={state.ModalIsOpen}
-        onRequestClose={closeModal}
+        onRequestClose={() =>
+          dispatch({
+            action: BenchmarkActions.GeneralCloseModel,
+            payload: false,
+          })
+        }
         shouldCloseOnOverlayClick={false}
         preventScroll={true}
         style={customStyles}
@@ -460,9 +405,18 @@ export default function ExplicitTiming() {
           className="global-btn "
           style={{ float: "right" }}
           onClick={() => {
-            setEntryRepresentationInternal("");
-            setNRetries(state.NumRetries + 1);
-            closeModal();
+            dispatch({
+              type: BenchmarkActions.ExplicitTimingModalRetry,
+              payload: {
+                EntryRepresentationInternal: "",
+                NumRetries: state.NumRetries + 1,
+                ModalIsOpen: false,
+              },
+            });
+
+            //setEntryRepresentationInternal("");
+            //setNRetries(state.NumRetries + 1);
+            //closeModal();
           }}
         >
           Close Window

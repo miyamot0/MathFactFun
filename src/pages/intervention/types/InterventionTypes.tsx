@@ -4,6 +4,9 @@ import { FactDataInterface } from "../../../firebase/types/GeneralTypes";
  * Actions for reducer
  */
 export enum BenchmarkActions {
+  GeneralOpenModel = "GeneralOpenModel",
+  GeneralCloseModel = "GeneralCloseModel",
+
   BenchmarkUpdateEntry = "BenchmarkUpdateEntry",
   BenchmarkBatchStartPreflight = "BenchmarkBatchStartPreflight",
   BenchmarkBatchStartBegin = "BenchmarkActionStartOrBegin",
@@ -11,6 +14,8 @@ export enum BenchmarkActions {
   BenchmarkBatchStartIncrementPost = "BenchmarkBatchStartIncrementPost",
 
   ExplicitTimingBatchStartPreflight = "BenchmarkBatchStartPreflight",
+  ExplicitTimingBatchIncrement = "ExplicitTimingBatchIncrement",
+  ExplicitTimingModalRetry = "ExplicitTimingModalRetry",
 }
 
 export interface BenchmarkState {
