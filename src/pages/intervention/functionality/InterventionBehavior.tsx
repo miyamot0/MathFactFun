@@ -188,20 +188,21 @@ export const InterventionReducer = (
   state: BenchmarkState,
   action: any
 ): BenchmarkState => {
-  switch (action.type) {
-    case BenchmarkActions.GeneralOpenModel:
-      return {
-        ...state,
-        ModalIsOpen: true,
-      };
-    case BenchmarkActions.GeneralCloseModel:
-      return {
-        ...state,
-        ModalIsOpen: false,
-      };
+  console.log(action);
 
+  switch (action.type) {
+    //case BenchmarkActions.GeneralOpenModal:
+    //  return {
+    //    ...state,
+    //    ModalIsOpen: true,
+    //  };
+    //case BenchmarkActions.GeneralCloseModal:
+    //  return {
+    //    ...state,
+    //    ModalIsOpen: false,
+    //  };
     // general?
-    case BenchmarkActions.BenchmarkUpdateEntry:
+    case BenchmarkActions.GeneralUpdateEntry:
       return { ...state, EntryRepresentationInternal: action.payload };
     case BenchmarkActions.BenchmarkBatchStartPreflight:
       return {
@@ -241,6 +242,14 @@ export const InterventionReducer = (
         ViewRepresentationInternal: action.payload.uView,
         EntryRepresentationInternal: action.payload.uEntry,
       };
+    ///
+    case BenchmarkActions.ExplicitTimingBatchStartPreflight:
+      return {
+        ...state,
+        WorkingData: action.payload.uWorkingData,
+        SecondsLeft: action.payload.uTimer,
+        LoadedData: action.payload.uLoadedData,
+      };
 
     case BenchmarkActions.ExplicitTimingModalRetry:
       return {
@@ -263,6 +272,6 @@ export const InterventionReducer = (
       };
 
     default:
-      throw new Error();
+      throw new Error(action.type);
   }
 };

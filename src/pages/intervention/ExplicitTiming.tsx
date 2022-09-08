@@ -10,7 +10,7 @@
  * Explicit Timing intervention
  */
 
-import React, { useReducer } from "react";
+import React, { useReducer, useState } from "react";
 
 import { useEffect } from "react";
 import { useParams, useHistory } from "react-router-dom";
@@ -77,13 +77,23 @@ export default function ExplicitTiming() {
     collectionString: "students",
     idString: id,
   });
-  const { addDocument2, response } = useFirestore("", target, id);
+  const { addDocument, response } = useFirestore("", target, id);
   const { updateDocument } = useFirestore("students", undefined, undefined);
 
   const [state, dispatch] = useReducer(
     InterventionReducer,
     InitialBenchmarkState
   );
+
+  const [modalIsOpen, setIsOpen] = useState(false);
+
+  function openModal(): void {
+    setIsOpen(true);
+  }
+
+  function closeModal(): void {
+    setIsOpen(false);
+  }
 
   /** keyHandler
    *
@@ -186,7 +196,7 @@ export default function ExplicitTiming() {
       createdAd: timestamp.fromDate(new Date()),
     };
 
-    await addDocument2(uploadObject);
+    await addDocument(uploadObject);
 
     // If added without issue, update timestamp
     if (!response.error) {
@@ -265,33 +275,17 @@ export default function ExplicitTiming() {
 
     let holderPreTime = state.PreTrialTime;
 
-    // Update time for trial
-    //setPreTrialTime(new Date());
-
-    // TODO HERE
-
     if (shouldShowFeedback(!isMatching)) {
-      // Error correction prompt
-
-      dispatch({ action: BenchmarkActions.GeneralOpenModel, payload: true });
-      //openModal();
+      openModal();
     } else {
       let totalDigitsShown = CalculateDigitsTotalAnswer(
         state.ViewRepresentationInternal
       );
 
-      //setTotalDigits(state.TotalDigits + totalDigitsShown);
-
       let totalDigitsCorrect = CalculateDigitsCorrectAnswer(
         combinedResponse,
         state.ViewRepresentationInternal
       );
-
-      //setCorrectTotalDigits(state.TotalDigitsCorrect + totalDigitsCorrect);
-
-      //setNumberTrials(state.NumbTrials + 1);
-
-      //let currentItem: FactModelInterface = FactEntryModel();
 
       let currentItem2: FactDataInterface = {
         factCorrect: isMatching,
@@ -303,8 +297,6 @@ export default function ExplicitTiming() {
         dateTimeEnd: timestamp.fromDate(new Date(current)),
         dateTimeStart: timestamp.fromDate(new Date(holderPreTime!)),
       };
-
-      //setIsOnInitialTry(true);
 
       dispatch({
         type: BenchmarkActions.ExplicitTimingBatchIncrement,
@@ -324,22 +316,10 @@ export default function ExplicitTiming() {
         // If finished, upload list w/ latest item
         submitDataToFirebase(currentItem2);
       } else {
-        // Otherise, add it to the existing list
-        //setModelList([...factModelList!, currentItem2]);
-
         const listItem = state.WorkingData![0];
         const updatedList = state.WorkingData!.filter(function (item) {
           return item !== listItem;
         });
-
-        // Update the collection--remove current item from list
-        //setWorkingData(updatedList);
-
-        // Set the 'true' item, less set-level coding component
-        //setViewRepresentationInternal(listItem.split(":")[0]);
-
-        // Set the 'true' item, less set-level coding component
-        //setEntryRepresentationInternal("");
 
         dispatch({
           type: BenchmarkActions.BenchmarkBatchStartIncrementPost,
@@ -368,13 +348,13 @@ export default function ExplicitTiming() {
 
       // Lop off end of string
       dispatch({
-        type: BenchmarkActions.BenchmarkUpdateEntry,
+        type: BenchmarkActions.GeneralUpdateEntry,
         payload: state.EntryRepresentationInternal.slice(0, -1),
       });
     } else {
       // Add to end of string
       dispatch({
-        type: BenchmarkActions.BenchmarkUpdateEntry,
+        type: BenchmarkActions.GeneralUpdateEntry,
         payload: state.EntryRepresentationInternal + char,
       });
     }
@@ -383,13 +363,8 @@ export default function ExplicitTiming() {
   return (
     <div className="wrapperET">
       <Modal
-        isOpen={state.ModalIsOpen}
-        onRequestClose={() =>
-          dispatch({
-            action: BenchmarkActions.GeneralCloseModel,
-            payload: false,
-          })
-        }
+        isOpen={modalIsOpen}
+        onRequestClose={closeModal}
         shouldCloseOnOverlayClick={false}
         preventScroll={true}
         style={customStyles}
@@ -410,9 +385,10 @@ export default function ExplicitTiming() {
               payload: {
                 EntryRepresentationInternal: "",
                 NumRetries: state.NumRetries + 1,
-                ModalIsOpen: false,
               },
             });
+
+            closeModal();
 
             //setEntryRepresentationInternal("");
             //setNRetries(state.NumRetries + 1);

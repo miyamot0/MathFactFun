@@ -42,15 +42,20 @@ import {
   loadWorkingDataBenchmark,
   useEventListener,
 } from "./functionality/InterventionBehavior";
-import { BenchmarkActions, SharedActionSequence } from "./types/InterventionTypes";
+import {
+  BenchmarkActions,
+  SharedActionSequence,
+} from "./types/InterventionTypes";
 
 export default function Benchmark() {
   const { id, target } = useParams<RoutedIdTargetParam>();
   const history = useHistory();
-  const { document } = useFirebaseDocumentTyped<StudentDataInterface>(
-    { collectionString: "students", idString: id });
+  const { document } = useFirebaseDocumentTyped<StudentDataInterface>({
+    collectionString: "students",
+    idString: id,
+  });
   const { user } = useAuthorizationContext();
-  const { addDocument2, response: addResponse } = useFirestore(
+  const { addDocument, response: addResponse } = useFirestore(
     "",
     target!.split("-")[0],
     id
@@ -61,7 +66,10 @@ export default function Benchmark() {
     undefined
   );
 
-  const [state, dispatch] = useReducer(InterventionReducer, InitialBenchmarkState);
+  const [state, dispatch] = useReducer(
+    InterventionReducer,
+    InitialBenchmarkState
+  );
 
   /** keyHandler
    *
@@ -121,7 +129,7 @@ export default function Benchmark() {
    *
    * Push data to server
    *
-   * @param {FactModelInterface} finalFactObject final item completed
+   * @param {FactDataInterface} finalFactObject final item completed
    */
   async function submitDataToFirebase(
     finalFactObject: FactDataInterface | null
@@ -154,7 +162,7 @@ export default function Benchmark() {
     };
 
     // Update collection with latest performance
-    await addDocument2(uploadObject);
+    await addDocument(uploadObject);
 
     // If added without issue, update timestamp
     if (!addResponse.error) {
@@ -315,13 +323,13 @@ export default function Benchmark() {
 
       // Lop off end of string
       dispatch({
-        type: BenchmarkActions.BenchmarkUpdateEntry,
+        type: BenchmarkActions.GeneralUpdateEntry,
         payload: state.EntryRepresentationInternal.slice(0, -1),
       });
     } else {
       // Add to end of string
       dispatch({
-        type: BenchmarkActions.BenchmarkUpdateEntry,
+        type: BenchmarkActions.GeneralUpdateEntry,
         payload: state.EntryRepresentationInternal + char,
       });
     }
