@@ -76,7 +76,7 @@ export function getSetFromArray(array: string[][], set: string): string[] {
 export function getUniqueProblems(
   arrayProblems: string[],
   operatorSymbol: string
-) {
+): string[] {
   const firstWave = [...new Set(arrayProblems)];
   let secondWave = [...new Set(arrayProblems)];
 
@@ -110,10 +110,16 @@ export function getUniqueProblems(
   return secondWave;
 }
 
+/** loadWorkingDataBenchmark
+ *
+ * @param {StudentDataInterface} document
+ * @param {string} target
+ * @returns {string[]}
+ */
 export function loadWorkingDataBenchmark(
   document: StudentDataInterface,
   target: string
-) {
+): string[] {
   const targetTrim = target!.split("-")[0];
   const coreItems = getCoreProblemSet(targetTrim);
   const coreSet = getSetFromArray(coreItems, document.problemSet!);
@@ -230,9 +236,8 @@ export const InterventionReducer = (
   state: BenchmarkState,
   action: any
 ): BenchmarkState => {
-
-  console.log(action)
-  console.log(state)
+  console.log(action);
+  console.log(state);
   switch (action.type) {
     case BenchmarkActions.GeneralUpdateEntry:
       return { ...state, EntryRepresentationInternal: action.payload };
@@ -320,7 +325,8 @@ export const InterventionReducer = (
         ButtonText: action.payload.uButtonText,
         CoverProblemItem: action.payload.uCoverProblemItem,
         PreTrialTime: action.payload.uTrialTime,
-        EntryRepresentationInternal: action.payload.uEntryRepresentationInternal,
+        EntryRepresentationInternal:
+          action.payload.uEntryRepresentationInternal,
         ShowButton: action.payload.uShowButton,
         IsOngoing: action.payload.uIsOngoing,
         StartTime: action.payload.uStartTime,
@@ -328,8 +334,8 @@ export const InterventionReducer = (
         CoverListViewItems: action.payload.uCoverListViewItems,
         WorkingData: action.payload.uWorkingData,
         CurrentAction: action.payload.uCurrentAction,
-        NextLiItem: action.payload.uNextLiItem
-      }
+        NextLiItem: action.payload.uNextLiItem,
+      };
 
     case BenchmarkActions.CoverCopyCompareTaskIncrement:
       return {
@@ -337,13 +343,14 @@ export const InterventionReducer = (
         CurrentAction: action.payload.uAction,
         ButtonText: action.payload.uButtonText,
         CoverProblemItem: action.payload.uCoverProblemItem,
-        CoverStimulusItem: action.payload.CoverStimulusItem
+        CoverStimulusItem: action.payload.CoverStimulusItem,
       };
 
     case BenchmarkActions.CoverCopyCompareModalRetry:
       return {
         ...state,
-        EntryRepresentationInternal: action.payload.uEntryRepresentationInternal,
+        EntryRepresentationInternal:
+          action.payload.uEntryRepresentationInternal,
         IsOngoing: action.payload.uIsOngoing,
         ToVerify: action.payload.uToVerify,
         OnInitialTry: action.payload.uOnInitialTry,
@@ -371,7 +378,8 @@ export const InterventionReducer = (
         ...state,
         CoverStimulusItem: action.payload.uCoverStimulusItem,
         CoverProblemItem: action.payload.uCoverProblemItem,
-        EntryRepresentationInternal: action.payload.uEntryRepresentationInternal,
+        EntryRepresentationInternal:
+          action.payload.uEntryRepresentationInternal,
         ViewRepresentationInternal: action.payload.uViewRepresentationInternal,
         ButtonText: action.payload.uButtonText,
         ShowButton: action.payload.uShowButton,
@@ -379,13 +387,13 @@ export const InterventionReducer = (
         CoverListViewItems: action.payload.uCoverListViewItems,
         OnInitialTry: action.payload.uOnInitialTry,
         FactModelList: action.payload.uFactModelList,
-      }
+      };
 
     case BenchmarkActions.CoverCopyCompareTaskReset:
       return {
         ...state,
         CurrentAction: action.payload.uAction,
-        ToVerify: action.payload.uVerify
+        ToVerify: action.payload.uVerify,
       };
 
     default:

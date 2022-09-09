@@ -54,6 +54,7 @@ import {
 // styles
 import "./ExplicitTiming.css";
 import { ErrorModalCustomStyle } from "./subcomponents/ModalStyles";
+import { InterventionFormat } from "../../maths/Facts";
 
 Modal.setAppElement("#root");
 
@@ -147,7 +148,7 @@ export default function ExplicitTiming() {
       correctDigits: state.TotalDigitsCorrect,
       errCount: state.NumErrors,
       nCorrectInitial: state.NumCorrectInitial,
-      nRetries: 0,
+      nRetries: state.NumRetries,
       sessionDuration: (end.getTime() - state.StartTime!.getTime()) / 1000,
       setSize: document!.factsTargeted.length,
       totalDigits: state.TotalDigits,
@@ -155,7 +156,7 @@ export default function ExplicitTiming() {
       id: document!.id,
       creator: user!.uid,
       target: document!.currentTarget,
-      method: "Benchmark",
+      method: InterventionFormat.ExplicitTiming,
       dateTimeEnd: end.toString(),
       dateTimeStart: state.StartTime!.toString(),
       createdAd: timestamp.fromDate(new Date()),
@@ -361,8 +362,7 @@ export default function ExplicitTiming() {
       </Modal>
       <div className="topBoxET">
         <h2 style={{ display: "inline-block" }}>
-          Explicit Timing: (
-          {document ? document.name : <></>}), Time:{" "}
+          Explicit Timing: ({document ? document.name : <></>}), Time:{" "}
           {document ? (
             <Timer
               secondsTotal={state.SecondsLeft}

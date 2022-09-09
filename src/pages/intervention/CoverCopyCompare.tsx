@@ -28,7 +28,7 @@ import {
   GetOperatorFromLabel,
   CalculateDigitsTotalAnswer,
 } from "../../utilities/LabelHelper";
-import { RelevantKeys } from "../../maths/Facts";
+import { InterventionFormat, RelevantKeys } from "../../maths/Facts";
 import { DetermineErrorCorrection } from "../../utilities/Logic";
 import {
   PerformanceModel,
@@ -44,8 +44,16 @@ import {
 } from "../../firebase/types/GeneralTypes";
 
 import { ErrorModalCustomStyle } from "./subcomponents/ModalStyles";
-import { BenchmarkActions, SharedActionSequence } from "./types/InterventionTypes";
-import { DelCode, InitialBenchmarkState, InterventionReducer, useEventListener } from "./functionality/InterventionBehavior";
+import {
+  BenchmarkActions,
+  SharedActionSequence,
+} from "./types/InterventionTypes";
+import {
+  DelCode,
+  InitialBenchmarkState,
+  InterventionReducer,
+  useEventListener,
+} from "./functionality/InterventionBehavior";
 import { RoutedIdTargetParam } from "../CommonTypes/CommonPageTypes";
 
 Modal.setAppElement("#root");
@@ -77,7 +85,7 @@ export default function CoverCopyCompare() {
    * @param {React.KeyboardEvent<HTMLElement>} key keyevent
    */
   function keyHandler(key: React.KeyboardEvent<HTMLElement>): void {
-    console.log('keyHandler fired')
+    console.log("keyHandler fired");
     if (RelevantKeys.includes(key.key)) {
       let modKey = key.key === "Backspace" ? "Del" : key.key;
       modKey = key.key === "Delete" ? "Del" : modKey;
@@ -136,9 +144,7 @@ export default function CoverCopyCompare() {
           uAction: SharedActionSequence.Entry,
           uWorkingData: document.factsTargeted,
           uLoadedData: true,
-          uOperator: GetOperatorFromLabel(
-            document.currentTarget!.toString()
-          )
+          uOperator: GetOperatorFromLabel(document.currentTarget!.toString()),
         },
       });
     }
@@ -161,52 +167,25 @@ export default function CoverCopyCompare() {
 
     const end = new Date();
 
-    let performanceInformation: PerformanceModelInterface = PerformanceModel();
+    const uploadObject = {
+      correctDigits: state.TotalDigitsCorrect,
+      errCount: state.NumErrors,
+      nCorrectInitial: state.NumCorrectInitial,
+      nRetries: state.NumRetries,
+      sessionDuration: (end.getTime() - state.StartTime!.getTime()) / 1000,
+      setSize: document!.factsTargeted.length,
+      totalDigits: state.TotalDigits,
+      entries: finalEntries.map((entry) => Object.assign({}, entry)),
+      id: document!.id,
+      creator: user!.uid,
+      target: document!.currentTarget,
+      method: InterventionFormat.CoverCopyCompare,
+      dateTimeEnd: end.toString(),
+      dateTimeStart: state.StartTime!.toString(),
+      createdAd: timestamp.fromDate(new Date()),
+    };
 
-    /*
-    HACK
-
-    // Strings
-    performanceInformation.data.id = document!.id;
-    performanceInformation.data.creator = user!.uid;
-    performanceInformation.data.target = (
-      document as StudentDataInterface
-    ).currentTarget;
-    performanceInformation.data.method = InterventionFormat.CoverCopyCompare;
-
-    // Numerics
-    performanceInformation.data.correctDigits = state.TotalDigitsCorrect;
-    performanceInformation.data.errCount = state.NumErrors;
-    performanceInformation.data.nCorrectInitial = state.NumCorrectInitial;
-    performanceInformation.data.nRetries = state.NumRetries;
-    performanceInformation.data.sessionDuration =
-      (end.getTime() - state.StartTime!.getTime()) / 1000;
-    performanceInformation.data.setSize = (
-      document as StudentDataInterface
-    ).factsTargeted.length;
-    performanceInformation.data.totalDigits = state.TotalDigits;
-
-    // Timestamps
-    performanceInformation.data.createdAt = timestamp.fromDate(new Date());
-    performanceInformation.data.dateTimeEnd = end.toString();
-    performanceInformation.data.dateTimeStart = state.StartTime!.toString();
-
-    // Arrays
-    performanceInformation.data.entries = finalEntries!;
-
-    */
-
-    // Sanity check for all required components
-    if (!performanceInformation.CheckObject()) {
-      alert("Firebase data was not well-formed");
-      return;
-    }
-
-    const objectToSend: PerformanceDataInterface =
-      performanceInformation.SubmitObject();
-
-    // Update collection with latest performance
-    await addDocument(objectToSend);
+    await addDocument(uploadObject);
 
     // If added without issue, update timestamp
     if (!response.error) {
@@ -241,10 +220,9 @@ export default function CoverCopyCompare() {
           uAction: SharedActionSequence.Begin,
           uButtonText: "Cover",
           uCoverStimulusItem: false,
-          uCoverProblemItem: true
+          uCoverProblemItem: true,
         },
       });
-
     } else if (state.CurrentAction === SharedActionSequence.Begin) {
       dispatch({
         type: BenchmarkActions.CoverCopyCompareTaskIncrement,
@@ -252,10 +230,9 @@ export default function CoverCopyCompare() {
           uAction: SharedActionSequence.CoverCopy,
           uButtonText: "Copied",
           uCoverStimulusItem: true,
-          uCoverProblemItem: false
+          uCoverProblemItem: false,
         },
       });
-
     } else if (state.CurrentAction === SharedActionSequence.CoverCopy) {
       dispatch({
         type: BenchmarkActions.CoverCopyCompareTaskIncrement,
@@ -263,16 +240,15 @@ export default function CoverCopyCompare() {
           uAction: SharedActionSequence.Compare,
           uButtonText: "Compared",
           uCoverStimulusItem: false,
-          uCoverProblemItem: false
+          uCoverProblemItem: false,
         },
       });
-
     } else {
       dispatch({
         type: BenchmarkActions.CoverCopyCompareTaskIncrement,
         payload: {
           uAction: SharedActionSequence.Entry,
-          uVerify: true
+          uVerify: true,
         },
       });
 
@@ -281,17 +257,13 @@ export default function CoverCopyCompare() {
 
     // Fire if ready to check response
     if (state.ToVerify || quickCheck) {
-
       dispatch({
         type: BenchmarkActions.CoverCopyCompareTaskIncrement,
         payload: {
           uAction: state.CurrentAction,
-          uVerify: false
+          uVerify: false,
         },
       });
-
-      //let uVerify = false
-      //setToVerify(false);
 
       // Compare if internal and inputted string match
       let isMatching =
@@ -315,9 +287,6 @@ export default function CoverCopyCompare() {
       let secs = (current.getTime() - state.PreTrialTime!.getTime()) / 1000;
 
       let holderPreTime = state.PreTrialTime;
-
-      // Update time for trial
-      //setPreTrialTime(new Date());
 
       if (shouldShowFeedback(!isMatching)) {
         // Error correction prompt
@@ -362,7 +331,6 @@ export default function CoverCopyCompare() {
           // If finished, upload list w/ latest item
           submitDataToFirebase(currentItem2);
         } else {
-
           dispatch({
             type: BenchmarkActions.CoverCopyCompareBatchStartIncrementPost,
             payload: {
@@ -404,12 +372,20 @@ export default function CoverCopyCompare() {
     if (char === "=" && state.EntryRepresentationInternal.includes("=")) return;
 
     // Rule #4: No '=' before an operator
-    if (char === "=" && !state.EntryRepresentationInternal.includes(state.OperatorSymbol))
+    if (
+      char === "=" &&
+      !state.EntryRepresentationInternal.includes(state.OperatorSymbol)
+    )
       return;
 
     // Rule #5/#6: No '=', before an digit AFTER operator
-    if (char === "=" && state.EntryRepresentationInternal.includes(state.OperatorSymbol)) {
-      let problemParts = state.EntryRepresentationInternal.split(state.OperatorSymbol);
+    if (
+      char === "=" &&
+      state.EntryRepresentationInternal.includes(state.OperatorSymbol)
+    ) {
+      let problemParts = state.EntryRepresentationInternal.split(
+        state.OperatorSymbol
+      );
 
       // Rule #5: If just 1 part, disregard (i.e., no operator)
       if (problemParts.length <= 1) return;
@@ -511,10 +487,7 @@ export default function CoverCopyCompare() {
         </button>
       </Modal>
       <div className="topBox">
-        <h2>
-          Cover Copy Compare: (
-          {document ? document.name : <></>})
-        </h2>
+        <h2>Cover Copy Compare: ({document ? document.name : <></>})</h2>
       </div>
       <div
         className="box1"

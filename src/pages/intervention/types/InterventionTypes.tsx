@@ -17,6 +17,8 @@ export enum BenchmarkActions {
   ExplicitTimingBatchIncrement = "ExplicitTimingBatchIncrement",
   ExplicitTimingModalRetry = "ExplicitTimingModalRetry",
 
+  TapedProblemsBatchStartPreflight = "TapedProblemsBatchStartPreflight",
+
   CoverCopyCompareBatchStartPreflight = "CoverCopyCompareBatchStartPreflight",
   CoverCopyCompareBatchStartBegin = "CoverCopyCompareBatchStartBegin",
   CoverCopyCompareTaskIncrement = "CoverCopyCompareTaskIncrement",
@@ -24,7 +26,7 @@ export enum BenchmarkActions {
   CoverCopyCompareBatchIncrement = "CoverCopyCompareBatchStartBegin",
   CoverCopyCompareBatchStartIncrementPost = "CoverCopyCompareBatchStartIncrementPost",
   CoverCopyCompareModalRetry = "CoverCopyCompareModalRetry",
-  CoverCopyCompareItemIncrement = "CoverCopyCompareItemIncrement"
+  CoverCopyCompareItemIncrement = "CoverCopyCompareItemIncrement",
 }
 
 export interface BenchmarkState {
@@ -43,7 +45,7 @@ export interface BenchmarkState {
   IsOngoing: false;
   ToVerify: false;
   FactModelList: FactDataInterface[];
-  NextLiItem: string,
+  NextLiItem: string;
   StartTime: Date | null;
   PreTrialTime: Date | null;
   OnInitialTry: boolean;

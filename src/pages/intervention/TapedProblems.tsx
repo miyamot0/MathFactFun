@@ -10,7 +10,7 @@
  * Taped Problems intervention
  */
 
-import React from "react";
+import React, { useReducer } from "react";
 
 import { useState, useEffect, useRef } from "react";
 import { useParams, useHistory } from "react-router-dom";
@@ -32,7 +32,7 @@ import {
   CalculateDigitsTotalAnswer,
   CalculateDigitsCorrectAnswer,
 } from "../../utilities/LabelHelper";
-import { RelevantKeys, InterventionFormat } from "../../maths/Facts";
+import { RelevantKeys } from "../../maths/Facts";
 
 import { DetermineErrorCorrection } from "../../utilities/Logic";
 import {
@@ -50,13 +50,16 @@ import {
   PerformanceDataInterface,
   StudentDataInterface,
 } from "../../firebase/types/GeneralTypes";
-
-const ActionSequence = {
-  Start: "ActionSequence.Start",
-  Answer: "ActionSequence.Answer",
-  Entry: "ActionSequence.Entry",
-  Begin: "ActionSequence.Begin",
-};
+import {
+  BenchmarkActions,
+  SharedActionSequence,
+} from "./types/InterventionTypes";
+import {
+  InitialBenchmarkState,
+  InterventionReducer,
+  keyHandler,
+  useEventListener,
+} from "./functionality/InterventionBehavior";
 
 const DelCode = "Del";
 
@@ -83,15 +86,21 @@ export default function TapedProblems() {
   const { user } = useAuthorizationContext();
   const history = useHistory();
 
-  const { document } = useFirebaseDocumentTyped<StudentDataInterface>(
-    {
-      collectionString: "students",
-      idString: id
-    });
+  const { document } = useFirebaseDocumentTyped<StudentDataInterface>({
+    collectionString: "students",
+    idString: id,
+  });
   const { addDocument, response } = useFirestore("", target, id);
   const { updateDocument } = useFirestore("students", undefined, undefined);
 
-  const [currentAction, setCurrentAction] = useState(ActionSequence.Start);
+  const [state, dispatch] = useReducer(
+    InterventionReducer,
+    InitialBenchmarkState
+  );
+
+  const [currentAction, setCurrentAction] = useState(
+    SharedActionSequence.Start
+  );
   const [buttonText, setButtonText] = useState("Start");
   const [isOnInitialTry, setIsOnInitialTry] = useState(true);
 
@@ -124,72 +133,10 @@ export default function TapedProblems() {
   // Timer Stuff
   const [secondsLeft, setSecondsLeft] = useState(0);
 
-  /** useEventListener
-   *
-   * listener for events
-   *
-   * @param {string} eventName ...
-   * @param {(key: React.KeyboardEvent<HTMLElement>) => void} handler ...
-   * @param {Window} element ...
-   */
-  function useEventListener(
-    eventName: string,
-    handler: (key: React.KeyboardEvent<HTMLElement>) => void,
-    element: Window = window
-  ): void {
-    const savedHandler = useRef({});
-    useEffect(() => {
-      savedHandler.current = handler;
-    }, [handler]);
-    useEffect(
-      () => {
-        const isSupported = element && element.addEventListener;
-        if (!isSupported) return;
-
-        const eventListener = (event: any) => {
-          if (typeof savedHandler.current === "function") {
-            savedHandler.current(event);
-          }
-        };
-
-        element.addEventListener(eventName, eventListener);
-
-        return () => {
-          element.removeEventListener(eventName, eventListener);
-        };
-      },
-      [eventName, element] // Re-run if eventName or element changes
-    );
-  }
-
-  /** keyHandler
-   *
-   * Handle keyboard input
-   *
-   * @param {React.KeyboardEvent<HTMLElement>} key keyevent
-   */
-  function keyHandler(key: React.KeyboardEvent<HTMLElement>): void {
-    if (key.key === "Enter") return;
-
-    if (RelevantKeys.includes(key.key)) {
-      let modKey = key.key === "Backspace" ? "Del" : key.key;
-      modKey = key.key === "Delete" ? "Del" : modKey;
-
-      if (modKey === " ") {
-        if (currentAction !== ActionSequence.Entry) {
-          captureButtonAction();
-          return;
-        }
-
-        return;
-      }
-
-      captureKeyClick(modKey);
-    }
-  }
-
   // Add event listener to hook
-  useEventListener("keydown", keyHandler);
+  useEventListener("keydown", (key) =>
+    keyHandler(key, captureKeyClick, captureButtonAction, state.CurrentAction)
+  );
 
   /** shouldShowFeedback
    *
@@ -201,7 +148,7 @@ export default function TapedProblems() {
   function shouldShowFeedback(trialError: boolean): boolean {
     return DetermineErrorCorrection(
       trialError,
-      (document as StudentDataInterface).currentErrorApproach!
+      document!.currentErrorApproach!
     );
   }
 
@@ -216,14 +163,16 @@ export default function TapedProblems() {
   // Fire once individual data loaded, just once
   useEffect(() => {
     if (document && !loadedData) {
-      // Establish working set
-      setWorkingData((document as StudentDataInterface).factsTargeted!);
-      setSecondsLeft((document as StudentDataInterface).minForTask! * 60);
-
-      // Flag that data is loaded
-      setLoadedData(true);
+      dispatch({
+        type: BenchmarkActions.TapedProblemsBatchStartPreflight,
+        payload: {
+          uWorkingData: document.factsTargeted,
+          uTimer: document.minForTask! * 60,
+          uLoadedData: true,
+        },
+      });
     }
-  }, [document, loadedData, setLoadedData, operatorSymbol, setOperatorSymbol]);
+  }, [document, loadedData]);
 
   /** callbackToSubmit
    *
@@ -233,6 +182,8 @@ export default function TapedProblems() {
   function callbackToSubmit() {
     submitDataToFirebase(null);
   }
+
+  // TODO: got down to here
 
   /** submitDataToFirebase
    *
@@ -321,8 +272,8 @@ export default function TapedProblems() {
    */
   function captureButtonAction(): void {
     if (
-      currentAction === ActionSequence.Start ||
-      currentAction === ActionSequence.Begin
+      currentAction === SharedActionSequence.Start ||
+      currentAction === SharedActionSequence.Begin
     ) {
       // Establish start of math fact
       setPreTrialTime(new Date());
@@ -349,7 +300,7 @@ export default function TapedProblems() {
 
       setCoverProblemItem(false);
 
-      setCurrentAction(ActionSequence.Answer);
+      setCurrentAction(SharedActionSequence.Answer);
 
       setButtonText("Check");
 
