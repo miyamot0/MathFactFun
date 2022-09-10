@@ -8,8 +8,6 @@
 
 import { PerformanceDataInterface } from "../firebase/types/GeneralTypes";
 
-import { FactModelInterface } from "./FactEntryModel";
-
 export interface PerformanceModelInterface {
   data: PerformanceDataInterface;
   CheckObject: () => boolean;

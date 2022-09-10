@@ -39,10 +39,6 @@ import {
   PerformanceModel,
   PerformanceModelInterface,
 } from "../../models/PerformanceModel";
-import {
-  FactEntryModel,
-  FactModelInterface,
-} from "../../models/FactEntryModel";
 
 // styles
 import "./TapedProblems.css";
@@ -58,6 +54,7 @@ import {
   useEventListener,
 } from "./functionality/InterventionBehavior";
 import { StudentDataInterface } from "../student/types/StudentTypes";
+import { FactDataInterface } from "../setcreator/types/SetCreatorTypes";
 
 const DelCode = "Del";
 
@@ -118,7 +115,7 @@ export default function TapedProblems() {
 
   const [preTrialTime, setPreTrialTime] = useState<Date>();
   const [startTime, setStartTime] = useState<Date>();
-  const [factModelList, setModelList] = useState<FactModelInterface[]>();
+  const [factModelList, setModelList] = useState<FactDataInterface[]>();
 
   const [viewRepresentationInternal, setViewRepresentationInternal] =
     useState("");
@@ -187,12 +184,12 @@ export default function TapedProblems() {
    *
    * Push data to server
    *
-   * @param {FactModelInterface} finalFactObject final item completed
+   * @param {FactDataInterface} finalFactObject final item completed
    */
   async function submitDataToFirebase(
-    finalFactObject: FactModelInterface | null
+    finalFactObject: FactDataInterface | null
   ): Promise<void> {
-    let finalEntries = factModelList;
+    const finalEntries = factModelList;
 
     if (finalFactObject !== null) {
       finalEntries?.push(finalFactObject);
@@ -200,7 +197,7 @@ export default function TapedProblems() {
 
     const end = new Date();
 
-    let performanceInformation: PerformanceModelInterface = PerformanceModel();
+    //let performanceInformation: PerformanceModelInterface = PerformanceModel();
 
     /*
     HACK
@@ -235,16 +232,16 @@ export default function TapedProblems() {
 
     // Sanity check for all required components
 
-    if (!performanceInformation.CheckObject()) {
-      alert("Firebase data was not well-formed");
-      return;
-    }
+    //if (!performanceInformation.CheckObject()) {
+    //  alert("Firebase data was not well-formed");
+    //  return;
+    //}
 
-    const objectToSend: PerformanceDataInterface =
-      performanceInformation.SubmitObject();
+    //const objectToSend: PerformanceDataInterface =
+    //  performanceInformation.SubmitObject();
 
     // Update collection with latest performance
-    await addDocument(objectToSend);
+    //await addDocument(objectToSend);
 
     // If added without issue, update timestamp
     if (!response.error) {
@@ -311,7 +308,7 @@ export default function TapedProblems() {
       entryRepresentationInternal;
 
     // Compare if internal and inputted string match
-    let isMatching =
+    const isMatching =
       viewRepresentationInternal.trim() === combinedResponse.trim();
 
     // Increment initial attempt, if correct
@@ -324,10 +321,10 @@ export default function TapedProblems() {
       setNumberErrors(numberErrors + 1);
     }
 
-    var current = new Date();
-    let secs = (current.getTime() - preTrialTime!.getTime()) / 1000;
+    const current = new Date();
+    const secs = (current.getTime() - preTrialTime!.getTime()) / 1000;
 
-    let holderPreTime = preTrialTime;
+    const holderPreTime = preTrialTime;
 
     // Update time for trial
     setPreTrialTime(new Date());
@@ -336,13 +333,13 @@ export default function TapedProblems() {
       // Error correction prompt
       openModal();
     } else {
-      let totalDigitsShown = CalculateDigitsTotalAnswer(
+      const totalDigitsShown = CalculateDigitsTotalAnswer(
         viewRepresentationInternal
       );
 
       setTotalDigits(totalDigits + totalDigitsShown);
 
-      let totalDigitsCorrect = CalculateDigitsCorrectAnswer(
+      const totalDigitsCorrect = CalculateDigitsCorrectAnswer(
         combinedResponse,
         viewRepresentationInternal
       );
@@ -351,7 +348,7 @@ export default function TapedProblems() {
 
       setNumberTrials(numberTrials + 1);
 
-      let currentItem = FactEntryModel();
+      const currentItem = {} as FactDataInterface;
       /*
       HACK
       currentItem.data.factCorrect = isMatching;

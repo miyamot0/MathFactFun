@@ -19,13 +19,11 @@ import { useFirestore } from "../../firebase/useFirestore";
 import Select from "react-select";
 import { DragDropContext } from "react-beautiful-dnd";
 import { OnlyUnique } from "../../utilities/LabelHelper";
-import {
-  FactDataInterface,
-  PerformanceDataInterface,
-} from "../../firebase/types/GeneralTypes";
+import { PerformanceDataInterface } from "../../firebase/types/GeneralTypes";
 import {
   ColumnsObject,
   DragDropActions,
+  FactDataInterface,
   FactStructure,
   ItemHistory,
   ItemMetrics,
