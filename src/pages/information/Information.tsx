@@ -14,7 +14,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 // styles
-import "./Information.css";
+import "./styles/Information.css";
 
 export default function Information() {
   return (

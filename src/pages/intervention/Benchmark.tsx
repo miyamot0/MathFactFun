@@ -41,7 +41,7 @@ import {
 } from "./types/InterventionTypes";
 
 // Styles
-import "../intervention/ExplicitTiming.css";
+import "./styles/ExplicitTiming.css";
 import { StudentDataInterface } from "../student/types/StudentTypes";
 import { FactDataInterface } from "../setcreator/types/SetCreatorTypes";
 
@@ -108,7 +108,7 @@ export default function Benchmark() {
   async function submitDataToFirebase(
     finalFactObject: FactDataInterface | null
   ): Promise<void> {
-    let finalEntries = state.FactModelList;
+    const finalEntries = state.FactModelList;
 
     if (finalFactObject !== null) {
       finalEntries?.push(finalFactObject);
@@ -140,7 +140,7 @@ export default function Benchmark() {
 
     // If added without issue, update timestamp
     if (!addResponse.error) {
-      let completedBenchmark = document!.completedBenchmark;
+      const completedBenchmark = document!.completedBenchmark;
 
       completedBenchmark.push(
         `${target} ${document!.dueDate!.toDate().toDateString()}`
@@ -199,7 +199,7 @@ export default function Benchmark() {
       state.EntryRepresentationInternal;
 
     // Compare if internal and inputted string match
-    let isMatching =
+    const isMatching =
       state.ViewRepresentationInternal.trim() === combinedResponse.trim();
 
     let uNumberCorrectInitial = state.NumCorrectInitial;
@@ -215,23 +215,23 @@ export default function Benchmark() {
       uNumberErrors = state.NumErrors + 1;
     }
 
-    var current = new Date();
-    let secs = (current.getTime() - state.PreTrialTime!.getTime()) / 1000;
+    const current = new Date();
+    const secs = (current.getTime() - state.PreTrialTime!.getTime()) / 1000;
 
-    let holderPreTime = state.PreTrialTime;
+    const holderPreTime = state.PreTrialTime;
 
-    let uTotalDigits =
+    const uTotalDigits =
       state.TotalDigits +
       CalculateDigitsTotalAnswer(state.ViewRepresentationInternal);
 
-    let uTotalDigitsCorrect =
+    const uTotalDigitsCorrect =
       state.TotalDigitsCorrect +
       CalculateDigitsCorrectAnswer(
         combinedResponse,
         state.ViewRepresentationInternal
       );
 
-    let uNumberTrials = state.NumbTrials + 1;
+    const uNumberTrials = state.NumbTrials + 1;
 
     const currentItem = {
       factCorrect: isMatching,
@@ -244,7 +244,7 @@ export default function Benchmark() {
       dateTimeStart: timestamp.fromDate(new Date(holderPreTime!)),
     } as FactDataInterface;
 
-    let uInitialTry = true;
+    const uInitialTry = true;
 
     dispatch({
       type: BenchmarkActions.BenchmarkBatchStartIncrement,

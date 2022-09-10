@@ -36,10 +36,10 @@ function checkIfProgrammingCurrent(
 
   const dateObj = date.toDate();
   const dateNow = new Date();
-  let difference = dateObj.getTime() - dateNow.getTime();
-  let daysSince = Math.ceil(difference / (1000 * 3600 * 24));
+  const difference = dateObj.getTime() - dateNow.getTime();
+  const daysSince = Math.ceil(difference / (1000 * 3600 * 24));
 
-  let areOnSameDay =
+  const areOnSameDay =
     dateObj.getFullYear() === dateNow.getFullYear() &&
     dateObj.getMonth() === dateNow.getMonth() &&
     dateObj.getDate() === dateNow.getDate();

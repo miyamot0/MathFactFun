@@ -34,13 +34,13 @@ export function reducerPerOperation(
     .sort()
     .map((date) => {
       // Pull in relevant content by date
-      let relevantData = mappedDocument.filter((obj) => obj.ShortDate === date);
+      const relevantData = mappedDocument.filter((obj) => obj.ShortDate === date);
 
-      let totalDigitsCorr = relevantData
+      const totalDigitsCorr = relevantData
         .map((obj) => obj.DigitsCorrect)
         .reduce(Sum);
-      let totalDigits = relevantData.map((obj) => obj.DigitsTotal).reduce(Sum);
-      let totalTime =
+      const totalDigits = relevantData.map((obj) => obj.DigitsTotal).reduce(Sum);
+      const totalTime =
         relevantData.map((obj) => obj.SessionDuration).reduce(Sum) / 60.0;
 
       return {

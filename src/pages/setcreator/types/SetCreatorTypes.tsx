@@ -76,7 +76,7 @@ export interface DragColumnContents {
 }
 
 export interface DragColumnsInterface {
-  [key: string]: DragColumnContents | null;
+  [key: string]: DragColumnContents;
 }
 
 export interface ItemMetrics {

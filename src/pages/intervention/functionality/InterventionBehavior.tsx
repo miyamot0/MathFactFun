@@ -55,7 +55,7 @@ export function getSetFromArray(array: string[][], set: string): string[] {
     end = 17;
   }
 
-  let problems: string[][] = array.slice(start, end);
+  const problems: string[][] = array.slice(start, end);
 
   return problems.reduce(
     (accumulator, value) => accumulator.concat(value),
@@ -80,7 +80,7 @@ export function getUniqueProblems(
   const firstWave = [...new Set(arrayProblems)];
   let secondWave = [...new Set(arrayProblems)];
 
-  let probsToRemove: string[] = [];
+  const probsToRemove: string[] = [];
 
   // First as truth
   firstWave.forEach((problem) => {

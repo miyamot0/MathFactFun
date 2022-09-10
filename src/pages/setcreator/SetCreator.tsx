@@ -149,13 +149,13 @@ export default function SetCreator() {
    */
   async function saveUpdatedInformation(objectToSave: ColumnsObject) {
     if (objectToSave !== null) {
-      let factsTargeted = objectToSave.columns.Targeted!.items.map(
+      const factsTargeted = objectToSave.columns.Targeted!.items.map(
         (a: FactStructure) => a.id
       );
-      var factsSkipped = objectToSave.columns.Skipped!.items.map(
+      const factsSkipped = objectToSave.columns.Skipped!.items.map(
         (a: FactStructure) => a.id
       );
-      var factsMastered = objectToSave.columns.Mastered!.items.map(
+      const factsMastered = objectToSave.columns.Mastered!.items.map(
         (a: FactStructure) => a.id
       );
 
@@ -207,7 +207,7 @@ export default function SetCreator() {
 
       dispatch({ type: DragDropActions.SetBaseItems, payload: flattened });
 
-      var newColumns = state.columns;
+      const newColumns = state.columns;
 
       const currTargetedSets = populateColumnMetrics(
         document!.factsTargeted,
@@ -230,7 +230,7 @@ export default function SetCreator() {
 
       newColumns.Skipped!.items = currSkippedSets;
 
-      let takenArray = [
+      const takenArray = [
         ...currTargetedSets.map((a) => a.id),
         ...currMasteredSets.map((a) => a.id),
         ...currSkippedSets.map((a) => a.id),
@@ -267,11 +267,11 @@ export default function SetCreator() {
    * @param {String} value Column to receive
    */
   function moveTargetedItems(value: string): void {
-    let newColumns = state.columns;
-    let preAvailable = state.columns.Available!.items;
+    const newColumns = state.columns;
+    const preAvailable = state.columns.Available!.items;
     let preTargeted = state.columns.Targeted!.items;
-    let preMastered = state.columns.Mastered!.items;
-    let preSkipped = state.columns.Skipped!.items;
+    const preMastered = state.columns.Mastered!.items;
+    const preSkipped = state.columns.Skipped!.items;
 
     switch (value) {
       case "Mastered":
@@ -321,7 +321,7 @@ export default function SetCreator() {
    * @param {number} setArray Index of set
    */
   function moveItemsToTargeted(setArray: number): void {
-    let newColumns = state.columns;
+    const newColumns = state.columns;
     let preAvailable = state.columns.Available!.items;
     let preTargeted = state.columns.Targeted!.items;
     let preSkipped = state.columns.Skipped!.items;
@@ -384,7 +384,7 @@ export default function SetCreator() {
    */
   function resetItems(): void {
     if (window.confirm("Are you sure you want to reset?") === true) {
-      let newColumns = state.columns;
+      const newColumns = state.columns;
       newColumns.Available!.items = state.BaseItems!;
       newColumns.Mastered!.items = [];
       newColumns.Skipped!.items = [];

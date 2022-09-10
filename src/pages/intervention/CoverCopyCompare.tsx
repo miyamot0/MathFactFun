@@ -31,7 +31,7 @@ import { InterventionFormat, RelevantKeys } from "../../maths/Facts";
 import { DetermineErrorCorrection } from "../../utilities/InterventionHelper";
 
 // styles
-import "./CoverCopyCompare.css";
+import "./styles/CoverCopyCompare.css";
 
 import { ErrorModalCustomStyle } from "./subcomponents/ModalStyles";
 import {

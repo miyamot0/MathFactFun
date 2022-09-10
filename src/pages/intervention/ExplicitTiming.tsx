@@ -48,7 +48,7 @@ import {
 } from "./functionality/InterventionBehavior";
 
 // styles
-import "./ExplicitTiming.css";
+import "./styles/ExplicitTiming.css";
 import { ErrorModalCustomStyle } from "./subcomponents/ModalStyles";
 import { InterventionFormat } from "../../maths/Facts";
 import { StudentDataInterface } from "../student/types/StudentTypes";

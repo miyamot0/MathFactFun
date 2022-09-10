@@ -44,7 +44,7 @@ function Timer({
 
     window.speechSynthesis.speak(synthesis);
 
-    let speakAnswer = () => {
+    const speakAnswer = () => {
       synthesis.text = plusser.toString();
       window.speechSynthesis.speak(synthesis);
       return;
@@ -71,7 +71,7 @@ function Timer({
   useEffect(() => {
 
     if (isActive && seconds <= nProblems * delta) {
-      let interval: NodeJS.Timer = setInterval(() => {
+      const interval: NodeJS.Timer = setInterval(() => {
         fire();
 
         setSeconds((seconds) => seconds + 1);

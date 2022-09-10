@@ -59,10 +59,10 @@ function checkIfDateCurrent(
     return false;
   }
 
-  let dateObj = date.toDate();
+  const dateObj = date.toDate();
   dateObj.setHours(0, 0, 0, 0);
 
-  let dateNow = new Date();
+  const dateNow = new Date();
   dateNow.setHours(0, 0, 0, 0);
 
   return dateNow.getTime() <= dateObj.getTime() ? true : false;

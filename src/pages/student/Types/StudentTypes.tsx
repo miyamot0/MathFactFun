@@ -4,9 +4,9 @@ import { CommentInterface } from "../../../firebase/types/GeneralTypes";
 export interface StudentDataInterface {
   id: string | undefined | null;
   aimLine: number;
-  createdAt: firebase.firestore.Timestamp | null;
-  dueDate: firebase.firestore.Timestamp | null;
-  lastActivity: firebase.firestore.Timestamp | null;
+  createdAt: firebase.firestore.Timestamp;
+  dueDate: firebase.firestore.Timestamp;
+  lastActivity: firebase.firestore.Timestamp;
   comments: CommentInterface[];
   completedBenchmark: string[];
   currentBenchmarking: string[];
@@ -14,7 +14,7 @@ export interface StudentDataInterface {
   factsSkipped: string[];
   factsTargeted: string[];
 
-  creator: string | null;
+  creator: string;
   currentApproach: string | undefined;
   currentErrorApproach: string | undefined;
   currentGrade: string;

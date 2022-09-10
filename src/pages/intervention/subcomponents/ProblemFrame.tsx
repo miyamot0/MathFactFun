@@ -27,7 +27,7 @@ function createVerticalString(str: string): string[][] {
   let operator = "";
   let toIter = 0;
 
-  let newText = [];
+  const newText = [];
   newText[0] = ["", "", ""];
   newText[1] = ["", "", ""];
   newText[2] = ["", "", ""];
@@ -56,7 +56,7 @@ function createVerticalString(str: string): string[][] {
 
   // Just lines
   if (!str.includes("=") && str.includes(operator)) {
-    let frontProb = str.split(operator)[0];
+    const frontProb = str.split(operator)[0];
 
     let shuf = 0;
 
@@ -65,7 +65,7 @@ function createVerticalString(str: string): string[][] {
       shuf++;
     }
 
-    let backProb = str.split(operator)[1];
+    const backProb = str.split(operator)[1];
 
     shuf = 0;
 
@@ -79,7 +79,7 @@ function createVerticalString(str: string): string[][] {
 
   // Just lines
   if (!str.includes("=") && str.includes(operator)) {
-    let frontProb = str.split(operator)[0];
+    const frontProb = str.split(operator)[0];
 
     let shuf = 0;
 
@@ -88,7 +88,7 @@ function createVerticalString(str: string): string[][] {
       shuf++;
     }
 
-    let backProb = str.split(operator)[1];
+    const backProb = str.split(operator)[1];
 
     shuf = 0;
 
@@ -104,8 +104,8 @@ function createVerticalString(str: string): string[][] {
 
   // Just lines
   if (str.includes("=") && str.includes(operator)) {
-    let preAnswer = str.split("=")[0];
-    let frontProb = preAnswer.split(operator)[0];
+    const preAnswer = str.split("=")[0];
+    const frontProb = preAnswer.split(operator)[0];
 
     let shuf = 0;
 
@@ -114,7 +114,7 @@ function createVerticalString(str: string): string[][] {
       shuf++;
     }
 
-    let backProb = preAnswer.split(operator)[1];
+    const backProb = preAnswer.split(operator)[1];
 
     shuf = 0;
 
@@ -125,7 +125,7 @@ function createVerticalString(str: string): string[][] {
       shuf++;
     }
 
-    let answerProb = str.split("=")[1];
+    const answerProb = str.split("=")[1];
 
     shuf = 0;
 

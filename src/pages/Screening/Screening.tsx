@@ -24,21 +24,14 @@ import { PerformanceDataInterface } from "../../firebase/types/GeneralTypes";
 import { RoutedIdParam } from "../../utilities/RoutingHelpers";
 import { reducerPerOperation } from "./functionality/ScreeningBehavior";
 import { useFirebaseCollectionTyped } from "../../firebase/useFirebaseCollection";
+import {
+  CommonDisplayHeadingStyle,
+  CommonPanelWidth,
+} from "../../utilities/FormHelpers";
 
 require("highcharts/modules/annotations")(Highcharts);
 require("highcharts/modules/accessibility")(Highcharts);
 AnnotationsModule(Highcharts);
-
-const PanelWidth = {
-  minHeight: "600px",
-};
-
-const HeadingStyle = {
-  fontSize: "1.25em",
-  color: "var(--heading-style-color)",
-  display: "block",
-  marginBottom: "6px",
-};
 
 export default function Screening() {
   const { id } = useParams<RoutedIdParam>();
@@ -172,8 +165,10 @@ export default function Screening() {
 
   return (
     <>
-      <div style={PanelWidth}>
-        <h2 style={HeadingStyle}>Benchmark Scores (Overall Fluency)</h2>
+      <div style={CommonPanelWidth}>
+        <h2 style={CommonDisplayHeadingStyle}>
+          Benchmark Scores (Overall Fluency)
+        </h2>
         <HighchartsReact highcharts={Highcharts} options={chartOptions} />
       </div>
       <br></br>

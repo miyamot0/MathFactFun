@@ -41,7 +41,10 @@ require("highcharts/modules/annotations")(Highcharts);
 require("highcharts/modules/accessibility")(Highcharts);
 AnnotationsModule(Highcharts);
 
-import "./styles/ProgressMonitorStyles.css";
+import {
+  CommonDisplayHeadingStyle,
+  CommonPanelWidth,
+} from "../../utilities/FormHelpers";
 
 export default function ProgressMonitor() {
   const { id, target, method, aim } = useParams<RoutedStudentProgressSet>();
@@ -62,6 +65,10 @@ export default function ProgressMonitor() {
   const [itemChartOptions, setItemChartOptions] = useState({});
 
   useEffect(() => {
+    if (!target && !aim && parseInt(aim) !== null) {
+      return;
+    }
+
     if (documents) {
       // Generate object from document collection
       const mappedDocument = remapPerformances(documents);
@@ -83,7 +90,7 @@ export default function ProgressMonitor() {
       );
 
       // Extend out, if aim line exceeds current max
-      maxYAxis = maxYAxis < parseInt(aim!) ? parseInt(aim!) + 1 : maxYAxis + 1;
+      maxYAxis = maxYAxis < parseInt(aim) ? parseInt(aim) + 1 : maxYAxis + 1;
 
       setChartOptions({
         chart: {
@@ -129,13 +136,13 @@ export default function ProgressMonitor() {
                 points: [
                   {
                     x: minDate.getTime(),
-                    y: parseInt(aim!),
+                    y: parseInt(aim),
                     xAxis: 0,
                     yAxis: 0,
                   },
                   {
                     x: maxDate.getTime(),
-                    y: parseInt(aim!),
+                    y: parseInt(aim),
                     xAxis: 0,
                     yAxis: 0,
                   },
@@ -180,7 +187,7 @@ export default function ProgressMonitor() {
             return (
               "Problem: " +
               this.x +
-              GetOperatorFromLabel(target!) +
+              GetOperatorFromLabel(target) +
               this.y +
               "</b>"
             );
@@ -220,12 +227,8 @@ export default function ProgressMonitor() {
 
   return (
     <>
-      <div
-        style={{
-          minHeight: "600px",
-        }}
-      >
-        <h2 className="h2-heading-style-progress">
+      <div style={CommonPanelWidth}>
+        <h2 style={CommonDisplayHeadingStyle}>
           Current Progress (Overall Fluency/{GetApproachStringFromLabel(method)}
           )
         </h2>
@@ -238,7 +241,7 @@ export default function ProgressMonitor() {
           minHeight: "600px",
         }}
       >
-        <h2 className="h2-heading-style-progress">
+        <h2 style={CommonDisplayHeadingStyle}>
           Current Progress (Item-level Performance/
           {GetApproachStringFromLabel(method)})
         </h2>

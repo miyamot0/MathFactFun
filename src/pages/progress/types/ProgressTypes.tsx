@@ -1,10 +1,10 @@
 import { FactDataInterface } from "../../setcreator/types/SetCreatorTypes";
 
 export interface RoutedStudentProgressSet {
-  id?: string;
-  target?: string;
-  method?: string;
-  aim?: string;
+  id: string;
+  target: string;
+  method: string;
+  aim: string;
 }
 
 export interface RemappedPerformances {

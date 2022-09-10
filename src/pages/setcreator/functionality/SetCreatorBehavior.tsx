@@ -5,6 +5,7 @@ import { StudentDataInterface } from "../../student/types/StudentTypes";
 import {
   ColumnObject,
   ColumnsObject,
+  DragColumnContents,
   DragColumnsInterface,
   DragDropActions,
   FactDataInterface,
@@ -62,10 +63,10 @@ export function onDragEnd(
   const { source, destination } = result;
 
   let columnObject: DragColumnsInterface = {
-    Available: null,
-    Targeted: null,
-    Mastered: null,
-    Skipped: null,
+    Available: {} as DragColumnContents,
+    Targeted: {} as DragColumnContents,
+    Mastered: {} as DragColumnContents,
+    Skipped: {} as DragColumnContents,
   };
 
   // Source and destination differ
@@ -187,7 +188,7 @@ export function formatTextBox(entry: number, dec: number) {
  * @returns {String} Color for background
  */
 export function formatBackgroundColor(entry: SetItem): string {
-  let backgroundColor = "#456C86";
+  const backgroundColor = "#456C86";
 
   if (
     entry.OTRs === undefined ||

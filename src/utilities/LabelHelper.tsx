@@ -6,7 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-
 /** formatDate
  *
  * Clean up date to normal format
@@ -15,10 +14,11 @@
  * @returns {String} Date output
  */
 export function FormatDate(date: string | number | Date): string {
-  var d = new Date(date),
-    month = "" + (d.getMonth() + 1),
-    day = "" + d.getDate(),
-    year = d.getFullYear();
+  const d = new Date(date);
+  const year = d.getFullYear();
+
+  let month = "" + (d.getMonth() + 1),
+    day = "" + d.getDate();
 
   if (month.length < 2) month = "0" + month;
   if (day.length < 2) day = "0" + day;
@@ -46,10 +46,10 @@ export function CalculateDigitsTotal(entry: string): number {
     operator = "/";
   }
 
-  let prefixTotal = entry.split("=")[0];
-  let prefixFirst = prefixTotal.split(operator)[0];
-  let prefixSecond = prefixTotal.split(operator)[1];
-  let suffixTotal = entry.split("=")[1];
+  const prefixTotal = entry.split("=")[0];
+  const prefixFirst = prefixTotal.split(operator)[0];
+  const prefixSecond = prefixTotal.split(operator)[1];
+  const suffixTotal = entry.split("=")[1];
 
   let digits = 0;
 
@@ -68,7 +68,7 @@ export function CalculateDigitsTotal(entry: string): number {
  * @returns {Int} Number of digits
  */
 export function CalculateDigitsTotalAnswer(entry: string): number {
-  let suffixTotal = entry.split("=")[1];
+  const suffixTotal = entry.split("=")[1];
 
   let digits = 0;
 
@@ -107,11 +107,11 @@ export function CalculateDigitsCorrect(
 
   if (entry.trim().length === 0) return digitsCorrect;
 
-  let entryPrefixInitial = entry.split("=")[0];
-  let dsplyprefixInitial = comparison.split("=")[0];
+  const entryPrefixInitial = entry.split("=")[0];
+  const dsplyprefixInitial = comparison.split("=")[0];
 
-  let entryPrefixFirst = entryPrefixInitial.split(operator)[0];
-  let dsplyPrefixFirst = dsplyprefixInitial.split(trueOperator)[0];
+  const entryPrefixFirst = entryPrefixInitial.split(operator)[0];
+  const dsplyPrefixFirst = dsplyprefixInitial.split(trueOperator)[0];
 
   let i = 0;
 
@@ -127,8 +127,8 @@ export function CalculateDigitsCorrect(
   }
 
   if (entry.includes(trueOperator)) {
-    let entryPrefixSecond = entryPrefixInitial.split(operator)[1];
-    let dsplyPrefixSecond = dsplyprefixInitial.split(trueOperator)[1];
+    const entryPrefixSecond = entryPrefixInitial.split(operator)[1];
+    const dsplyPrefixSecond = dsplyprefixInitial.split(trueOperator)[1];
 
     if (entryPrefixSecond !== null && entryPrefixSecond.trim().length !== 0) {
       // Secondary prefix
@@ -143,8 +143,8 @@ export function CalculateDigitsCorrect(
   }
 
   if (entry.includes("=")) {
-    let entryPrefixTerminal = entry.split("=")[1];
-    let dsplyprefixTerminal = comparison.split("=")[1];
+    const entryPrefixTerminal = entry.split("=")[1];
+    const dsplyprefixTerminal = comparison.split("=")[1];
 
     if (entryPrefixTerminal && entryPrefixTerminal.trim().length !== 0) {
       // suffix
@@ -178,12 +178,12 @@ export function CalculateDigitsCorrectAnswer(
 
   if (entry.trim().length === 0) return digitsCorrect;
 
-  let entryPrefixTerminal = entry.split("=")[1];
-  let dsplyprefixTerminal = comparison.split("=")[1];
+  const entryPrefixTerminal = entry.split("=")[1];
+  const dsplyprefixTerminal = comparison.split("=")[1];
 
   if (entryPrefixTerminal && entryPrefixTerminal.trim().length !== 0) {
     // suffix
-    for (var i = 0; i < dsplyprefixTerminal.length; i++) {
+    for (let i = 0; i < dsplyprefixTerminal.length; i++) {
       if (entryPrefixTerminal.length - 1 >= i) {
         if (entryPrefixTerminal[i] === dsplyprefixTerminal[i]) {
           digitsCorrect++;

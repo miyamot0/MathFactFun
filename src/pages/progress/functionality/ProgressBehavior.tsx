@@ -20,7 +20,7 @@ import {
  * @returns {Date} Amended date object
  */
 export function modifyDate(newDate: Date = new Date()): Date {
-  let modDate = newDate;
+  const modDate = newDate;
   modDate.setHours(0);
   modDate.setMinutes(0);
   modDate.setSeconds(0);
@@ -107,13 +107,13 @@ export function aggregatePerformances(
     .filter(OnlyUnique)
     .sort()
     .map((date) => {
-      let relevantData = mappedDocument.filter((obj) => obj.ShortDate === date);
+      const relevantData = mappedDocument.filter((obj) => obj.ShortDate === date);
 
-      let totalDigitsCorr = relevantData
+      const totalDigitsCorr = relevantData
         .map((obj) => obj.DigitsCorrect)
         .reduce(Sum);
-      let totalDigits = relevantData.map((obj) => obj.DigitsTotal).reduce(Sum);
-      let totalTime =
+      const totalDigits = relevantData.map((obj) => obj.DigitsTotal).reduce(Sum);
+      const totalTime =
         relevantData.map((obj) => obj.SessionDuration).reduce(Sum) / 60.0;
 
       return {

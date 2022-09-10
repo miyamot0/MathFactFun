@@ -23,7 +23,8 @@
     "react-select": "^5.3.2"
   },
   "scripts": {
-    "lint": "eslint src/*",
+    "lint": "eslint --ext .ts,.tsx .",    
+    "lint:fix": "eslint --fix --ext .ts,.tsx .",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",

@@ -3,6 +3,17 @@ import { MultiValue } from "react-select";
 import { SingleOptionType } from "./RoutingHelpers";
 import { StudentCreatorBehavior } from "../pages/student/types/StudentTypes";
 
+export const CommonPanelWidth = {
+  minHeight: "600px",
+};
+
+export const CommonDisplayHeadingStyle = {
+  fontSize: "1.25em",
+  color: "var(--heading-style-color)",
+  display: "block",
+  marginBottom: "6px",
+};
+
 export function checkInputNullOrUndefined(
   value:
     | string

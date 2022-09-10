@@ -101,11 +101,11 @@ export default function EditStudent() {
     dispatch({
       type: StudentCreatorBehavior.SetLoadedStudent,
       payload: {
-        uName: document.name!,
-        uDetails: document.details!,
-        uDueDate: FormatDate(document.dueDate!.toDate()),
-        uAimLine: document.aimLine!,
-        uExplicitTime: document.minForTask!,
+        uName: document.name,
+        uDetails: document.details,
+        uDueDate: FormatDate(document.dueDate.toDate()),
+        uAimLine: document.aimLine,
+        uExplicitTime: document.minForTask,
         uCurrentTarget,
         uCurrentGrade,
         uCurrentApproach,

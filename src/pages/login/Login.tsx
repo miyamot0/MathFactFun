@@ -14,17 +14,6 @@ import React from "react";
 import { useState } from "react";
 import { useFirebaseLogin } from "../../firebase/useFirebaseLogin";
 
-// Styles
-
-const LoginBoxStyle = {
-  maxWidth: "360px",
-  margin: "60px auto",
-  padding: "40px",
-  border: "1px solid #ddd",
-  boxShadow: "3px 3px 5px rgba(0,0,0,0.05)",
-  background: "#fff",
-};
-
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -44,7 +33,17 @@ export default function Login() {
   }
 
   return (
-    <form style={LoginBoxStyle} onSubmit={handleLoginSubmission}>
+    <form
+      style={{
+        maxWidth: "360px",
+        margin: "60px auto",
+        padding: "40px",
+        border: "1px solid #ddd",
+        boxShadow: "3px 3px 5px rgba(0,0,0,0.05)",
+        background: "#fff",
+      }}
+      onSubmit={handleLoginSubmission}
+    >
       <h2>Login</h2>
       <label>
         <span>Email:</span>

@@ -26,7 +26,7 @@ export default function Timer({
 
   useEffect(() => {
     if (startTimerTime) {
-      let intervalIdValue: NodeJS.Timer = setInterval(() => {
+      const intervalIdValue: NodeJS.Timer = setInterval(() => {
         setSecondCounter((secondCounter) => secondCounter + 1);
       }, 1000);
 

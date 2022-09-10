@@ -103,7 +103,7 @@ export function generateDraggable(item: SetItem, index: number) {
   return (
     <Draggable key={item.id} draggableId={item.id} index={index}>
       {(provided, snapshot) => {
-        let setNumber = parseInt(item.id.split(":")[1]);
+        const setNumber = parseInt(item.id.split(":")[1]);
 
         let label = "B";
         let valueAdjustment = 6;
@@ -135,7 +135,7 @@ export function generateDroppable(columns: DragColumnsInterface) {
   return Object.entries(columns).map(([columnId, column]) => {
     return (
       <div style={DropContainer} key={columnId}>
-        <h2 style={HeadingStyle}>{column!.name}</h2>
+        <h2 style={HeadingStyle}>{column.name}</h2>
         <div style={{ margin: 8 }}>
           <Droppable droppableId={columnId} key={columnId}>
             {(provided, snapshot) => {
@@ -152,7 +152,7 @@ export function generateDroppable(columns: DragColumnsInterface) {
                     minHeight: 500,
                   }}
                 >
-                  {column!.items.map((item, index) => {
+                  {column.items.map((item, index) => {
                     return generateDraggable(item, index);
                   })}
                   {provided.placeholder}

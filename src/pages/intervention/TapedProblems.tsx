@@ -37,7 +37,7 @@ import { RelevantKeys } from "../../maths/Facts";
 import { DetermineErrorCorrection } from "../../utilities/InterventionHelper";
 
 // styles
-import "./TapedProblems.css";
+import "./styles/TapedProblems.css";
 import { PerformanceDataInterface } from "../../firebase/types/GeneralTypes";
 import {
   BenchmarkActions,
