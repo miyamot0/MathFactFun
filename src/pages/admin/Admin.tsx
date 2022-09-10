@@ -25,13 +25,11 @@ const userConverter = (userArray: CurrentObjectTypeArrays) => {
 };
 
 export default function Admin(): JSX.Element {
-  const { documents, error } = useFirebaseCollectionTyped<UserDataInterface>(
-    {
-      collectionString: "users",
-      queryString: undefined,
-      orderString: undefined
-    }
-  );
+  const { documents, error } = useFirebaseCollectionTyped<UserDataInterface>({
+    collectionString: "users",
+    queryString: undefined,
+    orderString: undefined,
+  });
 
   return (
     <div>

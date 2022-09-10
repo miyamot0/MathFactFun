@@ -18,12 +18,11 @@ import {
   WhereFilterOp,
   OrderByDirection,
 } from "@firebase/firestore-types";
-import {
-  CollectionInputInterface,
-} from "./types/GeneralTypes";
+import { CollectionInputInterface } from "./types/GeneralTypes";
 import { FirestoreCollections } from "./useFirestore";
 import {
-  performanceConverter, studentConverter,
+  performanceConverter,
+  studentConverter,
 } from "./converters/GeneralConverters";
 
 const CollectionError = "Unable to retrieve data";
@@ -38,14 +37,14 @@ const CollectionError = "Unable to retrieve data";
  * @returns {useFirebaseCollectionTyped}
  */
 // eslint-disable-next-line @typescript-eslint/no-redeclare
-export function useFirebaseCollectionTyped<T>(
-  { collectionString,
-    queryString,
-    orderString
-  }: CollectionInputInterface): {
-    documents: T[] | null;
-    error: string | undefined;
-  } {
+export function useFirebaseCollectionTyped<T>({
+  collectionString,
+  queryString,
+  orderString,
+}: CollectionInputInterface): {
+  documents: T[] | null;
+  error: string | undefined;
+} {
   const [documents, setDocuments] = useState<T[] | null>(null);
   const [error, setError] = useState<string>();
 
@@ -81,6 +80,27 @@ export function useFirebaseCollectionTyped<T>(
         },
         (error) => {
           setError(CollectionError);
+          console.log(error);
+        }
+      );
+
+      return () => unsubscribe();
+    } else if (collectionString === FirestoreCollections.Users) {
+      const unsubscribe = ref.onSnapshot(
+        (snapshot) => {
+          setDocuments(
+            snapshot.docs.map((doc) => {
+              return {
+                ...doc.data(),
+                id: doc.id,
+              } as unknown as T;
+            })
+          );
+          setError(undefined);
+        },
+        (error) => {
+          setError(CollectionError);
+          console.log(error);
         }
       );
 

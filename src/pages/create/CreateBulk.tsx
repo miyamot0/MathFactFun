@@ -26,19 +26,12 @@ import {
   ErrorHandling,
 } from "../../maths/Facts";
 import { StudentDataInterface } from "../../firebase/types/GeneralTypes";
-
-const CreateFormStyle = {
-  maxWidth: "600px",
-};
-
-interface RoutedAdminSet {
-  id?: string;
-}
+import { RoutedIdParam } from "../CommonTypes/CommonPageTypes";
 
 // Page to create new students
 export default function CreateBulk() {
   const history = useHistory();
-  const { id } = useParams<RoutedAdminSet>();
+  const { id } = useParams<RoutedIdParam>();
   const { addDocument, response } = useFirestore(
     "students",
     undefined,
@@ -187,7 +180,7 @@ export default function CreateBulk() {
   }
 
   return (
-    <div style={CreateFormStyle}>
+    <div style={{ maxWidth: "600px" }}>
       <h2 className="global-page-title">Add new students to class/group</h2>
 
       <form onSubmit={handleCreateStudentSubmit}>
