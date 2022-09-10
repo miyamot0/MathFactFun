@@ -18,7 +18,7 @@ export interface StudentCreateState {
   DidBuild: boolean;
   AimLine: number;
   ExplicitTime: number;
-  ProblemSet: string;
+  CurrentProblemSet: SingleOptionType;
 }
 
 export const UserCreateSingleInitialState: StudentCreateState = {
@@ -51,7 +51,10 @@ export const UserCreateSingleInitialState: StudentCreateState = {
   DidBuild: false,
   AimLine: 0,
   ExplicitTime: 2,
-  ProblemSet: "A",
+  CurrentProblemSet: {
+    value: "A",
+    label: "A",
+  } as SingleOptionType,
 };
 
 /**
@@ -92,6 +95,11 @@ export function UserCreationReducer(
         ...state,
         CurrentBenchmarking: action.payload.uCurrentBenchmarking,
       };
+    case StudentCreatorBehavior.SetProblemSet:
+      return {
+        ...state,
+        CurrentProblemSet: action.payload.uProblemSet,
+      };
     case StudentCreatorBehavior.SetBuilt:
       return {
         ...state,
@@ -121,7 +129,7 @@ export function UserCreationReducer(
         CurrentErrorApproach: action.payload.uCurrentErrorApproach,
         CurrentSRApproach: action.payload.uCurrentSRApproach,
         CurrentBenchmarking: action.payload.uCurrentBenchmarking,
-        ProblemSet: action.payload.uProblemSet,
+        CurrentProblemSet: action.payload.uProblemSet,
       };
 
     default:

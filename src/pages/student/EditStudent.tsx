@@ -98,6 +98,10 @@ export default function EditStudent() {
       (obj) => obj.value === document.currentSRApproach
     );
 
+    console.log(document);
+    console.log(BenchmarkSets);
+    console.log(uProblemSet);
+
     dispatch({
       type: StudentCreatorBehavior.SetLoadedStudent,
       payload: {
@@ -217,11 +221,15 @@ export default function EditStudent() {
       dueDate: timestamp.fromDate(date),
       aimLine: state.AimLine,
       minForTask: state.ExplicitTime,
-      problemSet: state.ProblemSet,
+      problemSet: state.CurrentProblemSet.value,
       factsTargeted: targetedList,
     };
 
-    await updateDocument(id, studentInformationToAdd);
+    const res = await updateDocument(id, studentInformationToAdd);
+
+    console.log(res);
+
+    console.log(response);
 
     if (!response.error || response.success === true) {
       history.push(`/dashboard`);
@@ -311,6 +319,19 @@ export default function EditStudent() {
             }}
             value={state.CurrentBenchmarking}
             isMulti={true}
+          />
+        </label>
+        <label>
+          <span>Benchmark Set:</span>
+          <Select
+            options={BenchmarkSets}
+            onChange={(option) => {
+              dispatch({
+                type: StudentCreatorBehavior.SetProblemSet,
+                payload: { uProblemSet: option },
+              });
+            }}
+            value={state.CurrentProblemSet}
           />
         </label>
         <label>

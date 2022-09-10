@@ -236,8 +236,8 @@ export const InterventionReducer = (
   state: BenchmarkState,
   action: any
 ): BenchmarkState => {
-  console.log(action);
-  console.log(state);
+  //console.log(action);
+  //console.log(state);
   switch (action.type) {
     case BenchmarkActions.GeneralUpdateEntry:
       return { ...state, EntryRepresentationInternal: action.payload };

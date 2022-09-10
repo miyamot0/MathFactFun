@@ -16,6 +16,8 @@ import { StudentDataInterface } from "../../pages/student/types/StudentTypes";
 import { UserDataInterface } from "../../pages/user/types/UserTypes";
 import { projectFirestore } from "../config";
 
+import { FirebaseError } from "@firebase/util";
+
 export enum FirestoreCollections {
   Students = "students",
   Performances = "performances",
@@ -228,12 +230,20 @@ export function useFirestore(
         error: null,
       });
       return updatedDocument;
-    } catch (err: any) {
-      dispatchIfNotCancelled({
-        type: FirestoreStates.ERROR,
-        payload: null,
-        error: err.message,
-      });
+    } catch (err: unknown) {
+      if (err instanceof FirebaseError) {
+        dispatchIfNotCancelled({
+          type: FirestoreStates.ERROR,
+          payload: null,
+          error: err.message,
+        });
+      } else {
+        dispatchIfNotCancelled({
+          type: FirestoreStates.ERROR,
+          payload: null,
+          error: "error",
+        });
+      }
 
       return;
     }

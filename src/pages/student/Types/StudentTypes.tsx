@@ -42,6 +42,7 @@ export enum StudentCreatorBehavior {
   SetCurrentErrorApproach,
   SetCurrentSRApproach,
   SetCurrentBenchmarking,
+  SetProblemSet,
   SetAimLine,
   SetExplicitTime,
   SetBuilt,
