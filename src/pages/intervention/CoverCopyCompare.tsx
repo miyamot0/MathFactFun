@@ -46,7 +46,10 @@ import {
 import { RoutedIdTargetParam } from "../../utilities/RoutingHelpers";
 import { StudentDataInterface } from "../student/types/StudentTypes";
 import { FactDataInterface } from "../setcreator/types/SetCreatorTypes";
-import { shouldShowFeedback } from "./helpers/InterventionHelpers";
+import {
+  checkLiNullUndefinedBlank,
+  shouldShowFeedback,
+} from "./helpers/InterventionHelpers";
 
 Modal.setAppElement("#root");
 
@@ -77,18 +80,20 @@ export default function CoverCopyCompare() {
    * @param {React.KeyboardEvent<HTMLElement>} key keyevent
    */
   function keyHandler(key: React.KeyboardEvent<HTMLElement>): void {
-    console.log("keyHandler fired");
     if (RelevantKeys.includes(key.key)) {
       let modKey = key.key === "Backspace" ? "Del" : key.key;
       modKey = key.key === "Delete" ? "Del" : modKey;
 
       if (modKey === " ") {
-        if (state.CurrentAction !== SharedActionSequence.Entry) {
+        if (
+          state.CurrentAction !== SharedActionSequence.Entry &&
+          state.CurrentAction !== SharedActionSequence.Start
+        ) {
           captureButtonAction();
           return;
         }
 
-        if (state.NextLiItem !== null && state.NextLiItem !== undefined) {
+        if (!checkLiNullUndefinedBlank(state.NextLiItem)) {
           captureItemClick(state.NextLiItem);
         }
 
@@ -119,7 +124,7 @@ export default function CoverCopyCompare() {
       dispatch({
         type: BenchmarkActions.CoverCopyCompareBatchStartPreflight,
         payload: {
-          uAction: SharedActionSequence.Entry,
+          uAction: SharedActionSequence.Start,
           uWorkingData: document.factsTargeted,
           uLoadedData: true,
           uOperator: GetOperatorFromLabel(document.currentTarget.toString()),
@@ -196,10 +201,15 @@ export default function CoverCopyCompare() {
       return;
     }
 
+    console.log(state);
+
     // HACK: need a flag for update w/o waiting for state change
     let quickCheck = false;
 
-    if (state.CurrentAction === SharedActionSequence.Entry) {
+    if (
+      state.CurrentAction === SharedActionSequence.Entry ||
+      state.CurrentAction === SharedActionSequence.Start
+    ) {
       dispatch({
         type: BenchmarkActions.CoverCopyCompareTaskIncrement,
         payload: {
@@ -231,7 +241,7 @@ export default function CoverCopyCompare() {
       });
     } else {
       dispatch({
-        type: BenchmarkActions.CoverCopyCompareTaskIncrement,
+        type: BenchmarkActions.CoverCopyCompareTaskReset,
         payload: {
           uAction: SharedActionSequence.Entry,
           uVerify: true,
@@ -244,7 +254,7 @@ export default function CoverCopyCompare() {
     // Fire if ready to check response
     if (state.ToVerify || quickCheck) {
       dispatch({
-        type: BenchmarkActions.CoverCopyCompareTaskIncrement,
+        type: BenchmarkActions.CoverCopyCompareTaskReset,
         payload: {
           uAction: state.CurrentAction,
           uVerify: false,
@@ -326,10 +336,11 @@ export default function CoverCopyCompare() {
               uViewRepresentationInternal: "",
               uButtonText: "Cover",
               uShowButton: false,
-              uIsOngoing: true,
+              uIsOngoing: false,
               uCoverListViewItems: false,
               uOnInitialTry: true,
               uFactModelList: [...state.FactModelList, currentItem2],
+              uCurrentAction: SharedActionSequence.Entry,
             },
           });
         }
@@ -432,6 +443,8 @@ export default function CoverCopyCompare() {
 
     captureButtonAction();
   }
+
+  console.log(state);
 
   return (
     <div className="wrapper">

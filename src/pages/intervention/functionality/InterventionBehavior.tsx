@@ -236,8 +236,6 @@ export const InterventionReducer = (
   state: BenchmarkState,
   action: any
 ): BenchmarkState => {
-  //console.log(action);
-  //console.log(state);
   switch (action.type) {
     case BenchmarkActions.GeneralUpdateEntry:
       return { ...state, EntryRepresentationInternal: action.payload };
@@ -343,7 +341,7 @@ export const InterventionReducer = (
         CurrentAction: action.payload.uAction,
         ButtonText: action.payload.uButtonText,
         CoverProblemItem: action.payload.uCoverProblemItem,
-        CoverStimulusItem: action.payload.CoverStimulusItem,
+        CoverStimulusItem: action.payload.uCoverStimulusItem,
       };
 
     case BenchmarkActions.CoverCopyCompareModalRetry:
@@ -387,7 +385,21 @@ export const InterventionReducer = (
         CoverListViewItems: action.payload.uCoverListViewItems,
         OnInitialTry: action.payload.uOnInitialTry,
         FactModelList: action.payload.uFactModelList,
+        CurrentAction: action.payload.uCurrentAction,
       };
+
+    /*
+              uCoverStimulusItem: true,
+              uCoverProblemItem: true,
+              uEntryRepresentationInternal: "",
+              uViewRepresentationInternal: "",
+              uButtonText: "Cover",
+              uShowButton: false,
+              uIsOngoing: true,
+              uCoverListViewItems: false,
+              uOnInitialTry: true,
+              uFactModelList: [...state.FactModelList, currentItem2],
+*/
 
     case BenchmarkActions.CoverCopyCompareTaskReset:
       return {

@@ -7,6 +7,7 @@
  */
 
 import React from "react";
+import { checkInputNullOrUndefined } from "../../../utilities/FormHelpers";
 
 // styles
 import "./ProblemFrame.css";
@@ -148,13 +149,17 @@ export default function ProblemFrame({
     backgroundColor: coverProblemSpace ? "gray" : "transparent",
   };
 
-  const colorOfEqualsLine = entryString.includes("=")
+  const entryStringHolder = checkInputNullOrUndefined(entryString)
+    ? ""
+    : entryString;
+
+  const colorOfEqualsLine = entryStringHolder.includes("=")
     ? "black"
     : coverProblemSpace
-      ? "gray"
-      : "transparent";
+    ? "gray"
+    : "transparent";
 
-  if (!entryString || entryString.length <= 0) {
+  if (!entryStringHolder || entryStringHolder.length <= 0) {
     return (
       <div className="block-wrapper">
         <div className="block1 block-shared" style={sharedStyle}></div>
@@ -176,7 +181,7 @@ export default function ProblemFrame({
     );
   }
 
-  const displayMatrix = createVerticalString(entryString);
+  const displayMatrix = createVerticalString(entryStringHolder);
 
   return (
     <div className="block-wrapper">

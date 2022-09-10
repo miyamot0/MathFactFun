@@ -51,3 +51,7 @@ export function shouldShowFeedback(
 ): boolean {
   return DetermineErrorCorrection(trialError, document.currentErrorApproach);
 }
+
+export function checkLiNullUndefinedBlank(str: string) {
+  return str === null || str === undefined || str.trim().length === 0;
+}

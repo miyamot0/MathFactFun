@@ -7,27 +7,27 @@ import { FactDataInterface } from "../../setcreator/types/SetCreatorTypes";
 export enum BenchmarkActions {
   //GeneralOpenModal = "GeneralOpenModal",
   //GeneralCloseModal = "GeneralCloseModal",
-  GeneralUpdateEntry = "GeneralUpdateEntry",
+  GeneralUpdateEntry,
 
-  BenchmarkBatchStartPreflight = "BenchmarkBatchStartPreflight",
-  BenchmarkBatchStartBegin = "BenchmarkActionStartOrBegin",
-  BenchmarkBatchStartIncrement = "BenchmarkBatchStartIncrement",
-  BenchmarkBatchStartIncrementPost = "BenchmarkBatchStartIncrementPost",
+  BenchmarkBatchStartPreflight,
+  BenchmarkBatchStartBegin,
+  BenchmarkBatchStartIncrement,
+  BenchmarkBatchStartIncrementPost,
 
-  ExplicitTimingBatchStartPreflight = "ExplicitTimingBatchStartPreflight",
-  ExplicitTimingBatchIncrement = "ExplicitTimingBatchIncrement",
-  ExplicitTimingModalRetry = "ExplicitTimingModalRetry",
+  ExplicitTimingBatchStartPreflight,
+  ExplicitTimingBatchIncrement,
+  ExplicitTimingModalRetry,
 
-  TapedProblemsBatchStartPreflight = "TapedProblemsBatchStartPreflight",
+  TapedProblemsBatchStartPreflight,
 
-  CoverCopyCompareBatchStartPreflight = "CoverCopyCompareBatchStartPreflight",
-  CoverCopyCompareBatchStartBegin = "CoverCopyCompareBatchStartBegin",
-  CoverCopyCompareTaskIncrement = "CoverCopyCompareTaskIncrement",
-  CoverCopyCompareTaskReset = "CoverCopyCompareTaskReset",
-  CoverCopyCompareBatchIncrement = "CoverCopyCompareBatchStartBegin",
-  CoverCopyCompareBatchStartIncrementPost = "CoverCopyCompareBatchStartIncrementPost",
-  CoverCopyCompareModalRetry = "CoverCopyCompareModalRetry",
-  CoverCopyCompareItemIncrement = "CoverCopyCompareItemIncrement",
+  CoverCopyCompareBatchStartPreflight,
+  CoverCopyCompareBatchStartBegin,
+  CoverCopyCompareTaskIncrement,
+  CoverCopyCompareTaskReset,
+  CoverCopyCompareBatchIncrement,
+  CoverCopyCompareBatchStartIncrementPost,
+  CoverCopyCompareModalRetry,
+  CoverCopyCompareItemIncrement,
 }
 
 export interface BenchmarkState {
