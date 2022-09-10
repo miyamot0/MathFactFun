@@ -17,9 +17,9 @@ import { timestamp } from "../../firebase/config";
 import Modal from "react-modal";
 
 // hooks
-import { useFirestore } from "../../firebase/useFirestore";
-import { useFirebaseDocumentTyped } from "../../firebase/useFirebaseDocument";
-import { useAuthorizationContext } from "../../context/useAuthorizationContext";
+import { useFirestore } from "../../firebase/hooks/useFirestore";
+import { useFirebaseDocumentTyped } from "../../firebase/hooks/useFirebaseDocument";
+import { useAuthorizationContext } from "../../context/hooks/useAuthorizationContext";
 
 // widgets
 import KeyPad from "./subcomponents/KeyPad";

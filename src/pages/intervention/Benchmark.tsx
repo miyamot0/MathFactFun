@@ -11,8 +11,8 @@ import { useEffect } from "react";
 import { useParams, useHistory } from "react-router-dom";
 
 // Hooks
-import { useFirestore } from "../../firebase/useFirestore";
-import { useFirebaseDocumentTyped } from "../../firebase/useFirebaseDocument";
+import { useFirestore } from "../../firebase/hooks/useFirestore";
+import { useFirebaseDocumentTyped } from "../../firebase/hooks/useFirebaseDocument";
 
 // Widgets
 import KeyPad from "./subcomponents/KeyPad";
@@ -27,7 +27,7 @@ import {
 
 import { timestamp } from "../../firebase/config";
 import { RoutedIdTargetParam } from "../../utilities/RoutingHelpers";
-import { useAuthorizationContext } from "../../context/useAuthorizationContext";
+import { useAuthorizationContext } from "../../context/hooks/useAuthorizationContext";
 import {
   DelCode,
   InitialBenchmarkState,

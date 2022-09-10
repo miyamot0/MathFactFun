@@ -13,7 +13,7 @@ import React from "react";
 
 import { useEffect } from "react";
 import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
-import { useAuthorizationContext } from "./context/useAuthorizationContext";
+import { useAuthorizationContext } from "./context/hooks/useAuthorizationContext";
 
 // Components
 import Navbar from "./components/Navbar";

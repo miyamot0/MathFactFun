@@ -11,14 +11,14 @@
  */
 
 import { useEffect, useState, useRef } from "react";
-import { projectFirestore } from "./config";
+import { projectFirestore } from "../config";
 
 import {
   Query,
   WhereFilterOp,
   OrderByDirection,
 } from "@firebase/firestore-types";
-import { CollectionInputInterface } from "./types/GeneralTypes";
+import { CollectionInputInterface } from "../types/GeneralTypes";
 import { FirestoreCollections } from "./useFirestore";
 
 const CollectionError = "Unable to retrieve data";

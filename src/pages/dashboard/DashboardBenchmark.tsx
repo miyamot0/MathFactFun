@@ -12,7 +12,7 @@
 
 import React from "react";
 import { useParams } from "react-router-dom";
-import { useFirebaseDocumentTyped } from "../../firebase/useFirebaseDocument";
+import { useFirebaseDocumentTyped } from "../../firebase/hooks/useFirebaseDocument";
 import BenchmarkList from "./subcomponents/BenchmarkList";
 
 // styles

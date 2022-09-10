@@ -12,8 +12,8 @@
 
 import React from "react";
 import { useState } from "react";
-import { useFirebaseCollectionTyped } from "../../firebase/useFirebaseCollection";
-import { useAuthorizationContext } from "../../context/useAuthorizationContext";
+import { useFirebaseCollectionTyped } from "../../firebase/hooks/useFirebaseCollection";
+import { useAuthorizationContext } from "../../context/hooks/useAuthorizationContext";
 
 import StudentFilter from "./functionality/StudentFilter";
 import PracticeList from "./subcomponents/PracticeList";

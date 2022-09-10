@@ -13,9 +13,9 @@
 import React, { useReducer } from "react";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { useFirebaseDocumentTyped } from "../../firebase/useFirebaseDocument";
-import { useFirebaseCollectionTyped } from "../../firebase/useFirebaseCollection";
-import { useFirestore } from "../../firebase/useFirestore";
+import { useFirebaseDocumentTyped } from "../../firebase/hooks/useFirebaseDocument";
+import { useFirebaseCollectionTyped } from "../../firebase/hooks/useFirebaseCollection";
+import { useFirestore } from "../../firebase/hooks/useFirestore";
 import Select from "react-select";
 import { DragDropContext } from "react-beautiful-dnd";
 import { OnlyUnique } from "../../utilities/LabelHelper";

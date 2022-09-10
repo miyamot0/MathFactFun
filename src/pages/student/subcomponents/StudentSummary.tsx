@@ -12,9 +12,9 @@
 
 import React from "react";
 import { Link } from "react-router-dom";
-import { useFirestore } from "../../../firebase/useFirestore";
+import { useFirestore } from "../../../firebase/hooks/useFirestore";
 import { useHistory } from "react-router-dom";
-import { useAuthorizationContext } from "../../../context/useAuthorizationContext";
+import { useAuthorizationContext } from "../../../context/hooks/useAuthorizationContext";
 import { GetApproachStringFromLabel } from "../../../utilities/LabelHelper";
 import { StudentWidgetInterface } from "../types/StudentTypes";
 

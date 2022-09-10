@@ -13,8 +13,8 @@
 import React from "react";
 import { useState } from "react";
 import { timestamp } from "../../../firebase/config";
-import { useAuthorizationContext } from "../../../context/useAuthorizationContext";
-import { useFirestore } from "../../../firebase/useFirestore";
+import { useAuthorizationContext } from "../../../context/hooks/useAuthorizationContext";
+import { useFirestore } from "../../../firebase/hooks/useFirestore";
 
 import "./StudentComments.css";
 import { CommentInterface } from "../../../firebase/types/GeneralTypes";

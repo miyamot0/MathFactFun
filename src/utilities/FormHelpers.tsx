@@ -14,6 +14,15 @@ export const CommonDisplayHeadingStyle = {
   marginBottom: "6px",
 };
 
+export const LoginPanelStyle = {
+  maxWidth: "360px",
+  margin: "60px auto",
+  padding: "40px",
+  border: "1px solid #ddd",
+  boxShadow: "3px 3px 5px rgba(0,0,0,0.05)",
+  background: "#fff",
+};
+
 export function checkInputNullOrUndefined(
   value:
     | string

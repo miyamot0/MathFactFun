@@ -13,11 +13,11 @@
 import React from "react";
 
 import { Link } from "react-router-dom";
-import { useFirebaseCollectionTyped } from "../../firebase/useFirebaseCollection";
+import { useFirebaseCollectionTyped } from "../../firebase/hooks/useFirebaseCollection";
 import { UserDataInterface } from "../user/types/UserTypes";
 
 // styles
-import "./Admin.css";
+import "./styles/Admin.css";
 
 export default function Admin(): JSX.Element {
   const { documents, error } = useFirebaseCollectionTyped<UserDataInterface>({

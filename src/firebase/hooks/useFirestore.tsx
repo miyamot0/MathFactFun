@@ -11,10 +11,10 @@
  */
 
 import { useReducer, useEffect, useState } from "react";
-import { StudentDataInterface } from "../pages/student/types/StudentTypes";
-import { UserDataInterface } from "../pages/user/types/UserTypes";
-import { projectFirestore, timestamp } from "./config";
-import { PerformanceDataInterface } from "./types/GeneralTypes";
+import { StudentDataInterface } from "../../pages/student/types/StudentTypes";
+import { UserDataInterface } from "../../pages/user/types/UserTypes";
+import { projectFirestore, timestamp } from "../config";
+import { PerformanceDataInterface } from "../types/GeneralTypes";
 
 export enum FirestoreCollections {
   Students = "students",

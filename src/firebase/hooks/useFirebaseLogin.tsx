@@ -11,9 +11,9 @@
  */
 
 import { useState, useEffect } from "react";
-import { projectAuth } from "./config";
-import { useAuthorizationContext } from "../context/useAuthorizationContext";
-import { AuthorizationStates } from "../context/AuthorizationContext";
+import { projectAuth } from "../config";
+import { useAuthorizationContext } from "../../context/hooks/useAuthorizationContext";
+import { AuthorizationStates } from "../../context/types/AuthorizationTypes";
 
 interface FirebaseLogin {
   login: (email: string, password: string) => Promise<void>;

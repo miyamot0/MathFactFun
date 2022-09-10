@@ -11,39 +11,21 @@
  */
 
 import React, { createContext, useReducer, useEffect, ReactNode } from "react";
-import firebase from "firebase/app"
+
 import { projectAuth } from "../firebase/config";
 import { AppInterface } from "../App";
-
-export enum AuthorizationStates {
-  LOGIN = "LOGIN",
-  LOGOUT = "LOGOUT",
-  READY = "READY",
-  CLAIMS = "CLAIMS",
-}
-
-export interface AuthorizationContextInterface {
-  user: firebase.User | null;
-  authIsReady: boolean;
-  adminFlag: boolean;
-  dispatch: any;
-}
-
-export interface AuthorizationContextStateInterface {
-  user: firebase.User | null;
-  authIsReady: boolean;
-  adminFlag: boolean;
-}
-
-interface FirebaseLoginAction {
-  type: AuthorizationStates;
-  payload: firebase.User | null;
-  payload2: boolean;
-}
-
-export type Props = {
-  children: ReactNode;
-};
+import {
+  AuthorizationContextInterface,
+  AuthorizationContextStateInterface,
+  AuthorizationProviderInterface,
+  AuthorizationStates,
+  FirebaseLoginAction,
+} from "./types/AuthorizationTypes";
+import { simplifyPrivilegeAccess } from "./helpers/AuthorizationHelpers";
+import {
+  AuthorizationReducer,
+  InitialAuthorizationState,
+} from "./functionality/AuthorizationBehavior";
 
 // Context to inherit
 export const AuthorizationContext =
@@ -54,51 +36,6 @@ export const AuthorizationContext =
     dispatch: undefined,
   });
 
-/** simplifyPrivilegeAccess
- *
- * Simplify access to privilege level
- *
- * @param {string} res level
- * @returns {bool}
- */
-function simplifyPrivilegeAccess(res: string): boolean {
-  return res === "admin" || res === "sysadmin";
-}
-
-/** Auth reducer
- *
- * Reducer firestore login
- *
- * @param {Enum} state Current state
- * @param {Object} action Action type
- * @returns {AuthorizationContextStateInterface}
- */
-export function authReducer(
-  state: AuthorizationContextStateInterface,
-  action: FirebaseLoginAction
-): AuthorizationContextStateInterface {
-  switch (action.type) {
-    case AuthorizationStates.LOGIN:
-      return { ...state, user: action.payload };
-    case AuthorizationStates.LOGOUT:
-      return { ...state, user: null };
-    case AuthorizationStates.READY:
-      return {
-        user: action.payload,
-        authIsReady: true,
-        adminFlag: action.payload2,
-      };
-    case AuthorizationStates.CLAIMS:
-      return {
-        user: action.payload,
-        authIsReady: true,
-        adminFlag: action.payload2,
-      };
-    default:
-      return state;
-  }
-}
-
 /** AuthorizationContextProvider
  *
  * Provider for auth state
@@ -106,12 +43,13 @@ export function authReducer(
  * @param {ReactNode} children Current state
  * @returns {AuthorizationContextStateInterface}
  */
-export function AuthorizationContextProvider({ children }: Props): AppInterface {
-  const [state, dispatch] = useReducer(authReducer, {
-    user: null,
-    authIsReady: false,
-    adminFlag: false,
-  });
+export function AuthorizationContextProvider({
+  children,
+}: AuthorizationProviderInterface): AppInterface {
+  const [state, dispatch] = useReducer(
+    AuthorizationReducer,
+    InitialAuthorizationState
+  );
 
   useEffect(() => {
     const unsub = projectAuth.onAuthStateChanged((user) => {

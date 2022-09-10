@@ -14,8 +14,8 @@ import React, { useReducer } from "react";
 import Select, { MultiValue } from "react-select";
 
 import { timestamp } from "../../firebase/config";
-import { useAuthorizationContext } from "../../context/useAuthorizationContext";
-import { useFirestore } from "../../firebase/useFirestore";
+import { useAuthorizationContext } from "../../context/hooks/useAuthorizationContext";
+import { useFirestore } from "../../firebase/hooks/useFirestore";
 import { useHistory } from "react-router-dom";
 import {
   Grades,

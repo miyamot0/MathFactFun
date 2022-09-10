@@ -10,14 +10,19 @@
  * Login Page
  */
 
-import React from "react";
-import { useState } from "react";
-import { useFirebaseLogin } from "../../firebase/useFirebaseLogin";
+import React, { useReducer } from "react";
+import { useFirebaseLogin } from "../../firebase/hooks/useFirebaseLogin";
+import { LoginPanelStyle } from "../../utilities/FormHelpers";
+import {
+  InitialLoginState,
+  UserLoginReducer,
+} from "./functionality/LoginBehavior";
+import { LoginDataBehavior } from "./types/LoginTypes";
 
 export default function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const { login, loginError, loginPending } = useFirebaseLogin();
+
+  const [state, dispatch] = useReducer(UserLoginReducer, InitialLoginState);
 
   /** handleLoginSubmission
    *
@@ -29,29 +34,24 @@ export default function Login() {
     event: React.FormEvent<HTMLFormElement>
   ): void {
     event.preventDefault();
-    login(email, password);
+    login(state.Email, state.Password);
   }
 
   return (
-    <form
-      style={{
-        maxWidth: "360px",
-        margin: "60px auto",
-        padding: "40px",
-        border: "1px solid #ddd",
-        boxShadow: "3px 3px 5px rgba(0,0,0,0.05)",
-        background: "#fff",
-      }}
-      onSubmit={handleLoginSubmission}
-    >
+    <form style={LoginPanelStyle} onSubmit={handleLoginSubmission}>
       <h2>Login</h2>
       <label>
         <span>Email:</span>
         <input
           required
           type="email"
-          onChange={(e) => setEmail(e.target.value)}
-          value={email}
+          onChange={(e) => {
+            dispatch({
+              type: LoginDataBehavior.SetEmail,
+              payload: e.target.value,
+            });
+          }}
+          value={state.Email}
         ></input>
       </label>
       <label>
@@ -59,14 +59,19 @@ export default function Login() {
         <input
           required
           type="password"
-          onChange={(e) => setPassword(e.target.value)}
-          value={password}
+          onChange={(e) => {
+            dispatch({
+              type: LoginDataBehavior.SetPassword,
+              payload: e.target.value,
+            });
+          }}
+          value={state.Password}
         ></input>
       </label>
       {!loginPending && <button className="global-btn ">Login</button>}
       {loginPending && (
         <button className="global-btn " disabled>
-          loading
+          loading...
         </button>
       )}
       {loginError && <div className="error">{loginError}</div>}

@@ -13,9 +13,9 @@
 import React, { useReducer } from "react";
 import { useParams } from "react-router-dom";
 import { timestamp } from "../../firebase/config";
-import { useFirestore } from "../../firebase/useFirestore";
+import { useFirestore } from "../../firebase/hooks/useFirestore";
 import { useHistory } from "react-router-dom";
-import { useFirebaseDocumentTyped } from "../../firebase/useFirebaseDocument";
+import { useFirebaseDocumentTyped } from "../../firebase/hooks/useFirebaseDocument";
 import {
   Grades,
   Operations,

@@ -11,7 +11,7 @@
  */
 
 import React, { useReducer } from "react";
-import { useFirestore } from "../../firebase/useFirestore";
+import { useFirestore } from "../../firebase/hooks/useFirestore";
 import { useHistory } from "react-router-dom";
 import {
   UserDataInitialState,

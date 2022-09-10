@@ -11,7 +11,7 @@
  */
 
 import React from "react";
-import { useAuthorizationContext } from "../context/useAuthorizationContext";
+import { useAuthorizationContext } from "../context/hooks/useAuthorizationContext";
 
 import { NavLink } from "react-router-dom";
 import { useLocation } from "react-router-dom";
@@ -24,7 +24,7 @@ import PlayIcon from "../assets/play.svg";
 import BarChartLineFill from "../assets/bar-chart-line-fill.svg";
 import House from "../assets/house.svg";
 
-import "./Sidebar.css";
+import "./styles/Sidebar.css";
 
 export default function Sidebar(): JSX.Element {
   const location = useLocation();

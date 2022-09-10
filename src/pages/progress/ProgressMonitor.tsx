@@ -13,8 +13,8 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useFirebaseCollectionTyped } from "../../firebase/useFirebaseCollection";
-import { useAuthorizationContext } from "../../context/useAuthorizationContext";
+import { useFirebaseCollectionTyped } from "../../firebase/hooks/useFirebaseCollection";
+import { useAuthorizationContext } from "../../context/hooks/useAuthorizationContext";
 import { GetOperatorFromLabel } from "../../utilities/LabelHelper";
 import {
   OnlyUnique,

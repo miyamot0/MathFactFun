@@ -10,8 +10,9 @@
  * Hook for getting Authorization Context
  */
 
-import { AuthorizationContext, AuthorizationContextInterface } from "./AuthorizationContext";
+import { AuthorizationContext } from "../AuthorizationContext";
 import { useContext } from "react";
+import { AuthorizationContextInterface } from "../types/AuthorizationTypes";
 
 /** useAuthorizationContext
  *
@@ -20,7 +21,8 @@ import { useContext } from "react";
  * @returns {AuthorizationContext}
  */
 export function useAuthorizationContext(): AuthorizationContextInterface {
-  const getContext: AuthorizationContextInterface = useContext(AuthorizationContext);
+  const getContext: AuthorizationContextInterface =
+    useContext(AuthorizationContext);
 
   if (!getContext) {
     throw Error("No Provider detected");

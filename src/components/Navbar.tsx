@@ -13,14 +13,14 @@
 import React from "react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { useFirebaseLogout } from "../firebase/useFirebaseLogout";
-import { useAuthorizationContext } from "../context/useAuthorizationContext";
+import { useFirebaseLogout } from "../firebase/hooks/useFirebaseLogout";
+import { useAuthorizationContext } from "../context/hooks/useAuthorizationContext";
 import { useLocation } from "react-router-dom";
 import { ConfirmIfInterventionScreen } from "../utilities/PathHelper";
 import Modal from "react-modal";
 
 // styles & images
-import "./Navbar.css";
+import "./styles/Navbar.css";
 
 Modal.setAppElement("#root");
 

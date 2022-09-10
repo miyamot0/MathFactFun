@@ -11,8 +11,8 @@
  */
 
 import { useEffect, useState } from "react";
-import { projectFirestore } from "./config";
-import { DocumentInputInterface } from "./types/GeneralTypes";
+import { projectFirestore } from "../config";
+import { DocumentInputInterface } from "../types/GeneralTypes";
 import { FirestoreCollections } from "./useFirestore";
 
 const ErrorNoData = "There was not a document at this location";

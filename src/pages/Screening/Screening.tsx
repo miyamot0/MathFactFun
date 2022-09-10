@@ -14,7 +14,7 @@ import React from "react";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import { useAuthorizationContext } from "../../context/useAuthorizationContext";
+import { useAuthorizationContext } from "../../context/hooks/useAuthorizationContext";
 
 import moment from "moment";
 import Highcharts from "highcharts";
@@ -23,7 +23,7 @@ import AnnotationsModule from "highcharts/modules/annotations";
 import { PerformanceDataInterface } from "../../firebase/types/GeneralTypes";
 import { RoutedIdParam } from "../../utilities/RoutingHelpers";
 import { reducerPerOperation } from "./functionality/ScreeningBehavior";
-import { useFirebaseCollectionTyped } from "../../firebase/useFirebaseCollection";
+import { useFirebaseCollectionTyped } from "../../firebase/hooks/useFirebaseCollection";
 import {
   CommonDisplayHeadingStyle,
   CommonPanelWidth,
