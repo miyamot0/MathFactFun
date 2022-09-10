@@ -53,8 +53,6 @@ export function UserGenerationReducer(
       return { ...state, FormError: action.payload.uFormError };
 
     default:
-      console.log(state);
-      console.log(action);
       throw new Error();
   }
 }

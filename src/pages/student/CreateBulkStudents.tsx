@@ -195,7 +195,6 @@ export default function CreateBulkStudents() {
           <textarea
             required
             onChange={(e) => {
-              console.log(e);
               dispatch({
                 type: StudentCreatorBehavior.SetName,
                 payload: { uName: e.target.value },

@@ -98,10 +98,6 @@ export default function EditStudent() {
       (obj) => obj.value === document.currentSRApproach
     );
 
-    console.log(document);
-    console.log(BenchmarkSets);
-    console.log(uProblemSet);
-
     dispatch({
       type: StudentCreatorBehavior.SetLoadedStudent,
       payload: {
@@ -225,11 +221,7 @@ export default function EditStudent() {
       factsTargeted: targetedList,
     };
 
-    const res = await updateDocument(id, studentInformationToAdd);
-
-    console.log(res);
-
-    console.log(response);
+    await updateDocument(id, studentInformationToAdd);
 
     if (!response.error || response.success === true) {
       history.push(`/dashboard`);

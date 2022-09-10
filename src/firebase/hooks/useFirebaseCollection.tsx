@@ -20,6 +20,7 @@ import {
 } from "@firebase/firestore-types";
 import { CollectionInputInterface } from "../types/GeneralTypes";
 import { FirestoreCollections } from "./useFirestore";
+import { FirebaseError } from "@firebase/util";
 
 const CollectionError = "Unable to retrieve data";
 
@@ -61,7 +62,10 @@ export function useFirebaseCollectionTyped<T>({
       ref = ref.orderBy(fieldPath, direction as OrderByDirection);
     }
 
-    if (collectionString === FirestoreCollections.Students) {
+    if (
+      collectionString === FirestoreCollections.Students ||
+      collectionString === FirestoreCollections.Users
+    ) {
       const unsubscribe = ref.onSnapshot(
         (snapshot) => {
           setDocuments(
@@ -74,29 +78,12 @@ export function useFirebaseCollectionTyped<T>({
           );
           setError(undefined);
         },
-        (error) => {
-          setError(CollectionError);
-          console.log(error);
-        }
-      );
-
-      return () => unsubscribe();
-    } else if (collectionString === FirestoreCollections.Users) {
-      const unsubscribe = ref.onSnapshot(
-        (snapshot) => {
-          setDocuments(
-            snapshot.docs.map((doc) => {
-              return {
-                ...doc.data(),
-                id: doc.id,
-              } as unknown as T;
-            })
-          );
-          setError(undefined);
-        },
-        (error) => {
-          setError(CollectionError);
-          console.log(error);
+        (err: unknown) => {
+          if (err instanceof FirebaseError) {
+            setError(err.message);
+          } else {
+            setError(CollectionError);
+          }
         }
       );
 
@@ -121,41 +108,17 @@ export function useFirebaseCollectionTyped<T>({
           );
           setError(undefined);
         },
-        () => {
-          setError(CollectionError);
+        (err: unknown) => {
+          if (err instanceof FirebaseError) {
+            setError(err.message);
+          } else {
+            setError(CollectionError);
+          }
         }
       );
 
       return () => unsubscribe();
     }
-
-    /*
-    const unsubscribe = ref.onSnapshot(
-      (snapshot) => {
-        let results = Array<CurrentObjectTypes | null>();
-
-        snapshot.docs.forEach((doc) => {
-          let preDoc = doc.data() as CurrentObjectTypes;
-          //preDoc.id = doc.id;
-          results.push(preDoc);
-        });
-
-        setDocuments(
-          results as
-            | StudentDataInterface[]
-            //| CommentInterface[]
-            | PerformanceDataInterface[]
-            | UserDataInterface[]
-        );
-        setError(undefined);
-      },
-      (error) => {
-        setError(CollectionError);
-      }
-    );
-
-    return () => unsubscribe();
-    */
   }, [collectionString, query, orderBy]);
 
   return { documents, error };

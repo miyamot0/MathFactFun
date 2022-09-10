@@ -15,6 +15,8 @@ import { projectFirestore } from "../config";
 import { DocumentInputInterface } from "../types/GeneralTypes";
 import { FirestoreCollections } from "./useFirestore";
 
+import { FirebaseError } from "@firebase/util";
+
 const ErrorNoData = "There was not a document at this location";
 const ErrorSnapshot = "Unable to get the document";
 
@@ -51,8 +53,12 @@ export function useFirebaseDocumentTyped<T>({
             setError(ErrorNoData);
           }
         },
-        () => {
-          setError(ErrorSnapshot);
+        (err: unknown) => {
+          if (err instanceof FirebaseError) {
+            setError(err.message);
+          } else {
+            setError(ErrorSnapshot);
+          }
         }
       );
 
@@ -69,8 +75,12 @@ export function useFirebaseDocumentTyped<T>({
             setError(ErrorNoData);
           }
         },
-        () => {
-          setError(ErrorSnapshot);
+        (err: unknown) => {
+          if (err instanceof FirebaseError) {
+            setError(err.message);
+          } else {
+            setError(ErrorSnapshot);
+          }
         }
       );
 

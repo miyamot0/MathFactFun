@@ -168,12 +168,20 @@ export function useFirestore(
         payload: addedDocument,
         error: null,
       });
-    } catch (err: any) {
-      dispatchIfNotCancelled({
-        type: FirestoreStates.ERROR,
-        payload: null,
-        error: err.message,
-      });
+    } catch (err: unknown) {
+      if (err instanceof FirebaseError) {
+        dispatchIfNotCancelled({
+          type: FirestoreStates.ERROR,
+          payload: null,
+          error: err.message,
+        });
+      } else {
+        dispatchIfNotCancelled({
+          type: FirestoreStates.ERROR,
+          payload: null,
+          error: "error",
+        });
+      }
     }
   }
 
@@ -198,12 +206,20 @@ export function useFirestore(
         payload: null,
         error: null,
       });
-    } catch (err) {
-      dispatchIfNotCancelled({
-        type: FirestoreStates.DELETED,
-        payload: null,
-        error: "Could not delete",
-      });
+    } catch (err: unknown) {
+      if (err instanceof FirebaseError) {
+        dispatchIfNotCancelled({
+          type: FirestoreStates.ERROR,
+          payload: null,
+          error: err.message,
+        });
+      } else {
+        dispatchIfNotCancelled({
+          type: FirestoreStates.ERROR,
+          payload: null,
+          error: "error",
+        });
+      }
     }
   }
 
