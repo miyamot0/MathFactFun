@@ -22,7 +22,7 @@ export interface FactDataInterface {
  * Actions for reducer
  */
 export enum DragDropActions {
-  Load = "Load",
+  LoadCallback = "LoadCallback",
   SetItemHistory = "SetItemHistory",
   SetBaseItems = "SetBaseItems",
   UpdateColumns = "UpdateColumns",
@@ -42,9 +42,13 @@ export type ColumnsObject = {
   columns: {
     [key: string]: ColumnVector;
   };
+  columnsOld: {
+    [key: string]: ColumnVector;
+  };
   ItemHistory: ItemHistory[];
   BaseItems: SetItem[];
   LoadedData: boolean;
+  Callback: any;
 };
 
 export interface FactStructure {

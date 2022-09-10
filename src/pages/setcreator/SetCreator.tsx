@@ -20,6 +20,7 @@ import Select from "react-select";
 import { DragDropContext } from "react-beautiful-dnd";
 import { OnlyUnique } from "../../utilities/LabelHelper";
 import {
+  ColumnObject,
   ColumnsObject,
   DragDropActions,
   FactDataInterface,
@@ -39,6 +40,7 @@ import {
   loadMathFacts,
   onDragEnd,
   populateColumnMetrics,
+  SetCreatorReducer,
 } from "./functionality/SetCreatorBehavior";
 import {
   ClearBtn,
@@ -72,35 +74,6 @@ export default function SetCreator() {
   );
 
   const [assignedSet, setAssignedSet] = useState<SingleOptionType>();
-
-  /**
-   * Reducer for submission
-   *
-   * @param {ColumnsObject} state
-   * @param {any} action
-   * @returns {ColumnsObject}
-   */
-  const SetCreatorReducer = (
-    state: ColumnsObject,
-    action: any
-  ): ColumnsObject => {
-    switch (action.type) {
-      case DragDropActions.Load:
-        return { ...state, columns: action.payload };
-      case DragDropActions.SetItemHistory:
-        return { ...state, ItemHistory: action.payload };
-      case DragDropActions.SetBaseItems:
-        return { ...state, BaseItems: action.payload };
-      case DragDropActions.UpdateColumns:
-        saveUpdatedInformation({ ...state, columns: action.payload });
-        return { ...state, columns: action.payload };
-      case DragDropActions.ToggleLoaded:
-        return { ...state, LoadedData: action.payload };
-
-      default:
-        throw new Error();
-    }
-  };
 
   const [state, dispatch] = useReducer(
     SetCreatorReducer,
@@ -143,21 +116,29 @@ export default function SetCreator() {
       );
 
       dispatch({ type: DragDropActions.SetItemHistory, payload: uniqueQuants });
+
+      dispatch({
+        type: DragDropActions.LoadCallback,
+        payload: callbackFromReducer,
+      });
     }
   }, [documents, target]);
 
-  /**
-   * Save information to firestore
-   */
-  async function saveUpdatedInformation(objectToSave: ColumnsObject) {
-    if (checkIfNullUndefinedOrEmpty(objectToSave)) {
-      const factsTargeted = objectToSave.columns.Targeted.items.map(
+  async function callbackFromReducer(
+    callbackColumns: ColumnObject,
+    callbackColumnsPre: ColumnObject
+  ) {
+    if (
+      !checkIfNullUndefinedOrEmpty(callbackColumns) &&
+      !checkIfNullUndefinedOrEmpty(callbackColumnsPre)
+    ) {
+      const factsTargeted = callbackColumns.Targeted.items.map(
         (a: FactStructure) => a.id
       );
-      const factsSkipped = objectToSave.columns.Skipped.items.map(
+      const factsSkipped = callbackColumns.Skipped.items.map(
         (a: FactStructure) => a.id
       );
-      const factsMastered = objectToSave.columns.Mastered.items.map(
+      const factsMastered = callbackColumns.Mastered.items.map(
         (a: FactStructure) => a.id
       );
 
@@ -166,6 +147,27 @@ export default function SetCreator() {
         factsSkipped,
         factsMastered,
       };
+
+      const factsTargetedPrev = callbackColumnsPre.Targeted.items.map(
+        (a: FactStructure) => a.id
+      );
+      const factsSkippedPrev = callbackColumnsPre.Skipped.items.map(
+        (a: FactStructure) => a.id
+      );
+      const factsMasteredPrev = callbackColumnsPre.Mastered.items.map(
+        (a: FactStructure) => a.id
+      );
+
+      const studentObjectPre = {
+        factsTargetedPrev,
+        factsSkippedPrev,
+        factsMasteredPrev,
+      };
+
+      // Note: expensive
+      if (JSON.stringify(studentObject) === JSON.stringify(studentObjectPre)) {
+        return;
+      }
 
       await updateDocument(id, studentObject);
 
