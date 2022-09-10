@@ -35,10 +35,6 @@ import {
 import { RelevantKeys } from "../../maths/Facts";
 
 import { DetermineErrorCorrection } from "../../utilities/Logic";
-import {
-  PerformanceModel,
-  PerformanceModelInterface,
-} from "../../models/PerformanceModel";
 
 // styles
 import "./TapedProblems.css";

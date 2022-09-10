@@ -1,3 +1,4 @@
+import firebase from "firebase/app";
 import { FactDataInterface } from "../../setcreator/types/SetCreatorTypes";
 
 /**
@@ -56,6 +57,30 @@ export interface BenchmarkState {
   NumbTrials: number;
   NumRetries: number;
   ModalIsOpen: boolean;
+}
+
+export interface PerformanceDataInterface {
+  correctDigits: number;
+  errCount: number;
+  nCorrectInitial: number;
+  nRetries: number;
+  sessionDuration: number;
+  setSize: number;
+  totalDigits: number;
+
+  // Arrays
+  entries: FactDataInterface[];
+
+  // Strings
+  id: string | undefined | null;
+  creator: string | undefined;
+  target: string | undefined;
+  method: string | undefined;
+  dateTimeEnd: string | undefined;
+  dateTimeStart: string | undefined;
+
+  // Timestamps
+  createdAt?: firebase.firestore.Timestamp | null;
 }
 
 export const SharedActionSequence = {

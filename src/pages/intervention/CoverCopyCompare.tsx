@@ -29,10 +29,6 @@ import {
 } from "../../utilities/LabelHelper";
 import { InterventionFormat, RelevantKeys } from "../../maths/Facts";
 import { DetermineErrorCorrection } from "../../utilities/Logic";
-import {
-  PerformanceModel,
-  PerformanceModelInterface,
-} from "../../models/PerformanceModel";
 
 // styles
 import "./CoverCopyCompare.css";
@@ -155,7 +151,7 @@ export default function CoverCopyCompare() {
   async function submitDataToFirebase(
     finalFactObject: FactDataInterface
   ): Promise<void> {
-    let finalEntries = state.FactModelList;
+    const finalEntries = state.FactModelList;
 
     if (finalFactObject !== null) {
       finalEntries?.push(finalFactObject);
@@ -262,7 +258,7 @@ export default function CoverCopyCompare() {
       });
 
       // Compare if internal and inputted string match
-      let isMatching =
+      const isMatching =
         state.ViewRepresentationInternal.trim() ===
         state.EntryRepresentationInternal.trim();
 
@@ -279,26 +275,26 @@ export default function CoverCopyCompare() {
         uNumberErrors = state.NumErrors + 1;
       }
 
-      var current = new Date();
-      let secs = (current.getTime() - state.PreTrialTime!.getTime()) / 1000;
+      const current = new Date();
+      const secs = (current.getTime() - state.PreTrialTime!.getTime()) / 1000;
 
-      let holderPreTime = state.PreTrialTime;
+      const holderPreTime = state.PreTrialTime;
 
       if (shouldShowFeedback(!isMatching)) {
         // Error correction prompt
         openModal();
       } else {
-        let totalDigitsShown = CalculateDigitsTotalAnswer(
+        const totalDigitsShown = CalculateDigitsTotalAnswer(
           state.ViewRepresentationInternal
         );
 
-        let totalDigitsCorrect = CalculateDigitsCorrect(
+        const totalDigitsCorrect = CalculateDigitsCorrect(
           state.EntryRepresentationInternal,
           state.ViewRepresentationInternal,
           state.OperatorSymbol
         );
 
-        let currentItem2: FactDataInterface = {
+        const currentItem2: FactDataInterface = {
           factCorrect: isMatching,
           initialTry: state.OnInitialTry,
           factType: document!.currentTarget,
@@ -379,7 +375,7 @@ export default function CoverCopyCompare() {
       char === "=" &&
       state.EntryRepresentationInternal.includes(state.OperatorSymbol)
     ) {
-      let problemParts = state.EntryRepresentationInternal.split(
+      const problemParts = state.EntryRepresentationInternal.split(
         state.OperatorSymbol
       );
 
