@@ -1,9 +1,11 @@
+import { MultiValue } from "react-select";
 import { ErrorHandling } from "../../../maths/Facts";
 import { SingleOptionType } from "../../CommonTypes/CommonPageTypes";
 import { UserCreatorBehavior } from "../types/CreateTypes";
 
 export interface StudentCreateState {
   Name: string;
+  Names: string[];
   Details: string;
   FormError: undefined | string;
   DueDate: string;
@@ -12,11 +14,12 @@ export interface StudentCreateState {
   CurrentTarget: SingleOptionType;
   CurrentErrorApproach: SingleOptionType;
   CurrentSRApproach: SingleOptionType;
-  CurrentBenchmarking: undefined | any;
+  CurrentBenchmarking: MultiValue<SingleOptionType>;
 }
 
 export const UserCreateSingleInitialState: StudentCreateState = {
   Name: "",
+  Names: [],
   Details: "",
   FormError: undefined,
   DueDate: "",
@@ -41,7 +44,7 @@ export const UserCreateSingleInitialState: StudentCreateState = {
     label: "No programmed contingencies",
   } as SingleOptionType,
 
-  CurrentBenchmarking: undefined,
+  CurrentBenchmarking: [] as MultiValue<SingleOptionType>,
 };
 
 /**
@@ -53,7 +56,7 @@ export const UserCreateSingleInitialState: StudentCreateState = {
  */
 export function UserCreationReducer(
   state: StudentCreateState,
-  action: any
+  action: { type: UserCreatorBehavior; payload: any }
 ): StudentCreateState {
   switch (action.type) {
     case UserCreatorBehavior.SetName:

@@ -13,16 +13,11 @@
 import React from "react";
 
 import { Link } from "react-router-dom";
-import { CurrentObjectTypeArrays } from "../../firebase/types/GeneralTypes";
 import { useFirebaseCollectionTyped } from "../../firebase/useFirebaseCollection";
 import { UserDataInterface } from "../../models/UserModel";
 
 // styles
 import "./Admin.css";
-
-const userConverter = (userArray: CurrentObjectTypeArrays) => {
-  return userArray!.map((usr) => usr as unknown as UserDataInterface);
-};
 
 export default function Admin(): JSX.Element {
   const { documents, error } = useFirebaseCollectionTyped<UserDataInterface>({
@@ -49,7 +44,7 @@ export default function Admin(): JSX.Element {
             </tr>
           </thead>
           <tbody>
-            {userConverter(documents).map((indivUser) => (
+            {documents.map((indivUser) => (
               <tr key={`${indivUser.id}-link2`}>
                 <td>{indivUser.id}</td>
                 <td>{indivUser.displayEmail}</td>

@@ -1,9 +1,16 @@
 import firebase from "firebase/app";
+import { MultiValue } from "react-select";
 import { SingleOptionType } from "../../CommonTypes/CommonPageTypes";
 import { UserCreatorBehavior } from "../types/CreateTypes";
 
 export function checkInputNullOrUndefined(
-  value: string | SingleOptionType | firebase.User | null | undefined
+  value:
+    | string
+    | SingleOptionType
+    | MultiValue<SingleOptionType>
+    | firebase.User
+    | null
+    | undefined
 ) {
   if (value === null) return true;
   if (value === undefined) return true;

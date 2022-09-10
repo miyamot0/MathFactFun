@@ -10,10 +10,9 @@
  * Create multiple new student object
  */
 
-import React from "react";
+import React, { useReducer } from "react";
 import { useParams } from "react-router-dom";
-import { useState } from "react";
-import Select, { SingleValue } from "react-select";
+import Select, { MultiValue } from "react-select";
 import { timestamp } from "../../firebase/config";
 import { useFirestore } from "../../firebase/useFirestore";
 import { useHistory } from "react-router-dom";
@@ -23,10 +22,24 @@ import {
   InterventionApproach,
   ErrorCorrection,
   Contingencies,
-  ErrorHandling,
 } from "../../maths/Facts";
-import { StudentDataInterface } from "../../firebase/types/GeneralTypes";
-import { RoutedIdParam } from "../CommonTypes/CommonPageTypes";
+import {
+  CommentInterface,
+  StudentDataInterface,
+} from "../../firebase/types/GeneralTypes";
+import {
+  RoutedIdParam,
+  SingleOptionType,
+} from "../CommonTypes/CommonPageTypes";
+import {
+  UserCreateSingleInitialState,
+  UserCreationReducer,
+} from "./functionality/CreateFunctionality";
+import {
+  checkInputNullOrUndefined,
+  streamlinedCheck,
+} from "./helpers/CreateHelpers";
+import { UserCreatorBehavior } from "./types/CreateTypes";
 
 // Page to create new students
 export default function CreateBulk() {
@@ -38,39 +51,10 @@ export default function CreateBulk() {
     undefined
   );
 
-  // field values
-  const [studentIdBank, setStudentIdBank] = useState<string>("");
-  const [dueDate, setDueDate] = useState<string>("");
-  const [currentGrade, setCurrentGrade] = useState<
-    SingleValue<{ value: string; label: string }>
-  >({ value: "", label: "" });
-  const [currentApproach, setCurrentApproach] = useState<
-    SingleValue<{ value: string; label: string }>
-  >({
-    value: "N/A",
-    label: "No Current Intervention",
-  });
-  const [currentBenchmarking, setCurrentBenchmarking] = useState<any>();
-  const [currentTarget, setCurrentTarget] = useState<
-    SingleValue<{ value: string; label: string }>
-  >({
-    value: "N/A",
-    label: "No Current Target",
-  });
-  const [currentErrorApproach, setCurrentErrorApproach] = useState<
-    SingleValue<{ value: string; label: string }>
-  >({
-    value: ErrorHandling.EveryTime,
-    label: "Give feedback every time",
-  });
-  const [currentSRApproach, setCurrentSRApproach] = useState<
-    SingleValue<{ value: string; label: string }>
-  >({
-    value: "None",
-    label: "No programmed contingencies",
-  });
-
-  const [formError, setFormError] = useState<string>();
+  const [state, dispatch] = useReducer(
+    UserCreationReducer,
+    UserCreateSingleInitialState
+  );
 
   const CoreOperations = Operations.filter((op) => op.value !== "N/A");
 
@@ -84,61 +68,81 @@ export default function CreateBulk() {
     event: React.FormEvent<HTMLFormElement>
   ): Promise<void> {
     event.preventDefault();
-    setFormError(undefined);
 
-    if (!currentGrade) {
-      setFormError("Please select current grade");
-      return;
-    }
+    dispatch({
+      type: UserCreatorBehavior.SetFormError,
+      payload: { uFormError: undefined },
+    });
 
-    if (currentBenchmarking === undefined || currentBenchmarking.length < 1) {
-      setFormError("Please select benchmarking options");
+    if (
+      streamlinedCheck(
+        state.CurrentGrade,
+        "Please select current grade",
+        dispatch
+      )
+    ) {
       return;
     }
 
     if (
-      currentTarget!.value === undefined ||
-      currentTarget!.value.trim().length < 1
+      streamlinedCheck(state.CurrentTarget, "Please select a target", dispatch)
     ) {
-      setFormError("Please select a target");
       return;
     }
 
     if (
-      currentApproach!.value === undefined ||
-      currentApproach!.value.trim().length < 1
+      streamlinedCheck(
+        state.CurrentApproach,
+        "Please select an intervention approach",
+        dispatch
+      )
     ) {
-      setFormError("Please select an intervention approach");
       return;
     }
 
     if (
-      currentErrorApproach!.value === undefined ||
-      currentErrorApproach!.value.trim().length < 1
+      streamlinedCheck(
+        state.CurrentErrorApproach,
+        "Please select an error correct approach",
+        dispatch
+      )
     ) {
-      setFormError("Please select an error correct approach");
       return;
     }
 
     if (
-      currentSRApproach!.value === undefined ||
-      currentSRApproach!.value.trim().length < 1
+      streamlinedCheck(
+        state.CurrentSRApproach,
+        "Please select a reinforcement strategy",
+        dispatch
+      )
     ) {
-      setFormError("Please select a reinforcement strategy");
+      return;
+    }
+
+    if (
+      checkInputNullOrUndefined(state.CurrentBenchmarking) ||
+      state.CurrentBenchmarking.length < 1
+    ) {
+      dispatch({
+        type: UserCreatorBehavior.SetFormError,
+        payload: { uFormError: "Please select benchmarking options" },
+      });
+
       return;
     }
 
     const laggedDate = new Date();
     laggedDate.setDate(laggedDate.getDate() - 1);
 
-    const comments: any[] = [];
-    const factsTargeted: any[] = [];
-    const factsMastered: any[] = [];
-    const factsSkipped: any[] = [];
+    const comments: CommentInterface[] = [];
+    const factsTargeted: string[] = [];
+    const factsMastered: string[] = [];
+    const factsSkipped: string[] = [];
     const aimLine = 0;
     const minForTask = 2;
 
-    const arrayTextAreaLines = studentIdBank.split("\n");
+    const arrayTextAreaLines = state.Name.split("\n");
 
     for (let i = 0; i < arrayTextAreaLines.length; i++) {
       const currentStudentID = arrayTextAreaLines[i].trim();
@@ -148,17 +152,17 @@ export default function CreateBulk() {
       const studentObject = {
         name: currentStudentID,
         details: "",
-        currentGrade: currentGrade.value,
-        currentTarget: currentTarget!.value,
-        currentApproach: currentApproach!.value,
-        currentErrorApproach: currentErrorApproach!.value,
-        currentSRApproach: currentSRApproach!.value,
-        currentBenchmarking: currentBenchmarking.map(
-          (benchmark: any) => benchmark.label
+        currentGrade: state.CurrentGrade.value,
+        currentTarget: state.CurrentTarget.value,
+        currentApproach: state.CurrentApproach.value,
+        currentErrorApproach: state.CurrentErrorApproach.value,
+        currentSRApproach: state.CurrentSRApproach.value,
+        currentBenchmarking: state.CurrentBenchmarking.map(
+          (benchmark: SingleOptionType) => benchmark.label
         ),
         completedBenchmark: [],
         creator: id,
-        dueDate: timestamp.fromDate(new Date(dueDate)),
+        dueDate: timestamp.fromDate(new Date(state.DueDate)),
         lastActivity: timestamp.fromDate(laggedDate),
         createdAt: timestamp.fromDate(new Date()),
         comments,
@@ -168,14 +172,16 @@ export default function CreateBulk() {
         aimLine,
         minForTask,
         problemSet: "A",
-        id: undefined,
+        id: null,
       } as StudentDataInterface;
 
       await addDocument(studentObject);
     }
 
-    if (!response.error) {
-      history.push(`/dashboard/true`);
+    if (!response.error || response.success === true) {
+      history.push(`/dashboard`);
+    } else {
+      alert(response.error);
     }
   }
 
@@ -188,32 +194,53 @@ export default function CreateBulk() {
           <span>Student IDs (one on each line):</span>
           <textarea
             required
-            onChange={(e) => setStudentIdBank(e.target.value)}
-            value={studentIdBank}
+            onChange={(e) => {
+              console.log(e);
+              dispatch({
+                type: UserCreatorBehavior.SetName,
+                payload: { uName: e.target.value },
+              });
+            }}
+            value={state.Name}
           ></textarea>
         </label>
         <label>
-          <span>Next Benchmark Date for Student(s):</span>
+          <span>Next Benchmark Date:</span>
           <input
             required
             type="date"
-            onChange={(e) => setDueDate(e.target.value)}
-            value={dueDate}
+            onChange={(e) => {
+              dispatch({
+                type: UserCreatorBehavior.SetDueDate,
+                payload: { uDueDate: e.target.value },
+              });
+            }}
+            value={state.DueDate}
           ></input>
         </label>
         <label>
-          <span>Current Grade for Student(s)</span>
+          <span>Current Grade</span>
           <Select
             options={Grades}
-            onChange={(option) => setCurrentGrade(option!)}
+            onChange={(option) => {
+              dispatch({
+                type: UserCreatorBehavior.SetCurrentGrade,
+                payload: { uCurrentGrade: option },
+              });
+            }}
           />
         </label>
         <label>
-          <span>Target(s) For Benchmarking</span>
+          <span>Target For Benchmarking</span>
           <Select
             options={CoreOperations}
-            onChange={(option) => setCurrentBenchmarking(option!)}
-            value={currentBenchmarking}
+            onChange={(option: MultiValue<SingleOptionType>) => {
+              dispatch({
+                type: UserCreatorBehavior.SetCurrentBenchmarking,
+                payload: { uCurrentBenchmarking: option },
+              });
+            }}
+            value={state.CurrentBenchmarking}
             isMulti={true}
           />
         </label>
@@ -221,39 +248,59 @@ export default function CreateBulk() {
           <span>Target For Intervention</span>
           <Select
             options={Operations}
-            onChange={(option) => setCurrentTarget(option!)}
-            value={currentTarget}
+            onChange={(option) => {
+              dispatch({
+                type: UserCreatorBehavior.SetCurrentTarget,
+                payload: { uCurrentTarget: option },
+              });
+            }}
+            value={state.CurrentTarget}
           />
         </label>
         <label>
           <span>Intervention Approach</span>
           <Select
             options={InterventionApproach}
-            onChange={(option) => setCurrentApproach(option!)}
-            value={currentApproach}
+            onChange={(option) => {
+              dispatch({
+                type: UserCreatorBehavior.SetCurrentApproach,
+                payload: { uCurrentApproach: option },
+              });
+            }}
+            value={state.CurrentApproach}
           />
         </label>
         <label>
           <span>Error Correction Procedures</span>
           <Select
             options={ErrorCorrection}
-            onChange={(option) => setCurrentErrorApproach(option!)}
-            value={currentErrorApproach}
+            onChange={(option) => {
+              dispatch({
+                type: UserCreatorBehavior.SetCurrentErrorApproach,
+                payload: { uCurrentErrorApproach: option },
+              });
+            }}
+            value={state.CurrentErrorApproach}
           />
         </label>
         <label>
           <span>Reinforcement Procedures</span>
           <Select
             options={Contingencies}
-            onChange={(option) => setCurrentSRApproach(option!)}
-            value={currentSRApproach}
+            onChange={(option) => {
+              dispatch({
+                type: UserCreatorBehavior.SetCurrentSRApproach,
+                payload: { uCurrentSRApproach: option },
+              });
+            }}
+            value={state.CurrentSRApproach}
           />
         </label>
 
         <button className="global-btn global-btn-light-red">
           Create New Student(s)
         </button>
-        {formError && <p className="error">{formError}</p>}
+        {state.FormError && <p className="error">{state.FormError}</p>}
       </form>
       <br></br>
     </div>
