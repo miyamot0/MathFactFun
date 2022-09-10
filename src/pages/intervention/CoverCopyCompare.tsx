@@ -36,10 +36,6 @@ import {
 
 // styles
 import "./CoverCopyCompare.css";
-import {
-  FactDataInterface,
-  PerformanceDataInterface,
-} from "../../firebase/types/GeneralTypes";
 
 import { ErrorModalCustomStyle } from "./subcomponents/ModalStyles";
 import {
@@ -54,6 +50,7 @@ import {
 } from "./functionality/InterventionBehavior";
 import { RoutedIdTargetParam } from "../../utilities/RoutingHelpers";
 import { StudentDataInterface } from "../student/types/StudentTypes";
+import { FactDataInterface } from "../setcreator/types/SetCreatorTypes";
 
 Modal.setAppElement("#root");
 

@@ -1,4 +1,5 @@
 import firebase from "firebase/app";
+import { FactDataInterface } from "../../pages/setcreator/types/SetCreatorTypes";
 
 import { StudentDataInterface } from "../../pages/student/types/StudentTypes";
 import { UserDataInterface } from "../../pages/user/types/UserTypes";
@@ -16,37 +17,6 @@ export class CommentInterface {
     this.createdAt = createdAt;
     this.createdBy = createdBy;
     this.id = id;
-  }
-}
-
-export class FactDataInterface {
-  constructor(
-    // Bools
-    readonly factCorrect: boolean | null,
-    readonly initialTry: boolean | null,
-
-    // Strings
-    readonly factType: string | undefined,
-    readonly factString: string | undefined,
-    readonly factEntry: string | undefined,
-
-    // Numerics
-    readonly latencySeconds: number | null,
-
-    // Timestamps
-    readonly dateTimeEnd: firebase.firestore.Timestamp,
-    readonly dateTimeStart: firebase.firestore.Timestamp
-  ) {
-    this.factCorrect = factCorrect;
-    this.initialTry = initialTry;
-    this.factType = factType;
-    this.factString = factString;
-    this.factEntry = factEntry;
-    this.latencySeconds = latencySeconds;
-
-    // Timestamps
-    this.dateTimeEnd = dateTimeEnd;
-    this.dateTimeStart = dateTimeStart;
   }
 }
 

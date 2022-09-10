@@ -1,10 +1,8 @@
 import moment from "moment";
-import {
-  FactDataInterface,
-  PerformanceDataInterface,
-} from "../../../firebase/types/GeneralTypes";
+import { PerformanceDataInterface } from "../../../firebase/types/GeneralTypes";
 import { OnlyUnique, Sum } from "../../../utilities/LabelHelper";
 import { DailyPerformanceMetrics } from "../../progress/types/ProgressTypes";
+import { FactDataInterface } from "../../setcreator/types/SetCreatorTypes";
 
 /** reducerPerOperation
  *

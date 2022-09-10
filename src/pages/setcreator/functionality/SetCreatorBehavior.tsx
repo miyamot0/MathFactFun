@@ -1,5 +1,4 @@
 import { DropResult } from "react-beautiful-dnd";
-import { FactDataInterface } from "../../../firebase/types/GeneralTypes";
 import { FactsOnFire } from "../../../maths/Mind";
 import { GetOperatorFromLabel, Sum } from "../../../utilities/LabelHelper";
 import { StudentDataInterface } from "../../student/types/StudentTypes";
@@ -8,6 +7,7 @@ import {
   ColumnsObject,
   DragColumnsInterface,
   DragDropActions,
+  FactDataInterface,
   FactStructure,
   ItemHistory,
   SetItem,

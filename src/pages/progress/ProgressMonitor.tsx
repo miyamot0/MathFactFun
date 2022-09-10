@@ -25,10 +25,7 @@ import moment from "moment";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import AnnotationsModule from "highcharts/modules/annotations";
-import {
-  FactDataInterface,
-  PerformanceDataInterface,
-} from "../../firebase/types/GeneralTypes";
+import { PerformanceDataInterface } from "../../firebase/types/GeneralTypes";
 import { RoutedStudentProgressSet } from "./types/ProgressTypes";
 import {
   aggregateItemLevelPerformances,
@@ -38,6 +35,7 @@ import {
   modifyDate,
   remapPerformances,
 } from "./functionality/ProgressBehavior";
+import { FactDataInterface } from "../setcreator/types/SetCreatorTypes";
 
 require("highcharts/modules/annotations")(Highcharts);
 require("highcharts/modules/accessibility")(Highcharts);

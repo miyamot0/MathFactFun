@@ -25,7 +25,6 @@ import {
   CalculateDigitsCorrectAnswer,
 } from "../../utilities/LabelHelper";
 
-import { FactDataInterface } from "../../firebase/types/GeneralTypes";
 import { timestamp } from "../../firebase/config";
 import { RoutedIdTargetParam } from "../../utilities/RoutingHelpers";
 import { useAuthorizationContext } from "../../context/useAuthorizationContext";
@@ -44,6 +43,7 @@ import {
 // Styles
 import "../intervention/ExplicitTiming.css";
 import { StudentDataInterface } from "../student/types/StudentTypes";
+import { FactDataInterface } from "../setcreator/types/SetCreatorTypes";
 
 export default function Benchmark() {
   const { id, target } = useParams<RoutedIdTargetParam>();
@@ -233,16 +233,16 @@ export default function Benchmark() {
 
     let uNumberTrials = state.NumbTrials + 1;
 
-    const currentItem = new FactDataInterface(
-      isMatching,
-      state.OnInitialTry,
-      document!.currentTarget!,
-      state.ViewRepresentationInternal,
-      state.EntryRepresentationInternal,
-      secs,
-      timestamp.fromDate(new Date(current)),
-      timestamp.fromDate(new Date(holderPreTime!))
-    );
+    const currentItem = {
+      factCorrect: isMatching,
+      initialTry: state.OnInitialTry,
+      factType: document!.currentTarget!,
+      factString: state.ViewRepresentationInternal,
+      factEntry: state.EntryRepresentationInternal,
+      latencySeconds: secs,
+      dateTimeEnd: timestamp.fromDate(new Date(current)),
+      dateTimeStart: timestamp.fromDate(new Date(holderPreTime!)),
+    } as FactDataInterface;
 
     let uInitialTry = true;
 

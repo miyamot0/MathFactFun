@@ -1,4 +1,4 @@
-import { FactDataInterface } from "../../../firebase/types/GeneralTypes";
+import { FactDataInterface } from "../../setcreator/types/SetCreatorTypes";
 
 export interface RoutedStudentProgressSet {
   id?: string;
