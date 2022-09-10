@@ -50,7 +50,7 @@ interface UseFirestore {
     doc: StudentDataInterface | UserDataInterface | PerformanceDataInterface
   ) => Promise<void>;
   deleteDocument: (id: string) => Promise<void>;
-  updateDocument: (id: string, updates: {}) => Promise<void>;
+  updateDocument: (id: string, updates: any) => Promise<void>;
   response: FirestoreState;
 }
 
@@ -216,7 +216,7 @@ export function useFirestore(
    * @param {updates} updates object with features to update
    * @returns {Promise<void>}
    */
-  async function updateDocument(id: string, updates: {}): Promise<void> {
+  async function updateDocument(id: string, updates: any): Promise<void> {
     dispatch({
       type: FirestoreStates.PENDING,
       payload: null,
