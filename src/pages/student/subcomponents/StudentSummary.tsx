@@ -83,13 +83,15 @@ export default function StudentSummary({ student }: StudentWidgetInterface) {
           </button>
         </Link>
 
-        <Link
-          to={`/ProgressMonitor/${student.currentTarget}/${student.id}/${student.currentApproach}/${student.aimLine}`}
-        >
-          <button className="global-btn global-btn-green btn-below">
-            Intervention-specific Targets
-          </button>
-        </Link>
+        {student.currentTarget && student.currentTarget !== "N/A" && (
+          <Link
+            to={`/ProgressMonitor/${student.currentTarget}/${student.id}/${student.currentApproach}/${student.aimLine}`}
+          >
+            <button className="global-btn global-btn-green btn-below">
+              Intervention-specific Targets
+            </button>
+          </Link>
+        )}
       </div>
 
       <div className="student-summary">
