@@ -20,28 +20,26 @@ import Navbar from "./components/Navbar";
 import SideBar from "./components/Sidebar";
 
 // Pages
-import EditStudent from "./pages/student/EditStudent";
-import Login from "./pages/login/Login";
-import CreateStudent from "./pages/student/CreateStudent";
-import Student from "./pages/student/Student";
 import Landing from "./pages/landing/Landing";
 import Information from "./pages/information/Information";
+import Login from "./pages/login/Login";
 
-// Dashboards
+import CreateStudent from "./pages/student/CreateStudent";
+import CreateBulkStudents from "./pages/student/CreateBulkStudents";
+import DisplayStudent from "./pages/student/DisplayStudent";
+import EditStudent from "./pages/student/EditStudent";
+import SetCreator from "./pages/setcreator/SetCreator";
+
+import Admin from "./pages/admin/Admin";
 import DashboardDisplay from "./pages/dashboard/DashboardDisplay";
 import DashboardPractice from "./pages/dashboard/DashboardPractice";
 import DashboardBenchmark from "./pages/dashboard/DashboardBenchmark";
-
-// Users/Settings
-import Admin from "./pages/admin/Admin";
-import SetCreator from "./pages/setcreator/SetCreator";
 import Screening from "./pages/Screening/Screening";
 import ProgressMonitor from "./pages/progress/ProgressMonitor";
-import EditUser from "./pages/edit/EditUser";
-import CreateUser from "./pages/create/CreateUser";
-import CreateBulkStudents from "./pages/student/CreateBulkStudents";
 
-// Intervention/Probes
+import CreateUser from "./pages/user/CreateUser";
+import EditUser from "./pages/user/EditUser";
+
 import Benchmark from "./pages/intervention/Benchmark";
 import CoverCopyCompare from "./pages/intervention/CoverCopyCompare";
 import ExplicitTiming from "./pages/intervention/ExplicitTiming";
@@ -89,7 +87,7 @@ function App(): AppInterface {
               </Route>
               <Route path="/student/:id">
                 {!user && <Redirect to="/login" />}
-                {user && <Student />}
+                {user && <DisplayStudent />}
               </Route>
               <Route path="/edit/:id">
                 {!user && <Redirect to="/login" />}

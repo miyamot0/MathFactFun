@@ -12,16 +12,14 @@
 
 import React from "react";
 import { useParams } from "react-router-dom";
-import StudentComments from "./subcomponents/StudentComments";
 import { useFirebaseDocumentTyped } from "../../firebase/useFirebaseDocument";
-
-import StudentSummary from "./subcomponents/StudentSummary";
-
-import "./Student.css";
 import { StudentDataInterface } from "../../firebase/types/GeneralTypes";
 import { RoutedIdParam } from "../CommonTypes/CommonPageTypes";
+import StudentSummary from "./subcomponents/StudentSummary";
+import StudentComments from "./subcomponents/StudentComments";
+import "./styles/DisplayStudent.css";
 
-export default function Student() {
+export default function DisplayStudent() {
   const { id } = useParams<RoutedIdParam>();
 
   const { document, documentError } =
