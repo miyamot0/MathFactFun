@@ -19,7 +19,6 @@ import { useFirestore } from "../../firebase/hooks/useFirestore";
 import Select from "react-select";
 import { DragDropContext } from "react-beautiful-dnd";
 import { OnlyUnique } from "../../utilities/LabelHelper";
-import { PerformanceDataInterface } from "../../firebase/types/GeneralTypes";
 import {
   ColumnsObject,
   DragDropActions,
@@ -50,6 +49,7 @@ import {
   TitleStyle,
 } from "./views/SetCreatorViews";
 import { StudentDataInterface } from "../student/types/StudentTypes";
+import { PerformanceDataInterface } from "../intervention/types/InterventionTypes";
 
 export default function SetCreator() {
   const { target, id } = useParams<RoutedIdTargetParam>();
@@ -108,10 +108,10 @@ export default function SetCreator() {
 
   useEffect(() => {
     if (documents && target) {
-      const mappedDocument = documents!.map((doc) => {
+      const mappedDocument = documents.map((doc) => {
         return {
           Items: doc.entries as FactDataInterface[],
-          Date: new Date(doc.dateTimeStart!),
+          Date: new Date(doc.dateTimeStart),
           ShortDate: new Date(doc.dateTimeStart!).toLocaleDateString("en-US"),
           Errors: doc.errCount,
           DigitsCorrect: doc.correctDigits,

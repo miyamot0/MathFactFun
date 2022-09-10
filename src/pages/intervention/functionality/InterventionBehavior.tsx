@@ -214,7 +214,7 @@ export const InitialBenchmarkState: BenchmarkState = {
   FactModelList: [],
   NextLiItem: "",
   StartTime: null,
-  PreTrialTime: null,
+  PreTrialTime: new Date(),
   OnInitialTry: true,
   NumCorrectInitial: 0,
   NumErrors: 0,

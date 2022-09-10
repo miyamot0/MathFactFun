@@ -174,7 +174,7 @@ export default function CoverCopyCompare() {
       method: InterventionFormat.CoverCopyCompare,
       dateTimeEnd: end.toString(),
       dateTimeStart: state.StartTime!.toString(),
-      createdAd: timestamp.fromDate(new Date()),
+      createdAt: timestamp.fromDate(new Date()),
     };
 
     await addDocument(uploadObject);

@@ -15,11 +15,11 @@ export interface StudentDataInterface {
   factsTargeted: string[];
 
   creator: string;
-  currentApproach: string | undefined;
-  currentErrorApproach: string | undefined;
+  currentApproach: string;
+  currentErrorApproach: string;
   currentGrade: string;
-  currentSRApproach: string | undefined;
-  currentTarget: string | undefined;
+  currentSRApproach: string;
+  currentTarget: string;
   details: string;
   name: string;
   problemSet: string;

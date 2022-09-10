@@ -20,7 +20,6 @@ import moment from "moment";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import AnnotationsModule from "highcharts/modules/annotations";
-import { PerformanceDataInterface } from "../../firebase/types/GeneralTypes";
 import { RoutedIdParam } from "../../utilities/RoutingHelpers";
 import { reducerPerOperation } from "./functionality/ScreeningBehavior";
 import { useFirebaseCollectionTyped } from "../../firebase/hooks/useFirebaseCollection";
@@ -28,6 +27,7 @@ import {
   CommonDisplayHeadingStyle,
   CommonPanelWidth,
 } from "../../utilities/FormHelpers";
+import { PerformanceDataInterface } from "../intervention/types/InterventionTypes";
 
 require("highcharts/modules/annotations")(Highcharts);
 require("highcharts/modules/accessibility")(Highcharts);

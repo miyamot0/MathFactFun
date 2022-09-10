@@ -1,4 +1,5 @@
 import firebase from "firebase/app";
+import { PerformanceDataInterface } from "../../pages/intervention/types/InterventionTypes";
 import { FactDataInterface } from "../../pages/setcreator/types/SetCreatorTypes";
 
 import { StudentDataInterface } from "../../pages/student/types/StudentTypes";
@@ -19,56 +20,6 @@ export class CommentInterface {
     this.id = id;
   }
 }
-
-export class PerformanceDataInterface {
-  constructor(
-    // Numerics
-    readonly correctDigits: number,
-    readonly errCount: number,
-    readonly nCorrectInitial: number,
-    readonly nRetries: number,
-    readonly sessionDuration: number,
-    readonly setSize: number,
-    readonly totalDigits: number,
-
-    // Arrays
-    readonly entries: FactDataInterface[],
-
-    // Strings
-    readonly id: string | undefined | null,
-    readonly creator: string | undefined,
-    readonly target: string | undefined,
-    readonly method: string | undefined,
-    readonly dateTimeEnd: string | undefined,
-    readonly dateTimeStart: string | undefined,
-
-    // Timestamps
-    readonly createdAt?: firebase.firestore.Timestamp | null
-  ) {
-    this.correctDigits = correctDigits;
-    this.errCount = errCount;
-    this.nCorrectInitial = nCorrectInitial;
-    this.nRetries = nRetries;
-    this.sessionDuration = sessionDuration;
-    this.setSize = setSize;
-    this.totalDigits = totalDigits;
-
-    // Timestamps
-    this.createdAt = createdAt;
-
-    // Arrays
-    this.entries = entries;
-
-    // Strings
-    this.id = id;
-    this.creator = creator;
-    this.target = target;
-    this.method = method;
-    this.dateTimeEnd = dateTimeEnd;
-    this.dateTimeStart = dateTimeStart;
-  }
-}
-
 export type CurrentObjectTypeArrays =
   | StudentDataInterface[]
   | PerformanceDataInterface[]

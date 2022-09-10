@@ -1,10 +1,10 @@
 import moment from "moment";
-import { PerformanceDataInterface } from "../../../firebase/types/GeneralTypes";
 import {
   GetOperatorFromLabel,
   OnlyUnique,
   Sum,
 } from "../../../utilities/LabelHelper";
+import { PerformanceDataInterface } from "../../intervention/types/InterventionTypes";
 import { FactDataInterface } from "../../setcreator/types/SetCreatorTypes";
 import {
   DailyPerformanceMetrics,
@@ -107,12 +107,16 @@ export function aggregatePerformances(
     .filter(OnlyUnique)
     .sort()
     .map((date) => {
-      const relevantData = mappedDocument.filter((obj) => obj.ShortDate === date);
+      const relevantData = mappedDocument.filter(
+        (obj) => obj.ShortDate === date
+      );
 
       const totalDigitsCorr = relevantData
         .map((obj) => obj.DigitsCorrect)
         .reduce(Sum);
-      const totalDigits = relevantData.map((obj) => obj.DigitsTotal).reduce(Sum);
+      const totalDigits = relevantData
+        .map((obj) => obj.DigitsTotal)
+        .reduce(Sum);
       const totalTime =
         relevantData.map((obj) => obj.SessionDuration).reduce(Sum) / 60.0;
 

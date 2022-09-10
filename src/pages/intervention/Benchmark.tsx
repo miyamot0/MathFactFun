@@ -132,7 +132,7 @@ export default function Benchmark() {
       method: "Benchmark",
       dateTimeEnd: end.toString(),
       dateTimeStart: state.StartTime!.toString(),
-      createdAd: timestamp.fromDate(new Date()),
+      createdAt: timestamp.fromDate(new Date()),
     };
 
     // Update collection with latest performance

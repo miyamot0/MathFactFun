@@ -96,20 +96,21 @@ export default function ExplicitTiming() {
    * @returns {boolean}
    */
   function shouldShowFeedback(trialError: boolean): boolean {
-    return DetermineErrorCorrection(
-      trialError,
-      document!.currentErrorApproach!
-    );
+    if (document === null) {
+      return false;
+    }
+
+    return DetermineErrorCorrection(trialError, document.currentErrorApproach);
   }
 
   // Fire once individual data loaded, just once
   useEffect(() => {
-    if (document && !state.LoadedData) {
+    if (document && state.LoadedData) {
       dispatch({
         type: BenchmarkActions.ExplicitTimingBatchStartPreflight,
         payload: {
           uWorkingData: document.factsTargeted,
-          uTimer: document.minForTask! * 60,
+          uTimer: document.minForTask * 60,
           uLoadedData: true,
         },
       });
@@ -137,7 +138,11 @@ export default function ExplicitTiming() {
     const finalEntries = state.FactModelList;
 
     if (finalFactObject !== null) {
-      finalEntries?.push(finalFactObject);
+      finalEntries.push(finalFactObject);
+    }
+
+    if (!state.StartTime || !user || !document || !id) {
+      return;
     }
 
     const end = new Date();
@@ -147,17 +152,17 @@ export default function ExplicitTiming() {
       errCount: state.NumErrors,
       nCorrectInitial: state.NumCorrectInitial,
       nRetries: state.NumRetries,
-      sessionDuration: (end.getTime() - state.StartTime!.getTime()) / 1000,
-      setSize: document!.factsTargeted.length,
+      sessionDuration: (end.getTime() - state.StartTime.getTime()) / 1000,
+      setSize: document.factsTargeted.length,
       totalDigits: state.TotalDigits,
       entries: finalEntries.map((entry) => Object.assign({}, entry)),
-      id: document!.id,
-      creator: user!.uid,
-      target: document!.currentTarget,
+      id: document.id,
+      creator: user.uid,
+      target: document.currentTarget,
       method: InterventionFormat.ExplicitTiming,
       dateTimeEnd: end.toString(),
-      dateTimeStart: state.StartTime!.toString(),
-      createdAd: timestamp.fromDate(new Date()),
+      dateTimeStart: state.StartTime.toString(),
+      createdAt: timestamp.fromDate(new Date()),
     };
 
     await addDocument(uploadObject);
@@ -170,7 +175,7 @@ export default function ExplicitTiming() {
       };
 
       // Update field regarding last activity
-      await updateDocument(id!, studentObject);
+      await updateDocument(id, studentObject);
 
       // Push to home
       if (!response.error) {
@@ -185,13 +190,17 @@ export default function ExplicitTiming() {
    *
    */
   function captureButtonAction(): void {
+    if (document === null) {
+      return;
+    }
+
     if (
       state.CurrentAction === SharedActionSequence.Start ||
       state.CurrentAction === SharedActionSequence.Begin
     ) {
-      const listItem = state.WorkingData![0];
+      const listItem = state.WorkingData[0];
 
-      const updatedList = state.WorkingData!.filter(function (item) {
+      const updatedList = state.WorkingData.filter(function (item) {
         return item !== listItem;
       });
 
@@ -235,7 +244,7 @@ export default function ExplicitTiming() {
     }
 
     const current = new Date();
-    const secs = (current.getTime() - state.PreTrialTime!.getTime()) / 1000;
+    const secs = (current.getTime() - state.PreTrialTime.getTime()) / 1000;
 
     const holderPreTime = state.PreTrialTime;
 
@@ -254,12 +263,12 @@ export default function ExplicitTiming() {
       const currentItem2: FactDataInterface = {
         factCorrect: isMatching,
         initialTry: state.OnInitialTry,
-        factType: document!.currentTarget,
+        factType: document.currentTarget,
         factString: state.ViewRepresentationInternal,
         factEntry: combinedResponse,
         latencySeconds: secs,
         dateTimeEnd: timestamp.fromDate(new Date(current)),
-        dateTimeStart: timestamp.fromDate(new Date(holderPreTime!)),
+        dateTimeStart: timestamp.fromDate(new Date(holderPreTime)),
       };
 
       dispatch({
@@ -276,19 +285,19 @@ export default function ExplicitTiming() {
       });
 
       // Note: issue where state change not fast enough to catch latest
-      if (state.WorkingData!.length === 0) {
+      if (state.WorkingData.length === 0) {
         // If finished, upload list w/ latest item
         submitDataToFirebase(currentItem2);
       } else {
-        const listItem = state.WorkingData![0];
-        const updatedList = state.WorkingData!.filter(function (item) {
+        const listItem = state.WorkingData[0];
+        const updatedList = state.WorkingData.filter(function (item) {
           return item !== listItem;
         });
 
         dispatch({
           type: BenchmarkActions.BenchmarkBatchStartIncrementPost,
           payload: {
-            uFactModel: [...state.FactModelList!, currentItem2],
+            uFactModel: [...state.FactModelList, currentItem2],
             uWorkingData: updatedList,
             uView: listItem.split(":")[0],
             uEntry: "",
@@ -364,7 +373,7 @@ export default function ExplicitTiming() {
           {document ? (
             <Timer
               secondsTotal={state.SecondsLeft}
-              startTimerTime={state.StartTime!}
+              startTimerTime={state.StartTime}
               callbackFunction={callbackToSubmit}
             />
           ) : (

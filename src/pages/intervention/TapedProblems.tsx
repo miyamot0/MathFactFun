@@ -38,7 +38,6 @@ import { DetermineErrorCorrection } from "../../utilities/InterventionHelper";
 
 // styles
 import "./styles/TapedProblems.css";
-import { PerformanceDataInterface } from "../../firebase/types/GeneralTypes";
 import {
   BenchmarkActions,
   SharedActionSequence,

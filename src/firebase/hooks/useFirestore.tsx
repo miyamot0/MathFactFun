@@ -11,10 +11,10 @@
  */
 
 import { useReducer, useEffect, useState } from "react";
+import { PerformanceDataInterface } from "../../pages/intervention/types/InterventionTypes";
 import { StudentDataInterface } from "../../pages/student/types/StudentTypes";
 import { UserDataInterface } from "../../pages/user/types/UserTypes";
 import { projectFirestore, timestamp } from "../config";
-import { PerformanceDataInterface } from "../types/GeneralTypes";
 
 export enum FirestoreCollections {
   Students = "students",
@@ -159,8 +159,7 @@ export function useFirestore(
     });
 
     try {
-      const createdAt = timestamp.fromDate(new Date());
-      const addedDocument = await ref.add({ ...doc, createdAt });
+      const addedDocument = await ref.add({ ...doc });
 
       dispatchIfNotCancelled({
         type: FirestoreStates.ADDED,

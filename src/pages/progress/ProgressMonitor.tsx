@@ -25,7 +25,6 @@ import moment from "moment";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import AnnotationsModule from "highcharts/modules/annotations";
-import { PerformanceDataInterface } from "../../firebase/types/GeneralTypes";
 import { RoutedStudentProgressSet } from "./types/ProgressTypes";
 import {
   aggregateItemLevelPerformances,
@@ -45,6 +44,7 @@ import {
   CommonDisplayHeadingStyle,
   CommonPanelWidth,
 } from "../../utilities/FormHelpers";
+import { PerformanceDataInterface } from "../intervention/types/InterventionTypes";
 
 export default function ProgressMonitor() {
   const { id, target, method, aim } = useParams<RoutedStudentProgressSet>();

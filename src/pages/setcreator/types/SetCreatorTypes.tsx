@@ -2,16 +2,16 @@ import firebase from "firebase/app";
 
 export interface FactDataInterface {
   // Bools
-  factCorrect: boolean | null;
-  initialTry: boolean | null;
+  factCorrect: boolean;
+  initialTry: boolean;
 
   // Strings
-  factType: string | undefined;
-  factString: string | undefined;
-  factEntry: string | undefined;
+  factType: string;
+  factString: string;
+  factEntry: string;
 
   // Numerics
-  latencySeconds: number | null;
+  latencySeconds: number;
 
   // Timestamps
   dateTimeEnd: firebase.firestore.Timestamp;

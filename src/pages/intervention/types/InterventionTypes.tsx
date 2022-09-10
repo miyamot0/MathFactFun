@@ -48,7 +48,7 @@ export interface BenchmarkState {
   FactModelList: FactDataInterface[];
   NextLiItem: string;
   StartTime: Date | null;
-  PreTrialTime: Date | null;
+  PreTrialTime: Date;
   OnInitialTry: boolean;
   NumCorrectInitial: number;
   NumErrors: number;
@@ -73,14 +73,14 @@ export interface PerformanceDataInterface {
 
   // Strings
   id: string | undefined | null;
-  creator: string | undefined;
-  target: string | undefined;
-  method: string | undefined;
-  dateTimeEnd: string | undefined;
-  dateTimeStart: string | undefined;
+  creator: string;
+  target: string;
+  method: string;
+  dateTimeEnd: string;
+  dateTimeStart: string;
 
   // Timestamps
-  createdAt?: firebase.firestore.Timestamp | null;
+  createdAt: firebase.firestore.Timestamp | null;
 }
 
 export const SharedActionSequence = {
