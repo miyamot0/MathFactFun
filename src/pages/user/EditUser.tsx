@@ -15,13 +15,12 @@ import { useParams } from "react-router-dom";
 import { useFirestore } from "../../firebase/useFirestore";
 import { useHistory } from "react-router-dom";
 import { useFirebaseDocumentTyped } from "../../firebase/useFirebaseDocument";
-import { UserDataInterface } from "../../models/UserModel";
-import { RoutedIdParam } from "../CommonTypes/CommonPageTypes";
+import { RoutedIdParam } from "../../utilities/RoutingHelpers";
 import {
   UserDataInitialState,
   UserGenerationReducer,
 } from "./functionality/UserFunctionality";
-import { UserCreatorBehavior } from "./types/UserTypes";
+import { UserCreatorBehavior, UserDataInterface } from "./types/UserTypes";
 import { streamlinedCheck } from "../../utilities/FormHelpers";
 
 export default function EditUser() {

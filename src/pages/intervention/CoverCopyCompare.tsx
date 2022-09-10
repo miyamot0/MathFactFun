@@ -52,7 +52,7 @@ import {
   InterventionReducer,
   useEventListener,
 } from "./functionality/InterventionBehavior";
-import { RoutedIdTargetParam } from "../CommonTypes/CommonPageTypes";
+import { RoutedIdTargetParam } from "../../utilities/RoutingHelpers";
 import { StudentDataInterface } from "../student/types/StudentTypes";
 
 Modal.setAppElement("#root");

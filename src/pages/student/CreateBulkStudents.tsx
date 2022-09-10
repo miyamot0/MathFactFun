@@ -27,7 +27,7 @@ import { CommentInterface } from "../../firebase/types/GeneralTypes";
 import {
   RoutedIdParam,
   SingleOptionType,
-} from "../CommonTypes/CommonPageTypes";
+} from "../../utilities/RoutingHelpers";
 import {
   UserCreateSingleInitialState,
   UserCreationReducer,

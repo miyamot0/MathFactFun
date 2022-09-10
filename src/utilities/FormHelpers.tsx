@@ -1,6 +1,6 @@
 import firebase from "firebase/app";
 import { MultiValue } from "react-select";
-import { SingleOptionType } from "../pages/CommonTypes/CommonPageTypes";
+import { SingleOptionType } from "./RoutingHelpers";
 import { StudentCreatorBehavior } from "../pages/student/types/StudentTypes";
 
 export function checkInputNullOrUndefined(

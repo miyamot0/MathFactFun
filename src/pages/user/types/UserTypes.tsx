@@ -1,4 +1,9 @@
-import { UserDataInterface } from "../../../models/UserModel";
+export interface UserDataInterface {
+  id: string | undefined | null;
+  displayEmail: string;
+  displayName: string;
+  displaySchool: string;
+}
 
 export interface UserWidgetInterface {
   user: UserDataInterface;

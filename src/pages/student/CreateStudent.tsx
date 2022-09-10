@@ -24,7 +24,7 @@ import {
   ErrorCorrection,
   Contingencies,
 } from "../../maths/Facts";
-import { SingleOptionType } from "../CommonTypes/CommonPageTypes";
+import { SingleOptionType } from "../../utilities/RoutingHelpers";
 import {
   UserCreateSingleInitialState,
   UserCreationReducer,

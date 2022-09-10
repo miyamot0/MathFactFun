@@ -11,8 +11,8 @@
  */
 
 import { useReducer, useEffect, useState } from "react";
-import { UserDataInterface } from "../models/UserModel";
 import { StudentDataInterface } from "../pages/student/types/StudentTypes";
+import { UserDataInterface } from "../pages/user/types/UserTypes";
 import { projectFirestore, timestamp } from "./config";
 import { PerformanceDataInterface } from "./types/GeneralTypes";
 

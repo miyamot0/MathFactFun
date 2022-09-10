@@ -1,7 +1,7 @@
 import firebase from "firebase/app";
 
-import { UserDataInterface } from "../../models/UserModel";
 import { StudentDataInterface } from "../../pages/student/types/StudentTypes";
+import { UserDataInterface } from "../../pages/user/types/UserTypes";
 
 export class CommentInterface {
   constructor(

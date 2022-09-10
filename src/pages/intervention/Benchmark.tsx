@@ -27,7 +27,7 @@ import {
 
 import { FactDataInterface } from "../../firebase/types/GeneralTypes";
 import { timestamp } from "../../firebase/config";
-import { RoutedIdTargetParam } from "../CommonTypes/CommonPageTypes";
+import { RoutedIdTargetParam } from "../../utilities/RoutingHelpers";
 import { useAuthorizationContext } from "../../context/useAuthorizationContext";
 import {
   DelCode,

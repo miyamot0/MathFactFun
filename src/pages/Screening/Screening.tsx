@@ -21,7 +21,7 @@ import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import AnnotationsModule from "highcharts/modules/annotations";
 import { PerformanceDataInterface } from "../../firebase/types/GeneralTypes";
-import { RoutedIdParam } from "../CommonTypes/CommonPageTypes";
+import { RoutedIdParam } from "../../utilities/RoutingHelpers";
 import { reducerPerOperation } from "./functionality/ScreeningBehavior";
 import { useFirebaseCollectionTyped } from "../../firebase/useFirebaseCollection";
 
@@ -51,20 +51,32 @@ export default function Screening() {
   const orderString = undefined;
 
   const { documents: additionDocuments } =
-    useFirebaseCollectionTyped<PerformanceDataInterface>(
-      { collectionString: `performances/Addition/${id}`, queryString, orderString });
+    useFirebaseCollectionTyped<PerformanceDataInterface>({
+      collectionString: `performances/Addition/${id}`,
+      queryString,
+      orderString,
+    });
 
   const { documents: subtractionDocuments } =
-    useFirebaseCollectionTyped<PerformanceDataInterface>(
-      { collectionString: `performances/Subtraction/${id}`, queryString, orderString });
+    useFirebaseCollectionTyped<PerformanceDataInterface>({
+      collectionString: `performances/Subtraction/${id}`,
+      queryString,
+      orderString,
+    });
 
   const { documents: multiplicationDocuments } =
-    useFirebaseCollectionTyped<PerformanceDataInterface>(
-      { collectionString: `performances/Multiplication/${id}`, queryString, orderString });
+    useFirebaseCollectionTyped<PerformanceDataInterface>({
+      collectionString: `performances/Multiplication/${id}`,
+      queryString,
+      orderString,
+    });
 
   const { documents: divisionDocuments } =
-    useFirebaseCollectionTyped<PerformanceDataInterface>(
-      { collectionString: `performances/Division/${id}`, queryString, orderString });
+    useFirebaseCollectionTyped<PerformanceDataInterface>({
+      collectionString: `performances/Division/${id}`,
+      queryString,
+      orderString,
+    });
 
   useEffect(() => {
     if (

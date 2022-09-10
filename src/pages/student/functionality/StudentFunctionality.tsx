@@ -1,6 +1,6 @@
 import { MultiValue } from "react-select";
 import { ErrorHandling } from "../../../maths/Facts";
-import { SingleOptionType } from "../../CommonTypes/CommonPageTypes";
+import { SingleOptionType } from "../../../utilities/RoutingHelpers";
 import { StudentCreatorBehavior } from "../types/StudentTypes";
 
 export interface StudentCreateState {

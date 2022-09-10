@@ -31,7 +31,7 @@ import Select, { MultiValue } from "react-select";
 import {
   RoutedIdParam,
   SingleOptionType,
-} from "../CommonTypes/CommonPageTypes";
+} from "../../utilities/RoutingHelpers";
 import {
   UserCreateSingleInitialState,
   UserCreationReducer,

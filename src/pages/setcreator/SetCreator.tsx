@@ -34,7 +34,7 @@ import {
 import {
   RoutedIdTargetParam,
   SingleOptionType,
-} from "../CommonTypes/CommonPageTypes";
+} from "../../utilities/RoutingHelpers";
 import {
   generateItemHistory,
   getRelevantCCCSet,

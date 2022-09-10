@@ -35,7 +35,7 @@ import {
 import { DetermineErrorCorrection } from "../../utilities/Logic";
 
 import { FactDataInterface } from "../../firebase/types/GeneralTypes";
-import { RoutedIdTargetParam } from "../CommonTypes/CommonPageTypes";
+import { RoutedIdTargetParam } from "../../utilities/RoutingHelpers";
 import {
   BenchmarkActions,
   SharedActionSequence,

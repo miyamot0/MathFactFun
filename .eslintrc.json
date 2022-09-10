@@ -20,7 +20,8 @@
         "@typescript-eslint"
     ],
     "rules": {
-        "react/jsx-filename-extension": ["warn", { "extensions": [".tsx"] }]
+        "react/jsx-filename-extension": ["warn", { "extensions": [".tsx"] }],
+        "@typescript-eslint/no-var-requires": "warn"
     },
     "settings": {
         "import/resolver": {
