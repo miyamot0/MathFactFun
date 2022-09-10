@@ -44,26 +44,27 @@ export default function Dashboard() {
     setFilter(newFilter);
   }
 
-  const students = documents
-    ? documents.filter((document) => {
-        switch (filter) {
-          case "All":
-            return true;
-          case "Mine":
-            return document.creator === user!.uid;
-          case "K":
-          case "1st":
-          case "2nd":
-          case "3rd":
-          case "4th":
-          case "5th":
-          case "6th":
-            return document.currentGrade === filter;
-          default:
-            return true;
-        }
-      })
-    : null;
+  const students =
+    documents && user
+      ? documents.filter((document) => {
+          switch (filter) {
+            case "All":
+              return true;
+            case "Mine":
+              return document.creator === user.uid;
+            case "K":
+            case "1st":
+            case "2nd":
+            case "3rd":
+            case "4th":
+            case "5th":
+            case "6th":
+              return document.currentGrade === filter;
+            default:
+              return true;
+          }
+        })
+      : null;
 
   return (
     <div>

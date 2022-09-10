@@ -105,7 +105,7 @@ export function getUniqueProblems(
     });
   });
 
-  secondWave = secondWave.filter((value, i) => !probsToRemove.includes(value));
+  secondWave = secondWave.filter((value) => !probsToRemove.includes(value));
 
   return secondWave;
 }
@@ -120,9 +120,9 @@ export function loadWorkingDataBenchmark(
   document: StudentDataInterface,
   target: string
 ): string[] {
-  const targetTrim = target!.split("-")[0];
+  const targetTrim = target.split("-")[0];
   const coreItems = getCoreProblemSet(targetTrim);
-  const coreSet = getSetFromArray(coreItems, document.problemSet!);
+  const coreSet = getSetFromArray(coreItems, document.problemSet);
 
   return getUniqueProblems(coreSet, GetOperatorFromLabel(targetTrim));
 }

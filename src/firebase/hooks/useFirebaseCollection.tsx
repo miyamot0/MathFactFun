@@ -121,7 +121,7 @@ export function useFirebaseCollectionTyped<T>({
           );
           setError(undefined);
         },
-        (error) => {
+        () => {
           setError(CollectionError);
         }
       );

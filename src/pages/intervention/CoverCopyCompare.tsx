@@ -28,7 +28,6 @@ import {
   CalculateDigitsTotalAnswer,
 } from "../../utilities/LabelHelper";
 import { InterventionFormat, RelevantKeys } from "../../maths/Facts";
-import { DetermineErrorCorrection } from "../../utilities/InterventionHelper";
 
 // styles
 import "./styles/CoverCopyCompare.css";
@@ -47,6 +46,7 @@ import {
 import { RoutedIdTargetParam } from "../../utilities/RoutingHelpers";
 import { StudentDataInterface } from "../student/types/StudentTypes";
 import { FactDataInterface } from "../setcreator/types/SetCreatorTypes";
+import { shouldShowFeedback } from "./helpers/InterventionHelpers";
 
 Modal.setAppElement("#root");
 
@@ -105,20 +105,6 @@ export default function CoverCopyCompare() {
   // Add event listener to hook
   useEventListener("keydown", keyHandler);
 
-  /** shouldShowFeedback
-   *
-   * Handle branching logic for error message
-   *
-   * @param {boolean} trialError was there an error?
-   * @returns {boolean}
-   */
-  function shouldShowFeedback(trialError: boolean): boolean {
-    return DetermineErrorCorrection(
-      trialError,
-      document!.currentErrorApproach!
-    );
-  }
-
   function openModal(): void {
     setIsOpen(true);
   }
@@ -136,7 +122,7 @@ export default function CoverCopyCompare() {
           uAction: SharedActionSequence.Entry,
           uWorkingData: document.factsTargeted,
           uLoadedData: true,
-          uOperator: GetOperatorFromLabel(document.currentTarget!.toString()),
+          uOperator: GetOperatorFromLabel(document.currentTarget.toString()),
         },
       });
     }
@@ -153,6 +139,10 @@ export default function CoverCopyCompare() {
   ): Promise<void> {
     const finalEntries = state.FactModelList;
 
+    if (!state.StartTime || !user || !document || !id) {
+      return;
+    }
+
     if (finalFactObject !== null) {
       finalEntries?.push(finalFactObject);
     }
@@ -164,16 +154,16 @@ export default function CoverCopyCompare() {
       errCount: state.NumErrors,
       nCorrectInitial: state.NumCorrectInitial,
       nRetries: state.NumRetries,
-      sessionDuration: (end.getTime() - state.StartTime!.getTime()) / 1000,
-      setSize: document!.factsTargeted.length,
+      sessionDuration: (end.getTime() - state.StartTime.getTime()) / 1000,
+      setSize: document.factsTargeted.length,
       totalDigits: state.TotalDigits,
       entries: finalEntries.map((entry) => Object.assign({}, entry)),
-      id: document!.id,
-      creator: user!.uid,
-      target: document!.currentTarget,
+      id: document.id,
+      creator: user.uid,
+      target: document.currentTarget,
       method: InterventionFormat.CoverCopyCompare,
       dateTimeEnd: end.toString(),
-      dateTimeStart: state.StartTime!.toString(),
+      dateTimeStart: state.StartTime.toString(),
       createdAt: timestamp.fromDate(new Date()),
     };
 
@@ -187,7 +177,7 @@ export default function CoverCopyCompare() {
       };
 
       // Update field regarding last activity
-      await updateDocument(id!, studentObject);
+      await updateDocument(id, studentObject);
 
       // Push to home
       if (!response.error) {
@@ -202,6 +192,10 @@ export default function CoverCopyCompare() {
    *
    */
   function captureButtonAction(): void {
+    if (document === null) {
+      return;
+    }
+
     // HACK: need a flag for update w/o waiting for state change
     let quickCheck = false;
 
@@ -276,11 +270,11 @@ export default function CoverCopyCompare() {
       }
 
       const current = new Date();
-      const secs = (current.getTime() - state.PreTrialTime!.getTime()) / 1000;
+      const secs = (current.getTime() - state.PreTrialTime.getTime()) / 1000;
 
       const holderPreTime = state.PreTrialTime;
 
-      if (shouldShowFeedback(!isMatching)) {
+      if (shouldShowFeedback(!isMatching, document)) {
         // Error correction prompt
         openModal();
       } else {
@@ -297,12 +291,12 @@ export default function CoverCopyCompare() {
         const currentItem2: FactDataInterface = {
           factCorrect: isMatching,
           initialTry: state.OnInitialTry,
-          factType: document!.currentTarget,
+          factType: document.currentTarget,
           factString: state.ViewRepresentationInternal,
           factEntry: state.EntryRepresentationInternal,
           latencySeconds: secs,
           dateTimeEnd: timestamp.fromDate(new Date(current)),
-          dateTimeStart: timestamp.fromDate(new Date(holderPreTime!)),
+          dateTimeStart: timestamp.fromDate(new Date(holderPreTime)),
         };
 
         dispatch({
@@ -319,7 +313,7 @@ export default function CoverCopyCompare() {
         });
 
         // Note: isusue where state change not fast enough to catch latest
-        if (state.WorkingData!.length === 0) {
+        if (state.WorkingData.length === 0) {
           // If finished, upload list w/ latest item
           submitDataToFirebase(currentItem2);
         } else {
@@ -335,7 +329,7 @@ export default function CoverCopyCompare() {
               uIsOngoing: true,
               uCoverListViewItems: false,
               uOnInitialTry: true,
-              uFactModelList: [...state.FactModelList!, currentItem2],
+              uFactModelList: [...state.FactModelList, currentItem2],
             },
           });
         }
@@ -414,7 +408,7 @@ export default function CoverCopyCompare() {
     // If a problem is loaded, exit out of event
     if (state.IsOngoing) return;
 
-    const updatedList = state.WorkingData!.filter(function (item) {
+    const updatedList = state.WorkingData.filter(function (item) {
       return item !== listItem;
     });
 

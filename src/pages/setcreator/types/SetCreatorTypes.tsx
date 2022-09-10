@@ -42,8 +42,8 @@ export type ColumnsObject = {
   columns: {
     [key: string]: ColumnVector;
   };
-  ItemHistory: ItemHistory[] | null;
-  BaseItems: SetItem[] | null;
+  ItemHistory: ItemHistory[];
+  BaseItems: SetItem[];
   LoadedData: boolean;
 };
 

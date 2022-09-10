@@ -1,3 +1,6 @@
+import { ErrorHandling } from "../../../maths/Facts";
+import { StudentDataInterface } from "../../student/types/StudentTypes";
+
 /** @license
  *
  * Copyright (c) Shawn P. Gilroy, Louisiana State University.
@@ -9,8 +12,6 @@
 /**
  * Shared logic file
  */
-
-import { ErrorHandling } from "../maths/Facts";
 
 /** ConfirmIfInterventionScreen
  *
@@ -34,4 +35,19 @@ export function DetermineErrorCorrection(
   }
 
   return false;
+}
+
+/** shouldShowFeedback
+ *
+ * Handle branching logic for error message
+ *
+ * @param {boolean} trialError was there an error?
+ * @param {StudentDataInterface} document student doc
+ * @returns {boolean}
+ */
+export function shouldShowFeedback(
+  trialError: boolean,
+  document: StudentDataInterface
+): boolean {
+  return DetermineErrorCorrection(trialError, document.currentErrorApproach);
 }

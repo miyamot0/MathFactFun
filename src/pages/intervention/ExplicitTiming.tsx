@@ -32,8 +32,6 @@ import {
   CalculateDigitsCorrectAnswer,
 } from "../../utilities/LabelHelper";
 
-import { DetermineErrorCorrection } from "../../utilities/InterventionHelper";
-
 import { RoutedIdTargetParam } from "../../utilities/RoutingHelpers";
 import {
   BenchmarkActions,
@@ -53,6 +51,7 @@ import { ErrorModalCustomStyle } from "./subcomponents/ModalStyles";
 import { InterventionFormat } from "../../maths/Facts";
 import { StudentDataInterface } from "../student/types/StudentTypes";
 import { FactDataInterface } from "../setcreator/types/SetCreatorTypes";
+import { shouldShowFeedback } from "./helpers/InterventionHelpers";
 
 Modal.setAppElement("#root");
 
@@ -88,21 +87,6 @@ export default function ExplicitTiming() {
     keyHandler(key, captureKeyClick, captureButtonAction, state.CurrentAction)
   );
 
-  /** shouldShowFeedback
-   *
-   * Handle branching logic for error message
-   *
-   * @param {boolean} trialError was there an error?
-   * @returns {boolean}
-   */
-  function shouldShowFeedback(trialError: boolean): boolean {
-    if (document === null) {
-      return false;
-    }
-
-    return DetermineErrorCorrection(trialError, document.currentErrorApproach);
-  }
-
   // Fire once individual data loaded, just once
   useEffect(() => {
     if (document && state.LoadedData) {
@@ -137,12 +121,12 @@ export default function ExplicitTiming() {
   ): Promise<void> {
     const finalEntries = state.FactModelList;
 
-    if (finalFactObject !== null) {
-      finalEntries.push(finalFactObject);
-    }
-
     if (!state.StartTime || !user || !document || !id) {
       return;
+    }
+
+    if (finalFactObject !== null) {
+      finalEntries.push(finalFactObject);
     }
 
     const end = new Date();
@@ -248,7 +232,7 @@ export default function ExplicitTiming() {
 
     const holderPreTime = state.PreTrialTime;
 
-    if (shouldShowFeedback(!isMatching)) {
+    if (shouldShowFeedback(!isMatching, document)) {
       openModal();
     } else {
       const totalDigitsShown = CalculateDigitsTotalAnswer(

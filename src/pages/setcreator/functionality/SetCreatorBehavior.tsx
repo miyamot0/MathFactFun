@@ -38,8 +38,8 @@ export const StartingColumnValues: ColumnObject = {
  */
 export const InitialSetCreatorState: ColumnsObject = {
   columns: StartingColumnValues,
-  ItemHistory: null,
-  BaseItems: null,
+  ItemHistory: {} as ItemHistory[],
+  BaseItems: {} as SetItem[],
   LoadedData: false,
 };
 
@@ -55,9 +55,7 @@ export const InitialSetCreatorState: ColumnsObject = {
 export function onDragEnd(
   result: DropResult,
   columns: DragColumnsInterface,
-  dispatch:
-    | ((arg0: { type: DragDropActions; payload: DragColumnsInterface }) => void)
-    | undefined
+  dispatch: any
 ): void {
   if (!result.destination) return;
   const { source, destination } = result;
@@ -73,8 +71,8 @@ export function onDragEnd(
   if (source.droppableId !== destination.droppableId) {
     const sourceColumn = columns[source.droppableId];
     const destColumn = columns[destination.droppableId];
-    const sourceItems = [...sourceColumn!.items];
-    const destItems = [...destColumn!.items];
+    const sourceItems = [...sourceColumn.items];
+    const destItems = [...destColumn.items];
     const [removed] = sourceItems.splice(source.index, 1);
     destItems.splice(destination.index, 0, removed);
 
@@ -92,23 +90,15 @@ export function onDragEnd(
       },
     } as DragColumnsInterface;
 
-    columnObject.Available!.name = `Available (${
-      columnObject.Available!.items.length
-    })`;
-    columnObject.Targeted!.name = `Targeted (${
-      columnObject.Targeted!.items.length
-    })`;
-    columnObject.Mastered!.name = `Mastered (${
-      columnObject.Mastered!.items.length
-    })`;
-    columnObject.Skipped!.name = `Skipped (${
-      columnObject.Skipped!.items.length
-    })`;
+    columnObject.Available.name = `Available (${columnObject.Available.items.length})`;
+    columnObject.Targeted.name = `Targeted (${columnObject.Targeted.items.length})`;
+    columnObject.Mastered.name = `Mastered (${columnObject.Mastered.items.length})`;
+    columnObject.Skipped.name = `Skipped (${columnObject.Skipped.items.length})`;
 
-    dispatch!({ type: DragDropActions.UpdateColumns, payload: columnObject });
+    dispatch({ type: DragDropActions.UpdateColumns, payload: columnObject });
   } else {
     const column = columns[source.droppableId];
-    const copiedItems = [...column!.items];
+    const copiedItems = [...column.items];
     const [removed] = copiedItems.splice(source.index, 1);
     copiedItems.splice(destination.index, 0, removed);
 
@@ -120,7 +110,7 @@ export function onDragEnd(
       },
     } as DragColumnsInterface;
 
-    dispatch!({ type: DragDropActions.UpdateColumns, payload: columnObject });
+    dispatch({ type: DragDropActions.UpdateColumns, payload: columnObject });
   }
 }
 
@@ -132,11 +122,11 @@ export function onDragEnd(
  * @returns {Array} Mind facts
  */
 export function loadMathFacts(
-  student: StudentDataInterface | null
+  student: StudentDataInterface
 ): FactStructure[][] {
   let factsOnFire = FactsOnFire.Addition;
 
-  switch (student!.currentTarget) {
+  switch (student.currentTarget) {
     case "Addition":
       factsOnFire = FactsOnFire.Addition;
       break;
@@ -208,7 +198,7 @@ export function formatBackgroundColor(entry: SetItem): string {
 export function generateItemHistory(
   uniqueProblems: string[],
   flatItemSummaries: FactDataInterface[],
-  target: string | undefined
+  target: string
 ) {
   return uniqueProblems.map((itemString) => {
     const relevantItems = flatItemSummaries.filter(
@@ -220,14 +210,14 @@ export function generateItemHistory(
       .reduce(Sum);
 
     const itemLatency = relevantItems
-      .map((item) => Math.abs(item.latencySeconds!))
+      .map((item) => Math.abs(item.latencySeconds))
       .reduce(Sum);
 
     return {
       FactString: itemString,
-      X: parseInt(itemString.split(GetOperatorFromLabel(target!))[0]),
+      X: parseInt(itemString.split(GetOperatorFromLabel(target))[0]),
       Y: parseInt(
-        itemString.split(GetOperatorFromLabel(target!))[1].split("=")[0]
+        itemString.split(GetOperatorFromLabel(target))[1].split("=")[0]
       ),
       Latency: itemLatency / relevantItems.length,
       AverageCorrect: (itemsCorrect / relevantItems.length) * 100,

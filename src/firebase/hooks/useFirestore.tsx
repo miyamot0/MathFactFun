@@ -14,7 +14,7 @@ import { useReducer, useEffect, useState } from "react";
 import { PerformanceDataInterface } from "../../pages/intervention/types/InterventionTypes";
 import { StudentDataInterface } from "../../pages/student/types/StudentTypes";
 import { UserDataInterface } from "../../pages/user/types/UserTypes";
-import { projectFirestore, timestamp } from "../config";
+import { projectFirestore } from "../config";
 
 export enum FirestoreCollections {
   Students = "students",
@@ -128,12 +128,12 @@ export function useFirestore(
   const [isCancelled, setIsCancelled] = useState(false);
 
   const ref =
-    collection !== ""
-      ? projectFirestore.collection(collection)
-      : projectFirestore
+    collection === "" && studentId !== undefined
+      ? projectFirestore
           .collection("performances")
           .doc(targetSkill)
-          .collection(studentId!);
+          .collection(studentId)
+      : projectFirestore.collection(collection);
 
   // only dispatch is not cancelled
   function dispatchIfNotCancelled(action: FirestoreAction): void {

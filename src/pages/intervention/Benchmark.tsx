@@ -32,6 +32,7 @@ import {
   DelCode,
   InitialBenchmarkState,
   InterventionReducer,
+  keyHandler,
   loadWorkingDataBenchmark,
   useEventListener,
 } from "./functionality/InterventionBehavior";
@@ -55,7 +56,7 @@ export default function Benchmark() {
   const { user } = useAuthorizationContext();
   const { addDocument, response: addResponse } = useFirestore(
     "",
-    target!.split("-")[0],
+    target.split("-")[0],
     id
   );
   const { updateDocument, response: updateResponse } = useFirestore(
@@ -77,7 +78,7 @@ export default function Benchmark() {
   // Fire once individual data loaded, just once
   useEffect(() => {
     if (document && !state.LoadedData) {
-      const coreSetClean = loadWorkingDataBenchmark(document, target!);
+      const coreSetClean = loadWorkingDataBenchmark(document, target);
 
       dispatch({
         type: BenchmarkActions.BenchmarkBatchStartPreflight,
@@ -110,28 +111,32 @@ export default function Benchmark() {
   ): Promise<void> {
     const finalEntries = state.FactModelList;
 
+    if (!state.StartTime || !user || !document || !id) {
+      return;
+    }
+
     if (finalFactObject !== null) {
       finalEntries?.push(finalFactObject);
     }
 
     const end = new Date();
-    const currentBenchmarkArea = target!.split("-")[0];
+    const currentBenchmarkArea = target.split("-")[0];
 
     const uploadObject = {
       correctDigits: state.TotalDigitsCorrect,
       errCount: state.NumErrors,
       nCorrectInitial: state.NumCorrectInitial,
       nRetries: 0,
-      sessionDuration: (end.getTime() - state.StartTime!.getTime()) / 1000,
-      setSize: document!.factsTargeted.length,
+      sessionDuration: (end.getTime() - state.StartTime.getTime()) / 1000,
+      setSize: document.factsTargeted.length,
       totalDigits: state.TotalDigits,
       entries: finalEntries.map((entry) => Object.assign({}, entry)),
-      id: document!.id,
-      creator: user!.uid,
+      id: document.id,
+      creator: user.uid,
       target: currentBenchmarkArea,
       method: "Benchmark",
       dateTimeEnd: end.toString(),
-      dateTimeStart: state.StartTime!.toString(),
+      dateTimeStart: state.StartTime.toString(),
       createdAt: timestamp.fromDate(new Date()),
     };
 
@@ -140,10 +145,10 @@ export default function Benchmark() {
 
     // If added without issue, update timestamp
     if (!addResponse.error) {
-      const completedBenchmark = document!.completedBenchmark;
+      const completedBenchmark = document.completedBenchmark;
 
       completedBenchmark.push(
-        `${target} ${document!.dueDate!.toDate().toDateString()}`
+        `${target} ${document.dueDate.toDate().toDateString()}`
       );
 
       // Omit time updates
@@ -152,7 +157,7 @@ export default function Benchmark() {
       };
 
       // Update field regarding last activity
-      await updateDocument(id!, studentObject);
+      await updateDocument(id, studentObject);
 
       // Push to home
       if (!updateResponse.error) {
@@ -167,12 +172,16 @@ export default function Benchmark() {
    *
    */
   function captureButtonAction(): void {
+    if (document === null) {
+      return;
+    }
+
     if (
       state.CurrentAction === SharedActionSequence.Start ||
       state.CurrentAction === SharedActionSequence.Begin
     ) {
-      const listItem = state.WorkingData![0];
-      const updatedList = state.WorkingData!.filter(function (item) {
+      const listItem = state.WorkingData[0];
+      const updatedList = state.WorkingData.filter(function (item) {
         return item !== listItem;
       });
 
@@ -216,7 +225,7 @@ export default function Benchmark() {
     }
 
     const current = new Date();
-    const secs = (current.getTime() - state.PreTrialTime!.getTime()) / 1000;
+    const secs = (current.getTime() - state.PreTrialTime.getTime()) / 1000;
 
     const holderPreTime = state.PreTrialTime;
 
@@ -236,12 +245,12 @@ export default function Benchmark() {
     const currentItem = {
       factCorrect: isMatching,
       initialTry: state.OnInitialTry,
-      factType: document!.currentTarget!,
+      factType: document.currentTarget,
       factString: state.ViewRepresentationInternal,
       factEntry: state.EntryRepresentationInternal,
       latencySeconds: secs,
       dateTimeEnd: timestamp.fromDate(new Date(current)),
-      dateTimeStart: timestamp.fromDate(new Date(holderPreTime!)),
+      dateTimeStart: timestamp.fromDate(new Date(holderPreTime)),
     } as FactDataInterface;
 
     const uInitialTry = true;
@@ -260,21 +269,21 @@ export default function Benchmark() {
     });
 
     // Potential issue: state change not fast enough to catch latest
-    if (state.WorkingData!.length === 0) {
+    if (state.WorkingData.length === 0) {
       // If finished, upload list w/ latest item
       submitDataToFirebase(currentItem);
     } else {
       // Otherise, add it to the existing list
 
-      const listItem = state.WorkingData![0];
-      const updatedList = state.WorkingData!.filter(function (item) {
+      const listItem = state.WorkingData[0];
+      const updatedList = state.WorkingData.filter(function (item) {
         return item !== listItem;
       });
 
       dispatch({
         type: BenchmarkActions.BenchmarkBatchStartIncrementPost,
         payload: {
-          uFactModel: [...state.FactModelList!, currentItem],
+          uFactModel: [...state.FactModelList, currentItem],
           uWorkingData: updatedList,
           uView: listItem.split(":")[0],
           uEntry: "",
@@ -317,7 +326,7 @@ export default function Benchmark() {
           {document ? (
             <Timer
               secondsTotal={state.SecondsLeft}
-              startTimerTime={state.StartTime!}
+              startTimerTime={state.StartTime}
               callbackFunction={callbackToSubmit}
             />
           ) : (
@@ -360,12 +369,4 @@ export default function Benchmark() {
       </div>
     </div>
   );
-}
-function keyHandler(
-  key: React.KeyboardEvent<HTMLElement>,
-  captureKeyClick: (char: string) => void,
-  captureButtonAction: () => void,
-  CurrentAction: string
-): void {
-  throw new Error("Function not implemented.");
 }

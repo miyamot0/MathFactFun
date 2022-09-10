@@ -80,8 +80,8 @@ export function remapPerformances(
     return {
       // TODO: clean up this flip flopping
       Items: doc.entries as FactDataInterface[],
-      Date: new Date(doc.dateTimeStart!),
-      ShortDate: new Date(doc.dateTimeStart!).toLocaleDateString("en-US"),
+      Date: new Date(doc.dateTimeStart),
+      ShortDate: new Date(doc.dateTimeStart).toLocaleDateString("en-US"),
       Errors: doc.errCount,
       DigitsCorrect: doc.correctDigits,
       DigitsCorrectInitial: doc.nCorrectInitial,
@@ -136,17 +136,17 @@ export function aggregatePerformances(
  *
  * Aggreg by item
  *
- * @param {(string | undefined)[]} uniqueMathFacts
+ * @param {string[]} uniqueMathFacts
  * @param {FactDataInterface[]} flatItemSummaries
- * @param {string | undefined} target
+ * @param {string} target
  * @returns
  */
 export function aggregateItemLevelPerformances(
-  uniqueMathFacts: (string | undefined)[],
+  uniqueMathFacts: string[],
   flatItemSummaries: FactDataInterface[],
-  target: string | undefined
+  target: string
 ): ItemPerformanceMetrics[] {
-  return uniqueMathFacts!.map((itemString) => {
+  return uniqueMathFacts.map((itemString) => {
     // Select matching performances from array of objects
     const relevantPerformances = flatItemSummaries.filter(
       (obj) => obj.factString === itemString
@@ -159,15 +159,15 @@ export function aggregateItemLevelPerformances(
 
     // Sum latency to correct responding
     const itemLatency = relevantPerformances
-      .map((item) => Math.abs(item.latencySeconds!))
+      .map((item) => Math.abs(item.latencySeconds))
       .reduce(Sum);
 
     // Construct object for plotting
     return {
       FactString: itemString,
-      X: parseInt(itemString!.split(GetOperatorFromLabel(target!))[0]),
+      X: parseInt(itemString.split(GetOperatorFromLabel(target))[0]),
       Y: parseInt(
-        itemString!.split(GetOperatorFromLabel(target!))[1].split("=")[0]
+        itemString.split(GetOperatorFromLabel(target))[1].split("=")[0]
       ),
       Latency: itemLatency / relevantPerformances.length,
       AverageCorrect: (itemsCorrect / relevantPerformances.length) * 100,

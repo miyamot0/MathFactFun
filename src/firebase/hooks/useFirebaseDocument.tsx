@@ -51,7 +51,7 @@ export function useFirebaseDocumentTyped<T>({
             setError(ErrorNoData);
           }
         },
-        (error) => {
+        () => {
           setError(ErrorSnapshot);
         }
       );
@@ -69,7 +69,7 @@ export function useFirebaseDocumentTyped<T>({
             setError(ErrorNoData);
           }
         },
-        (error) => {
+        () => {
           setError(ErrorSnapshot);
         }
       );

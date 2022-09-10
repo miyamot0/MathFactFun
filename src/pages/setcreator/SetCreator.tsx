@@ -50,6 +50,7 @@ import {
 } from "./views/SetCreatorViews";
 import { StudentDataInterface } from "../student/types/StudentTypes";
 import { PerformanceDataInterface } from "../intervention/types/InterventionTypes";
+import { checkIfNullUndefinedOrEmpty } from "./helpers/SetCreatorHelpers";
 
 export default function SetCreator() {
   const { target, id } = useParams<RoutedIdTargetParam>();
@@ -112,7 +113,7 @@ export default function SetCreator() {
         return {
           Items: doc.entries as FactDataInterface[],
           Date: new Date(doc.dateTimeStart),
-          ShortDate: new Date(doc.dateTimeStart!).toLocaleDateString("en-US"),
+          ShortDate: new Date(doc.dateTimeStart).toLocaleDateString("en-US"),
           Errors: doc.errCount,
           DigitsCorrect: doc.correctDigits,
           DigitsCorrectInitial: doc.nCorrectInitial,
@@ -125,12 +126,13 @@ export default function SetCreator() {
       const itemSummaries: FactDataInterface[][] = mappedDocument.map(
         (items) => items.Items
       );
+
       const flatItemSummaries: FactDataInterface[] = itemSummaries.reduce(
         (accumulator, value) => accumulator.concat(value)
       );
 
       const uniqueProblems: string[] = flatItemSummaries
-        .map((obj) => obj.factString!)
+        .map((obj) => obj.factString)
         .filter(OnlyUnique)
         .sort();
 
@@ -148,14 +150,14 @@ export default function SetCreator() {
    * Save information to firestore
    */
   async function saveUpdatedInformation(objectToSave: ColumnsObject) {
-    if (objectToSave !== null) {
-      const factsTargeted = objectToSave.columns.Targeted!.items.map(
+    if (checkIfNullUndefinedOrEmpty(objectToSave)) {
+      const factsTargeted = objectToSave.columns.Targeted.items.map(
         (a: FactStructure) => a.id
       );
-      const factsSkipped = objectToSave.columns.Skipped!.items.map(
+      const factsSkipped = objectToSave.columns.Skipped.items.map(
         (a: FactStructure) => a.id
       );
-      const factsMastered = objectToSave.columns.Mastered!.items.map(
+      const factsMastered = objectToSave.columns.Mastered.items.map(
         (a: FactStructure) => a.id
       );
 
@@ -165,7 +167,7 @@ export default function SetCreator() {
         factsMastered,
       };
 
-      await updateDocument(id!, studentObject);
+      await updateDocument(id, studentObject);
 
       if (response.error) {
         window.alert("There was an error saving to the database");
@@ -174,7 +176,11 @@ export default function SetCreator() {
   }
 
   useEffect(() => {
-    if (document && state.ItemHistory && !state.LoadedData) {
+    if (
+      document &&
+      !checkIfNullUndefinedOrEmpty(state.ItemHistory) &&
+      !state.LoadedData
+    ) {
       // Loads ALL facts
 
       const mapped: FactStructure[][] = loadMathFacts(document);
@@ -187,7 +193,7 @@ export default function SetCreator() {
           accuracy = 0,
           latency = 0;
 
-        const releventResult = state.ItemHistory!.filter(
+        const releventResult = state.ItemHistory.filter(
           (obj: ItemHistory) => obj.FactString === entry.Answer
         );
 
@@ -210,25 +216,25 @@ export default function SetCreator() {
       const newColumns = state.columns;
 
       const currTargetedSets = populateColumnMetrics(
-        document!.factsTargeted,
-        state.ItemHistory!
+        document.factsTargeted,
+        state.ItemHistory
       );
 
-      newColumns.Targeted!.items = currTargetedSets;
+      newColumns.Targeted.items = currTargetedSets;
 
       const currMasteredSets = populateColumnMetrics(
-        document!.factsMastered,
-        state.ItemHistory!
+        document.factsMastered,
+        state.ItemHistory
       );
 
-      newColumns.Mastered!.items = currMasteredSets;
+      newColumns.Mastered.items = currMasteredSets;
 
       const currSkippedSets = populateColumnMetrics(
-        document!.factsSkipped,
-        state.ItemHistory!
+        document.factsSkipped,
+        state.ItemHistory
       );
 
-      newColumns.Skipped!.items = currSkippedSets;
+      newColumns.Skipped.items = currSkippedSets;
 
       const takenArray = [
         ...currTargetedSets.map((a) => a.id),
@@ -240,20 +246,12 @@ export default function SetCreator() {
         return !takenArray.includes(item.id);
       });
 
-      newColumns.Available!.items = filteredMap;
+      newColumns.Available.items = filteredMap;
 
-      newColumns.Available!.name = `Available (${
-        newColumns.Available!.items.length
-      })`;
-      newColumns.Targeted!.name = `Targeted (${
-        newColumns.Targeted!.items.length
-      })`;
-      newColumns.Mastered!.name = `Mastered (${
-        newColumns.Mastered!.items.length
-      })`;
-      newColumns.Skipped!.name = `Skipped (${
-        newColumns.Skipped!.items.length
-      })`;
+      newColumns.Available.name = `Available (${newColumns.Available.items.length})`;
+      newColumns.Targeted.name = `Targeted (${newColumns.Targeted.items.length})`;
+      newColumns.Mastered.name = `Mastered (${newColumns.Mastered.items.length})`;
+      newColumns.Skipped.name = `Skipped (${newColumns.Skipped.items.length})`;
 
       dispatch({ type: DragDropActions.UpdateColumns, payload: newColumns });
       dispatch({ type: DragDropActions.ToggleLoaded, payload: true });
@@ -268,10 +266,10 @@ export default function SetCreator() {
    */
   function moveTargetedItems(value: string): void {
     const newColumns = state.columns;
-    const preAvailable = state.columns.Available!.items;
-    let preTargeted = state.columns.Targeted!.items;
-    const preMastered = state.columns.Mastered!.items;
-    const preSkipped = state.columns.Skipped!.items;
+    const preAvailable = state.columns.Available.items;
+    let preTargeted = state.columns.Targeted.items;
+    const preMastered = state.columns.Mastered.items;
+    const preSkipped = state.columns.Skipped.items;
 
     switch (value) {
       case "Mastered":
@@ -302,14 +300,14 @@ export default function SetCreator() {
 
     preTargeted = [];
 
-    newColumns.Available!.items = preAvailable;
-    newColumns.Available!.name = `Available (${preAvailable.length})`;
-    newColumns.Targeted!.items = preTargeted;
-    newColumns.Targeted!.name = `Targeted (${preTargeted.length})`;
-    newColumns.Mastered!.items = preMastered;
-    newColumns.Mastered!.name = `Mastered (${preMastered.length})`;
-    newColumns.Skipped!.items = preSkipped;
-    newColumns.Skipped!.name = `Skipped (${preSkipped.length})`;
+    newColumns.Available.items = preAvailable;
+    newColumns.Available.name = `Available (${preAvailable.length})`;
+    newColumns.Targeted.items = preTargeted;
+    newColumns.Targeted.name = `Targeted (${preTargeted.length})`;
+    newColumns.Mastered.items = preMastered;
+    newColumns.Mastered.name = `Mastered (${preMastered.length})`;
+    newColumns.Skipped.items = preSkipped;
+    newColumns.Skipped.name = `Skipped (${preSkipped.length})`;
 
     dispatch({ type: DragDropActions.UpdateColumns, payload: newColumns });
   }
@@ -321,21 +319,25 @@ export default function SetCreator() {
    * @param {number} setArray Index of set
    */
   function moveItemsToTargeted(setArray: number): void {
+    if (!document) {
+      return;
+    }
+
     const newColumns = state.columns;
-    let preAvailable = state.columns.Available!.items;
-    let preTargeted = state.columns.Targeted!.items;
-    let preSkipped = state.columns.Skipped!.items;
-    let preMastered = state.columns.Mastered!.items;
+    let preAvailable = state.columns.Available.items;
+    let preTargeted = state.columns.Targeted.items;
+    let preSkipped = state.columns.Skipped.items;
+    let preMastered = state.columns.Mastered.items;
 
     const mapped = loadMathFacts(document)[setArray].map((item) => item.id);
 
-    state.columns.Targeted!.items.forEach((item: FactStructure) => {
+    state.columns.Targeted.items.forEach((item: FactStructure) => {
       preAvailable.push(item);
     });
 
     preTargeted = [];
 
-    state.columns.Available!.items.forEach((item: FactStructure) => {
+    state.columns.Available.items.forEach((item: FactStructure) => {
       if (mapped.includes(item.id)) {
         preTargeted.push(item);
 
@@ -345,7 +347,7 @@ export default function SetCreator() {
       }
     });
 
-    state.columns.Skipped!.items.forEach((item: FactStructure) => {
+    state.columns.Skipped.items.forEach((item: FactStructure) => {
       if (mapped.includes(item.id)) {
         preTargeted.push(item);
 
@@ -355,7 +357,7 @@ export default function SetCreator() {
       }
     });
 
-    state.columns.Mastered!.items.forEach((item: FactStructure) => {
+    state.columns.Mastered.items.forEach((item: FactStructure) => {
       if (mapped.includes(item.id)) {
         preTargeted.push(item);
 
@@ -365,14 +367,14 @@ export default function SetCreator() {
       }
     });
 
-    newColumns.Available!.items = preAvailable;
-    newColumns.Available!.name = `Available (${preAvailable.length})`;
-    newColumns.Targeted!.items = preTargeted;
-    newColumns.Targeted!.name = `Targeted (${preTargeted.length})`;
-    newColumns.Mastered!.items = preMastered;
-    newColumns.Mastered!.name = `Mastered (${preMastered.length})`;
-    newColumns.Skipped!.items = preSkipped;
-    newColumns.Skipped!.name = `Skipped (${preSkipped.length})`;
+    newColumns.Available.items = preAvailable;
+    newColumns.Available.name = `Available (${preAvailable.length})`;
+    newColumns.Targeted.items = preTargeted;
+    newColumns.Targeted.name = `Targeted (${preTargeted.length})`;
+    newColumns.Mastered.items = preMastered;
+    newColumns.Mastered.name = `Mastered (${preMastered.length})`;
+    newColumns.Skipped.items = preSkipped;
+    newColumns.Skipped.name = `Skipped (${preSkipped.length})`;
 
     dispatch({ type: DragDropActions.UpdateColumns, payload: newColumns });
   }
@@ -385,21 +387,21 @@ export default function SetCreator() {
   function resetItems(): void {
     if (window.confirm("Are you sure you want to reset?") === true) {
       const newColumns = state.columns;
-      newColumns.Available!.items = state.BaseItems!;
-      newColumns.Mastered!.items = [];
-      newColumns.Skipped!.items = [];
-      newColumns.Targeted!.items = [];
+      newColumns.Available.items = state.BaseItems;
+      newColumns.Mastered.items = [];
+      newColumns.Skipped.items = [];
+      newColumns.Targeted.items = [];
 
-      newColumns.Available!.name = `Available (${state.BaseItems!.length})`;
-      newColumns.Targeted!.name = `Targeted (0)`;
-      newColumns.Mastered!.name = `Mastered (0)`;
-      newColumns.Skipped!.name = `Skipped (0)`;
+      newColumns.Available.name = `Available (${state.BaseItems.length})`;
+      newColumns.Targeted.name = `Targeted (0)`;
+      newColumns.Mastered.name = `Mastered (0)`;
+      newColumns.Skipped.name = `Skipped (0)`;
 
       dispatch({ type: DragDropActions.UpdateColumns, payload: newColumns });
     }
   }
 
-  const relevantFOFSets = getRelevantCCCSet(target!);
+  const relevantFOFSets = getRelevantCCCSet(target);
 
   return (
     <div style={SetContainer}>
@@ -433,8 +435,12 @@ export default function SetCreator() {
                 } as SingleOptionType;
               })}
               onChange={(option) => {
-                setAssignedSet(option!);
-                moveItemsToTargeted(parseInt(option!.value) - 1);
+                if (!option) {
+                  return;
+                }
+
+                setAssignedSet(option);
+                moveItemsToTargeted(parseInt(option.value) - 1);
               }}
               value={assignedSet}
             />
@@ -449,7 +455,11 @@ export default function SetCreator() {
                 };
               })}
               onChange={(option) => {
-                moveTargetedItems(option!.value);
+                if (!option) {
+                  return;
+                }
+
+                moveTargetedItems(option.value);
               }}
             />
           </label>

@@ -10,16 +10,14 @@
  * Authorization context
  */
 
-import React, { createContext, useReducer, useEffect, ReactNode } from "react";
+import React, { createContext, useReducer, useEffect } from "react";
 
 import { projectAuth } from "../firebase/config";
 import { AppInterface } from "../App";
 import {
   AuthorizationContextInterface,
-  AuthorizationContextStateInterface,
   AuthorizationProviderInterface,
   AuthorizationStates,
-  FirebaseLoginAction,
 } from "./types/AuthorizationTypes";
 import { simplifyPrivilegeAccess } from "./helpers/AuthorizationHelpers";
 import {

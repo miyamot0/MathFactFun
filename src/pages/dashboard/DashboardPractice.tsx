@@ -43,32 +43,33 @@ export default function DashboardPractice() {
     setFilter(newFilter);
   }
 
-  const students = documents
-    ? documents.filter((document) => {
-        switch (filter) {
-          case "All":
-            return document.currentApproach !== "N/A";
-          case "Mine":
-            return (
-              document.creator === user!.uid &&
-              document.currentApproach !== "N/A"
-            );
-          case "K":
-          case "1st":
-          case "2nd":
-          case "3rd":
-          case "4th":
-          case "5th":
-          case "6th":
-            return (
-              document.currentGrade === filter &&
-              document.currentApproach !== "N/A"
-            );
-          default:
-            return document.currentApproach !== "N/A";
-        }
-      })
-    : null;
+  const students =
+    documents && user
+      ? documents.filter((document) => {
+          switch (filter) {
+            case "All":
+              return document.currentApproach !== "N/A";
+            case "Mine":
+              return (
+                document.creator === user.uid &&
+                document.currentApproach !== "N/A"
+              );
+            case "K":
+            case "1st":
+            case "2nd":
+            case "3rd":
+            case "4th":
+            case "5th":
+            case "6th":
+              return (
+                document.currentGrade === filter &&
+                document.currentApproach !== "N/A"
+              );
+            default:
+              return document.currentApproach !== "N/A";
+          }
+        })
+      : null;
 
   return (
     <div>

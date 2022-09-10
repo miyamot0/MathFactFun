@@ -34,8 +34,6 @@ import {
 } from "../../utilities/LabelHelper";
 import { RelevantKeys } from "../../maths/Facts";
 
-import { DetermineErrorCorrection } from "../../utilities/InterventionHelper";
-
 // styles
 import "./styles/TapedProblems.css";
 import {
@@ -50,6 +48,7 @@ import {
 } from "./functionality/InterventionBehavior";
 import { StudentDataInterface } from "../student/types/StudentTypes";
 import { FactDataInterface } from "../setcreator/types/SetCreatorTypes";
+import { shouldShowFeedback } from "./helpers/InterventionHelpers";
 
 const DelCode = "Del";
 
@@ -127,20 +126,6 @@ export default function TapedProblems() {
   useEventListener("keydown", (key) =>
     keyHandler(key, captureKeyClick, captureButtonAction, state.CurrentAction)
   );
-
-  /** shouldShowFeedback
-   *
-   * Handle branching logic for error message
-   *
-   * @param {boolean} trialError was there an error?
-   * @returns {boolean}
-   */
-  function shouldShowFeedback(trialError: boolean): boolean {
-    return DetermineErrorCorrection(
-      trialError,
-      document!.currentErrorApproach!
-    );
-  }
 
   function openModal(): void {
     setIsOpen(true);
@@ -261,6 +246,10 @@ export default function TapedProblems() {
    *
    */
   function captureButtonAction(): void {
+    if (document === null) {
+      return;
+    }
+
     if (
       currentAction === SharedActionSequence.Start ||
       currentAction === SharedActionSequence.Begin
@@ -324,7 +313,7 @@ export default function TapedProblems() {
     // Update time for trial
     setPreTrialTime(new Date());
 
-    if (shouldShowFeedback(!isMatching)) {
+    if (shouldShowFeedback(!isMatching, document)) {
       // Error correction prompt
       openModal();
     } else {

@@ -12,13 +12,13 @@ import { FactDataInterface } from "../../setcreator/types/SetCreatorTypes";
  * @returns
  */
 export function reducerPerOperation(
-  doc: PerformanceDataInterface[] | undefined
+  doc: PerformanceDataInterface[]
 ): DailyPerformanceMetrics[] {
-  const mappedDocument = doc!.map((doc) => {
+  const mappedDocument = doc.map((doc) => {
     return {
       Items: doc.entries as FactDataInterface[],
-      Date: new Date(doc.dateTimeStart!),
-      ShortDate: new Date(doc.dateTimeStart!).toLocaleDateString("en-US"),
+      Date: new Date(doc.dateTimeStart),
+      ShortDate: new Date(doc.dateTimeStart).toLocaleDateString("en-US"),
       Errors: doc.errCount,
       DigitsCorrect: doc.correctDigits,
       DigitsCorrectInitial: doc.nCorrectInitial,
