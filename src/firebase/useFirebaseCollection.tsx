@@ -20,7 +20,6 @@ import {
 } from "@firebase/firestore-types";
 import { CollectionInputInterface } from "./types/GeneralTypes";
 import { FirestoreCollections } from "./useFirestore";
-import { performanceConverter } from "./converters/GeneralConverters";
 
 const CollectionError = "Unable to retrieve data";
 
@@ -110,7 +109,7 @@ export function useFirebaseCollectionTyped<T>({
       stringSplit.length > 0 &&
       stringSplit[0] === FirestoreCollections.Performances
     ) {
-      const unsubscribe = ref.withConverter(performanceConverter).onSnapshot(
+      const unsubscribe = ref.onSnapshot(
         (snapshot) => {
           setDocuments(
             snapshot.docs.map((doc) => {
