@@ -41,16 +41,7 @@ require("highcharts/modules/annotations")(Highcharts);
 require("highcharts/modules/accessibility")(Highcharts);
 AnnotationsModule(Highcharts);
 
-const PanelWidth = {
-  minHeight: "600px",
-};
-
-const HeadingStyle = {
-  fontSize: "1.25em",
-  color: "var(--heading-style-color)",
-  display: "block",
-  marginBottom: "6px",
-};
+import "./styles/ProgressMonitorStyles.css";
 
 export default function ProgressMonitor() {
   const { id, target, method, aim } = useParams<RoutedStudentProgressSet>();
@@ -156,7 +147,7 @@ export default function ProgressMonitor() {
       });
 
       // Extract items from document collection
-      let itemSummaries = mappedDocument.map(({ Items }) => Items);
+      const itemSummaries = mappedDocument.map(({ Items }) => Items);
 
       const flatItemSummaries: FactDataInterface[] = itemSummaries.reduce(
         (accumulator, value) => accumulator.concat(value)
@@ -229,8 +220,12 @@ export default function ProgressMonitor() {
 
   return (
     <>
-      <div style={PanelWidth}>
-        <h2 style={HeadingStyle}>
+      <div
+        style={{
+          minHeight: "600px",
+        }}
+      >
+        <h2 className="h2-heading-style-progress">
           Current Progress (Overall Fluency/{GetApproachStringFromLabel(method)}
           )
         </h2>
@@ -238,8 +233,12 @@ export default function ProgressMonitor() {
       </div>
       <br></br>
 
-      <div style={PanelWidth}>
-        <h2 style={HeadingStyle}>
+      <div
+        style={{
+          minHeight: "600px",
+        }}
+      >
+        <h2 className="h2-heading-style-progress">
           Current Progress (Item-level Performance/
           {GetApproachStringFromLabel(method)})
         </h2>

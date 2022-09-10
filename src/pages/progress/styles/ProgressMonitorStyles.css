@@ -1,0 +1,7 @@
+
+.h2-heading-style-progress {
+    font-size: 1.25em;
+    color: var(--heading-style-color);
+    display: block;
+    margin-bottom: 6px;
+}

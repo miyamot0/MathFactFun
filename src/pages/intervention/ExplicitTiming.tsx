@@ -32,7 +32,7 @@ import {
   CalculateDigitsCorrectAnswer,
 } from "../../utilities/LabelHelper";
 
-import { DetermineErrorCorrection } from "../../utilities/Logic";
+import { DetermineErrorCorrection } from "../../utilities/InterventionHelper";
 
 import { RoutedIdTargetParam } from "../../utilities/RoutingHelpers";
 import {
@@ -134,7 +134,7 @@ export default function ExplicitTiming() {
   async function submitDataToFirebase(
     finalFactObject: FactDataInterface | null
   ): Promise<void> {
-    let finalEntries = state.FactModelList;
+    const finalEntries = state.FactModelList;
 
     if (finalFactObject !== null) {
       finalEntries?.push(finalFactObject);
@@ -218,7 +218,7 @@ export default function ExplicitTiming() {
       state.EntryRepresentationInternal;
 
     // Compare if internal and inputted string match
-    let isMatching =
+    const isMatching =
       state.ViewRepresentationInternal.trim() === combinedResponse.trim();
 
     let uNumberCorrectInitial = state.NumCorrectInitial;
@@ -234,24 +234,24 @@ export default function ExplicitTiming() {
       uNumberErrors = state.NumErrors + 1;
     }
 
-    var current = new Date();
-    let secs = (current.getTime() - state.PreTrialTime!.getTime()) / 1000;
+    const current = new Date();
+    const secs = (current.getTime() - state.PreTrialTime!.getTime()) / 1000;
 
-    let holderPreTime = state.PreTrialTime;
+    const holderPreTime = state.PreTrialTime;
 
     if (shouldShowFeedback(!isMatching)) {
       openModal();
     } else {
-      let totalDigitsShown = CalculateDigitsTotalAnswer(
+      const totalDigitsShown = CalculateDigitsTotalAnswer(
         state.ViewRepresentationInternal
       );
 
-      let totalDigitsCorrect = CalculateDigitsCorrectAnswer(
+      const totalDigitsCorrect = CalculateDigitsCorrectAnswer(
         combinedResponse,
         state.ViewRepresentationInternal
       );
 
-      let currentItem2: FactDataInterface = {
+      const currentItem2: FactDataInterface = {
         factCorrect: isMatching,
         initialTry: state.OnInitialTry,
         factType: document!.currentTarget,

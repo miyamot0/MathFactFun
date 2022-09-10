@@ -34,7 +34,7 @@ import {
 } from "../../utilities/LabelHelper";
 import { RelevantKeys } from "../../maths/Facts";
 
-import { DetermineErrorCorrection } from "../../utilities/Logic";
+import { DetermineErrorCorrection } from "../../utilities/InterventionHelper";
 
 // styles
 import "./TapedProblems.css";
