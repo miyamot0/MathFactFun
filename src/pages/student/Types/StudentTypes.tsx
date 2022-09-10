@@ -4,7 +4,7 @@ export interface StudentWidgetInterface {
   student: StudentDataInterface;
 }
 
-export enum UserCreatorBehavior {
+export enum StudentCreatorBehavior {
   SetName,
   SetDetails,
   SetDueDate,

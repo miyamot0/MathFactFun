@@ -28,13 +28,13 @@ import { SingleOptionType } from "../CommonTypes/CommonPageTypes";
 import {
   UserCreateSingleInitialState,
   UserCreationReducer,
-} from "./functionality/CreateFunctionality";
+} from "./functionality/StudentFunctionality";
 import { StudentDataInterface } from "../../firebase/types/GeneralTypes";
 import {
   checkInputNullOrUndefined,
   streamlinedCheck,
-} from "./helpers/CreateHelpers";
-import { UserCreatorBehavior } from "./types/StudentTypes";
+} from "./helpers/StudentHelpers";
+import { StudentCreatorBehavior } from "./types/StudentTypes";
 
 // Page to create new students
 export default function CreateStudent() {
@@ -65,7 +65,7 @@ export default function CreateStudent() {
     event.preventDefault();
 
     dispatch({
-      type: UserCreatorBehavior.SetFormError,
+      type: StudentCreatorBehavior.SetFormError,
       payload: { uFormError: undefined },
     });
 
@@ -124,7 +124,7 @@ export default function CreateStudent() {
       state.CurrentBenchmarking.length < 1
     ) {
       dispatch({
-        type: UserCreatorBehavior.SetFormError,
+        type: StudentCreatorBehavior.SetFormError,
         payload: { uFormError: "Please select benchmarking options" },
       });
 
@@ -182,7 +182,7 @@ export default function CreateStudent() {
             type="text"
             onChange={(e) => {
               dispatch({
-                type: UserCreatorBehavior.SetName,
+                type: StudentCreatorBehavior.SetName,
                 payload: { uName: e.target.value },
               });
             }}
@@ -195,7 +195,7 @@ export default function CreateStudent() {
             required
             onChange={(e) => {
               dispatch({
-                type: UserCreatorBehavior.SetDetails,
+                type: StudentCreatorBehavior.SetDetails,
                 payload: { uDetails: e.target.value },
               });
             }}
@@ -209,7 +209,7 @@ export default function CreateStudent() {
             type="date"
             onChange={(e) => {
               dispatch({
-                type: UserCreatorBehavior.SetDueDate,
+                type: StudentCreatorBehavior.SetDueDate,
                 payload: { uDueDate: e.target.value },
               });
             }}
@@ -222,7 +222,7 @@ export default function CreateStudent() {
             options={Grades}
             onChange={(option) => {
               dispatch({
-                type: UserCreatorBehavior.SetCurrentGrade,
+                type: StudentCreatorBehavior.SetCurrentGrade,
                 payload: { uCurrentGrade: option },
               });
             }}
@@ -234,7 +234,7 @@ export default function CreateStudent() {
             options={CoreOperations}
             onChange={(option: MultiValue<SingleOptionType>) => {
               dispatch({
-                type: UserCreatorBehavior.SetCurrentBenchmarking,
+                type: StudentCreatorBehavior.SetCurrentBenchmarking,
                 payload: { uCurrentBenchmarking: option },
               });
             }}
@@ -248,7 +248,7 @@ export default function CreateStudent() {
             options={Operations}
             onChange={(option) => {
               dispatch({
-                type: UserCreatorBehavior.SetCurrentTarget,
+                type: StudentCreatorBehavior.SetCurrentTarget,
                 payload: { uCurrentTarget: option },
               });
             }}
@@ -261,7 +261,7 @@ export default function CreateStudent() {
             options={InterventionApproach}
             onChange={(option) => {
               dispatch({
-                type: UserCreatorBehavior.SetCurrentApproach,
+                type: StudentCreatorBehavior.SetCurrentApproach,
                 payload: { uCurrentApproach: option },
               });
             }}
@@ -274,7 +274,7 @@ export default function CreateStudent() {
             options={ErrorCorrection}
             onChange={(option) => {
               dispatch({
-                type: UserCreatorBehavior.SetCurrentErrorApproach,
+                type: StudentCreatorBehavior.SetCurrentErrorApproach,
                 payload: { uCurrentErrorApproach: option },
               });
             }}
@@ -287,7 +287,7 @@ export default function CreateStudent() {
             options={Contingencies}
             onChange={(option) => {
               dispatch({
-                type: UserCreatorBehavior.SetCurrentSRApproach,
+                type: StudentCreatorBehavior.SetCurrentSRApproach,
                 payload: { uCurrentSRApproach: option },
               });
             }}

@@ -19,18 +19,14 @@ import { useFirebaseDocumentTyped } from "../../firebase/useFirebaseDocument";
 import { UserDataInterface } from "../../models/UserModel";
 import { RoutedIdParam } from "../CommonTypes/CommonPageTypes";
 
-const EditFormStyle = {
-  maxWidth: "600px",
-};
-
 export default function EditUser() {
   const history = useHistory();
   const { id } = useParams<RoutedIdParam>();
 
-  const { document, documentError } = useFirebaseDocumentTyped<UserDataInterface>(
-    {
+  const { document, documentError } =
+    useFirebaseDocumentTyped<UserDataInterface>({
       collectionString: "users",
-      idString: id
+      idString: id,
     });
 
   const { updateDocument, response } = useFirestore(
@@ -98,7 +94,7 @@ export default function EditUser() {
   }
 
   return (
-    <div style={EditFormStyle}>
+    <div style={{ maxWidth: "600px" }}>
       <h2 className="global-page-title">Edit current teacher</h2>
 
       <form onSubmit={handleEditFormSubmit}>

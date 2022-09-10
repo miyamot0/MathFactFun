@@ -1,7 +1,7 @@
 import firebase from "firebase/app";
 import { MultiValue } from "react-select";
 import { SingleOptionType } from "../../CommonTypes/CommonPageTypes";
-import { UserCreatorBehavior } from "../types/StudentTypes";
+import { StudentCreatorBehavior } from "../types/StudentTypes";
 
 export function checkInputNullOrUndefined(
   value:
@@ -33,7 +33,7 @@ export function streamlinedCheck(
 
   if (statusOfCheck) {
     dispatch({
-      type: UserCreatorBehavior.SetFormError,
+      type: StudentCreatorBehavior.SetFormError,
       payload: { uFormError: err },
     });
   }

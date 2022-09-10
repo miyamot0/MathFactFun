@@ -34,12 +34,12 @@ import {
 import {
   UserCreateSingleInitialState,
   UserCreationReducer,
-} from "./functionality/CreateFunctionality";
+} from "./functionality/StudentFunctionality";
 import {
   checkInputNullOrUndefined,
   streamlinedCheck,
-} from "./helpers/CreateHelpers";
-import { UserCreatorBehavior } from "./types/StudentTypes";
+} from "./helpers/StudentHelpers";
+import { StudentCreatorBehavior } from "./types/StudentTypes";
 
 // Page to create new students
 export default function CreateBulkStudents() {
@@ -70,7 +70,7 @@ export default function CreateBulkStudents() {
     event.preventDefault();
 
     dispatch({
-      type: UserCreatorBehavior.SetFormError,
+      type: StudentCreatorBehavior.SetFormError,
       payload: { uFormError: undefined },
     });
 
@@ -125,7 +125,7 @@ export default function CreateBulkStudents() {
       state.CurrentBenchmarking.length < 1
     ) {
       dispatch({
-        type: UserCreatorBehavior.SetFormError,
+        type: StudentCreatorBehavior.SetFormError,
         payload: { uFormError: "Please select benchmarking options" },
       });
 
@@ -197,7 +197,7 @@ export default function CreateBulkStudents() {
             onChange={(e) => {
               console.log(e);
               dispatch({
-                type: UserCreatorBehavior.SetName,
+                type: StudentCreatorBehavior.SetName,
                 payload: { uName: e.target.value },
               });
             }}
@@ -211,7 +211,7 @@ export default function CreateBulkStudents() {
             type="date"
             onChange={(e) => {
               dispatch({
-                type: UserCreatorBehavior.SetDueDate,
+                type: StudentCreatorBehavior.SetDueDate,
                 payload: { uDueDate: e.target.value },
               });
             }}
@@ -224,7 +224,7 @@ export default function CreateBulkStudents() {
             options={Grades}
             onChange={(option) => {
               dispatch({
-                type: UserCreatorBehavior.SetCurrentGrade,
+                type: StudentCreatorBehavior.SetCurrentGrade,
                 payload: { uCurrentGrade: option },
               });
             }}
@@ -236,7 +236,7 @@ export default function CreateBulkStudents() {
             options={CoreOperations}
             onChange={(option: MultiValue<SingleOptionType>) => {
               dispatch({
-                type: UserCreatorBehavior.SetCurrentBenchmarking,
+                type: StudentCreatorBehavior.SetCurrentBenchmarking,
                 payload: { uCurrentBenchmarking: option },
               });
             }}
@@ -250,7 +250,7 @@ export default function CreateBulkStudents() {
             options={Operations}
             onChange={(option) => {
               dispatch({
-                type: UserCreatorBehavior.SetCurrentTarget,
+                type: StudentCreatorBehavior.SetCurrentTarget,
                 payload: { uCurrentTarget: option },
               });
             }}
@@ -263,7 +263,7 @@ export default function CreateBulkStudents() {
             options={InterventionApproach}
             onChange={(option) => {
               dispatch({
-                type: UserCreatorBehavior.SetCurrentApproach,
+                type: StudentCreatorBehavior.SetCurrentApproach,
                 payload: { uCurrentApproach: option },
               });
             }}
@@ -276,7 +276,7 @@ export default function CreateBulkStudents() {
             options={ErrorCorrection}
             onChange={(option) => {
               dispatch({
-                type: UserCreatorBehavior.SetCurrentErrorApproach,
+                type: StudentCreatorBehavior.SetCurrentErrorApproach,
                 payload: { uCurrentErrorApproach: option },
               });
             }}
@@ -289,7 +289,7 @@ export default function CreateBulkStudents() {
             options={Contingencies}
             onChange={(option) => {
               dispatch({
-                type: UserCreatorBehavior.SetCurrentSRApproach,
+                type: StudentCreatorBehavior.SetCurrentSRApproach,
                 payload: { uCurrentSRApproach: option },
               });
             }}

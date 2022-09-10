@@ -15,14 +15,14 @@ import { useState } from "react";
 import { useFirestore } from "../../firebase/useFirestore";
 import { useHistory } from "react-router-dom";
 
-const CreateFormStyle = {
-  maxWidth: "600px",
-};
-
 // Page to create new students
 export default function CreateUser() {
   const history = useHistory();
-  const { addDocument, response } = useFirestore("tempUsers", undefined, undefined);
+  const { addDocument, response } = useFirestore(
+    "tempUsers",
+    undefined,
+    undefined
+  );
 
   // field values
   const [email, setEmail] = useState<string>("");
@@ -63,7 +63,7 @@ export default function CreateUser() {
       displayName: name,
       displaySchool: school,
       password: password,
-      id: undefined
+      id: undefined,
     };
 
     await addDocument(userObject);
@@ -74,7 +74,7 @@ export default function CreateUser() {
   }
 
   return (
-    <div style={CreateFormStyle}>
+    <div style={{ maxWidth: "600px" }}>
       <h2 className="global-page-title">Add a new user (Teacher)</h2>
 
       <form onSubmit={handleCreateUserSubmit}>

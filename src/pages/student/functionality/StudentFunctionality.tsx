@@ -1,7 +1,7 @@
 import { MultiValue } from "react-select";
 import { ErrorHandling } from "../../../maths/Facts";
 import { SingleOptionType } from "../../CommonTypes/CommonPageTypes";
-import { UserCreatorBehavior } from "../types/StudentTypes";
+import { StudentCreatorBehavior } from "../types/StudentTypes";
 
 export interface StudentCreateState {
   Name: string;
@@ -63,51 +63,51 @@ export const UserCreateSingleInitialState: StudentCreateState = {
  */
 export function UserCreationReducer(
   state: StudentCreateState,
-  action: { type: UserCreatorBehavior; payload: any }
+  action: { type: StudentCreatorBehavior; payload: any }
 ): StudentCreateState {
   switch (action.type) {
-    case UserCreatorBehavior.SetName:
+    case StudentCreatorBehavior.SetName:
       return { ...state, Name: action.payload.uName };
-    case UserCreatorBehavior.SetDetails:
+    case StudentCreatorBehavior.SetDetails:
       return { ...state, Details: action.payload.uDetails };
-    case UserCreatorBehavior.SetFormError:
+    case StudentCreatorBehavior.SetFormError:
       return { ...state, FormError: action.payload.uFormError };
-    case UserCreatorBehavior.SetDueDate:
+    case StudentCreatorBehavior.SetDueDate:
       return { ...state, DueDate: action.payload.uDueDate };
-    case UserCreatorBehavior.SetCurrentApproach:
+    case StudentCreatorBehavior.SetCurrentApproach:
       return { ...state, CurrentApproach: action.payload.uCurrentApproach };
-    case UserCreatorBehavior.SetCurrentGrade:
+    case StudentCreatorBehavior.SetCurrentGrade:
       return { ...state, CurrentGrade: action.payload.uCurrentGrade };
-    case UserCreatorBehavior.SetCurrentTarget:
+    case StudentCreatorBehavior.SetCurrentTarget:
       return { ...state, CurrentTarget: action.payload.uCurrentTarget };
-    case UserCreatorBehavior.SetCurrentErrorApproach:
+    case StudentCreatorBehavior.SetCurrentErrorApproach:
       return {
         ...state,
         CurrentErrorApproach: action.payload.uCurrentErrorApproach,
       };
-    case UserCreatorBehavior.SetCurrentSRApproach:
+    case StudentCreatorBehavior.SetCurrentSRApproach:
       return { ...state, CurrentSRApproach: action.payload.uCurrentSRApproach };
-    case UserCreatorBehavior.SetCurrentBenchmarking:
+    case StudentCreatorBehavior.SetCurrentBenchmarking:
       return {
         ...state,
         CurrentBenchmarking: action.payload.uCurrentBenchmarking,
       };
-    case UserCreatorBehavior.SetBuilt:
+    case StudentCreatorBehavior.SetBuilt:
       return {
         ...state,
         DidBuild: true,
       };
-    case UserCreatorBehavior.SetAimLine:
+    case StudentCreatorBehavior.SetAimLine:
       return {
         ...state,
         AimLine: action.payload.uAimLine,
       };
-    case UserCreatorBehavior.SetExplicitTime:
+    case StudentCreatorBehavior.SetExplicitTime:
       return {
         ...state,
         ExplicitTime: action.payload.uExplicitTime,
       };
-    case UserCreatorBehavior.SetLoadedStudent:
+    case StudentCreatorBehavior.SetLoadedStudent:
       return {
         ...state,
         Name: action.payload.uName,
