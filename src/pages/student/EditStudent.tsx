@@ -28,7 +28,6 @@ import { FormatDate } from "../../utilities/LabelHelper";
 
 // components
 import Select, { MultiValue } from "react-select";
-import { StudentDataInterface } from "../../firebase/types/GeneralTypes";
 import {
   RoutedIdParam,
   SingleOptionType,
@@ -41,7 +40,10 @@ import {
   checkInputNullOrUndefined,
   streamlinedCheck,
 } from "../../utilities/FormHelpers";
-import { StudentCreatorBehavior } from "./types/StudentTypes";
+import {
+  StudentCreatorBehavior,
+  StudentDataInterface,
+} from "./types/StudentTypes";
 
 // TODO: reducer
 

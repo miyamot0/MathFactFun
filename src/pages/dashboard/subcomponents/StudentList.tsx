@@ -17,8 +17,8 @@ import { Link } from "react-router-dom";
 import { GetApproachStringFromLabel } from "../../../utilities/LabelHelper";
 
 import "./StudentList.css";
-import { StudentDataInterface } from "../../../firebase/types/GeneralTypes";
 import { StudentListInterface } from "../types/DashboardTypes";
+import { StudentDataInterface } from "../../student/types/StudentTypes";
 
 /** checkIfProgrammingCurrent
  *

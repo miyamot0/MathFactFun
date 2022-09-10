@@ -22,7 +22,6 @@ import { OnlyUnique } from "../../utilities/LabelHelper";
 import {
   FactDataInterface,
   PerformanceDataInterface,
-  StudentDataInterface,
 } from "../../firebase/types/GeneralTypes";
 import {
   ColumnsObject,
@@ -52,15 +51,20 @@ import {
   SetEditForm,
   TitleStyle,
 } from "./views/SetCreatorViews";
+import { StudentDataInterface } from "../student/types/StudentTypes";
 
 export default function SetCreator() {
   const { target, id } = useParams<RoutedIdTargetParam>();
-  const { document } = useFirebaseDocumentTyped<StudentDataInterface>(
-    { collectionString: "students", idString: id });
+  const { document } = useFirebaseDocumentTyped<StudentDataInterface>({
+    collectionString: "students",
+    idString: id,
+  });
 
-  const { documents } = useFirebaseCollectionTyped<PerformanceDataInterface>(
-    { collectionString: `performances/${target}/${id}`, queryString: undefined, orderString: undefined }
-  );
+  const { documents } = useFirebaseCollectionTyped<PerformanceDataInterface>({
+    collectionString: `performances/${target}/${id}`,
+    queryString: undefined,
+    orderString: undefined,
+  });
 
   const { updateDocument, response } = useFirestore(
     "students",
@@ -240,14 +244,18 @@ export default function SetCreator() {
 
       newColumns.Available!.items = filteredMap;
 
-      newColumns.Available!.name = `Available (${newColumns.Available!.items.length
-        })`;
-      newColumns.Targeted!.name = `Targeted (${newColumns.Targeted!.items.length
-        })`;
-      newColumns.Mastered!.name = `Mastered (${newColumns.Mastered!.items.length
-        })`;
-      newColumns.Skipped!.name = `Skipped (${newColumns.Skipped!.items.length
-        })`;
+      newColumns.Available!.name = `Available (${
+        newColumns.Available!.items.length
+      })`;
+      newColumns.Targeted!.name = `Targeted (${
+        newColumns.Targeted!.items.length
+      })`;
+      newColumns.Mastered!.name = `Mastered (${
+        newColumns.Mastered!.items.length
+      })`;
+      newColumns.Skipped!.name = `Skipped (${
+        newColumns.Skipped!.items.length
+      })`;
 
       dispatch({ type: DragDropActions.UpdateColumns, payload: newColumns });
       dispatch({ type: DragDropActions.ToggleLoaded, payload: true });

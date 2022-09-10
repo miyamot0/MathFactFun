@@ -29,12 +29,14 @@ import {
   UserCreateSingleInitialState,
   UserCreationReducer,
 } from "./functionality/StudentFunctionality";
-import { StudentDataInterface } from "../../firebase/types/GeneralTypes";
 import {
   checkInputNullOrUndefined,
   streamlinedCheck,
 } from "../../utilities/FormHelpers";
-import { StudentCreatorBehavior } from "./types/StudentTypes";
+import {
+  StudentCreatorBehavior,
+  StudentDataInterface,
+} from "./types/StudentTypes";
 
 // Page to create new students
 export default function CreateStudent() {
@@ -63,6 +65,10 @@ export default function CreateStudent() {
     event: React.FormEvent<HTMLFormElement>
   ): Promise<void> {
     event.preventDefault();
+
+    if (user === null) {
+      return;
+    }
 
     dispatch({
       type: StudentCreatorBehavior.SetFormError,
@@ -142,7 +148,7 @@ export default function CreateStudent() {
       currentBenchmarking: state.CurrentBenchmarking.map(
         (benchmark: SingleOptionType) => benchmark.label
       ),
-      creator: user?.uid,
+      creator: user.uid,
       dueDate: timestamp.fromDate(new Date(state.DueDate)),
       lastActivity: timestamp.fromDate(laggedDate),
       createdAt: timestamp.fromDate(new Date()),
@@ -154,6 +160,8 @@ export default function CreateStudent() {
       // defaults
       id: null,
       aimLine: 0,
+      problemSet: "A",
+      minForTask: 2,
       comments: [],
       completedBenchmark: [],
       factsMastered: [],

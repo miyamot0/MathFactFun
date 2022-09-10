@@ -17,13 +17,16 @@ import BenchmarkList from "./subcomponents/BenchmarkList";
 
 // styles
 import "./Dashboards.css";
-import { StudentDataInterface } from "../../firebase/types/GeneralTypes";
 import { RoutedIdParam } from "../CommonTypes/CommonPageTypes";
+import { StudentDataInterface } from "../student/types/StudentTypes";
 
 export default function DashboardBenchmark() {
   const { id } = useParams<RoutedIdParam>();
   const { document, documentError } =
-    useFirebaseDocumentTyped<StudentDataInterface>({ collectionString: "students", idString: id });
+    useFirebaseDocumentTyped<StudentDataInterface>({
+      collectionString: "students",
+      idString: id,
+    });
 
   if (documentError) {
     return <div className="error">{documentError}</div>;

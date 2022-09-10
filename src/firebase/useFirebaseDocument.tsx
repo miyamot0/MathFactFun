@@ -12,7 +12,6 @@
 
 import { useEffect, useState } from "react";
 import { projectFirestore } from "./config";
-import { studentConverter } from "./converters/GeneralConverters";
 import { DocumentInputInterface } from "./types/GeneralTypes";
 import { FirestoreCollections } from "./useFirestore";
 
@@ -41,7 +40,7 @@ export function useFirebaseDocumentTyped<T>({
     const ref = projectFirestore.collection(collectionString).doc(idString);
 
     if (collectionString === FirestoreCollections.Students) {
-      const unsubscribe = ref.withConverter(studentConverter).onSnapshot(
+      const unsubscribe = ref.onSnapshot(
         (snapshot) => {
           if (snapshot.data()) {
             setDocument({

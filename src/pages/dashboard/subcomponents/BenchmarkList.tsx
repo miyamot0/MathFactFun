@@ -13,7 +13,7 @@
 import React from "react";
 
 import { Link } from "react-router-dom";
-import { StudentDataInterface } from "../../../firebase/types/GeneralTypes";
+import { StudentDataInterface } from "../../student/types/StudentTypes";
 import { BenchmarkInterface } from "../types/DashboardTypes";
 
 import "./BenchmarkList.css";
@@ -88,7 +88,7 @@ export default function BenchmarkList({ student }: BenchmarkInterface) {
       {student.currentBenchmarking.length === 0 && (
         <p>No benchmarking targets</p>
       )}
-      {student.currentBenchmarking.map((benchmark) => {
+      {student.currentBenchmarking.map((benchmark: any) => {
         const benchmarkCompleted = checkIfCompletedBenchmark(
           student,
           benchmark

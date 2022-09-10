@@ -23,7 +23,6 @@ import StimulusFrame from "./subcomponents/StimulusFrame";
 
 // helpers
 import {
-  CalculateDigitsTotal,
   CalculateDigitsCorrect,
   GetOperatorFromLabel,
   CalculateDigitsTotalAnswer,
@@ -40,7 +39,6 @@ import "./CoverCopyCompare.css";
 import {
   FactDataInterface,
   PerformanceDataInterface,
-  StudentDataInterface,
 } from "../../firebase/types/GeneralTypes";
 
 import { ErrorModalCustomStyle } from "./subcomponents/ModalStyles";
@@ -55,6 +53,7 @@ import {
   useEventListener,
 } from "./functionality/InterventionBehavior";
 import { RoutedIdTargetParam } from "../CommonTypes/CommonPageTypes";
+import { StudentDataInterface } from "../student/types/StudentTypes";
 
 Modal.setAppElement("#root");
 

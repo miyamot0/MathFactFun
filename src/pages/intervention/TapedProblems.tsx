@@ -46,10 +46,7 @@ import {
 
 // styles
 import "./TapedProblems.css";
-import {
-  PerformanceDataInterface,
-  StudentDataInterface,
-} from "../../firebase/types/GeneralTypes";
+import { PerformanceDataInterface } from "../../firebase/types/GeneralTypes";
 import {
   BenchmarkActions,
   SharedActionSequence,
@@ -60,6 +57,7 @@ import {
   keyHandler,
   useEventListener,
 } from "./functionality/InterventionBehavior";
+import { StudentDataInterface } from "../student/types/StudentTypes";
 
 const DelCode = "Del";
 

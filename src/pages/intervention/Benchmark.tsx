@@ -25,10 +25,7 @@ import {
   CalculateDigitsCorrectAnswer,
 } from "../../utilities/LabelHelper";
 
-import {
-  FactDataInterface,
-  StudentDataInterface,
-} from "../../firebase/types/GeneralTypes";
+import { FactDataInterface } from "../../firebase/types/GeneralTypes";
 import { timestamp } from "../../firebase/config";
 import { RoutedIdTargetParam } from "../CommonTypes/CommonPageTypes";
 import { useAuthorizationContext } from "../../context/useAuthorizationContext";
@@ -46,6 +43,7 @@ import {
 
 // Styles
 import "../intervention/ExplicitTiming.css";
+import { StudentDataInterface } from "../student/types/StudentTypes";
 
 export default function Benchmark() {
   const { id, target } = useParams<RoutedIdTargetParam>();

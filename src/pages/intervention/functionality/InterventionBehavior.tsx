@@ -1,8 +1,8 @@
 import { useEffect, useRef } from "react";
-import { StudentDataInterface } from "../../../firebase/types/GeneralTypes";
 import { RelevantKeys } from "../../../maths/Facts";
 import { FactsOnFire } from "../../../maths/Mind";
 import { GetOperatorFromLabel } from "../../../utilities/LabelHelper";
+import { StudentDataInterface } from "../../student/types/StudentTypes";
 import {
   BenchmarkActions,
   BenchmarkState,

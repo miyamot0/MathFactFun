@@ -1,6 +1,7 @@
 import firebase from "firebase/app";
 
 import { UserDataInterface } from "../../models/UserModel";
+import { StudentDataInterface } from "../../pages/student/types/StudentTypes";
 
 export class CommentInterface {
   constructor(
@@ -15,60 +16,6 @@ export class CommentInterface {
     this.createdAt = createdAt;
     this.createdBy = createdBy;
     this.id = id;
-  }
-}
-
-export class StudentDataInterface {
-  constructor(
-    // Strings
-    readonly id: string | undefined | null,
-    readonly aimLine: number,
-    readonly createdAt: firebase.firestore.Timestamp | null,
-    readonly dueDate: firebase.firestore.Timestamp | null,
-    readonly lastActivity: firebase.firestore.Timestamp | null,
-    readonly comments: CommentInterface[],
-    readonly completedBenchmark: string[],
-    readonly currentBenchmarking: string[],
-    readonly factsMastered: string[],
-    readonly factsSkipped: string[],
-    readonly factsTargeted: string[],
-
-    readonly creator?: string,
-    readonly currentApproach?: string | undefined,
-    readonly currentErrorApproach?: string | undefined,
-    readonly currentGrade?: string,
-    readonly currentSRApproach?: string | undefined,
-    readonly currentTarget?: string | undefined,
-    readonly details?: string,
-    readonly name?: string,
-    readonly problemSet?: string,
-
-    readonly minForTask?: number
-  ) {
-    // Strings
-    this.id = id;
-    this.aimLine = aimLine;
-    this.createdAt = createdAt;
-    this.dueDate = dueDate;
-    this.lastActivity = lastActivity;
-    this.comments = comments;
-    this.completedBenchmark = completedBenchmark;
-    this.currentBenchmarking = currentBenchmarking;
-    this.factsMastered = factsMastered;
-    this.factsSkipped = factsSkipped;
-    this.factsTargeted = factsTargeted;
-
-    this.creator = creator;
-    this.currentApproach = currentApproach;
-    this.currentErrorApproach = currentErrorApproach;
-    this.currentGrade = currentGrade;
-    this.currentSRApproach = currentSRApproach;
-    this.currentTarget = currentTarget;
-    this.details = details;
-    this.name = name;
-    this.problemSet = problemSet;
-
-    this.minForTask = minForTask;
   }
 }
 

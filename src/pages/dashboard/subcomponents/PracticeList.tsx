@@ -17,8 +17,8 @@ import { Link } from "react-router-dom";
 import { GetApproachStringFromLabel } from "../../../utilities/LabelHelper";
 
 import "./PracticeList.css";
-import { StudentDataInterface } from "../../../firebase/types/GeneralTypes";
 import { PracticeListInterface } from "../types/DashboardTypes";
+import { StudentDataInterface } from "../../student/types/StudentTypes";
 
 const anchorStyle = {
   marginTop: "5px",

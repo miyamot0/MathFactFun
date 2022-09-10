@@ -17,7 +17,7 @@ import { useAuthorizationContext } from "../../context/useAuthorizationContext";
 
 import StudentFilter from "./functionality/StudentFilter";
 import PracticeList from "./subcomponents/PracticeList";
-import { StudentDataInterface } from "../../firebase/types/GeneralTypes";
+import { StudentDataInterface } from "../student/types/StudentTypes";
 
 export default function DashboardPractice() {
   const { user, adminFlag } = useAuthorizationContext();
@@ -28,7 +28,8 @@ export default function DashboardPractice() {
   const orderString = undefined;
 
   const { documents, error } = useFirebaseCollectionTyped<StudentDataInterface>(
-    { collectionString: "students", queryString, orderString });
+    { collectionString: "students", queryString, orderString }
+  );
 
   const [filter, setFilter] = useState("Mine");
 
@@ -44,29 +45,29 @@ export default function DashboardPractice() {
 
   const students = documents
     ? documents.filter((document) => {
-      switch (filter) {
-        case "All":
-          return document.currentApproach !== "N/A";
-        case "Mine":
-          return (
-            document.creator === user!.uid &&
-            document.currentApproach !== "N/A"
-          );
-        case "K":
-        case "1st":
-        case "2nd":
-        case "3rd":
-        case "4th":
-        case "5th":
-        case "6th":
-          return (
-            document.currentGrade === filter &&
-            document.currentApproach !== "N/A"
-          );
-        default:
-          return document.currentApproach !== "N/A";
-      }
-    })
+        switch (filter) {
+          case "All":
+            return document.currentApproach !== "N/A";
+          case "Mine":
+            return (
+              document.creator === user!.uid &&
+              document.currentApproach !== "N/A"
+            );
+          case "K":
+          case "1st":
+          case "2nd":
+          case "3rd":
+          case "4th":
+          case "5th":
+          case "6th":
+            return (
+              document.currentGrade === filter &&
+              document.currentApproach !== "N/A"
+            );
+          default:
+            return document.currentApproach !== "N/A";
+        }
+      })
     : null;
 
   return (

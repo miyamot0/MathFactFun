@@ -23,10 +23,7 @@ import {
   ErrorCorrection,
   Contingencies,
 } from "../../maths/Facts";
-import {
-  CommentInterface,
-  StudentDataInterface,
-} from "../../firebase/types/GeneralTypes";
+import { CommentInterface } from "../../firebase/types/GeneralTypes";
 import {
   RoutedIdParam,
   SingleOptionType,
@@ -39,7 +36,10 @@ import {
   checkInputNullOrUndefined,
   streamlinedCheck,
 } from "../../utilities/FormHelpers";
-import { StudentCreatorBehavior } from "./types/StudentTypes";
+import {
+  StudentCreatorBehavior,
+  StudentDataInterface,
+} from "./types/StudentTypes";
 
 // Page to create new students
 export default function CreateBulkStudents() {

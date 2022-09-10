@@ -34,10 +34,7 @@ import {
 
 import { DetermineErrorCorrection } from "../../utilities/Logic";
 
-import {
-  FactDataInterface,
-  StudentDataInterface,
-} from "../../firebase/types/GeneralTypes";
+import { FactDataInterface } from "../../firebase/types/GeneralTypes";
 import { RoutedIdTargetParam } from "../CommonTypes/CommonPageTypes";
 import {
   BenchmarkActions,
@@ -55,6 +52,7 @@ import {
 import "./ExplicitTiming.css";
 import { ErrorModalCustomStyle } from "./subcomponents/ModalStyles";
 import { InterventionFormat } from "../../maths/Facts";
+import { StudentDataInterface } from "../student/types/StudentTypes";
 
 Modal.setAppElement("#root");
 

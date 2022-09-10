@@ -1,9 +1,9 @@
 import firebase from "firebase/app";
+import { StudentDataInterface } from "../../pages/student/types/StudentTypes";
 import {
   CommentInterface,
   FactDataInterface,
   PerformanceDataInterface,
-  StudentDataInterface,
 } from "../types/GeneralTypes";
 
 export type CommentConverterType =
@@ -30,66 +30,6 @@ export const commentConverter: CommentConverterType = {
       data.createdAt,
       data.createdBy,
       data.id
-    );
-  },
-};
-
-export type StudentConverterType =
-  firebase.firestore.FirestoreDataConverter<StudentDataInterface>;
-
-export const studentConverter: StudentConverterType = {
-  toFirestore(data: StudentDataInterface): firebase.firestore.DocumentData {
-    return {
-      id: data.id,
-      aimLine: data.aimLine,
-      createdAt: data.createdAt,
-      dueDate: data.dueDate,
-      lastActivity: data.lastActivity,
-      comments: data.comments,
-      completedBenchmark: data.completedBenchmark,
-      currentBenchmarking: data.currentBenchmarking,
-      factsMastered: data.factsMastered,
-      factsSkipped: data.factsSkipped,
-      factsTargeted: data.factsTargeted,
-      creator: data.creator,
-      currentApproach: data.currentApproach,
-      currentErrorApproach: data.currentErrorApproach,
-      currentGrade: data.currentGrade,
-      currentSRApproach: data.currentSRApproach,
-      currentTarget: data.currentTarget,
-      details: data.details,
-      name: data.name,
-      problemSet: data.problemSet,
-      minForTask: data.minForTask,
-    };
-  },
-  fromFirestore(
-    snapshot: firebase.firestore.QueryDocumentSnapshot,
-    options: firebase.firestore.SnapshotOptions
-  ): StudentDataInterface {
-    const data = snapshot.data(options);
-    return new StudentDataInterface(
-      data.id,
-      data.aimLine,
-      data.createdAt,
-      data.dueDate,
-      data.lastActivity,
-      data.comments,
-      data.completedBenchmark,
-      data.currentBenchmarking,
-      data.factsMastered,
-      data.factsSkipped,
-      data.factsTargeted,
-      data.creator,
-      data.currentApproach,
-      data.currentErrorApproach,
-      data.currentGrade,
-      data.currentSRApproach,
-      data.currentTarget,
-      data.details,
-      data.name,
-      data.problemSet,
-      data.minForTask
     );
   },
 };
