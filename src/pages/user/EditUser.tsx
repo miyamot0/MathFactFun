@@ -10,14 +10,19 @@
  * User Edit Page
  */
 
-import React from "react";
-import { useState } from "react";
+import React, { useReducer } from "react";
 import { useParams } from "react-router-dom";
 import { useFirestore } from "../../firebase/useFirestore";
 import { useHistory } from "react-router-dom";
 import { useFirebaseDocumentTyped } from "../../firebase/useFirebaseDocument";
 import { UserDataInterface } from "../../models/UserModel";
 import { RoutedIdParam } from "../CommonTypes/CommonPageTypes";
+import {
+  UserDataInitialState,
+  UserGenerationReducer,
+} from "./functionality/UserFunctionality";
+import { UserCreatorBehavior } from "./types/UserTypes";
+import { streamlinedCheck } from "../../utilities/FormHelpers";
 
 export default function EditUser() {
   const history = useHistory();
@@ -35,17 +40,21 @@ export default function EditUser() {
     undefined
   );
 
-  // form field values
-  const [name, setName] = useState<string>("");
-  const [school, setSchool] = useState<string>("");
+  const [state, dispatch] = useReducer(
+    UserGenerationReducer,
+    UserDataInitialState
+  );
 
-  const [formError, setFormError] = useState<string>();
-  const [didBuild, setDidBuild] = useState(false);
-
-  if (document && !didBuild) {
-    setDidBuild(true);
-    setName((document as UserDataInterface).displayName);
-    setSchool((document as UserDataInterface).displaySchool);
+  if (document && !state.DidBuild) {
+    dispatch({
+      type: UserCreatorBehavior.SetLoadedUser,
+      payload: {
+        uName: document.displayName,
+        uEmail: document.displayEmail,
+        uSchool: document.displaySchool,
+        uid: document.id,
+      },
+    });
   }
 
   /** handleEditFormSubmit
@@ -59,27 +68,40 @@ export default function EditUser() {
   ): Promise<any> {
     event.preventDefault();
 
-    setFormError(undefined);
-
-    if (!name) {
-      setFormError("Please enter a valid name");
+    if (document === null || id === undefined) {
       return;
     }
 
-    if (!school) {
-      setFormError("Please enter a valid school name");
+    dispatch({
+      type: UserCreatorBehavior.SetFormError,
+      payload: { uFormError: undefined },
+    });
+
+    if (streamlinedCheck(state.Name, "Please enter a valid name", dispatch)) {
+      return;
+    }
+
+    if (
+      streamlinedCheck(
+        state.School,
+        "Please enter a valid school name",
+        dispatch
+      )
+    ) {
       return;
     }
 
     const teacherObject = {
-      displayName: name,
-      displaySchool: school,
+      displayName: state.Name,
+      displaySchool: state.School,
     };
 
-    await updateDocument(id!, teacherObject);
+    await updateDocument(id, teacherObject);
 
-    if (!response.error) {
-      history.push("/admin");
+    if (!response.error || response.success === true) {
+      history.push(`/admin`);
+    } else {
+      alert(response.error);
     }
 
     return null;
@@ -103,21 +125,31 @@ export default function EditUser() {
           <input
             required
             type="text"
-            onChange={(e) => setName(e.target.value)}
-            value={name}
+            onChange={(e) => {
+              dispatch({
+                type: UserCreatorBehavior.SetName,
+                payload: { uName: e.target.value },
+              });
+            }}
+            value={state.Name}
           ></input>
         </label>
         <label>
           <span>Teacher School:</span>
           <textarea
             required
-            onChange={(e) => setSchool(e.target.value)}
-            value={school}
+            onChange={(e) => {
+              dispatch({
+                type: UserCreatorBehavior.SetSchool,
+                payload: { uSchool: e.target.value },
+              });
+            }}
+            value={state.School}
           ></textarea>
         </label>
 
         <button className="global-btn ">Edit Teacher</button>
-        {formError && <p className="error">{formError}</p>}
+        {state.FormError && <p className="error">{state.FormError}</p>}
       </form>
       <br></br>
     </div>

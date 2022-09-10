@@ -13,9 +13,7 @@
 import { useEffect, useState } from "react";
 import { projectFirestore } from "./config";
 import { studentConverter } from "./converters/GeneralConverters";
-import {
-  DocumentInputInterface,
-} from "./types/GeneralTypes";
+import { DocumentInputInterface } from "./types/GeneralTypes";
 import { FirestoreCollections } from "./useFirestore";
 
 const ErrorNoData = "There was not a document at this location";
@@ -29,12 +27,10 @@ const ErrorSnapshot = "Unable to get the document";
  * @param {string} idString id for student
  * @returns {UseFirebaseDocument}
  */
-export function useFirebaseDocumentTyped<T>(
-  {
-    collectionString,
-    idString
-  }: DocumentInputInterface
-): {
+export function useFirebaseDocumentTyped<T>({
+  collectionString,
+  idString,
+}: DocumentInputInterface): {
   document: T | null;
   documentError: string | undefined;
 } {
@@ -62,12 +58,29 @@ export function useFirebaseDocumentTyped<T>(
       );
 
       return () => unsubscribe();
+    } else if (collectionString === FirestoreCollections.Users) {
+      const unsubscribe = ref.onSnapshot(
+        (snapshot) => {
+          if (snapshot.data()) {
+            setDocument({
+              ...snapshot.data(),
+              id: snapshot.id,
+            } as unknown as T);
+          } else {
+            setError(ErrorNoData);
+          }
+        },
+        (error) => {
+          setError(ErrorSnapshot);
+        }
+      );
+
+      return () => unsubscribe();
     }
   }
 
   useEffect(() => {
     pullDocs();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [collectionString, idString]);
 
   return { document, documentError };

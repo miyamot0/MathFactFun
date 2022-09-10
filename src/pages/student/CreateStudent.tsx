@@ -33,7 +33,7 @@ import { StudentDataInterface } from "../../firebase/types/GeneralTypes";
 import {
   checkInputNullOrUndefined,
   streamlinedCheck,
-} from "./helpers/StudentHelpers";
+} from "../../utilities/FormHelpers";
 import { StudentCreatorBehavior } from "./types/StudentTypes";
 
 // Page to create new students

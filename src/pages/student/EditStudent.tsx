@@ -11,7 +11,6 @@
  */
 
 import React, { useReducer } from "react";
-import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { timestamp } from "../../firebase/config";
 import { useFirestore } from "../../firebase/useFirestore";
@@ -35,14 +34,13 @@ import {
   SingleOptionType,
 } from "../CommonTypes/CommonPageTypes";
 import {
-  StudentCreateState,
   UserCreateSingleInitialState,
   UserCreationReducer,
 } from "./functionality/StudentFunctionality";
 import {
   checkInputNullOrUndefined,
   streamlinedCheck,
-} from "./helpers/StudentHelpers";
+} from "../../utilities/FormHelpers";
 import { StudentCreatorBehavior } from "./types/StudentTypes";
 
 // TODO: reducer

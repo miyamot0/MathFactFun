@@ -9,5 +9,7 @@ export enum UserCreatorBehavior {
   SetName,
   SetSchool,
   SetEmail,
+  SetPassword,
   SetLoadedUser,
+  SetFormError,
 }

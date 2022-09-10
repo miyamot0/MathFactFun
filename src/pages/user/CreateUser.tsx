@@ -10,10 +10,15 @@
  * Create new student object
  */
 
-import React from "react";
-import { useState } from "react";
+import React, { useReducer } from "react";
 import { useFirestore } from "../../firebase/useFirestore";
 import { useHistory } from "react-router-dom";
+import {
+  UserDataInitialState,
+  UserGenerationReducer,
+} from "./functionality/UserFunctionality";
+import { UserCreatorBehavior } from "./types/UserTypes";
+import { streamlinedCheck } from "../../utilities/FormHelpers";
 
 // Page to create new students
 export default function CreateUser() {
@@ -24,12 +29,10 @@ export default function CreateUser() {
     undefined
   );
 
-  // field values
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [name, setName] = useState<string>("");
-  const [school, setSchool] = useState<string>("");
-  const [formError, setFormError] = useState<string>();
+  const [state, dispatch] = useReducer(
+    UserGenerationReducer,
+    UserDataInitialState
+  );
 
   /** handleCreateStudentSubmit
    *
@@ -41,28 +44,41 @@ export default function CreateUser() {
     event: React.FormEvent<HTMLFormElement>
   ): Promise<void> {
     event.preventDefault();
-    setFormError(undefined);
 
-    if (!name) {
-      setFormError("Please enter a name");
+    dispatch({
+      type: UserCreatorBehavior.SetFormError,
+      payload: { uFormError: undefined },
+    });
+
+    if (streamlinedCheck(state.Name, "Please enter a valid name", dispatch)) {
       return;
     }
 
-    if (!email) {
-      setFormError("Please enter a valid email");
+    if (
+      streamlinedCheck(
+        state.Email,
+        "Please enter a valid email address",
+        dispatch
+      )
+    ) {
       return;
     }
 
-    if (!school) {
-      setFormError("Please enter a school code");
+    if (
+      streamlinedCheck(
+        state.School,
+        "Please enter a valid school name",
+        dispatch
+      )
+    ) {
       return;
     }
 
     const userObject = {
-      displayEmail: email,
-      displayName: name,
-      displaySchool: school,
-      password: password,
+      displayEmail: state.Email,
+      displayName: state.Name,
+      displaySchool: state.School,
+      password: state.Password,
       id: undefined,
     };
 
@@ -83,8 +99,13 @@ export default function CreateUser() {
           <input
             required
             type="text"
-            onChange={(e) => setName(e.target.value)}
-            value={name}
+            onChange={(e) => {
+              dispatch({
+                type: UserCreatorBehavior.SetName,
+                payload: { uName: e.target.value },
+              });
+            }}
+            value={state.Name}
           ></input>
         </label>
 
@@ -93,34 +114,48 @@ export default function CreateUser() {
           <input
             required
             type="email"
-            onChange={(e) => setEmail(e.target.value)}
-            value={email}
+            onChange={(e) => {
+              dispatch({
+                type: UserCreatorBehavior.SetEmail,
+                payload: { uEmail: e.target.value },
+              });
+            }}
+            value={state.Email}
           ></input>
         </label>
 
         <label>
-          <span>Password:</span>
+          <span>Teacher Password:</span>
           <input
             required
             type="password"
-            onChange={(e) => setPassword(e.target.value)}
-            value={password}
+            onChange={(e) => {
+              dispatch({
+                type: UserCreatorBehavior.SetPassword,
+                payload: { uPassword: e.target.value },
+              });
+            }}
+            value={state.Password}
           ></input>
         </label>
 
         <label>
-          <span>School Name:</span>
-          <input
+          <span>Teacher School:</span>
+          <textarea
             required
-            type="text"
-            onChange={(e) => setSchool(e.target.value)}
-            value={school}
-          ></input>
+            onChange={(e) => {
+              dispatch({
+                type: UserCreatorBehavior.SetSchool,
+                payload: { uSchool: e.target.value },
+              });
+            }}
+            value={state.School}
+          ></textarea>
         </label>
         <button className="global-btn global-btn-light-red">
           Create New User
         </button>
-        {formError && <p className="error">{formError}</p>}
+        {state.FormError && <p className="error">{state.FormError}</p>}
       </form>
       <br></br>
     </div>

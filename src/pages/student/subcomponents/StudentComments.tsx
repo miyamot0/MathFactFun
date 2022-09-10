@@ -41,11 +41,15 @@ export default function StudentComments({ student }: StudentWidgetInterface) {
   ): Promise<void> {
     event.preventDefault();
 
+    if (user === null) {
+      return;
+    }
+
     const usersComment = {
-      displayName: user!.displayName,
+      displayName: user.displayName,
       content: newComment,
       createdAt: timestamp.fromDate(new Date()),
-      createdBy: user!.uid,
+      createdBy: user.uid,
       id: Math.random(),
     };
 
