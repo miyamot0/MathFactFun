@@ -12,13 +12,13 @@
 
 import React from "react";
 import { useState } from "react";
-import { timestamp } from "../../firebase/config";
-import { useAuthorizationContext } from "../../context/useAuthorizationContext";
-import { useFirestore } from "../../firebase/useFirestore";
+import { timestamp } from "../../../firebase/config";
+import { useAuthorizationContext } from "../../../context/useAuthorizationContext";
+import { useFirestore } from "../../../firebase/useFirestore";
 
 import "./StudentComments.css";
-import { CommentInterface } from "../../firebase/types/GeneralTypes";
-import { StudentWidgetInterface } from "./Types/StudentTypes";
+import { CommentInterface } from "../../../firebase/types/GeneralTypes";
+import { StudentWidgetInterface } from "../types/StudentTypes";
 
 export default function StudentComments({ student }: StudentWidgetInterface) {
   const { updateDocument, response } = useFirestore(

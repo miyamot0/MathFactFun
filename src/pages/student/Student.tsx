@@ -12,10 +12,10 @@
 
 import React from "react";
 import { useParams } from "react-router-dom";
-import StudentComments from "./StudentComments";
+import StudentComments from "./subcomponents/StudentComments";
 import { useFirebaseDocumentTyped } from "../../firebase/useFirebaseDocument";
 
-import StudentSummary from "./StudentSummary";
+import StudentSummary from "./subcomponents/StudentSummary";
 
 import "./Student.css";
 import { StudentDataInterface } from "../../firebase/types/GeneralTypes";
@@ -25,7 +25,10 @@ export default function Student() {
   const { id } = useParams<RoutedIdParam>();
 
   const { document, documentError } =
-    useFirebaseDocumentTyped<StudentDataInterface>({ collectionString: "students", idString: id });
+    useFirebaseDocumentTyped<StudentDataInterface>({
+      collectionString: "students",
+      idString: id,
+    });
 
   if (documentError) {
     return <div className="error">{documentError}</div>;

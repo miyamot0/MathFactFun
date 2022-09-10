@@ -7,31 +7,35 @@
  */
 
 /**
- * Create multiple new student object
+ * Student Edit Page
  */
 
 import React, { useReducer } from "react";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
-import Select, { MultiValue } from "react-select";
 import { timestamp } from "../../firebase/config";
 import { useFirestore } from "../../firebase/useFirestore";
 import { useHistory } from "react-router-dom";
+import { useFirebaseDocumentTyped } from "../../firebase/useFirebaseDocument";
 import {
   Grades,
   Operations,
+  BenchmarkSets,
   InterventionApproach,
   ErrorCorrection,
   Contingencies,
 } from "../../maths/Facts";
-import {
-  CommentInterface,
-  StudentDataInterface,
-} from "../../firebase/types/GeneralTypes";
+import { FormatDate } from "../../utilities/LabelHelper";
+
+// components
+import Select, { MultiValue } from "react-select";
+import { StudentDataInterface } from "../../firebase/types/GeneralTypes";
 import {
   RoutedIdParam,
   SingleOptionType,
 } from "../CommonTypes/CommonPageTypes";
 import {
+  StudentCreateState,
   UserCreateSingleInitialState,
   UserCreationReducer,
 } from "./functionality/CreateFunctionality";
@@ -39,13 +43,19 @@ import {
   checkInputNullOrUndefined,
   streamlinedCheck,
 } from "./helpers/CreateHelpers";
-import { UserCreatorBehavior } from "./types/CreateTypes";
+import { UserCreatorBehavior } from "./types/StudentTypes";
 
-// Page to create new students
-export default function CreateBulk() {
-  const history = useHistory();
+// TODO: reducer
+
+export default function EditStudent() {
   const { id } = useParams<RoutedIdParam>();
-  const { addDocument, response } = useFirestore(
+  const { document, documentError } =
+    useFirebaseDocumentTyped<StudentDataInterface>({
+      collectionString: "students",
+      idString: id,
+    });
+  const history = useHistory();
+  const { updateDocument, response } = useFirestore(
     "students",
     undefined,
     undefined
@@ -58,16 +68,69 @@ export default function CreateBulk() {
 
   const CoreOperations = Operations.filter((op) => op.value !== "N/A");
 
-  /** handleCreateStudentSubmit
+  if (document && !state.DidBuild) {
+    dispatch({
+      type: UserCreatorBehavior.SetBuilt,
+      payload: null,
+    });
+
+    const uCurrentTarget = Operations.find(
+      (obj) => obj.value === document.currentTarget
+    );
+
+    const uCurrentBenchmarking = Operations.filter((obj) =>
+      document.currentBenchmarking.includes(obj.label)
+    );
+
+    const uProblemSet = BenchmarkSets.find(
+      (obj) => obj.value === document.problemSet
+    );
+    const uCurrentGrade = Grades.find(
+      (obj) => obj.value === document.currentGrade
+    );
+    const uCurrentApproach = InterventionApproach.find(
+      (obj) => obj.value === document.currentApproach
+    );
+    const uCurrentErrorApproach = ErrorCorrection.find(
+      (obj) => obj.value === document.currentErrorApproach
+    );
+    const uCurrentSRApproach = Contingencies.find(
+      (obj) => obj.value === document.currentSRApproach
+    );
+
+    dispatch({
+      type: UserCreatorBehavior.SetLoadedStudent,
+      payload: {
+        uName: document.name!,
+        uDetails: document.details!,
+        uDueDate: FormatDate(document.dueDate!.toDate()),
+        uAimLine: document.aimLine!,
+        uExplicitTime: document.minForTask!,
+        uCurrentTarget,
+        uCurrentGrade,
+        uCurrentApproach,
+        uCurrentErrorApproach,
+        uCurrentSRApproach,
+        uCurrentBenchmarking,
+        uProblemSet,
+      },
+    });
+  }
+
+  /** handleEditFormSubmit
    *
-   * Event for creating a student
+   * Submission event for student edit form
    *
-   * @param {React.FormEvent<HTMLFormElement>} event
+   * @param {React.FormEvent<HTMLFormElement>} event Submitted event
    */
-  async function handleCreateStudentSubmit(
+  async function handleEditFormSubmit(
     event: React.FormEvent<HTMLFormElement>
-  ): Promise<void> {
+  ): Promise<any> {
     event.preventDefault();
+
+    if (document === null || id === undefined) {
+      return;
+    }
 
     dispatch({
       type: UserCreatorBehavior.SetFormError,
@@ -132,76 +195,81 @@ export default function CreateBulk() {
       return;
     }
 
-    const laggedDate = new Date();
-    laggedDate.setDate(laggedDate.getDate() - 1);
+    const date = new Date(state.DueDate);
+    date.setTime(date.getTime() + date.getTimezoneOffset() * 60 * 1000);
 
-    const comments: CommentInterface[] = [];
-    const factsTargeted: string[] = [];
-    const factsMastered: string[] = [];
-    const factsSkipped: string[] = [];
-    const aimLine = 0;
-    const minForTask = 2;
+    const targetedList =
+      state.CurrentTarget.value === document.currentTarget
+        ? document.factsTargeted
+        : [];
 
-    const arrayTextAreaLines = state.Name.split("\n");
+    const studentInformationToAdd = {
+      name: state.Name,
+      details: state.Details,
+      currentGrade: state.CurrentGrade.value,
+      currentTarget: state.CurrentTarget.value,
+      currentApproach: state.CurrentApproach.value,
+      currentBenchmarking: state.CurrentBenchmarking.map(
+        (benchmark: SingleOptionType) => benchmark.label
+      ),
+      currentErrorApproach: state.CurrentErrorApproach.value,
+      currentSRApproach: state.CurrentSRApproach.value,
+      dueDate: timestamp.fromDate(date),
+      aimLine: state.AimLine,
+      minForTask: state.ExplicitTime,
+      problemSet: state.ProblemSet,
+      factsTargeted: targetedList,
+    };
 
-    for (let i = 0; i < arrayTextAreaLines.length; i++) {
-      const currentStudentID = arrayTextAreaLines[i].trim();
-
-      if (currentStudentID.length < 1) continue;
-
-      const studentObject = {
-        name: currentStudentID,
-        details: "",
-        currentGrade: state.CurrentGrade.value,
-        currentTarget: state.CurrentTarget.value,
-        currentApproach: state.CurrentApproach.value,
-        currentErrorApproach: state.CurrentErrorApproach.value,
-        currentSRApproach: state.CurrentSRApproach.value,
-        currentBenchmarking: state.CurrentBenchmarking.map(
-          (benchmark: SingleOptionType) => benchmark.label
-        ),
-        completedBenchmark: [],
-        creator: id,
-        dueDate: timestamp.fromDate(new Date(state.DueDate)),
-        lastActivity: timestamp.fromDate(laggedDate),
-        createdAt: timestamp.fromDate(new Date()),
-        comments,
-        factsTargeted,
-        factsMastered,
-        factsSkipped,
-        aimLine,
-        minForTask,
-        problemSet: "A",
-        id: null,
-      } as StudentDataInterface;
-
-      await addDocument(studentObject);
-    }
+    await updateDocument(id, studentInformationToAdd);
 
     if (!response.error || response.success === true) {
       history.push(`/dashboard`);
     } else {
       alert(response.error);
     }
+
+    return null;
+  }
+
+  if (documentError) {
+    return <div className="error">{documentError}</div>;
+  }
+
+  if (!document) {
+    return <div className="loading">Loading...</div>;
   }
 
   return (
     <div style={{ maxWidth: "600px" }}>
-      <h2 className="global-page-title">Add new students to class/group</h2>
+      <h2 className="global-page-title">Edit current student</h2>
 
-      <form onSubmit={handleCreateStudentSubmit}>
+      <form onSubmit={handleEditFormSubmit}>
         <label>
-          <span>Student IDs (one on each line):</span>
-          <textarea
+          <span>Student ID:</span>
+          <input
             required
+            type="text"
             onChange={(e) => {
-              console.log(e);
               dispatch({
                 type: UserCreatorBehavior.SetName,
                 payload: { uName: e.target.value },
               });
             }}
             value={state.Name}
+          ></input>
+        </label>
+        <label>
+          <span>Student Details:</span>
+          <textarea
+            required
+            onChange={(e) => {
+              dispatch({
+                type: UserCreatorBehavior.SetDetails,
+                payload: { uDetails: e.target.value },
+              });
+            }}
+            value={state.Details}
           ></textarea>
         </label>
         <label>
@@ -228,6 +296,7 @@ export default function CreateBulk() {
                 payload: { uCurrentGrade: option },
               });
             }}
+            value={state.CurrentGrade}
           />
         </label>
         <label>
@@ -296,10 +365,44 @@ export default function CreateBulk() {
             value={state.CurrentSRApproach}
           />
         </label>
+        <label>
+          <span>Target Aim Line</span>
+          <input
+            type="number"
+            min="0"
+            max="80"
+            value={state.AimLine}
+            onChange={(e) => {
+              const value: number | null | undefined = parseInt(e.target.value);
+              if (!checkInputNullOrUndefined(value)) {
+                dispatch({
+                  type: UserCreatorBehavior.SetAimLine,
+                  payload: { uAimLine: e.target.value },
+                });
+              }
+            }}
+          />
+        </label>
+        <label>
+          <span>Duration for Task (Minutes; Explicit Timing Only)</span>
+          <input
+            type="number"
+            min="1"
+            max="10"
+            value={state.ExplicitTime}
+            onChange={(e) => {
+              const value: number | null | undefined = parseInt(e.target.value);
+              if (!checkInputNullOrUndefined(value)) {
+                dispatch({
+                  type: UserCreatorBehavior.SetExplicitTime,
+                  payload: { uExplicitTime: e.target.value },
+                });
+              }
+            }}
+          />
+        </label>
 
-        <button className="global-btn global-btn-light-red">
-          Create New Student(s)
-        </button>
+        <button className="global-btn ">Edit Student</button>
         {state.FormError && <p className="error">{state.FormError}</p>}
       </form>
       <br></br>

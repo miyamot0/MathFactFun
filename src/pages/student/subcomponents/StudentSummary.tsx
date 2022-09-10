@@ -12,11 +12,11 @@
 
 import React from "react";
 import { Link } from "react-router-dom";
-import { useFirestore } from "../../firebase/useFirestore";
+import { useFirestore } from "../../../firebase/useFirestore";
 import { useHistory } from "react-router-dom";
-import { useAuthorizationContext } from "../../context/useAuthorizationContext";
-import { GetApproachStringFromLabel } from "../../utilities/LabelHelper";
-import { StudentWidgetInterface } from "./Types/StudentTypes";
+import { useAuthorizationContext } from "../../../context/useAuthorizationContext";
+import { GetApproachStringFromLabel } from "../../../utilities/LabelHelper";
+import { StudentWidgetInterface } from "../types/StudentTypes";
 
 // styles
 import "./StudentSummary.css";

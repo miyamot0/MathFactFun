@@ -20,9 +20,9 @@ import Navbar from "./components/Navbar";
 import SideBar from "./components/Sidebar";
 
 // Pages
-import Edit from "./pages/edit/Edit";
+import EditStudent from "./pages/student/EditStudent";
 import Login from "./pages/login/Login";
-import Create from "./pages/create/Create";
+import CreateStudent from "./pages/student/CreateStudent";
 import Student from "./pages/student/Student";
 import Landing from "./pages/landing/Landing";
 import Information from "./pages/information/Information";
@@ -39,7 +39,7 @@ import Screening from "./pages/Screening/Screening";
 import ProgressMonitor from "./pages/progress/ProgressMonitor";
 import EditUser from "./pages/edit/EditUser";
 import CreateUser from "./pages/create/CreateUser";
-import CreateBulk from "./pages/create/CreateBulk";
+import CreateBulkStudents from "./pages/student/CreateBulkStudents";
 
 // Intervention/Probes
 import Benchmark from "./pages/intervention/Benchmark";
@@ -85,7 +85,7 @@ function App(): AppInterface {
               </Route>
               <Route path="/create">
                 {!user && <Redirect to="/login" />}
-                {user && <Create />}
+                {user && <CreateStudent />}
               </Route>
               <Route path="/student/:id">
                 {!user && <Redirect to="/login" />}
@@ -93,7 +93,7 @@ function App(): AppInterface {
               </Route>
               <Route path="/edit/:id">
                 {!user && <Redirect to="/login" />}
-                {user && <Edit />}
+                {user && <EditStudent />}
               </Route>
               <Route path="/set/:target/:id">
                 {!user && <Redirect to="/login" />}
@@ -141,7 +141,7 @@ function App(): AppInterface {
               </Route>
               <Route path="/createStudents/:id">
                 {user && !adminFlag && <Redirect to="/dashboard" />}
-                {user && adminFlag && <CreateBulk />}
+                {user && adminFlag && <CreateBulkStudents />}
               </Route>
               <Route path="/login">
                 {user && <Redirect to="/" />}

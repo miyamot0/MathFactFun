@@ -1,7 +1,7 @@
 import { MultiValue } from "react-select";
 import { ErrorHandling } from "../../../maths/Facts";
 import { SingleOptionType } from "../../CommonTypes/CommonPageTypes";
-import { UserCreatorBehavior } from "../types/CreateTypes";
+import { UserCreatorBehavior } from "../types/StudentTypes";
 
 export interface StudentCreateState {
   Name: string;
@@ -15,6 +15,10 @@ export interface StudentCreateState {
   CurrentErrorApproach: SingleOptionType;
   CurrentSRApproach: SingleOptionType;
   CurrentBenchmarking: MultiValue<SingleOptionType>;
+  DidBuild: boolean;
+  AimLine: number;
+  ExplicitTime: number;
+  ProblemSet: string;
 }
 
 export const UserCreateSingleInitialState: StudentCreateState = {
@@ -43,8 +47,11 @@ export const UserCreateSingleInitialState: StudentCreateState = {
     value: "None",
     label: "No programmed contingencies",
   } as SingleOptionType,
-
   CurrentBenchmarking: [] as MultiValue<SingleOptionType>,
+  DidBuild: false,
+  AimLine: 0,
+  ExplicitTime: 2,
+  ProblemSet: "A",
 };
 
 /**
@@ -85,8 +92,39 @@ export function UserCreationReducer(
         ...state,
         CurrentBenchmarking: action.payload.uCurrentBenchmarking,
       };
+    case UserCreatorBehavior.SetBuilt:
+      return {
+        ...state,
+        DidBuild: true,
+      };
+    case UserCreatorBehavior.SetAimLine:
+      return {
+        ...state,
+        AimLine: action.payload.uAimLine,
+      };
+    case UserCreatorBehavior.SetExplicitTime:
+      return {
+        ...state,
+        ExplicitTime: action.payload.uExplicitTime,
+      };
+    case UserCreatorBehavior.SetLoadedStudent:
+      return {
+        ...state,
+        Name: action.payload.uName,
+        Details: action.payload.uDetails,
+        DueDate: action.payload.uDueDate,
+        AimLine: action.payload.uAimLine,
+        ExplicitTime: action.payload.uExplicitTime,
+        CurrentTarget: action.payload.uCurrentTarget,
+        CurrentGrade: action.payload.uCurrentGrade,
+        CurrentApproach: action.payload.uCurrentApproach,
+        CurrentErrorApproach: action.payload.uCurrentErrorApproach,
+        CurrentSRApproach: action.payload.uCurrentSRApproach,
+        CurrentBenchmarking: action.payload.uCurrentBenchmarking,
+        ProblemSet: action.payload.uProblemSet,
+      };
 
     default:
-      throw new Error(action.type);
+      throw new Error();
   }
 }

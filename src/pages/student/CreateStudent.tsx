@@ -29,15 +29,15 @@ import {
   UserCreateSingleInitialState,
   UserCreationReducer,
 } from "./functionality/CreateFunctionality";
-import { UserCreatorBehavior } from "./types/CreateTypes";
 import { StudentDataInterface } from "../../firebase/types/GeneralTypes";
 import {
   checkInputNullOrUndefined,
   streamlinedCheck,
 } from "./helpers/CreateHelpers";
+import { UserCreatorBehavior } from "./types/StudentTypes";
 
 // Page to create new students
-export default function Create() {
+export default function CreateStudent() {
   const history = useHistory();
   const { addDocument, response } = useFirestore(
     "students",
