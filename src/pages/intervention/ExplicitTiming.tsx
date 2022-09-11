@@ -255,6 +255,19 @@ export default function ExplicitTiming() {
       };
 
       dispatch({
+        type: BenchmarkActions.ExplicitTimingBatchIncrement,
+        payload: {
+          uNumberCorrectInitial,
+          uNumberErrors,
+          uTotalDigits: state.TotalDigits + totalDigitsShown,
+          uTotalDigitsCorrect: state.TotalDigitsCorrect + totalDigitsCorrect,
+          uNumberTrials: state.NumbTrials + 1,
+          uInitialTry: state.OnInitialTry,
+          uTrialTime: new Date(),
+        },
+      });
+
+      dispatch({
         type: BenchmarkActions.ExplicitTimingModalPreErrorLog,
         payload: {
           uFactModel: [...state.FactModelList, currentItem2],

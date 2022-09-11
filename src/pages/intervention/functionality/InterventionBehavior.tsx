@@ -356,6 +356,12 @@ export const InterventionReducer = (
         CoverStimulusItem: action.payload.uCoverStimulusItem,
       };
 
+    case BenchmarkActions.CoverCopyCompareModalPreErrorLog:
+      return {
+        ...state,
+        FactModelList: action.payload.uFactModel,
+      };
+
     case BenchmarkActions.CoverCopyCompareModalRetry:
       return {
         ...state,

@@ -284,6 +284,48 @@ export default function CoverCopyCompare() {
 
       if (shouldShowFeedback(!isMatching, document)) {
         // Error correction prompt
+
+        const totalDigitsShown = CalculateDigitsTotalAnswer(
+          state.ViewRepresentationInternal
+        );
+
+        const totalDigitsCorrect = CalculateDigitsCorrect(
+          state.EntryRepresentationInternal,
+          state.ViewRepresentationInternal,
+          state.OperatorSymbol
+        );
+
+        const currentItem2: FactDataInterface = {
+          factCorrect: isMatching,
+          initialTry: state.OnInitialTry,
+          factType: document.currentTarget,
+          factString: state.ViewRepresentationInternal,
+          factEntry: state.EntryRepresentationInternal,
+          latencySeconds: secs,
+          dateTimeEnd: timestamp.fromDate(new Date(current)),
+          dateTimeStart: timestamp.fromDate(new Date(holderPreTime)),
+        };
+
+        dispatch({
+          type: BenchmarkActions.CoverCopyCompareBatchIncrement,
+          payload: {
+            uNumberCorrectInitial,
+            uNumberErrors,
+            uTotalDigits: state.TotalDigits + totalDigitsShown,
+            uTotalDigitsCorrect: state.TotalDigitsCorrect + totalDigitsCorrect,
+            uNumberTrials: state.NumbTrials + 1,
+            uInitialTry: state.OnInitialTry,
+            uTrialTime: new Date(),
+          },
+        });
+
+        dispatch({
+          type: BenchmarkActions.CoverCopyCompareModalPreErrorLog,
+          payload: {
+            uFactModel: [...state.FactModelList, currentItem2],
+          },
+        });
+
         openModal();
       } else {
         const totalDigitsShown = CalculateDigitsTotalAnswer(
@@ -441,8 +483,6 @@ export default function CoverCopyCompare() {
 
     captureButtonAction();
   }
-
-  console.log(state);
 
   return (
     <div className="wrapper">
