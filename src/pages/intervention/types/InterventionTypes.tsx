@@ -27,6 +27,7 @@ export enum BenchmarkActions {
   CoverCopyCompareTaskReset,
   CoverCopyCompareBatchIncrement,
   CoverCopyCompareBatchStartIncrementPost,
+  CoverCopyCompareModalPreErrorLog,
   CoverCopyCompareModalRetry,
   CoverCopyCompareItemIncrement,
 }
