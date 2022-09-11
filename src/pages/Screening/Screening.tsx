@@ -21,13 +21,13 @@ import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import AnnotationsModule from "highcharts/modules/annotations";
 import { RoutedIdParam } from "../../utilities/RoutingHelpers";
-import { reducerPerOperation } from "./functionality/ScreeningBehavior";
 import { useFirebaseCollectionTyped } from "../../firebase/hooks/useFirebaseCollection";
 import {
   CommonDisplayHeadingStyle,
   CommonPanelWidth,
 } from "../../utilities/FormHelpers";
 import { PerformanceDataInterface } from "../intervention/types/InterventionTypes";
+import { reducerPerOperation } from "./functionality/ScreeningBehavior";
 
 require("highcharts/modules/annotations")(Highcharts);
 require("highcharts/modules/accessibility")(Highcharts);

@@ -19,7 +19,7 @@ import { GetApproachStringFromLabel } from "../../../utilities/LabelHelper";
 import { StudentWidgetInterface } from "../types/StudentTypes";
 
 // styles
-import "./StudentSummary.css";
+import "./styles/StudentSummary.css";
 
 export default function StudentSummary({ student }: StudentWidgetInterface) {
   const { deleteDocument, response } = useFirestore(

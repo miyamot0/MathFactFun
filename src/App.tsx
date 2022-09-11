@@ -34,7 +34,7 @@ import Admin from "./pages/admin/Admin";
 import DashboardDisplay from "./pages/dashboard/DashboardDisplay";
 import DashboardPractice from "./pages/dashboard/DashboardPractice";
 import DashboardBenchmark from "./pages/dashboard/DashboardBenchmark";
-import Screening from "./pages/Screening/Screening";
+import Screening from "./pages/screening/Screening";
 import ProgressMonitor from "./pages/progress/ProgressMonitor";
 
 import CreateUser from "./pages/user/CreateUser";

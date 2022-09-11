@@ -128,8 +128,9 @@ export default function Information() {
             targets (e.g., Addition, Subtraction) but also include a more
             intense intervention on a specific target (e.g., Addition). In the{" "}
             <Link to={"/create"}>Create Student</Link> page, you should
-            designate the target in the 'Target for Intervention' widget and the
-            intervention approach in the 'Intervention Approach' widget.
+            designate the target in the &apos;Target for Intervention&apos;
+            widget and the intervention approach in the &apos;Intervention
+            Approach&apos; widget.
           </p>
           <p>
             You may also adjust your rules for responding to student errors and
@@ -197,14 +198,14 @@ export default function Information() {
             Once a student is added to a group/classroom, and an intervention is
             selected, math problems can be added by selecting a student on the{" "}
             <Link to={`/dashboard`}>Dashboard</Link> and then press the button
-            labeled "Targeted Item Sets." If you do not see this button
-            displayed under the Benchmarking and Intervention Settings heading,
-            it is likely that you did not select an intervention for the student
-            (see "Selecting an Intervention" heading above). Once you press the
-            "Targeted Item Sets" button, you will be at a screen where you have
-            items Available (i.e., in the bank), items Targeted (i.e., those
-            being worked on), items Mastered (i.e., previously worked on), and
-            items Skipped.
+            labeled &apos;Targeted Item Sets.&apos; If you do not see this
+            button displayed under the Benchmarking and Intervention Settings
+            heading, it is likely that you did not select an intervention for
+            the student (see &apos;Selecting an Intervention&apos; heading
+            above). Once you press the &apos;Targeted Item Sets&apos; button,
+            you will be at a screen where you have items Available (i.e., in the
+            bank), items Targeted (i.e., those being worked on), items Mastered
+            (i.e., previously worked on), and items Skipped.
           </p>
           <p>
             It is important to be mindful about working from the same Tier I
@@ -228,22 +229,23 @@ export default function Information() {
             Addition and Subtraction benchmarks), a students overall fluency
             across all targeted benchmarks can be viewed by selecting the
             student in the <Link to={`/dashboard`}>Dashboard</Link> and clicking
-            on the "Overall Math" button under the heading "View Student
-            Performance."
+            on the &apos;Overall Math&apos; button under the heading &apos;View
+            Student Performance.&apos;
           </p>
           <p>
-            In this page, a student's fluency across all targeted skills will be
-            displayed as a function of time (i.e., all skills across time).
-            However, there is another option to view more detailed, item-level
-            information resulting from progress-monitoring and intervention.
+            In this page, a student&apos;s fluency across all targeted skills
+            will be displayed as a function of time (i.e., all skills across
+            time). However, there is another option to view more detailed,
+            item-level information resulting from progress-monitoring and
+            intervention.
           </p>
           <p>
             {" "}
             To view more in-depth information regarding the intervention target
-            (e.g., Addition), you can select the "Intervention-specific Targets"
-            button. This functionality provides overall accuracy and fluency
-            information, as well as the item-level performances that exist
-            across various sets.
+            (e.g., Addition), you can select the &apos;Intervention-specific
+            Targets&apos; button. This functionality provides overall accuracy
+            and fluency information, as well as the item-level performances that
+            exist across various sets.
           </p>
         </div>
 
@@ -299,8 +301,8 @@ export default function Information() {
               Space = Check/advance to the next problem (CCC/ET/Benchmark)
             </li>
             <li>
-              Enter = Functions as the '=' operator, so that work can remain on
-              the numpad exclusively
+              Enter = Functions as the &apos;=&apos; operator, so that work can
+              remain on the numpad exclusively
             </li>
             <li>
               Delete/Backspace = Removes the trailing character in the inputted

@@ -69,7 +69,6 @@ function Timer({
   }
 
   useEffect(() => {
-
     if (isActive && seconds <= nProblems * delta) {
       const interval: NodeJS.Timer = setInterval(() => {
         fire();
@@ -82,7 +81,6 @@ function Timer({
       clearInterval(intervalId);
     }
     return () => clearInterval(intervalId);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isActive, seconds]);
 
   return (

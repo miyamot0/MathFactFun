@@ -16,7 +16,7 @@ import { timestamp } from "../../../firebase/config";
 import { useAuthorizationContext } from "../../../context/hooks/useAuthorizationContext";
 import { useFirestore } from "../../../firebase/hooks/useFirestore";
 
-import "./StudentComments.css";
+import "./styles/StudentComments.css";
 import { CommentInterface } from "../../../firebase/types/GeneralTypes";
 import { StudentWidgetInterface } from "../types/StudentTypes";
 

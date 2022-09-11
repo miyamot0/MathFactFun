@@ -21,7 +21,6 @@ import { DragDropContext } from "react-beautiful-dnd";
 import { OnlyUnique } from "../../utilities/LabelHelper";
 import {
   ColumnObject,
-  ColumnsObject,
   DragDropActions,
   FactDataInterface,
   FactStructure,

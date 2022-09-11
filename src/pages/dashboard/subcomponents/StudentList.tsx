@@ -16,7 +16,7 @@ import firebase from "firebase/app";
 import { Link } from "react-router-dom";
 import { GetApproachStringFromLabel } from "../../../utilities/LabelHelper";
 
-import "./StudentList.css";
+import "./styles/StudentList.css";
 import { StudentListInterface } from "../types/DashboardTypes";
 import { StudentDataInterface } from "../../student/types/StudentTypes";
 
@@ -60,7 +60,7 @@ function checkIfBenchmarksCompleted(student: StudentDataInterface): boolean {
   student.currentBenchmarking.forEach((bm) => {
     if (!confirmedCompleted) return;
 
-    const tag = `${bm} ${student.dueDate!.toDate().toDateString()}`;
+    const tag = `${bm} ${student.dueDate.toDate().toDateString()}`;
 
     if (!student.completedBenchmark.includes(tag)) {
       confirmedCompleted = false;
@@ -85,7 +85,7 @@ function generateWrapper(student: StudentDataInterface): JSX.Element {
     return (
       <p>
         <span className="on-track"></span>
-        {""}Next Benchmark(s): {student.dueDate!.toDate().toDateString()}
+        {""}Next Benchmark(s): {student.dueDate.toDate().toDateString()}
       </p>
     );
   }

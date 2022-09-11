@@ -16,7 +16,7 @@ import firebase from "firebase/app";
 import { Link } from "react-router-dom";
 import { GetApproachStringFromLabel } from "../../../utilities/LabelHelper";
 
-import "./PracticeList.css";
+import "./styles/PracticeList.css";
 import { PracticeListInterface } from "../types/DashboardTypes";
 import { StudentDataInterface } from "../../student/types/StudentTypes";
 
@@ -134,7 +134,7 @@ export default function PracticeList({
             ) : (
               <span className="needs-practice"> </span>
             )}{" "}
-            Last Practice: {student.lastActivity!.toDate().toDateString()}
+            Last Practice: {student.lastActivity.toDate().toDateString()}
           </p>
         </div>
       ))}

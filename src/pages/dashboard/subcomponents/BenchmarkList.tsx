@@ -16,7 +16,7 @@ import { Link } from "react-router-dom";
 import { StudentDataInterface } from "../../student/types/StudentTypes";
 import { BenchmarkInterface } from "../types/DashboardTypes";
 
-import "./BenchmarkList.css";
+import "./styles/BenchmarkList.css";
 
 /** checkIfCompletedBenchmark
  *
@@ -34,7 +34,7 @@ function checkIfCompletedBenchmark(
     return false;
   }
 
-  const tag = `${benchmark} ${student.dueDate!.toDate().toDateString()}`;
+  const tag = `${benchmark} ${student.dueDate.toDate().toDateString()}`;
 
   if (student.completedBenchmark.includes(tag)) {
     return true;
@@ -103,7 +103,7 @@ export default function BenchmarkList({ student }: BenchmarkInterface) {
             {generateWrapper(student, benchmark, benchmarkCompleted)}
             <hr />
             <p>
-              <b>Due Date:</b> {student.dueDate!.toDate().toDateString()}
+              <b>Due Date:</b> {student.dueDate.toDate().toDateString()}
             </p>
             <p>
               <b>Status:</b> {generatedStyledFeedback(benchmarkCompleted)}
