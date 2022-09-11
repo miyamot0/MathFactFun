@@ -35,7 +35,6 @@ export default function Timer({
     }
 
     // TODO: Dependency issue to explore
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [startTimerTime]);
 
   useEffect(() => {
@@ -44,8 +43,6 @@ export default function Timer({
         callbackFunction();
       }, 3000);
     }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fireCallback]);
 
   const relevantSeconds = secondsTotal - secondCounter;

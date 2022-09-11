@@ -16,6 +16,7 @@ export enum BenchmarkActions {
 
   ExplicitTimingBatchStartPreflight,
   ExplicitTimingBatchIncrement,
+  ExplicitTimingModalPreErrorLog,
   ExplicitTimingModalRetry,
 
   TapedProblemsBatchStartPreflight,

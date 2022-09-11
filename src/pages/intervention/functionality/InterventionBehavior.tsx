@@ -184,8 +184,11 @@ export function keyHandler(
     modKey = key.key === "Delete" ? "Del" : modKey;
 
     if (modKey === " ") {
-      if (currentAction !== SharedActionSequence.Entry) {
-        captureButtonAction2();
+      if (
+        currentAction !== SharedActionSequence.Entry &&
+        currentAction !== SharedActionSequence.Start
+      ) {
+        () => captureButtonAction2();
         return;
       }
 
@@ -286,14 +289,17 @@ export const InterventionReducer = (
         WorkingData: action.payload.uWorkingData,
         SecondsLeft: action.payload.uTimer,
         LoadedData: action.payload.uLoadedData,
+        CurrentAction: action.payload.uAction,
       };
 
     case BenchmarkActions.ExplicitTimingModalRetry:
       return {
         ...state,
-        EntryRepresentationInternal: action.payload.EntryRepresentationInternal,
-        NumRetries: action.payload.NumRetries,
-        ModalIsOpen: action.payload.ModalIsOpen,
+        EntryRepresentationInternal:
+          action.payload.uEntryRepresentationInternal,
+        NumRetries: action.payload.uNumRetries,
+        ModalIsOpen: false,
+        OnInitialTry: action.payload.uOnInitialTry,
       };
 
     case BenchmarkActions.ExplicitTimingBatchIncrement:
@@ -306,6 +312,12 @@ export const InterventionReducer = (
         NumbTrials: action.payload.uNumberTrials,
         OnInitialTry: action.payload.uInitialTry,
         PreTrialTime: action.payload.uTrialTime,
+      };
+
+    case BenchmarkActions.ExplicitTimingModalPreErrorLog:
+      return {
+        ...state,
+        FactModelList: action.payload.uFactModel,
       };
     // Cover Copy Compare
     case BenchmarkActions.CoverCopyCompareBatchStartPreflight:

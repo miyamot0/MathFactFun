@@ -9,7 +9,7 @@
 import React from "react";
 
 // styles
-import "./SimpleProblemFrame.css";
+import "./styles/SimpleProblemFrame.css";
 
 interface SimpleProblemFrameInterface {
   problemStem: string;
@@ -100,8 +100,8 @@ export default function SimpleProblemFrame({
   const colorOfEqualsLine = problemStem.includes("=")
     ? "black"
     : coverProblemSpace
-      ? "gray"
-      : "transparent";
+    ? "gray"
+    : "transparent";
 
   if (!problemStem || problemStem.length <= 0) {
     return (

@@ -9,7 +9,7 @@
 import React from "react";
 
 // styles
-import "./StimulusFrame.css";
+import "./styles/StimulusFrame.css";
 
 interface StimulusFrameInterface {
   itemString: string;

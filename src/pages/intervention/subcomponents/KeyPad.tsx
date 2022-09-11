@@ -9,7 +9,7 @@
 import React from "react";
 
 // styles
-import "./KeyPad.css";
+import "./styles/KeyPad.css";
 
 interface CallbackInterface {
   (arg0: string): void;

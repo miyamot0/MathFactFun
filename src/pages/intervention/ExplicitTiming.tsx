@@ -89,10 +89,11 @@ export default function ExplicitTiming() {
 
   // Fire once individual data loaded, just once
   useEffect(() => {
-    if (document && state.LoadedData) {
+    if (document && !state.LoadedData) {
       dispatch({
         type: BenchmarkActions.ExplicitTimingBatchStartPreflight,
         payload: {
+          uAction: SharedActionSequence.Start,
           uWorkingData: document.factsTargeted,
           uTimer: document.minForTask * 60,
           uLoadedData: true,
@@ -233,6 +234,33 @@ export default function ExplicitTiming() {
     const holderPreTime = state.PreTrialTime;
 
     if (shouldShowFeedback(!isMatching, document)) {
+      const totalDigitsShown = CalculateDigitsTotalAnswer(
+        state.ViewRepresentationInternal
+      );
+
+      const totalDigitsCorrect = CalculateDigitsCorrectAnswer(
+        combinedResponse,
+        state.ViewRepresentationInternal
+      );
+
+      const currentItem2: FactDataInterface = {
+        factCorrect: isMatching,
+        initialTry: state.OnInitialTry,
+        factType: document.currentTarget,
+        factString: state.ViewRepresentationInternal,
+        factEntry: combinedResponse,
+        latencySeconds: secs,
+        dateTimeEnd: timestamp.fromDate(new Date(current)),
+        dateTimeStart: timestamp.fromDate(new Date(holderPreTime)),
+      };
+
+      dispatch({
+        type: BenchmarkActions.ExplicitTimingModalPreErrorLog,
+        payload: {
+          uFactModel: [...state.FactModelList, currentItem2],
+        },
+      });
+
       openModal();
     } else {
       const totalDigitsShown = CalculateDigitsTotalAnswer(
@@ -340,8 +368,9 @@ export default function ExplicitTiming() {
             dispatch({
               type: BenchmarkActions.ExplicitTimingModalRetry,
               payload: {
-                EntryRepresentationInternal: "",
-                NumRetries: state.NumRetries + 1,
+                uEntryRepresentationInternal: "",
+                uNumRetries: state.NumRetries + 1,
+                uOnInitialTry: false,
               },
             });
 

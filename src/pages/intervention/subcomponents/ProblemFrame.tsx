@@ -10,7 +10,7 @@ import React from "react";
 import { checkInputNullOrUndefined } from "../../../utilities/FormHelpers";
 
 // styles
-import "./ProblemFrame.css";
+import "./styles/ProblemFrame.css";
 
 interface ProblemFrameInterface {
   entryString: string;

@@ -201,8 +201,6 @@ export default function CoverCopyCompare() {
       return;
     }
 
-    console.log(state);
-
     // HACK: need a flag for update w/o waiting for state change
     let quickCheck = false;
 
