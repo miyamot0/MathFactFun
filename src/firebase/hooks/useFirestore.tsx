@@ -12,7 +12,7 @@
 
 import { useReducer, useEffect, useState } from "react";
 import { PerformanceDataInterface } from "../../pages/intervention/types/InterventionTypes";
-import { StudentDataInterface } from "../../pages/student/Types/StudentTypes";
+import { StudentDataInterface } from "../../pages/student/interfaces/StudentInterfaces";
 import { UserDataInterface } from "../../pages/user/types/UserTypes";
 import { projectFirestore } from "../config";
 

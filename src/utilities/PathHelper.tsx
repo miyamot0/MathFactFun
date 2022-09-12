@@ -6,11 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-
-/**
- * Helper file
- */
-
 /** confirmIfInterventionScreen
  *
  * Disable sidebar if on practice/intervention screen

@@ -17,8 +17,8 @@ import { useAuthorizationContext } from "../../../context/hooks/useAuthorization
 import { useFirestore } from "../../../firebase/hooks/useFirestore";
 
 import "./styles/StudentComments.css";
-import { CommentInterface } from "../../../firebase/types/GeneralTypes";
-import { StudentWidgetInterface } from "../Types/StudentTypes";
+import { StudentWidgetInterface } from "../interfaces/StudentInterfaces";
+import { CommentInterface } from "./types/CommentTypes";
 
 export default function StudentComments({ student }: StudentWidgetInterface) {
   const { updateDocument, response } = useFirestore(
@@ -111,7 +111,7 @@ export default function StudentComments({ student }: StudentWidgetInterface) {
                   {comment.displayName
                     ?.split(" ")
                     .map(
-                      (w) => w[0].toUpperCase() + w.substring(1).toLowerCase()
+                      (w: any) => w[0].toUpperCase() + w.substring(1).toLowerCase()
                     )
                     .join(" ")}
                 </p>

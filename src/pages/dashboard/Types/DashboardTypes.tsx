@@ -1,4 +1,4 @@
-import { StudentDataInterface } from "../../student/Types/StudentTypes";
+import { StudentDataInterface } from "../../student/interfaces/StudentInterfaces";
 
 export interface CallbackInterface {
   (arg0: string): void;

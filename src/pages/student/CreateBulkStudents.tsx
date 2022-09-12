@@ -23,24 +23,24 @@ import {
   ErrorCorrection,
   Contingencies,
 } from "../../maths/Facts";
-import { CommentInterface } from "../../firebase/types/GeneralTypes";
 import {
   RoutedIdParam,
 
-} from "../../types/RoutingInterfaces";
+} from "../../interfaces/RoutingInterfaces";
 import {
+  StudentCreatorBehavior,
   UserCreateSingleInitialState,
-  UserCreationReducer,
+  userCreationReducer,
 } from "./functionality/StudentFunctionality";
 import {
   checkInputNullOrUndefined,
   streamlinedCheck,
 } from "../../utilities/FormHelpers";
 import {
-  StudentCreatorBehavior,
   StudentDataInterface,
-} from "./Types/StudentTypes";
+} from "./interfaces/StudentInterfaces";
 import { SingleOptionType } from "../../types/SharedComponentTypes";
+import { CommentInterface } from "./subcomponents/types/CommentTypes";
 
 // Page to create new students
 export default function CreateBulkStudents() {
@@ -53,7 +53,7 @@ export default function CreateBulkStudents() {
   );
 
   const [state, dispatch] = useReducer(
-    UserCreationReducer,
+    userCreationReducer,
     UserCreateSingleInitialState
   );
 

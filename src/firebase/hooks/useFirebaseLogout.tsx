@@ -13,13 +13,8 @@
 import { useEffect, useState } from "react";
 import { projectAuth } from "../config";
 import { useAuthorizationContext } from "../../context/hooks/useAuthorizationContext";
-import { AuthorizationStates } from "../../context/types/AuthorizationTypes";
-
-interface FirebaseLogout {
-  logout: () => Promise<void>;
-  logoutError: string | undefined;
-  logoutPending: boolean;
-}
+import { FirebaseLogout } from "../interfaces/FirebaseInterfaces";
+import { AuthorizationStates } from "../../context/functionality/AuthorizationBehavior";
 
 /** useFirebaseLogout
  *

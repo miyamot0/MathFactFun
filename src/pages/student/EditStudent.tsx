@@ -31,19 +31,19 @@ import Select, { MultiValue } from "react-select";
 import {
   RoutedIdParam,
 
-} from "../../types/RoutingInterfaces";
+} from "../../interfaces/RoutingInterfaces";
 import {
+  StudentCreatorBehavior,
   UserCreateSingleInitialState,
-  UserCreationReducer,
+  userCreationReducer,
 } from "./functionality/StudentFunctionality";
 import {
   checkInputNullOrUndefined,
   streamlinedCheck,
 } from "../../utilities/FormHelpers";
 import {
-  StudentCreatorBehavior,
   StudentDataInterface,
-} from "./Types/StudentTypes";
+} from "./interfaces/StudentInterfaces";
 import { SingleOptionType } from "../../types/SharedComponentTypes";
 
 // TODO: reducer
@@ -63,7 +63,7 @@ export default function EditStudent() {
   );
 
   const [state, dispatch] = useReducer(
-    UserCreationReducer,
+    userCreationReducer,
     UserCreateSingleInitialState
   );
 
@@ -72,7 +72,9 @@ export default function EditStudent() {
   if (document && !state.DidBuild) {
     dispatch({
       type: StudentCreatorBehavior.SetBuilt,
-      payload: null,
+      payload: {
+        uDidBuild: true
+      },
     });
 
     const uCurrentTarget = Operations.find(

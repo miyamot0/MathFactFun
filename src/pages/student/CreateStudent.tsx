@@ -25,17 +25,17 @@ import {
   Contingencies,
 } from "../../maths/Facts";
 import {
+  StudentCreatorBehavior,
   UserCreateSingleInitialState,
-  UserCreationReducer,
+  userCreationReducer,
 } from "./functionality/StudentFunctionality";
 import {
   checkInputNullOrUndefined,
   streamlinedCheck,
 } from "../../utilities/FormHelpers";
 import {
-  StudentCreatorBehavior,
   StudentDataInterface,
-} from "./Types/StudentTypes";
+} from "./interfaces/StudentInterfaces";
 import { SingleOptionType } from "../../types/SharedComponentTypes";
 
 // Page to create new students
@@ -49,7 +49,7 @@ export default function CreateStudent() {
   const { user } = useAuthorizationContext();
 
   const [state, dispatch] = useReducer(
-    UserCreationReducer,
+    userCreationReducer,
     UserCreateSingleInitialState
   );
 

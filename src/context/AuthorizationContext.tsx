@@ -15,15 +15,15 @@ import React, { createContext, useReducer, useEffect } from "react";
 import { projectAuth } from "../firebase/config";
 import { AppInterface } from "../App";
 import {
-  AuthorizationContextInterface,
   AuthorizationProviderInterface,
-  AuthorizationStates,
 } from "./types/AuthorizationTypes";
-import { simplifyPrivilegeAccess } from "./helpers/AuthorizationHelpers";
+import { AuthorizationContextInterface } from "./interfaces/AuthorizationInterfaces";
 import {
-  AuthorizationReducer,
+  authorizationReducer,
+  AuthorizationStates,
   InitialAuthorizationState,
 } from "./functionality/AuthorizationBehavior";
+import { simplifyPrivilegeAccess } from "./helpers/AuthorizationHelpers";
 
 // Context to inherit
 export const AuthorizationContext =
@@ -45,7 +45,7 @@ export function AuthorizationContextProvider({
   children,
 }: AuthorizationProviderInterface): AppInterface {
   const [state, dispatch] = useReducer(
-    AuthorizationReducer,
+    authorizationReducer,
     InitialAuthorizationState
   );
 

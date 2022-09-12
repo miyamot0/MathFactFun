@@ -18,9 +18,9 @@ import {
   WhereFilterOp,
   OrderByDirection,
 } from "@firebase/firestore-types";
-import { CollectionInputInterface } from "../types/GeneralTypes";
 import { FirestoreCollections } from "./useFirestore";
 import { FirebaseError } from "@firebase/util";
+import { CollectionInputInterface } from "../interfaces/FirebaseInterfaces";
 
 const CollectionError = "Unable to retrieve data";
 

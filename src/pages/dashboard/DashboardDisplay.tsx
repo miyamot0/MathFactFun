@@ -18,7 +18,7 @@ import { useAuthorizationContext } from "../../context/hooks/useAuthorizationCon
 // Components
 import StudentList from "./subcomponents/StudentList";
 import StudentFilter from "./functionality/StudentFilter";
-import { StudentDataInterface } from "../student/Types/StudentTypes";
+import { StudentDataInterface } from "../student/interfaces/StudentInterfaces";
 
 export default function Dashboard() {
   const { user, adminFlag } = useAuthorizationContext();

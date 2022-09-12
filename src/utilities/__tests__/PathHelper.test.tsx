@@ -8,29 +8,6 @@
 
 import { confirmIfInterventionScreen, InterventionPaths } from "../PathHelper";
 
-/**
-export function confirmIfInterventionScreen(address: string): boolean {
-  const screens = [
-    "CoverCopyCompare",
-    "ExplicitTiming",
-    "Cloze",
-    "TapedProblems",
-    "benchmark",
-  ];
-
-  let valueToReturn = false;
-
-  screens.forEach((screen) => {
-    if (address.includes(screen) && !address.includes("Progress")) {
-      valueToReturn = true;
-    }
-  });
-
-  return valueToReturn;
-}
-
- */
-
 describe('PathHelper: confirmIfInterventionScreen', () => {
     it('Benchmark: Should register as an intervention (testing) interface', () => {
         const page = InterventionPaths.Benchmark;

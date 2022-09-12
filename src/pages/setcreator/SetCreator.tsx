@@ -30,7 +30,7 @@ import {
 } from "./types/SetCreatorTypes";
 import {
   RoutedIdTargetParam,
-} from "../../types/RoutingInterfaces";
+} from "../../interfaces/RoutingInterfaces";
 import {
   generateItemHistory,
   getRelevantCCCSet,
@@ -48,7 +48,7 @@ import {
   SetEditForm,
   TitleStyle,
 } from "./views/SetCreatorViews";
-import { StudentDataInterface } from "../student/Types/StudentTypes";
+import { StudentDataInterface } from "../student/interfaces/StudentInterfaces";
 import { PerformanceDataInterface } from "../intervention/types/InterventionTypes";
 import { checkIfNullUndefinedOrEmpty } from "./helpers/SetCreatorHelpers";
 import { SingleOptionType } from "../../types/SharedComponentTypes";

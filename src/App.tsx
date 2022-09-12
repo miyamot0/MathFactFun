@@ -47,7 +47,7 @@ import "./App.css";
 
 export type AppInterface = JSX.Element;
 
-function App(): AppInterface {
+export function App(): AppInterface {
   const { user, authIsReady, adminFlag } = useAuthorizationContext();
 
   useEffect(() => {

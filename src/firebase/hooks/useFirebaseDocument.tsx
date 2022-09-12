@@ -12,10 +12,10 @@
 
 import { useEffect, useState } from "react";
 import { projectFirestore } from "../config";
-import { DocumentInputInterface } from "../types/GeneralTypes";
 import { FirestoreCollections } from "./useFirestore";
 
 import { FirebaseError } from "@firebase/util";
+import { DocumentInputInterface } from "../interfaces/FirebaseInterfaces";
 
 const ErrorNoData = "There was not a document at this location";
 const ErrorSnapshot = "Unable to get the document";

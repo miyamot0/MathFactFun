@@ -26,7 +26,7 @@ import {
 } from "../../utilities/LabelHelper";
 
 import { timestamp } from "../../firebase/config";
-import { RoutedIdTargetParam } from "../../types/RoutingInterfaces";
+import { RoutedIdTargetParam } from "../../interfaces/RoutingInterfaces";
 import { useAuthorizationContext } from "../../context/hooks/useAuthorizationContext";
 import {
   DelCode,
@@ -43,7 +43,7 @@ import {
 
 // Styles
 import "./styles/ExplicitTiming.css";
-import { StudentDataInterface } from "../student/Types/StudentTypes";
+import { StudentDataInterface } from "../student/interfaces/StudentInterfaces";
 import { FactDataInterface } from "../setcreator/types/SetCreatorTypes";
 
 export default function Benchmark() {

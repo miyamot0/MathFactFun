@@ -6,4 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-export type SingleOptionType = { label: string; value: string };
+export type CommentInterface = {
+    content: string,
+    displayName: string,
+    createdAt: any,
+    createdBy: any,
+    id: number
+}

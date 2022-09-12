@@ -43,8 +43,8 @@ import {
   InterventionReducer,
   useEventListener,
 } from "./functionality/InterventionBehavior";
-import { RoutedIdTargetParam } from "../../types/RoutingInterfaces";
-import { StudentDataInterface } from "../student/Types/StudentTypes";
+import { RoutedIdTargetParam } from "../../interfaces/RoutingInterfaces";
+import { StudentDataInterface } from "../student/interfaces/StudentInterfaces";
 import { FactDataInterface } from "../setcreator/types/SetCreatorTypes";
 import {
   checkLiNullUndefinedBlank,

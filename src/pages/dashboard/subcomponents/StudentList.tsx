@@ -18,7 +18,7 @@ import { GetApproachStringFromLabel } from "../../../utilities/LabelHelper";
 
 import "./styles/StudentList.css";
 import { StudentListInterface } from "../types/DashboardTypes";
-import { StudentDataInterface } from "../../student/Types/StudentTypes";
+import { StudentDataInterface } from "../../student/interfaces/StudentInterfaces";
 
 /** checkIfProgrammingCurrent
  *

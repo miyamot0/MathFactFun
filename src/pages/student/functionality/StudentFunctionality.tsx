@@ -1,24 +1,25 @@
-import { MultiValue } from "react-select";
+import { MultiValue, SingleValue } from "react-select";
 import { ErrorHandling } from "../../../maths/Facts";
 import { SingleOptionType } from "../../../types/SharedComponentTypes";
-import { StudentCreatorBehavior } from "../Types/StudentTypes";
+import { confirmMultiSingleOptionType, confirmNumberType, confirmSingleOptionType, confirmStringType } from "../../../utilities/ReducerHelpers";
+import { StudentCreateState } from "../interfaces/StudentInterfaces";
 
-export interface StudentCreateState {
-  Name: string;
-  Names: string[];
-  Details: string;
-  FormError: undefined | string;
-  DueDate: string;
-  CurrentApproach: SingleOptionType;
-  CurrentGrade: SingleOptionType;
-  CurrentTarget: SingleOptionType;
-  CurrentErrorApproach: SingleOptionType;
-  CurrentSRApproach: SingleOptionType;
-  CurrentBenchmarking: MultiValue<SingleOptionType>;
-  DidBuild: boolean;
-  AimLine: number;
-  ExplicitTime: number;
-  CurrentProblemSet: SingleOptionType;
+export enum StudentCreatorBehavior {
+  SetName,
+  SetDetails,
+  SetDueDate,
+  SetFormError,
+  SetCurrentApproach,
+  SetCurrentGrade,
+  SetCurrentTarget,
+  SetCurrentErrorApproach,
+  SetCurrentSRApproach,
+  SetCurrentBenchmarking,
+  SetProblemSet,
+  SetAimLine,
+  SetExplicitTime,
+  SetBuilt,
+  SetLoadedStudent,
 }
 
 export const UserCreateSingleInitialState: StudentCreateState = {
@@ -57,48 +58,67 @@ export const UserCreateSingleInitialState: StudentCreateState = {
   } as SingleOptionType,
 };
 
-/**
- * Reducer for create
+type StudentPayloadObjects =
+  {
+    [key: string]: string
+    | SingleValue<SingleOptionType>
+    | MultiValue<SingleOptionType>
+    | number
+    | boolean
+    | undefined;
+  };
+
+type StudentActionObject = {
+  type: StudentCreatorBehavior;
+  payload: StudentPayloadObjects
+};
+
+/** userCreationReducer
+ * 
+ * Reducer for creating/editing student
  *
- * @param {any} state
- * @param {any} action
- * @returns {any}
+ * @param {StudentCreateState} state
+ * @param {StudentActionObject} action
+ * @returns {StudentCreateState}
  */
-export function UserCreationReducer(
+export function userCreationReducer(
   state: StudentCreateState,
-  action: { type: StudentCreatorBehavior; payload: any }
+  action: StudentActionObject,
 ): StudentCreateState {
   switch (action.type) {
     case StudentCreatorBehavior.SetName:
-      return { ...state, Name: action.payload.uName };
+      return { ...state, Name: confirmStringType(action.payload.uName) };
     case StudentCreatorBehavior.SetDetails:
-      return { ...state, Details: action.payload.uDetails };
+      return { ...state, Details: confirmStringType(action.payload.uDetails) };
     case StudentCreatorBehavior.SetFormError:
-      return { ...state, FormError: action.payload.uFormError };
+      return {
+        ...state,
+        FormError: action.payload.uFormError === undefined ? undefined : confirmStringType(action.payload.uFormError)
+      };
     case StudentCreatorBehavior.SetDueDate:
-      return { ...state, DueDate: action.payload.uDueDate };
+      return { ...state, DueDate: confirmStringType(action.payload.uDueDate) };
     case StudentCreatorBehavior.SetCurrentApproach:
-      return { ...state, CurrentApproach: action.payload.uCurrentApproach };
+      return { ...state, CurrentApproach: confirmSingleOptionType(action.payload.uCurrentApproach) };
     case StudentCreatorBehavior.SetCurrentGrade:
-      return { ...state, CurrentGrade: action.payload.uCurrentGrade };
+      return { ...state, CurrentGrade: confirmSingleOptionType(action.payload.uCurrentGrade) };
     case StudentCreatorBehavior.SetCurrentTarget:
-      return { ...state, CurrentTarget: action.payload.uCurrentTarget };
+      return { ...state, CurrentTarget: confirmSingleOptionType(action.payload.uCurrentTarget) };
     case StudentCreatorBehavior.SetCurrentErrorApproach:
       return {
         ...state,
-        CurrentErrorApproach: action.payload.uCurrentErrorApproach,
+        CurrentErrorApproach: confirmSingleOptionType(action.payload.uCurrentErrorApproach),
       };
     case StudentCreatorBehavior.SetCurrentSRApproach:
-      return { ...state, CurrentSRApproach: action.payload.uCurrentSRApproach };
+      return { ...state, CurrentSRApproach: confirmSingleOptionType(action.payload.uCurrentSRApproach) };
     case StudentCreatorBehavior.SetCurrentBenchmarking:
       return {
         ...state,
-        CurrentBenchmarking: action.payload.uCurrentBenchmarking,
+        CurrentBenchmarking: confirmMultiSingleOptionType(action.payload.uCurrentBenchmarking),
       };
     case StudentCreatorBehavior.SetProblemSet:
       return {
         ...state,
-        CurrentProblemSet: action.payload.uProblemSet,
+        CurrentProblemSet: confirmSingleOptionType(action.payload.uProblemSet),
       };
     case StudentCreatorBehavior.SetBuilt:
       return {
@@ -108,28 +128,28 @@ export function UserCreationReducer(
     case StudentCreatorBehavior.SetAimLine:
       return {
         ...state,
-        AimLine: action.payload.uAimLine,
+        AimLine: confirmNumberType(action.payload.uAimLine),
       };
     case StudentCreatorBehavior.SetExplicitTime:
       return {
         ...state,
-        ExplicitTime: action.payload.uExplicitTime,
+        ExplicitTime: confirmNumberType(action.payload.uExplicitTime),
       };
     case StudentCreatorBehavior.SetLoadedStudent:
       return {
         ...state,
-        Name: action.payload.uName,
-        Details: action.payload.uDetails,
-        DueDate: action.payload.uDueDate,
-        AimLine: action.payload.uAimLine,
-        ExplicitTime: action.payload.uExplicitTime,
-        CurrentTarget: action.payload.uCurrentTarget,
-        CurrentGrade: action.payload.uCurrentGrade,
-        CurrentApproach: action.payload.uCurrentApproach,
-        CurrentErrorApproach: action.payload.uCurrentErrorApproach,
-        CurrentSRApproach: action.payload.uCurrentSRApproach,
-        CurrentBenchmarking: action.payload.uCurrentBenchmarking,
-        CurrentProblemSet: action.payload.uProblemSet,
+        Name: confirmStringType(action.payload.uName),
+        Details: confirmStringType(action.payload.uDetails),
+        DueDate: confirmStringType(action.payload.uDueDate),
+        AimLine: confirmNumberType(action.payload.uAimLine),
+        ExplicitTime: confirmNumberType(action.payload.uExplicitTime),
+        CurrentTarget: confirmSingleOptionType(action.payload.uCurrentTarget),
+        CurrentGrade: confirmSingleOptionType(action.payload.uCurrentGrade),
+        CurrentApproach: confirmSingleOptionType(action.payload.uCurrentApproach),
+        CurrentErrorApproach: confirmSingleOptionType(action.payload.uCurrentErrorApproach),
+        CurrentSRApproach: confirmSingleOptionType(action.payload.uCurrentSRApproach),
+        CurrentBenchmarking: confirmMultiSingleOptionType(action.payload.uCurrentBenchmarking),
+        CurrentProblemSet: confirmSingleOptionType(action.payload.uProblemSet),
       };
 
     default:

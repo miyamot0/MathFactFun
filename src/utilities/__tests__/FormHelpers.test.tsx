@@ -6,8 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import { SingleOptionType } from "../../types/SharedComponentTypes";
 import { checkInputNullOrUndefined, streamlinedCheck } from "../FormHelpers";
-import { SingleOptionType } from "../../types/RoutingInterfaces"
 
 describe('FormHelpers: checkInputNullOrUndefined', () => {
     it('Blank: Should confirm false', () => {

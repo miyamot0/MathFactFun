@@ -20,7 +20,7 @@ import moment from "moment";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import AnnotationsModule from "highcharts/modules/annotations";
-import { RoutedIdParam } from "../../types/RoutingInterfaces";
+import { RoutedIdParam } from "../../interfaces/RoutingInterfaces";
 import { useFirebaseCollectionTyped } from "../../firebase/hooks/useFirebaseCollection";
 import {
   CommonDisplayHeadingStyle,

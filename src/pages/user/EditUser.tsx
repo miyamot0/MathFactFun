@@ -15,7 +15,7 @@ import { useParams } from "react-router-dom";
 import { useFirestore } from "../../firebase/hooks/useFirestore";
 import { useHistory } from "react-router-dom";
 import { useFirebaseDocumentTyped } from "../../firebase/hooks/useFirebaseDocument";
-import { RoutedIdParam } from "../../types/RoutingInterfaces";
+import { RoutedIdParam } from "../../interfaces/RoutingInterfaces";
 import {
   UserDataInitialState,
   UserGenerationReducer,

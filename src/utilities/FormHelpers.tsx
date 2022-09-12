@@ -8,7 +8,7 @@
 
 import firebase from "firebase/app";
 import { MultiValue } from "react-select";
-import { StudentCreatorBehavior } from "../pages/student/Types/StudentTypes";
+import { StudentCreatorBehavior } from "../pages/student/functionality/StudentFunctionality";
 import { SingleOptionType } from "../types/SharedComponentTypes";
 
 export const CommonPanelWidth = {

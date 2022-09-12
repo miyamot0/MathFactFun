@@ -13,13 +13,8 @@
 import { useState, useEffect } from "react";
 import { projectAuth } from "../config";
 import { useAuthorizationContext } from "../../context/hooks/useAuthorizationContext";
-import { AuthorizationStates } from "../../context/types/AuthorizationTypes";
-
-interface FirebaseLogin {
-  login: (email: string, password: string) => Promise<void>;
-  loginError: string | undefined;
-  loginPending: boolean;
-}
+import { FirebaseLogin } from "../interfaces/FirebaseInterfaces";
+import { AuthorizationStates } from "../../context/functionality/AuthorizationBehavior";
 
 /** useFirebaseLogin
  *

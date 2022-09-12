@@ -1,8 +1,12 @@
-import {
-  AuthorizationContextStateInterface,
-  AuthorizationStates,
-  FirebaseLoginAction,
-} from "../types/AuthorizationTypes";
+/** @license
+ *
+ * Copyright (c) Shawn P. Gilroy, Louisiana State University.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+import { AuthorizationContextStateInterface, FirebaseLoginAction } from "../interfaces/AuthorizationInterfaces";
 
 export const InitialAuthorizationState = {
   user: null,
@@ -10,15 +14,22 @@ export const InitialAuthorizationState = {
   adminFlag: false,
 };
 
-/** Auth reducer
+export enum AuthorizationStates {
+  LOGIN = "LOGIN",
+  LOGOUT = "LOGOUT",
+  READY = "READY",
+  CLAIMS = "CLAIMS",
+}
+
+/** AuthorizationReducer
  *
- * Reducer firestore login
+ * Reducer for firestore login
  *
- * @param {Enum} state Current state
- * @param {Object} action Action type
+ * @param {AuthorizationContextStateInterface} state Current state
+ * @param {FirebaseLoginAction} action Action type
  * @returns {AuthorizationContextStateInterface}
  */
-export function AuthorizationReducer(
+export function authorizationReducer(
   state: AuthorizationContextStateInterface,
   action: FirebaseLoginAction
 ): AuthorizationContextStateInterface {

@@ -12,7 +12,7 @@
 
 import { AuthorizationContext } from "../AuthorizationContext";
 import { useContext } from "react";
-import { AuthorizationContextInterface } from "../types/AuthorizationTypes";
+import { AuthorizationContextInterface } from "../interfaces/AuthorizationInterfaces";
 
 /** useAuthorizationContext
  *

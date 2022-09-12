@@ -32,7 +32,7 @@ import {
   CalculateDigitsCorrectAnswer,
 } from "../../utilities/LabelHelper";
 
-import { RoutedIdTargetParam } from "../../types/RoutingInterfaces";
+import { RoutedIdTargetParam } from "../../interfaces/RoutingInterfaces";
 import {
   BenchmarkActions,
   SharedActionSequence,
@@ -49,7 +49,7 @@ import {
 import "./styles/ExplicitTiming.css";
 import { ErrorModalCustomStyle } from "./subcomponents/ModalStyles";
 import { InterventionFormat } from "../../maths/Facts";
-import { StudentDataInterface } from "../student/Types/StudentTypes";
+import { StudentDataInterface } from "../student/interfaces/StudentInterfaces";
 import { FactDataInterface } from "../setcreator/types/SetCreatorTypes";
 import { shouldShowFeedback } from "./helpers/InterventionHelpers";
 

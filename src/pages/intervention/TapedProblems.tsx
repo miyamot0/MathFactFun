@@ -46,7 +46,7 @@ import {
   keyHandler,
   useEventListener,
 } from "./functionality/InterventionBehavior";
-import { StudentDataInterface } from "../student/Types/StudentTypes";
+import { StudentDataInterface } from "../student/interfaces/StudentInterfaces";
 import { FactDataInterface } from "../setcreator/types/SetCreatorTypes";
 import { shouldShowFeedback } from "./helpers/InterventionHelpers";
 
