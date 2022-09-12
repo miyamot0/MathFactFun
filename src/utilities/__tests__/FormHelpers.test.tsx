@@ -7,7 +7,7 @@
  */
 
 import { checkInputNullOrUndefined, streamlinedCheck } from "../FormHelpers";
-import { SingleOptionType } from "../RoutingHelpers"
+import { SingleOptionType } from "../../types/RoutingInterfaces"
 
 describe('FormHelpers: checkInputNullOrUndefined', () => {
     it('Blank: Should confirm false', () => {
@@ -80,24 +80,3 @@ describe('FormHelpers: streamlinedCheck', () => {
         expect(result).toEqual(expected)
     })
 })
-
-/**
-
-  value: string | SingleOptionType,
-
-  if (typeof value === "string") {
-    statusOfCheck = checkInputNullOrUndefined(value);
-  } else if (value as SingleOptionType) {
-    statusOfCheck = value.value.trim().length < 1;
-  }
-
-  if (statusOfCheck) {
-    dispatch({
-      type: StudentCreatorBehavior.SetFormError,
-      payload: { uFormError: err },
-    });
-  }
-
-  return statusOfCheck;
-}
- */

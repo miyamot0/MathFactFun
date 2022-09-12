@@ -15,7 +15,7 @@ import { useAuthorizationContext } from "../context/hooks/useAuthorizationContex
 
 import { NavLink } from "react-router-dom";
 import { useLocation } from "react-router-dom";
-import { ConfirmIfInterventionScreen } from "../utilities/PathHelper";
+import { confirmIfInterventionScreen } from "../utilities/PathHelper";
 
 import WindowSideBar from "../assets/window-sidebar.svg";
 import PlusSquare from "../assets/plus-square.svg";
@@ -31,7 +31,7 @@ export default function Sidebar(): JSX.Element {
 
   const { authIsReady } = useAuthorizationContext();
 
-  return ConfirmIfInterventionScreen(location.pathname) && authIsReady ? (
+  return confirmIfInterventionScreen(location.pathname) && authIsReady ? (
     <></>
   ) : (
     <div className="sidebar">

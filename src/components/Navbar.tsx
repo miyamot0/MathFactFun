@@ -16,7 +16,7 @@ import { Link } from "react-router-dom";
 import { useFirebaseLogout } from "../firebase/hooks/useFirebaseLogout";
 import { useAuthorizationContext } from "../context/hooks/useAuthorizationContext";
 import { useLocation } from "react-router-dom";
-import { ConfirmIfInterventionScreen } from "../utilities/PathHelper";
+import { confirmIfInterventionScreen } from "../utilities/PathHelper";
 import Modal from "react-modal";
 
 // styles & images
@@ -51,7 +51,7 @@ export default function Navbar() {
     setIsOpen(false);
   }
 
-  return ConfirmIfInterventionScreen(location.pathname) ||
+  return confirmIfInterventionScreen(location.pathname) ||
     location.pathname.includes("login") ? (
     <></>
   ) : (

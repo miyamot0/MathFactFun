@@ -11,29 +11,35 @@
  * Helper file
  */
 
-/** ConfirmIfInterventionScreen
+/** confirmIfInterventionScreen
  *
  * Disable sidebar if on practice/intervention screen
  *
  * @param {String} address
  * @returns {Bool} does address fit exclusion
  */
-export function ConfirmIfInterventionScreen(address: string): boolean {
-  const screens = [
-    "CoverCopyCompare",
-    "ExplicitTiming",
-    "Cloze",
-    "TapedProblems",
-    "benchmark",
-  ];
+export function confirmIfInterventionScreen(address: string): boolean {
+  const screens = Object.keys(InterventionPaths);
+  const addressStringLower = address.toLowerCase();
 
   let valueToReturn = false;
 
   screens.forEach((screen) => {
-    if (address.includes(screen) && !address.includes("Progress")) {
+    const pageReferenceLower = screen.toLowerCase();
+
+    if (addressStringLower.includes(pageReferenceLower) && !addressStringLower.includes("Progress")) {
       valueToReturn = true;
     }
   });
 
   return valueToReturn;
 }
+
+// eslint-disable-next-line
+export const InterventionPaths = {
+  Benchmark: "Benchmark",
+  CoverCopyCompare: "CoverCopyCompare",
+  Cloze: "Cloze",
+  ExplicitTiming: "ExplicitTiming",
+  TapedProblems: "TapedProblems",
+};

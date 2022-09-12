@@ -43,7 +43,7 @@ import {
   InterventionReducer,
   useEventListener,
 } from "./functionality/InterventionBehavior";
-import { RoutedIdTargetParam } from "../../utilities/RoutingHelpers";
+import { RoutedIdTargetParam } from "../../types/RoutingInterfaces";
 import { StudentDataInterface } from "../student/Types/StudentTypes";
 import { FactDataInterface } from "../setcreator/types/SetCreatorTypes";
 import {

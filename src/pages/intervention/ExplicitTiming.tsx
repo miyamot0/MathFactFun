@@ -32,7 +32,7 @@ import {
   CalculateDigitsCorrectAnswer,
 } from "../../utilities/LabelHelper";
 
-import { RoutedIdTargetParam } from "../../utilities/RoutingHelpers";
+import { RoutedIdTargetParam } from "../../types/RoutingInterfaces";
 import {
   BenchmarkActions,
   SharedActionSequence,

@@ -26,7 +26,7 @@ import {
 } from "../../utilities/LabelHelper";
 
 import { timestamp } from "../../firebase/config";
-import { RoutedIdTargetParam } from "../../utilities/RoutingHelpers";
+import { RoutedIdTargetParam } from "../../types/RoutingInterfaces";
 import { useAuthorizationContext } from "../../context/hooks/useAuthorizationContext";
 import {
   DelCode,

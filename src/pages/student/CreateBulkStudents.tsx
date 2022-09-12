@@ -26,8 +26,8 @@ import {
 import { CommentInterface } from "../../firebase/types/GeneralTypes";
 import {
   RoutedIdParam,
-  SingleOptionType,
-} from "../../utilities/RoutingHelpers";
+
+} from "../../types/RoutingInterfaces";
 import {
   UserCreateSingleInitialState,
   UserCreationReducer,
@@ -40,6 +40,7 @@ import {
   StudentCreatorBehavior,
   StudentDataInterface,
 } from "./Types/StudentTypes";
+import { SingleOptionType } from "../../types/SharedComponentTypes";
 
 // Page to create new students
 export default function CreateBulkStudents() {

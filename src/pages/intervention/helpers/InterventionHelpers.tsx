@@ -13,7 +13,7 @@ import { StudentDataInterface } from "../../student/Types/StudentTypes";
  * Shared logic file
  */
 
-/** ConfirmIfInterventionScreen
+/** DetermineErrorCorrection
  *
  * Disable sidebar if on practice/intervention screen
  *

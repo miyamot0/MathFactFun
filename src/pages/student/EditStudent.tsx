@@ -24,14 +24,14 @@ import {
   ErrorCorrection,
   Contingencies,
 } from "../../maths/Facts";
-import { FormatDate } from "../../utilities/LabelHelper";
+import { formatDate } from "../../utilities/LabelHelper";
 
 // components
 import Select, { MultiValue } from "react-select";
 import {
   RoutedIdParam,
-  SingleOptionType,
-} from "../../utilities/RoutingHelpers";
+
+} from "../../types/RoutingInterfaces";
 import {
   UserCreateSingleInitialState,
   UserCreationReducer,
@@ -44,6 +44,7 @@ import {
   StudentCreatorBehavior,
   StudentDataInterface,
 } from "./Types/StudentTypes";
+import { SingleOptionType } from "../../types/SharedComponentTypes";
 
 // TODO: reducer
 
@@ -103,7 +104,7 @@ export default function EditStudent() {
       payload: {
         uName: document.name,
         uDetails: document.details,
-        uDueDate: FormatDate(document.dueDate.toDate()),
+        uDueDate: formatDate(document.dueDate.toDate()),
         uAimLine: document.aimLine,
         uExplicitTime: document.minForTask,
         uCurrentTarget,

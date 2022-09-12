@@ -24,7 +24,6 @@ import {
   ErrorCorrection,
   Contingencies,
 } from "../../maths/Facts";
-import { SingleOptionType } from "../../utilities/RoutingHelpers";
 import {
   UserCreateSingleInitialState,
   UserCreationReducer,
@@ -37,6 +36,7 @@ import {
   StudentCreatorBehavior,
   StudentDataInterface,
 } from "./Types/StudentTypes";
+import { SingleOptionType } from "../../types/SharedComponentTypes";
 
 // Page to create new students
 export default function CreateStudent() {

@@ -13,7 +13,7 @@
  * @param {Date} date Prior date object
  * @returns {String} Date output
  */
-export function FormatDate(date: string | number | Date): string {
+export function formatDate(date: string | number | Date): string {
   const d = new Date(date);
   const year = d.getFullYear();
 
@@ -26,16 +26,17 @@ export function FormatDate(date: string | number | Date): string {
   return [year, month, day].join("-");
 }
 
-/** CalculateDigitsTotal
+/** calculateDigitsTotalInProblem
  *
  * Calculates the total number of digits in math fact string
  *
  * @param {String} entry String for math fact
  * @returns {Int} Number of digits
  */
-export function CalculateDigitsTotal(entry: string): number {
+export function calculateDigitsTotalInProblem(entry: string): number {
   let operator = "";
 
+  // Check out operators
   if (entry.includes("+")) {
     operator = "+";
   } else if (entry.includes("-")) {
@@ -44,6 +45,13 @@ export function CalculateDigitsTotal(entry: string): number {
     operator = "x";
   } else if (entry.includes("/")) {
     operator = "/";
+  } else {
+    throw Error('No operator found in fact string');
+  }
+
+  // Check out operators
+  if (!entry.includes("=")) {
+    throw Error('No equality sign found in fact string');
   }
 
   const prefixTotal = entry.split("=")[0];

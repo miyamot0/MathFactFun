@@ -13,7 +13,7 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import { useFirebaseDocumentTyped } from "../../firebase/hooks/useFirebaseDocument";
-import { RoutedIdParam } from "../../utilities/RoutingHelpers";
+import { RoutedIdParam } from "../../types/RoutingInterfaces";
 import StudentSummary from "./subcomponents/StudentSummary";
 import StudentComments from "./subcomponents/StudentComments";
 import "./styles/DisplayStudent.css";

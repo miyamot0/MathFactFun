@@ -17,7 +17,7 @@ import BenchmarkList from "./subcomponents/BenchmarkList";
 
 // styles
 import "./Dashboards.css";
-import { RoutedIdParam } from "../../utilities/RoutingHelpers";
+import { RoutedIdParam } from "../../types/RoutingInterfaces";
 import { StudentDataInterface } from "../student/Types/StudentTypes";
 
 export default function DashboardBenchmark() {

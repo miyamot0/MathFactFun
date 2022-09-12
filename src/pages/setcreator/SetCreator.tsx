@@ -30,8 +30,7 @@ import {
 } from "./types/SetCreatorTypes";
 import {
   RoutedIdTargetParam,
-  SingleOptionType,
-} from "../../utilities/RoutingHelpers";
+} from "../../types/RoutingInterfaces";
 import {
   generateItemHistory,
   getRelevantCCCSet,
@@ -52,6 +51,7 @@ import {
 import { StudentDataInterface } from "../student/Types/StudentTypes";
 import { PerformanceDataInterface } from "../intervention/types/InterventionTypes";
 import { checkIfNullUndefinedOrEmpty } from "./helpers/SetCreatorHelpers";
+import { SingleOptionType } from "../../types/SharedComponentTypes";
 
 export default function SetCreator() {
   const { target, id } = useParams<RoutedIdTargetParam>();

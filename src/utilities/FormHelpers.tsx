@@ -9,7 +9,7 @@
 import firebase from "firebase/app";
 import { MultiValue } from "react-select";
 import { StudentCreatorBehavior } from "../pages/student/Types/StudentTypes";
-import { SingleOptionType } from "./RoutingHelpers";
+import { SingleOptionType } from "../types/SharedComponentTypes";
 
 export const CommonPanelWidth = {
   minHeight: "600px",
