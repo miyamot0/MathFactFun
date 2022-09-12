@@ -12,7 +12,7 @@
 
 import { useReducer, useEffect, useState } from "react";
 import { PerformanceDataInterface } from "../../pages/intervention/types/InterventionTypes";
-import { StudentDataInterface } from "../../pages/student/types/StudentTypes";
+import { StudentDataInterface } from "../../pages/student/Types/StudentTypes";
 import { UserDataInterface } from "../../pages/user/types/UserTypes";
 import { projectFirestore } from "../config";
 
@@ -132,9 +132,9 @@ export function useFirestore(
   const ref =
     collection === "" && studentId !== undefined
       ? projectFirestore
-          .collection("performances")
-          .doc(targetSkill)
-          .collection(studentId)
+        .collection("performances")
+        .doc(targetSkill)
+        .collection(studentId)
       : projectFirestore.collection(collection);
 
   // only dispatch is not cancelled

@@ -17,7 +17,7 @@ import { RoutedIdParam } from "../../utilities/RoutingHelpers";
 import StudentSummary from "./subcomponents/StudentSummary";
 import StudentComments from "./subcomponents/StudentComments";
 import "./styles/DisplayStudent.css";
-import { StudentDataInterface } from "./types/StudentTypes";
+import { StudentDataInterface } from "./Types/StudentTypes";
 
 export default function DisplayStudent() {
   const { id } = useParams<RoutedIdParam>();

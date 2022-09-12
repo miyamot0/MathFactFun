@@ -49,7 +49,7 @@ import {
 import "./styles/ExplicitTiming.css";
 import { ErrorModalCustomStyle } from "./subcomponents/ModalStyles";
 import { InterventionFormat } from "../../maths/Facts";
-import { StudentDataInterface } from "../student/types/StudentTypes";
+import { StudentDataInterface } from "../student/Types/StudentTypes";
 import { FactDataInterface } from "../setcreator/types/SetCreatorTypes";
 import { shouldShowFeedback } from "./helpers/InterventionHelpers";
 

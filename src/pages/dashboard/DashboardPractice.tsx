@@ -17,7 +17,7 @@ import { useAuthorizationContext } from "../../context/hooks/useAuthorizationCon
 
 import StudentFilter from "./functionality/StudentFilter";
 import PracticeList from "./subcomponents/PracticeList";
-import { StudentDataInterface } from "../student/types/StudentTypes";
+import { StudentDataInterface } from "../student/Types/StudentTypes";
 
 export default function DashboardPractice() {
   const { user, adminFlag } = useAuthorizationContext();
@@ -46,29 +46,29 @@ export default function DashboardPractice() {
   const students =
     documents && user
       ? documents.filter((document) => {
-          switch (filter) {
-            case "All":
-              return document.currentApproach !== "N/A";
-            case "Mine":
-              return (
-                document.creator === user.uid &&
-                document.currentApproach !== "N/A"
-              );
-            case "K":
-            case "1st":
-            case "2nd":
-            case "3rd":
-            case "4th":
-            case "5th":
-            case "6th":
-              return (
-                document.currentGrade === filter &&
-                document.currentApproach !== "N/A"
-              );
-            default:
-              return document.currentApproach !== "N/A";
-          }
-        })
+        switch (filter) {
+          case "All":
+            return document.currentApproach !== "N/A";
+          case "Mine":
+            return (
+              document.creator === user.uid &&
+              document.currentApproach !== "N/A"
+            );
+          case "K":
+          case "1st":
+          case "2nd":
+          case "3rd":
+          case "4th":
+          case "5th":
+          case "6th":
+            return (
+              document.currentGrade === filter &&
+              document.currentApproach !== "N/A"
+            );
+          default:
+            return document.currentApproach !== "N/A";
+        }
+      })
       : null;
 
   return (

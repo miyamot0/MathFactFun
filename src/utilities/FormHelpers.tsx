@@ -1,7 +1,15 @@
+/** @license
+ *
+ * Copyright (c) Shawn P. Gilroy, Louisiana State University.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
 import firebase from "firebase/app";
 import { MultiValue } from "react-select";
+import { StudentCreatorBehavior } from "../pages/student/Types/StudentTypes";
 import { SingleOptionType } from "./RoutingHelpers";
-import { StudentCreatorBehavior } from "../pages/student/types/StudentTypes";
 
 export const CommonPanelWidth = {
   minHeight: "600px",
@@ -23,6 +31,13 @@ export const LoginPanelStyle = {
   background: "#fff",
 };
 
+/** checkInputNullOrUndefined
+ * 
+ * General check to confirm common values are null safe
+ * 
+ * @param {string | number | SingleOptionType | MultiValue<SingleOptionType> | firebase.User | null | undefined} value 
+ * @returns {boolean}
+ */
 export function checkInputNullOrUndefined(
   value:
     | string
@@ -32,12 +47,21 @@ export function checkInputNullOrUndefined(
     | firebase.User
     | null
     | undefined
-) {
+): boolean {
   if (value === null) return true;
   if (value === undefined) return true;
   return false;
 }
 
+/** streamlinedCheck
+ * 
+ * Streamline quick checking for common option selections
+ * 
+ * @param {string | SingleOptionType} value 
+ * @param {string} err 
+ * @param {Function} dispatch 
+ * @returns {boolean}
+ */
 export function streamlinedCheck(
   value: string | SingleOptionType,
   err: string,
@@ -48,7 +72,11 @@ export function streamlinedCheck(
   if (typeof value === "string") {
     statusOfCheck = checkInputNullOrUndefined(value);
   } else if (value as SingleOptionType) {
-    statusOfCheck = value.value.trim().length < 1;
+    if ('value' in value && 'label' in value) {
+      statusOfCheck = value.value.trim().length < 1;
+    } else {
+      statusOfCheck = false;
+    }
   }
 
   if (statusOfCheck) {

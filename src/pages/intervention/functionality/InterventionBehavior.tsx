@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { RelevantKeys } from "../../../maths/Facts";
 import { FactsOnFire } from "../../../maths/Mind";
 import { GetOperatorFromLabel } from "../../../utilities/LabelHelper";
-import { StudentDataInterface } from "../../student/types/StudentTypes";
+import { StudentDataInterface } from "../../student/Types/StudentTypes";
 import {
   BenchmarkActions,
   BenchmarkState,

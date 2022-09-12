@@ -49,7 +49,7 @@ import {
   SetEditForm,
   TitleStyle,
 } from "./views/SetCreatorViews";
-import { StudentDataInterface } from "../student/types/StudentTypes";
+import { StudentDataInterface } from "../student/Types/StudentTypes";
 import { PerformanceDataInterface } from "../intervention/types/InterventionTypes";
 import { checkIfNullUndefinedOrEmpty } from "./helpers/SetCreatorHelpers";
 

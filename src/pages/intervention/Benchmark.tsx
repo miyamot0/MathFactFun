@@ -43,7 +43,7 @@ import {
 
 // Styles
 import "./styles/ExplicitTiming.css";
-import { StudentDataInterface } from "../student/types/StudentTypes";
+import { StudentDataInterface } from "../student/Types/StudentTypes";
 import { FactDataInterface } from "../setcreator/types/SetCreatorTypes";
 
 export default function Benchmark() {

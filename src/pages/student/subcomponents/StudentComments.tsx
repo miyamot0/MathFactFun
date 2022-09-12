@@ -18,7 +18,7 @@ import { useFirestore } from "../../../firebase/hooks/useFirestore";
 
 import "./styles/StudentComments.css";
 import { CommentInterface } from "../../../firebase/types/GeneralTypes";
-import { StudentWidgetInterface } from "../types/StudentTypes";
+import { StudentWidgetInterface } from "../Types/StudentTypes";
 
 export default function StudentComments({ student }: StudentWidgetInterface) {
   const { updateDocument, response } = useFirestore(

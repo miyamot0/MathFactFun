@@ -2,7 +2,7 @@ import firebase from "firebase/app";
 import { PerformanceDataInterface } from "../../pages/intervention/types/InterventionTypes";
 import { FactDataInterface } from "../../pages/setcreator/types/SetCreatorTypes";
 
-import { StudentDataInterface } from "../../pages/student/types/StudentTypes";
+import { StudentDataInterface } from "../../pages/student/Types/StudentTypes";
 import { UserDataInterface } from "../../pages/user/types/UserTypes";
 
 export class CommentInterface {

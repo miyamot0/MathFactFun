@@ -44,7 +44,7 @@ import {
   useEventListener,
 } from "./functionality/InterventionBehavior";
 import { RoutedIdTargetParam } from "../../utilities/RoutingHelpers";
-import { StudentDataInterface } from "../student/types/StudentTypes";
+import { StudentDataInterface } from "../student/Types/StudentTypes";
 import { FactDataInterface } from "../setcreator/types/SetCreatorTypes";
 import {
   checkLiNullUndefinedBlank,

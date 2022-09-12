@@ -1,7 +1,7 @@
 import { DropResult } from "react-beautiful-dnd";
 import { FactsOnFire } from "../../../maths/Mind";
 import { GetOperatorFromLabel, Sum } from "../../../utilities/LabelHelper";
-import { StudentDataInterface } from "../../student/types/StudentTypes";
+import { StudentDataInterface } from "../../student/Types/StudentTypes";
 import {
   ColumnObject,
   ColumnsObject,

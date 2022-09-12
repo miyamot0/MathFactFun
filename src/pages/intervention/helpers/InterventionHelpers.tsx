@@ -1,5 +1,5 @@
 import { ErrorHandling } from "../../../maths/Facts";
-import { StudentDataInterface } from "../../student/types/StudentTypes";
+import { StudentDataInterface } from "../../student/Types/StudentTypes";
 
 /** @license
  *

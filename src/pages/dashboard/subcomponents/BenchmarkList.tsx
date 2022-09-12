@@ -13,7 +13,7 @@
 import React from "react";
 
 import { Link } from "react-router-dom";
-import { StudentDataInterface } from "../../student/types/StudentTypes";
+import { StudentDataInterface } from "../../student/Types/StudentTypes";
 import { BenchmarkInterface } from "../types/DashboardTypes";
 
 import "./styles/BenchmarkList.css";

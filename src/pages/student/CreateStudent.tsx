@@ -36,7 +36,7 @@ import {
 import {
   StudentCreatorBehavior,
   StudentDataInterface,
-} from "./types/StudentTypes";
+} from "./Types/StudentTypes";
 
 // Page to create new students
 export default function CreateStudent() {

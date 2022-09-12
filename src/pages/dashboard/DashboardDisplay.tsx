@@ -18,7 +18,7 @@ import { useAuthorizationContext } from "../../context/hooks/useAuthorizationCon
 // Components
 import StudentList from "./subcomponents/StudentList";
 import StudentFilter from "./functionality/StudentFilter";
-import { StudentDataInterface } from "../student/types/StudentTypes";
+import { StudentDataInterface } from "../student/Types/StudentTypes";
 
 export default function Dashboard() {
   const { user, adminFlag } = useAuthorizationContext();
@@ -47,23 +47,23 @@ export default function Dashboard() {
   const students =
     documents && user
       ? documents.filter((document) => {
-          switch (filter) {
-            case "All":
-              return true;
-            case "Mine":
-              return document.creator === user.uid;
-            case "K":
-            case "1st":
-            case "2nd":
-            case "3rd":
-            case "4th":
-            case "5th":
-            case "6th":
-              return document.currentGrade === filter;
-            default:
-              return true;
-          }
-        })
+        switch (filter) {
+          case "All":
+            return true;
+          case "Mine":
+            return document.creator === user.uid;
+          case "K":
+          case "1st":
+          case "2nd":
+          case "3rd":
+          case "4th":
+          case "5th":
+          case "6th":
+            return document.currentGrade === filter;
+          default:
+            return true;
+        }
+      })
       : null;
 
   return (

@@ -18,7 +18,7 @@ import { GetApproachStringFromLabel } from "../../../utilities/LabelHelper";
 
 import "./styles/PracticeList.css";
 import { PracticeListInterface } from "../types/DashboardTypes";
-import { StudentDataInterface } from "../../student/types/StudentTypes";
+import { StudentDataInterface } from "../../student/Types/StudentTypes";
 
 const anchorStyle = {
   marginTop: "5px",

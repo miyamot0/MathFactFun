@@ -43,7 +43,7 @@ import {
 import {
   StudentCreatorBehavior,
   StudentDataInterface,
-} from "./types/StudentTypes";
+} from "./Types/StudentTypes";
 
 // TODO: reducer
 
