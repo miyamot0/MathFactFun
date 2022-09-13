@@ -85,6 +85,8 @@ export interface PerformanceDataInterface {
   createdAt: firebase.firestore.Timestamp | null;
 }
 
+// TODO: move this
+
 export const SharedActionSequence = {
   Start: "ActionSequence.Start",
   Answer: "ActionSequence.Answer",

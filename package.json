@@ -23,7 +23,24 @@
     "moduleNameMapper": {
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.js",
       "\\.(css|less)$": "identity-obj-proxy"
-    }
+    },
+    "coveragePathIgnorePatterns": [
+      "index.tsx",
+      "AuthorizationInterfaces.tsx",
+      "AuthorizationTypes.tsx",
+      "CollectionTypes.tsx",
+      "CommentTypes.tsx",
+      "DashboardTypes.tsx",
+      "FirebaseInterfaces.tsx",
+      "LoginTypes.tsx",
+      "ProgressTypes.tsx",
+      "SetCreatorTypes.tsx",
+      "RoutingInterfaces.tsx",
+      "SetCreatorTypes.tsx",
+      "SharedComponentTypes.tsx",
+      "StudentInterfaces.tsx",
+      "UserTypes.tsx"
+    ]
   },
   "scripts": {
     "lint": "eslint --ext .ts,.tsx .",

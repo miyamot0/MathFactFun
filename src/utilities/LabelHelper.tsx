@@ -127,10 +127,16 @@ export function CalculateDigitsCorrect(
 
   let i = 0;
 
+  /* istanbul ignore else*/
   if (entryPrefixFirst && entryPrefixFirst.trim().length !== 0) {
+
     // Initial prefix
     for (i = 0; i < dsplyPrefixFirst.length; i++) {
+
+      /* istanbul ignore else*/
       if (entryPrefixFirst.length - 1 >= i) {
+
+        /* istanbul ignore else*/
         if (entryPrefixFirst[i] === dsplyPrefixFirst[i]) {
           digitsCorrect++;
         }
@@ -138,14 +144,21 @@ export function CalculateDigitsCorrect(
     }
   }
 
+  /* istanbul ignore else*/
   if (entry.includes(trueOperator)) {
     const entryPrefixSecond = entryPrefixInitial.split(operator)[1];
     const dsplyPrefixSecond = dsplyprefixInitial.split(trueOperator)[1];
 
+    /* istanbul ignore else*/
     if (entryPrefixSecond !== null && entryPrefixSecond.trim().length !== 0) {
+
       // Secondary prefix
       for (i = 0; i < dsplyPrefixSecond.length; i++) {
+
+        /* istanbul ignore else*/
         if (entryPrefixSecond.length - 1 >= i) {
+
+          /* istanbul ignore else*/
           if (entryPrefixSecond[i] === dsplyPrefixSecond[i]) {
             digitsCorrect++;
           }
@@ -158,10 +171,16 @@ export function CalculateDigitsCorrect(
     const entryPrefixTerminal = entry.split("=")[1];
     const dsplyprefixTerminal = comparison.split("=")[1];
 
+    /* istanbul ignore else*/
     if (entryPrefixTerminal && entryPrefixTerminal.trim().length !== 0) {
       // suffix
+
       for (i = 0; i < dsplyprefixTerminal.length; i++) {
+
+        /* istanbul ignore else*/
         if (entryPrefixTerminal.length - 1 >= i) {
+
+          /* istanbul ignore else*/
           if (entryPrefixTerminal[i] === dsplyprefixTerminal[i]) {
             digitsCorrect++;
           }
@@ -188,21 +207,30 @@ export function CalculateDigitsCorrectAnswer(
 ): number {
   let digitsCorrect = 0;
 
-  if (entry.trim().length === 0) return digitsCorrect;
-
-  if (!entry.includes("=")) {
+  /* istanbul ignore else*/
+  if (!entry.includes("=") || !comparison.includes("=")) {
     throw Error("No equality sign found in fact string");
-  }
+  } else {
+    /* istanbul ignore else*/
+    if (entry.trim().length === 0) {
+      return 0;
+    } else {
+      const entryPrefixTerminal = entry.split("=")[1];
+      const dsplyprefixTerminal = comparison.split("=")[1];
 
-  const entryPrefixTerminal = entry.split("=")[1];
-  const dsplyprefixTerminal = comparison.split("=")[1];
+      /* istanbul ignore else*/
+      if (entryPrefixTerminal && entryPrefixTerminal.trim().length !== 0) {
+        // suffix
+        for (let i = 0; i < dsplyprefixTerminal.length; i++) {
 
-  if (entryPrefixTerminal && entryPrefixTerminal.trim().length !== 0) {
-    // suffix
-    for (let i = 0; i < dsplyprefixTerminal.length; i++) {
-      if (entryPrefixTerminal.length - 1 >= i) {
-        if (entryPrefixTerminal[i] === dsplyprefixTerminal[i]) {
-          digitsCorrect++;
+          /* istanbul ignore else*/
+          if (entryPrefixTerminal.length - 1 >= i) {
+
+            /* istanbul ignore else*/
+            if (entryPrefixTerminal[i] === dsplyprefixTerminal[i]) {
+              digitsCorrect++;
+            }
+          }
         }
       }
     }
