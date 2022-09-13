@@ -19,10 +19,21 @@ export function confirmIfInterventionScreen(address: string): boolean {
 
   let valueToReturn = false;
 
+  if (
+    addressStringLower === "/" ||
+    !addressStringLower.includes("/") ||
+    addressStringLower.trim().length === 0
+  ) {
+    return false;
+  }
+
+  const stringArray = addressStringLower
+    .split("/")
+    .filter((str) => str.trim().length > 1)[0];
+
   screens.forEach((screen) => {
     const pageReferenceLower = screen.toLowerCase();
-
-    if (addressStringLower.includes(pageReferenceLower) && !addressStringLower.includes("Progress")) {
+    if (stringArray.includes(pageReferenceLower)) {
       valueToReturn = true;
     }
   });

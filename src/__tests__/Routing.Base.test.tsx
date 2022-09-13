@@ -192,6 +192,12 @@ describe("Routing (No Admin)", () => {
     expect(wrapper.find("div.navbar")).toHaveLength(1);
     expect(wrapper.find(CreateStudent)).toHaveLength(1);
 
+    history.push("/ProgressMonitor/Addition/123/ExplicitTiming/40");
+    wrapper.update();
+
+    expect(wrapper.find("div.navbar")).toHaveLength(1);
+    expect(wrapper.find(ProgressMonitor)).toHaveLength(1);
+
     history.push("/ExplicitTiming/Addition/123");
     wrapper.update();
 
