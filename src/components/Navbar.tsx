@@ -22,8 +22,6 @@ import Modal from "react-modal";
 // styles & images
 import "./styles/Navbar.css";
 
-Modal.setAppElement("#root");
-
 const customStyles = {
   content: {
     top: "50%",
@@ -51,11 +49,13 @@ export default function Navbar() {
     setIsOpen(false);
   }
 
+  Modal.setAppElement("#root");
+
   return confirmIfInterventionScreen(location.pathname) ||
     location.pathname.includes("login") ? (
     <></>
   ) : (
-    <div className="navbar">
+    <div className="navbar" data-testid={"Navbar-id"}>
       {user && <p>Logged in: {user.email}</p>}
 
       <ul>
@@ -99,6 +99,7 @@ export default function Navbar() {
         shouldCloseOnOverlayClick={false}
         preventScroll={true}
         style={customStyles}
+        ariaHideApp={!(process.env.NODE_ENV === 'test')}
         contentLabel="Example Modal"
       >
         <h2>Open Source Licenses</h2>

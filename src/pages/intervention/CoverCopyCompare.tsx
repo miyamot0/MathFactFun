@@ -51,8 +51,6 @@ import {
   shouldShowFeedback,
 } from "./helpers/InterventionHelpers";
 
-Modal.setAppElement("#root");
-
 export default function CoverCopyCompare() {
   const { id, target } = useParams<RoutedIdTargetParam>();
   const { user } = useAuthorizationContext();
@@ -72,6 +70,8 @@ export default function CoverCopyCompare() {
 
   // modal stuff
   const [modalIsOpen, setIsOpen] = useState(false);
+
+  Modal.setAppElement("#root");
 
   /** keyHandler
    *
@@ -492,6 +492,7 @@ export default function CoverCopyCompare() {
         shouldCloseOnOverlayClick={false}
         preventScroll={true}
         style={ErrorModalCustomStyle}
+        ariaHideApp={!(process.env.NODE_ENV === 'test')}
         contentLabel="Example Modal"
       >
         <h2>Double-check your math!</h2>

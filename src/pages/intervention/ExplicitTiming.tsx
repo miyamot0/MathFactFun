@@ -53,8 +53,6 @@ import { StudentDataInterface } from "../student/interfaces/StudentInterfaces";
 import { FactDataInterface } from "../setcreator/types/SetCreatorTypes";
 import { shouldShowFeedback } from "./helpers/InterventionHelpers";
 
-Modal.setAppElement("#root");
-
 export default function ExplicitTiming() {
   const { id, target } = useParams<RoutedIdTargetParam>();
   const { user } = useAuthorizationContext();
@@ -73,6 +71,8 @@ export default function ExplicitTiming() {
   );
 
   const [modalIsOpen, setIsOpen] = useState(false);
+
+  Modal.setAppElement("#root");
 
   function openModal(): void {
     setIsOpen(true);
@@ -366,6 +366,7 @@ export default function ExplicitTiming() {
         shouldCloseOnOverlayClick={false}
         preventScroll={true}
         style={ErrorModalCustomStyle}
+        ariaHideApp={!(process.env.NODE_ENV === 'test')}
         contentLabel="Example Modal"
       >
         <h2 style={{ color: "#5F686D" }}>Double-check your math!</h2>

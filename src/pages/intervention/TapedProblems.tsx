@@ -63,8 +63,6 @@ const customStyles = {
   },
 };
 
-Modal.setAppElement("#root");
-
 interface RoutedStudentSet {
   id?: string;
   target?: string;
@@ -118,6 +116,8 @@ export default function TapedProblems() {
 
   /// modal stuff
   const [modalIsOpen, setIsOpen] = useState(false);
+
+  Modal.setAppElement("#root");
 
   // Timer Stuff
   const [secondsLeft, setSecondsLeft] = useState(0);
@@ -412,6 +412,7 @@ export default function TapedProblems() {
         shouldCloseOnOverlayClick={false}
         preventScroll={true}
         style={customStyles}
+        ariaHideApp={!(process.env.NODE_ENV === 'test')}
         contentLabel="Example Modal"
       >
         <h2 style={{ color: "#5F686D" }}>Double-check your math!</h2>

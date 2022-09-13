@@ -8,6 +8,7 @@
 
 import React from "react";
 
+
 import { useEffect } from "react";
 import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
 import { useAuthorizationContext } from "./context/hooks/useAuthorizationContext";
@@ -42,6 +43,8 @@ import CoverCopyCompare from "./pages/intervention/CoverCopyCompare";
 import ExplicitTiming from "./pages/intervention/ExplicitTiming";
 import TapedProblems from "./pages/intervention/TapedProblems";
 
+
+
 // Styles
 import "./App.css";
 
@@ -55,7 +58,7 @@ export function App(): AppInterface {
   }, []);
 
   return (
-    <div className="App">
+    <div className="App" data-testid={"App-id"}>
       {authIsReady && (
         <BrowserRouter>
           {user && <SideBar />}
