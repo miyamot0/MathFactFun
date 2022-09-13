@@ -8,73 +8,89 @@
 
 import { MultiValue } from "react-select";
 import { SingleOptionType } from "../../types/SharedComponentTypes";
-import { confirmMultiSingleOptionType, confirmNumberType, confirmSingleOptionType, confirmStringType } from "../ReducerHelpers";
+import {
+  confirmMultiSingleOptionType,
+  confirmNumberType,
+  confirmSingleOptionType,
+  confirmStringType,
+} from "../ReducerHelpers";
 
-describe('ReducerHelper: confirmStringType', () => {
-    it('String: should return correct value, no error', () => {
-        const value = "asdf";
-        const result = confirmStringType(value);
+describe("ReducerHelper: confirmStringType", () => {
+  it("String: should return correct value, no error", () => {
+    const value = "asdf";
+    const result = confirmStringType(value);
 
-        expect(value).toEqual(result);
-    })
+    expect(value).toEqual(result);
+  });
 
-    it('Object: should return throw error', () => {
-        const value = { asdf: "asdf" };
+  it("Object: should return throw error", () => {
+    const value = { asdf: "asdf" };
 
-        expect(() => confirmStringType(value)).toThrow(Error('Value not a string type'));
-    })
-})
+    expect(() => confirmStringType(value)).toThrow(
+      Error("Value not a string type")
+    );
+  });
+});
 
-describe('ReducerHelper: confirmNumberType', () => {
-    it('Number: should return correct value, no error', () => {
-        const value = 123;
-        const result = confirmNumberType(value);
+describe("ReducerHelper: confirmNumberType", () => {
+  it("Number: should return correct value, no error", () => {
+    const value = 123;
+    const result = confirmNumberType(value);
 
-        expect(value).toEqual(result);
-    })
+    expect(value).toEqual(result);
+  });
 
-    it('Object: should return throw error', () => {
-        const value = { asdf: 123 };
+  it("Object: should return throw error", () => {
+    const value = { asdf: 123 };
 
-        expect(() => confirmNumberType(value)).toThrow(Error('Value not a number type'));
-    })
-})
+    expect(() => confirmNumberType(value)).toThrow(
+      Error("Value not a number type")
+    );
+  });
+});
 
-describe('ReducerHelper: confirmSingleOptionType', () => {
-    it('SingleOptionType: should return correct value, no error', () => {
-        const value = {
-            label: "",
-            value: ""
-        } as SingleOptionType;
-        const result = confirmSingleOptionType(value);
+describe("ReducerHelper: confirmSingleOptionType", () => {
+  it("SingleOptionType: should return correct value, no error", () => {
+    const value = {
+      label: "",
+      value: "",
+    } as SingleOptionType;
+    const result = confirmSingleOptionType(value);
 
-        expect(value).toEqual(result);
-    })
+    expect(value).toEqual(result);
+  });
 
-    it('Object: should return throw error', () => {
-        const value = { asdf: 123 };
+  it("Object: should return throw error", () => {
+    const value = { asdf: 123 };
 
-        expect(() => confirmSingleOptionType(value)).toThrow(Error('Value not a single option type'));
-    })
-})
+    expect(() => confirmSingleOptionType(value)).toThrow(
+      Error("Value not a single option type")
+    );
+  });
+});
 
-describe('ReducerHelper: confirmMultiSingleOptionType', () => {
-    it('MultiValue<SingleOptionType>: should return correct value, no error', () => {
-        const value = [{
-            label: "",
-            value: ""
-        }, {
-            label: "",
-            value: ""
-        }] as MultiValue<SingleOptionType>;
-        const result = confirmMultiSingleOptionType(value);
+describe("ReducerHelper: confirmMultiSingleOptionType", () => {
+  it("MultiValue<SingleOptionType>: should return correct value, no error", () => {
+    const value = [
+      {
+        label: "",
+        value: "",
+      },
+      {
+        label: "",
+        value: "",
+      },
+    ] as MultiValue<SingleOptionType>;
+    const result = confirmMultiSingleOptionType(value);
 
-        expect(value).toEqual(result);
-    })
+    expect(value).toEqual(result);
+  });
 
-    it('Object: should return throw error', () => {
-        const value = [{ asdf: 123 }, { qwer: 456 }];
+  it("Object: should return throw error", () => {
+    const value = [{ asdf: 123 }, { qwer: 456 }];
 
-        expect(() => confirmMultiSingleOptionType(value)).toThrow(Error('Value not a multiple single option type'));
-    })
-})
+    expect(() => confirmMultiSingleOptionType(value)).toThrow(
+      Error("Value not a multiple single option type")
+    );
+  });
+});

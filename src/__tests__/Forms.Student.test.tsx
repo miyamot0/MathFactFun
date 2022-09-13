@@ -1,3 +1,7 @@
+/**
+ * @jest-environment jsdom
+ */
+
 /** @license
  *
  * Copyright (c) Shawn P. Gilroy, Louisiana State University.
