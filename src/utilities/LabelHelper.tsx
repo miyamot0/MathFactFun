@@ -76,6 +76,10 @@ export function calculateDigitsTotalInProblem(entry: string): number {
  * @returns {Int} Number of digits
  */
 export function CalculateDigitsTotalAnswer(entry: string): number {
+  if (!entry.includes("=")) {
+    throw Error("No equality sign found in fact string");
+  }
+
   const suffixTotal = entry.split("=")[1];
 
   let digits = 0;
@@ -186,6 +190,10 @@ export function CalculateDigitsCorrectAnswer(
 
   if (entry.trim().length === 0) return digitsCorrect;
 
+  if (!entry.includes("=")) {
+    throw Error("No equality sign found in fact string");
+  }
+
   const entryPrefixTerminal = entry.split("=")[1];
   const dsplyprefixTerminal = comparison.split("=")[1];
 
@@ -223,7 +231,7 @@ export function GetOperatorFromLabel(
     case "Division":
       return "/";
     default:
-      return "";
+      throw Error("No matching operation");
   }
 }
 
@@ -252,7 +260,7 @@ export function GetApproachStringFromLabel(
     case "ExplicitTiming":
       return "Explicit Timing";
     default:
-      return "---";
+      throw Error("No matching approach found")
   }
 }
 
@@ -270,6 +278,11 @@ export function OnlyUnique(
   index: any,
   self: string | any[]
 ): boolean {
+
+  if (self === undefined || value === undefined || index === undefined) {
+    throw Error("Value was undefined")
+  }
+
   return self.indexOf(value) === index;
 }
 
@@ -277,10 +290,15 @@ export function OnlyUnique(
  *
  * Sum items in array
  *
- * @param {Int} prev Prior value
- * @param {Int} next Next value
- * @returns {Int} total
+ * @param {number | undefined} prev Prior value
+ * @param {number | undefined} next Next value
+ * @returns {number} total
  */
-export function Sum(prev: number, next: number): number {
+export function Sum(prev: number | undefined,
+  next: number | undefined): number {
+  if (prev === undefined || next === undefined) {
+    throw Error("A value was undefined")
+  }
+
   return prev + next;
 }
