@@ -71,7 +71,10 @@ export default function Navbar() {
 
         {user && authIsReady && adminFlag && (
           <li>
-            <Link className="global-btn global-btn-orange" to="/admin">
+            <Link
+              className="global-btn global-btn-orange admin-class"
+              to="/admin"
+            >
               Administration
             </Link>
           </li>
@@ -99,7 +102,7 @@ export default function Navbar() {
         shouldCloseOnOverlayClick={false}
         preventScroll={true}
         style={customStyles}
-        ariaHideApp={!(process.env.NODE_ENV === 'test')}
+        ariaHideApp={!(process.env.NODE_ENV === "test")}
         contentLabel="Example Modal"
       >
         <h2>Open Source Licenses</h2>

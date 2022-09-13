@@ -8,7 +8,6 @@
 
 import React from "react";
 
-
 import { useEffect } from "react";
 import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
 import { useAuthorizationContext } from "./context/hooks/useAuthorizationContext";
@@ -42,8 +41,6 @@ import Benchmark from "./pages/intervention/Benchmark";
 import CoverCopyCompare from "./pages/intervention/CoverCopyCompare";
 import ExplicitTiming from "./pages/intervention/ExplicitTiming";
 import TapedProblems from "./pages/intervention/TapedProblems";
-
-
 
 // Styles
 import "./App.css";
@@ -144,6 +141,10 @@ export function App(): AppInterface {
               <Route path="/login">
                 {user && <Redirect to="/" />}
                 {!user && <Login />}
+              </Route>
+              <Route path="/">
+                {!user && <Redirect to="/login" />}
+                {user && <Landing />}
               </Route>
             </Switch>
           </div>
