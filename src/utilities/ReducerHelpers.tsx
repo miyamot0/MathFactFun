@@ -31,18 +31,26 @@ export function confirmStringType(value: unknown): string {
 export function confirmNumberType(value: unknown): number {
 
     if (!Number.isFinite(value)) {
-        throw Error("Value not a number type");
+        throw new Error("Value not a number type");
     }
 
     return value as number;
 }
 
-function checkIfOptionKeysPresent(value: unknown): boolean {
-    const currentKeys = Object.keys(value as object);
+export function checkIfOptionKeysPresent(value: unknown): boolean {
+    const newObject = value as object;
 
-    if (currentKeys === null || currentKeys === undefined) {
-        return false;
-    } else if (!currentKeys.includes("label") || !currentKeys.includes("value")) {
+    if (newObject === null) {
+        throw new Error("Option is null, cannot check for keys");
+    }
+
+    if (newObject === undefined) {
+        throw new Error("Option is undefined, cannot check for keys");
+    }
+
+    const currentKeys = Object.keys(newObject);
+
+    if (!currentKeys.includes("label") || !currentKeys.includes("value")) {
         return false;
     }
 
@@ -71,16 +79,16 @@ export function confirmMultiSingleOptionType(value: unknown): MultiValue<SingleO
 
     const riskyCast = value as MultiValue<SingleOptionType>;
 
+    if (riskyCast === null || riskyCast === undefined) {
+        throw Error("Value not a multiple single option type");
+    }
+
     riskyCast.forEach((singleOptionType: object) => {
 
         if (!checkIfOptionKeysPresent(singleOptionType)) {
             throw Error("Value not a multiple single option type");
         }
     });
-
-    if (riskyCast === null || riskyCast === undefined) {
-        throw Error("Value not a multiple single option type");
-    }
 
     return value as MultiValue<SingleOptionType>;
 }

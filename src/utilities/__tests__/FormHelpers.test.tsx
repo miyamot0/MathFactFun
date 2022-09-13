@@ -68,15 +68,32 @@ describe('FormHelpers: streamlinedCheck', () => {
     })
 
     it('Undefined (SingleOptionType): Should confirm false', () => {
-        const value = {} as SingleOptionType;
+        const value = { phony: 'props' };
 
         const err = "";
         const dispatch = () => true;
 
-        const expected = false;
+        expect(() => streamlinedCheck(value as unknown as SingleOptionType, err, dispatch)).toThrow(Error("Value is not a valid option"))
+    })
 
-        const result = streamlinedCheck(value, err, dispatch);
+    it('Error: dispatch is null', () => {
+        const value = {
+            label: "",
+            value: ""
+        } as SingleOptionType;
 
-        expect(result).toEqual(expected)
+        const err = "";
+        const dispatch = null;
+
+        expect(() => streamlinedCheck(value, err, dispatch)).toThrow(Error("Dispatch cannot be null or undefined"))
+    })
+
+    it('Error: dispatch is undefined', () => {
+        const value = {} as SingleOptionType;
+
+        const err = "";
+        const dispatch = undefined;
+
+        expect(() => streamlinedCheck(value, err, dispatch)).toThrow(Error("Dispatch cannot be null or undefined"))
     })
 })

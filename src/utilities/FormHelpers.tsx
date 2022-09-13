@@ -10,6 +10,7 @@ import firebase from "firebase/app";
 import { MultiValue } from "react-select";
 import { StudentCreatorBehavior } from "../pages/student/functionality/StudentFunctionality";
 import { SingleOptionType } from "../types/SharedComponentTypes";
+import { checkIfOptionKeysPresent } from "./ReducerHelpers";
 
 export const CommonPanelWidth = {
   minHeight: "600px",
@@ -69,22 +70,34 @@ export function streamlinedCheck(
 ): boolean {
   let statusOfCheck = true;
 
+  if (dispatch === null || dispatch === undefined) {
+    throw Error("Dispatch cannot be null or undefined")
+  }
+
   if (typeof value === "string") {
     statusOfCheck = checkInputNullOrUndefined(value);
-  } else if (value as SingleOptionType) {
-    if ('value' in value && 'label' in value) {
-      statusOfCheck = value.value.trim().length < 1;
-    } else {
-      statusOfCheck = false;
-    }
-  }
 
-  if (statusOfCheck) {
     dispatch({
-      type: StudentCreatorBehavior.SetFormError,
+      type: "",
       payload: { uFormError: err },
     });
+
+    return statusOfCheck;
   }
 
+  const valueToCheck = value as SingleOptionType;
+
+  if (valueToCheck === null || valueToCheck === undefined || !checkIfOptionKeysPresent(valueToCheck)) {
+    throw Error("Value is not a valid option")
+  }
+
+  statusOfCheck = valueToCheck.value.trim().length < 1;
+
+  dispatch({
+    type: "",
+    payload: { uFormError: err },
+  });
+
   return statusOfCheck;
+
 }

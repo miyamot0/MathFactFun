@@ -9,6 +9,7 @@
 import { MultiValue } from "react-select";
 import { SingleOptionType } from "../../types/SharedComponentTypes";
 import {
+  checkIfOptionKeysPresent,
   confirmMultiSingleOptionType,
   confirmNumberType,
   confirmSingleOptionType,
@@ -93,4 +94,64 @@ describe("ReducerHelper: confirmMultiSingleOptionType", () => {
       Error("Value not a multiple single option type")
     );
   });
+
+  it("Object: should return throw error (null)", () => {
+    const value = null;
+
+    expect(() => confirmMultiSingleOptionType(value)).toThrow(
+      Error("Value not a multiple single option type")
+    );
+  });
+
+  it("Object: should return throw error (undefined)", () => {
+    const value = undefined;
+
+    expect(() => confirmMultiSingleOptionType(value)).toThrow(
+      Error("Value not a multiple single option type")
+    );
+  });
 });
+
+describe("ReducerHelper: checkIfOptionKeysPresent", () => {
+  it("Should pass when both keys present", () => {
+    const value = {
+      label: "",
+      value: ""
+    };
+    const result = checkIfOptionKeysPresent(value);
+
+    expect(result).toEqual(true);
+  });
+
+  it("Should fail when one key missing (1)", () => {
+    const value = {
+      value: ""
+    };
+    const result = checkIfOptionKeysPresent(value);
+
+    expect(result).toEqual(false);
+  });
+
+  it("Should fail when one key missing (2)", () => {
+    const value = {
+      label: "",
+    };
+    const result = checkIfOptionKeysPresent(value);
+
+    expect(result).toEqual(false);
+  });
+
+  it("Should throw error when null", () => {
+    const value = null;
+
+    expect(() => checkIfOptionKeysPresent(value)).toThrow(Error("Option is null, cannot check for keys"));
+  });
+
+  it("Should throw error when undefined", () => {
+    const value = undefined;
+
+    expect(() => checkIfOptionKeysPresent(value)).toThrow(Error("Option is undefined, cannot check for keys"));
+  });
+
+});
+
