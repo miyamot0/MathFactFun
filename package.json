@@ -30,7 +30,9 @@
     "lint:fix": "eslint --fix --ext .ts,.tsx .",
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test -- --silent=false",
+    "test": "react-scripts test",
+    "test-verbose": "react-scripts test -- --silent=false",
+    "test-coverage": "react-scripts test -- --coverage",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
