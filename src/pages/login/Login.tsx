@@ -84,7 +84,11 @@ export default function Login() {
     if (loginPending === undefined || loginPending) {
       return <></>;
     } else {
-      return <button className="global-btn ">Login</button>;
+      return (
+        <button className="global-btn" data-testid="login-button-input">
+          Login
+        </button>
+      );
     }
   }
 
@@ -130,6 +134,7 @@ export default function Login() {
         <input
           required
           type="email"
+          data-testid="login-email-input"
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             /* istanbul ignore next */
             handleOnEmailChange(e);
@@ -142,6 +147,7 @@ export default function Login() {
         <input
           required
           type="password"
+          data-testid="login-pass-input"
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             /* istanbul ignore next */
             handleOnPasswordChange(e);

@@ -24,14 +24,22 @@ Enzyme.configure({ adapter: new Adapter() });
 
 ReactModal.setAppElement = () => null;
 
-/*
-jest.mock("../../../firebase/hooks/useFirebaseLogin", () => ({
-  ...jest.requireActual("../../../firebase/hooks/useFirebaseLogin"),
-  login: jest.fn(),
-  loginError: undefined,
-  loginPending: false,
-}));
-*/
+const mockUploadFunction = jest.fn(() => "Success");
+
+jest.mock("../../../firebase/hooks/useFirebaseLogin", () => {
+  const originalModule = jest.requireActual(
+    "../../../firebase/hooks/useFirebaseLogin"
+  );
+  return {
+    __esModule: true,
+    ...originalModule,
+    default: () => ({
+      login: mockUploadFunction,
+      loginError: undefined,
+      loginPending: false,
+    }),
+  };
+});
 
 describe("Login: Reducer behavior", () => {
   it("Should have persisting state", () => {
@@ -101,36 +109,54 @@ describe("Login: Reducer behavior", () => {
       expect(result.current[0]).toStrictEqual(state);
     });
   });
+});
 
-  it("Should throw error on bad username call", () => {
-    const wrapper = shallow(<Login />);
-    const instance = wrapper.instance() as any;
+describe("Login: Display components", () => {
+  it("Should display fields and buttons", () => {
+    const wrapper = mount(<Login />);
 
-    /*
-    expect(instance.handleOnPasswordChange(null)).toThrow(
-      Error("Error in password handler")
-    );
-    */
+    const emailInput = wrapper.find({ "data-testid": "login-email-input" });
+    const passInput = wrapper.find({ "data-testid": "login-pass-input" });
+    const buttonInput = wrapper.find({ "data-testid": "login-button-input" });
 
-    expect(true).toBe(true);
+    expect(emailInput.length).toBe(1);
+    expect(passInput.length).toBe(1);
+    expect(buttonInput.length).toBe(1);
   });
 
-  /*
-  it("Should cancel if empty", () => {
-    const view = mount(
-      <AuthorizationContext.Provider
-        value={{
-          user: null,
-          authIsReady: false,
-          adminFlag: false,
-          dispatch,
-        }}
-      >
-        <Login />
-      </AuthorizationContext.Provider>
-    );
+  it("Should allow for updating text", async () => {
+    act(() => {
+      const wrapper = mount(<Login />);
 
-    expect(true).toBe(true);
+      const emailInput = wrapper.find({ "data-testid": "login-email-input" });
+      const passInput = wrapper.find({ "data-testid": "login-pass-input" });
+      const buttonInput = wrapper.find({ "data-testid": "login-button-input" });
+
+      emailInput.props().onChange({ target: { value: "email" } });
+      emailInput.update();
+
+      //emailInput.simulate("change", { target: { value: "email" } });
+      //passInput.simulate("change", { target: { value: "pass" } });
+      //passInput.update();
+      //buttonInput.simulate("click");
+      //buttonInput.update();
+
+      wrapper.update();
+
+      console.log(emailInput.text);
+      console.log(passInput.text());
+
+      console.log(buttonInput);
+
+      //expect(mockUploadFunction).toHaveBeenCalled();
+
+      /*
+      expect(instance.handleOnPasswordChange(null)).toThrow(
+        Error("Error in password handler")
+      );
+      */
+
+      expect(1).toBe(1);
+    });
   });
-  */
 });
