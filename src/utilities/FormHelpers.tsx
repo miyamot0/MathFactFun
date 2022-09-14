@@ -8,7 +8,6 @@
 
 import firebase from "firebase/app";
 import { MultiValue } from "react-select";
-import { StudentCreatorBehavior } from "../pages/student/functionality/StudentFunctionality";
 import { SingleOptionType } from "../types/SharedComponentTypes";
 import { checkIfOptionKeysPresent } from "./ReducerHelpers";
 
@@ -33,10 +32,10 @@ export const LoginPanelStyle = {
 };
 
 /** checkInputNullOrUndefined
- * 
+ *
  * General check to confirm common values are null safe
- * 
- * @param {string | number | SingleOptionType | MultiValue<SingleOptionType> | firebase.User | null | undefined} value 
+ *
+ * @param {string | number | SingleOptionType | MultiValue<SingleOptionType> | firebase.User | null | undefined} value
  * @returns {boolean}
  */
 export function checkInputNullOrUndefined(
@@ -55,12 +54,12 @@ export function checkInputNullOrUndefined(
 }
 
 /** streamlinedCheck
- * 
+ *
  * Streamline quick checking for common option selections
- * 
- * @param {string | SingleOptionType} value 
- * @param {string} err 
- * @param {Function} dispatch 
+ *
+ * @param {string | SingleOptionType} value
+ * @param {string} err
+ * @param {Function} dispatch
  * @returns {boolean}
  */
 export function streamlinedCheck(
@@ -71,7 +70,7 @@ export function streamlinedCheck(
   let statusOfCheck = true;
 
   if (dispatch === null || dispatch === undefined) {
-    throw Error("Dispatch cannot be null or undefined")
+    throw Error("Dispatch cannot be null or undefined");
   }
 
   if (typeof value === "string") {
@@ -87,8 +86,12 @@ export function streamlinedCheck(
 
   const valueToCheck = value as SingleOptionType;
 
-  if (valueToCheck === null || valueToCheck === undefined || !checkIfOptionKeysPresent(valueToCheck)) {
-    throw Error("Value is not a valid option")
+  if (
+    valueToCheck === null ||
+    valueToCheck === undefined ||
+    !checkIfOptionKeysPresent(valueToCheck)
+  ) {
+    throw Error("Value is not a valid option");
   }
 
   statusOfCheck = valueToCheck.value.trim().length < 1;
@@ -99,5 +102,4 @@ export function streamlinedCheck(
   });
 
   return statusOfCheck;
-
 }

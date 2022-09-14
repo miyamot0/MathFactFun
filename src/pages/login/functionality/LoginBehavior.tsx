@@ -1,3 +1,11 @@
+/** @license
+ *
+ * Copyright (c) Shawn P. Gilroy, Louisiana State University.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
 import { LoginDataBehavior, LoginDataInterface } from "../types/LoginTypes";
 
 export const InitialLoginState: LoginDataInterface = {
@@ -5,6 +13,12 @@ export const InitialLoginState: LoginDataInterface = {
   Password: "",
 };
 
+/** UserLoginReducer
+ *
+ * @param {LoginDataInterface} state
+ * @param {LoginDataInterface} action
+ * @returns {LoginDataInterface}
+ */
 export function UserLoginReducer(
   state: LoginDataInterface,
   action: { type: LoginDataBehavior; payload: string }
@@ -14,8 +28,7 @@ export function UserLoginReducer(
       return { ...state, Email: action.payload };
     case LoginDataBehavior.SetPassword:
       return { ...state, Password: action.payload };
-
     default:
-      throw new Error();
+      return { ...state };
   }
 }

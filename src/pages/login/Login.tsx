@@ -6,10 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-/**
- * Login Page
- */
-
 import React, { useReducer } from "react";
 import { useFirebaseLogin } from "../../firebase/hooks/useFirebaseLogin";
 import { LoginPanelStyle } from "../../utilities/FormHelpers";
@@ -24,17 +20,106 @@ export default function Login() {
 
   const [state, dispatch] = useReducer(UserLoginReducer, InitialLoginState);
 
+  /* istanbul ignore next */
   /** handleLoginSubmission
    *
    * Event to handle a submission
    *
    * @param {React.FormEvent<HTMLFormElement>} event Submission event
    */
-  function handleLoginSubmission(
+  async function handleLoginSubmission(
     event: React.FormEvent<HTMLFormElement>
+  ): Promise<void> {
+    /* istanbul ignore next */
+    if (event && state.Email && state.Password) {
+      event.preventDefault();
+      await login(state.Email, state.Password);
+    }
+  }
+
+  /* istanbul ignore next */
+  /** handleOnEmailChange
+   *
+   * @param {React.ChangeEvent<HTMLInputElement>} e value
+   * @returns {void}
+   */
+  function handleOnEmailChange(e: React.ChangeEvent<HTMLInputElement>) {
+    /* istanbul ignore next */
+    if (!dispatch || !e.target.value) {
+      return;
+    } else {
+      dispatch({
+        type: LoginDataBehavior.SetEmail,
+        payload: e.target.value,
+      });
+    }
+  }
+
+  /* istanbul ignore next */
+  /** handleOnPasswordChange
+   *
+   * @param {React.ChangeEvent<HTMLInputElement>} e value
+   * @returns {void}
+   */
+  function handleOnPasswordChange(
+    e: React.ChangeEvent<HTMLInputElement>
   ): void {
-    event.preventDefault();
-    login(state.Email, state.Password);
+    /* istanbul ignore next */
+    if (!dispatch || !e.target.value) {
+      throw Error("Error in password handler");
+    } else {
+      dispatch({
+        type: LoginDataBehavior.SetPassword,
+        payload: e.target.value,
+      });
+    }
+  }
+
+  /** renderLoginButton
+   *
+   * @returns {JSX.Element}
+   */
+  function renderLoginButton(): JSX.Element {
+    /* istanbul ignore next */
+    if (loginPending === undefined || loginPending) {
+      return <></>;
+    } else {
+      return <button className="global-btn ">Login</button>;
+    }
+  }
+
+  /** renderLoading
+   *
+   * @returns {JSX.Element}
+   */
+  function renderLoading(): JSX.Element {
+    /* istanbul ignore next */
+    if (
+      loginPending === undefined ||
+      loginPending === null ||
+      loginPending === true
+    ) {
+      return (
+        <button className="global-btn" disabled>
+          loading...
+        </button>
+      );
+    } else {
+      return <></>;
+    }
+  }
+
+  /** renderError
+   *
+   * @returns {JSX.Element}
+   */
+  function renderError(): JSX.Element {
+    /* istanbul ignore next */
+    if (loginError === null || loginError === undefined) {
+      return <></>;
+    } else {
+      return <div className="error"> {loginError} </div>;
+    }
   }
 
   return (
@@ -45,11 +130,9 @@ export default function Login() {
         <input
           required
           type="email"
-          onChange={(e) => {
-            dispatch({
-              type: LoginDataBehavior.SetEmail,
-              payload: e.target.value,
-            });
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            /* istanbul ignore next */
+            handleOnEmailChange(e);
           }}
           value={state.Email}
         ></input>
@@ -59,22 +142,19 @@ export default function Login() {
         <input
           required
           type="password"
-          onChange={(e) => {
-            dispatch({
-              type: LoginDataBehavior.SetPassword,
-              payload: e.target.value,
-            });
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            /* istanbul ignore next */
+            handleOnPasswordChange(e);
           }}
           value={state.Password}
         ></input>
       </label>
-      {!loginPending && <button className="global-btn ">Login</button>}
-      {loginPending && (
-        <button className="global-btn " disabled>
-          loading...
-        </button>
-      )}
-      {loginError && <div className="error">{loginError}</div>}
+
+      {renderLoginButton()}
+
+      {renderLoading()}
+
+      {renderError()}
     </form>
   );
 }

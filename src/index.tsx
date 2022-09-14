@@ -12,13 +12,11 @@ import "./index.css";
 import App from "./App";
 import { AuthorizationContextProvider } from "./context/AuthorizationContext";
 
-const root = document.getElementById("root");
-
 ReactDOM.render(
   <React.StrictMode>
     <AuthorizationContextProvider>
       <App />
     </AuthorizationContextProvider>
   </React.StrictMode>,
-  root
+  document.getElementById("root")
 );
