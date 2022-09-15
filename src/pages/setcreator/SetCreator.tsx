@@ -15,23 +15,10 @@ import { useFirestore } from "../../firebase/hooks/useFirestore";
 import Select from "react-select";
 import { DragDropContext } from "react-beautiful-dnd";
 import { OnlyUnique } from "../../utilities/LabelHelper";
-import {
-  ColumnObject,
-  DragDropActions,
-  FactDataInterface,
-  FactStructure,
-  ItemHistory,
-  ItemMetrics,
-  SetItem,
-} from "./types/SetCreatorTypes";
+import { ColumnObject, DragDropActions } from "./types/SetCreatorTypes";
 import { RoutedIdTargetParam } from "../../interfaces/RoutingInterfaces";
 import {
-  generateItemHistory,
-  getRelevantCCCSet,
   InitialSetCreatorState,
-  loadMathFacts,
-  onDragEnd,
-  populateColumnMetrics,
   SetCreatorReducer,
 } from "./functionality/SetCreatorBehavior";
 import {
@@ -44,8 +31,22 @@ import {
 } from "./views/SetCreatorViews";
 import { StudentDataInterface } from "../student/interfaces/StudentInterfaces";
 import { PerformanceDataInterface } from "../intervention/types/InterventionTypes";
-import { checkIfNullUndefinedOrEmpty } from "./helpers/SetCreatorHelpers";
+import {
+  checkIfNullUndefinedOrEmpty,
+  generateItemHistory,
+  getRelevantCCCSet,
+  loadMathFacts,
+  onDragEnd,
+  populateColumnMetrics,
+} from "./helpers/SetCreatorHelpers";
 import { SingleOptionType } from "../../types/SharedComponentTypes";
+import {
+  FactDataInterface,
+  FactStructure,
+  ItemHistory,
+  ItemMetrics,
+  SetItem,
+} from "./interfaces/SetCreatorInterfaces";
 
 export default function SetCreator() {
   const { target, id } = useParams<RoutedIdTargetParam>();
