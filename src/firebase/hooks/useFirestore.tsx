@@ -6,10 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-/**
- * Firestore hook
- */
-
 import { useReducer, useEffect, useState } from "react";
 import { PerformanceDataInterface } from "../../pages/intervention/types/InterventionTypes";
 import { StudentDataInterface } from "../../pages/student/interfaces/StudentInterfaces";
@@ -17,6 +13,11 @@ import { UserDataInterface } from "../../pages/user/types/UserTypes";
 import { projectFirestore } from "../config";
 
 import { FirebaseError } from "@firebase/util";
+import {
+  FirestoreAction,
+  FirestoreState,
+  UseFirestore,
+} from "../interfaces/FirebaseInterfaces";
 
 export enum FirestoreCollections {
   Students = "students",
@@ -32,28 +33,6 @@ export enum FirestoreStates {
   ERROR = "ERROR",
 }
 
-interface FirestoreState {
-  isPending: boolean;
-  document: any;
-  success: boolean;
-  error: string | null;
-}
-
-interface FirestoreAction {
-  type: FirestoreStates;
-  payload: any;
-  error: string | null;
-}
-
-interface UseFirestore {
-  addDocument: (
-    doc: StudentDataInterface | UserDataInterface | PerformanceDataInterface
-  ) => Promise<void>;
-  deleteDocument: (id: string) => Promise<void>;
-  updateDocument: (id: string, updates: any) => Promise<void>;
-  response: FirestoreState;
-}
-
 /** firestoreReducer
  *
  * Reducer firestore interactions
@@ -62,7 +41,7 @@ interface UseFirestore {
  * @param {Object} action Action type
  * @returns {FirestoreState}
  */
-function firestoreReducer(
+export function firestoreReducer(
   state: FirestoreState,
   action: FirestoreAction
 ): FirestoreState {
@@ -132,9 +111,9 @@ export function useFirestore(
   const ref =
     collection === "" && studentId !== undefined
       ? projectFirestore
-        .collection("performances")
-        .doc(targetSkill)
-        .collection(studentId)
+          .collection("performances")
+          .doc(targetSkill)
+          .collection(studentId)
       : projectFirestore.collection(collection);
 
   // only dispatch is not cancelled
