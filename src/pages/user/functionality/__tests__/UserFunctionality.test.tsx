@@ -32,6 +32,25 @@ describe("User Functionality: Reducer behavior", () => {
     expect(UserDataInitialState).toBe(state);
   });
 
+  it("Should match original state, DEFAULT", async () => {
+    const { result, waitForValueToChange } = renderHook(() =>
+      useReducer(UserGenerationReducer, UserDataInitialState)
+    );
+
+    const [, dispatch] = result.current;
+
+    const priorState = result.current;
+
+    dispatch({
+      type: UserCreatorBehavior.SetThrow,
+      payload: {},
+    });
+
+    setTimeout(() => {
+      expect(result.current[0]).toBe(priorState);
+    }, 1000);
+  });
+
   it("test dispatch: SetName", async () => {
     act(async () => {
       const { result, waitForValueToChange } = renderHook(() =>

@@ -17,4 +17,5 @@ export enum UserCreatorBehavior {
   SetPassword,
   SetLoadedUser,
   SetFormError,
+  SetThrow,
 }

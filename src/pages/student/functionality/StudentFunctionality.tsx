@@ -16,25 +16,10 @@ import {
   confirmStringType,
 } from "../../../utilities/ReducerHelpers";
 import { StudentCreateState } from "../interfaces/StudentInterfaces";
-import { StudentActionObject } from "../types/StudentTypes";
-
-export enum StudentCreatorBehavior {
-  SetName,
-  SetDetails,
-  SetDueDate,
-  SetFormError,
-  SetCurrentApproach,
-  SetCurrentGrade,
-  SetCurrentTarget,
-  SetCurrentErrorApproach,
-  SetCurrentSRApproach,
-  SetCurrentBenchmarking,
-  SetProblemSet,
-  SetAimLine,
-  SetExplicitTime,
-  SetBuilt,
-  SetLoadedStudent,
-}
+import {
+  StudentActionObject,
+  StudentCreatorBehavior,
+} from "../types/StudentTypes";
 
 export const UserCreateSingleInitialState: StudentCreateState = {
   Name: "",
@@ -183,6 +168,6 @@ export function userCreationReducer(
       };
 
     default:
-      throw new Error();
+      return state;
   }
 }

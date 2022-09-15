@@ -8,10 +8,9 @@
 
 import { MultiValue, SingleValue } from "react-select";
 import { SingleOptionType } from "../../../types/SharedComponentTypes";
-import { StudentCreatorBehavior } from "../functionality/StudentFunctionality";
 
 export type StudentPayloadObjects = {
-    [key: string]:
+  [key: string]:
     | string
     | SingleValue<SingleOptionType>
     | MultiValue<SingleOptionType>
@@ -21,6 +20,25 @@ export type StudentPayloadObjects = {
 };
 
 export type StudentActionObject = {
-    type: StudentCreatorBehavior;
-    payload: StudentPayloadObjects;
+  type: StudentCreatorBehavior;
+  payload: StudentPayloadObjects;
 };
+
+export enum StudentCreatorBehavior {
+  SetName,
+  SetDetails,
+  SetDueDate,
+  SetFormError,
+  SetCurrentApproach,
+  SetCurrentGrade,
+  SetCurrentTarget,
+  SetCurrentErrorApproach,
+  SetCurrentSRApproach,
+  SetCurrentBenchmarking,
+  SetProblemSet,
+  SetAimLine,
+  SetExplicitTime,
+  SetBuilt,
+  SetLoadedStudent,
+  SetThrow,
+}
