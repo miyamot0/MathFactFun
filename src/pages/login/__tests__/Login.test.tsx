@@ -9,7 +9,7 @@
 import React, { useReducer } from "react";
 import ReactModal from "react-modal";
 import Adapter from "enzyme-adapter-react-16";
-import Enzyme, { shallow } from "enzyme";
+import Enzyme from "enzyme";
 import { mount } from "enzyme";
 import Login from "../Login";
 import { renderHook } from "@testing-library/react-hooks";

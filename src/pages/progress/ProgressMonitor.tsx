@@ -6,10 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-/**
- * Progress monitor
- */
-
 import React from "react";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -33,7 +29,7 @@ import {
   getMappedMarker,
   modifyDate,
   remapPerformances,
-} from "./functionality/ProgressBehavior";
+} from "./helpers/ProgressHelpers";
 import { FactDataInterface } from "../setcreator/types/SetCreatorTypes";
 
 require("highcharts/modules/annotations")(Highcharts);

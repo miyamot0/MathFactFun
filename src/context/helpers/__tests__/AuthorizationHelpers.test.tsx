@@ -11,7 +11,11 @@ import { AuthorizationContextProvider } from "../../AuthorizationContext";
 
 describe("Authorization Context", () => {
   it("...", () => {
-    const val = <AuthorizationContextProvider children={[]} />;
+    const val = (
+      <AuthorizationContextProvider>
+        <></>
+      </AuthorizationContextProvider>
+    );
 
     expect(val).not.toBe(null);
   });

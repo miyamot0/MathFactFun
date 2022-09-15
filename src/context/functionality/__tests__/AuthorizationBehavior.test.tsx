@@ -114,25 +114,4 @@ describe("Authorization Behavior: Reducer behavior", () => {
       expect(result.current[0].adminFlag).toBe(true);
     });
   });
-
-  /*
-    it("Should update email", async () => {
-      await act(async () => {
-        const { result, waitForValueToChange } = renderHook(() =>
-          useReducer(UserLoginReducer, InitialLoginState)
-        );
-  
-        const [, dispatch] = result.current;
-        const newEmail = "newEmail";
-  
-        dispatch({
-          type: LoginDataBehavior.SetEmail,
-          payload: newEmail,
-        });
-  
-        await waitForValueToChange(() => result.current[0].Email);
-        expect(result.current[0].Email).toBe(newEmail);
-      });
-    });
-    */
 });

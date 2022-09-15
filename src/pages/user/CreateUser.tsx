@@ -13,12 +13,10 @@
 import React, { useReducer } from "react";
 import { useFirestore } from "../../firebase/hooks/useFirestore";
 import { useHistory } from "react-router-dom";
-import {
-  UserDataInitialState,
-  UserGenerationReducer,
-} from "./functionality/UserFunctionality";
 import { UserCreatorBehavior } from "./types/UserTypes";
 import { streamlinedCheck } from "../../utilities/FormHelpers";
+import { UserGenerationReducer } from "./functionality/UserFunctionality";
+import { UserDataInitialState } from "./interfaces/UserInterfaces";
 
 // Page to create new students
 export default function CreateUser() {

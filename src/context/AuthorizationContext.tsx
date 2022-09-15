@@ -6,17 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-/**
- * Authorization context
- */
-
 import React, { createContext, useReducer, useEffect } from "react";
 
 import { projectAuth } from "../firebase/config";
 import { AppInterface } from "../App";
-import {
-  AuthorizationProviderInterface,
-} from "./types/AuthorizationTypes";
+import { AuthorizationProviderInterface } from "./types/AuthorizationTypes";
 import { AuthorizationContextInterface } from "./interfaces/AuthorizationInterfaces";
 import {
   authorizationReducer,

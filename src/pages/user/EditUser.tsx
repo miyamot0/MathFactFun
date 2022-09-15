@@ -16,12 +16,10 @@ import { useFirestore } from "../../firebase/hooks/useFirestore";
 import { useHistory } from "react-router-dom";
 import { useFirebaseDocumentTyped } from "../../firebase/hooks/useFirebaseDocument";
 import { RoutedIdParam } from "../../interfaces/RoutingInterfaces";
-import {
-  UserDataInitialState,
-  UserGenerationReducer,
-} from "./functionality/UserFunctionality";
 import { UserCreatorBehavior, UserDataInterface } from "./types/UserTypes";
 import { streamlinedCheck } from "../../utilities/FormHelpers";
+import { UserGenerationReducer } from "./functionality/UserFunctionality";
+import { UserDataInitialState } from "./interfaces/UserInterfaces";
 
 export default function EditUser() {
   const history = useHistory();
