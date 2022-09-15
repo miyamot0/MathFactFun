@@ -16,85 +16,135 @@ import { mount } from "enzyme";
 import { CommentInterface } from "../../student/subcomponents/types/CommentTypes";
 import { StudentDataInterface } from "../../student/interfaces/StudentInterfaces";
 import { act } from "react-dom/test-utils";
+import BenchmarkList from "../subcomponents/BenchmarkList";
+import { MemoryRouter } from "react-router-dom";
 
 Enzyme.configure({ adapter: new Adapter() });
 
 ReactModal.setAppElement = () => null;
 
 const mockComment = {
-    content: 'string',
-    displayName: 'string',
-    createdAt: '',
-    createdBy: '',
-    id: 0
-}
+  content: "string",
+  displayName: "string",
+  createdAt: "",
+  createdBy: "",
+  id: 0,
+};
 
-const mockId = '123';
+const mockId = "123";
 
 const mockData = {
-    id: mockId,
-    aimLine: 0,
-    createdAt: firebase.firestore.Timestamp.fromDate(new Date()),
-    dueDate: firebase.firestore.Timestamp.fromDate(new Date()),
-    lastActivity: firebase.firestore.Timestamp.fromDate(new Date()),
-    comments: [mockComment] as CommentInterface[],
-    completedBenchmark: [],
-    currentBenchmarking: ['', ''],
-    factsMastered: ['', ''],
-    factsSkipped: ['', ''],
-    factsTargeted: ['', ''],
+  id: mockId,
+  aimLine: 0,
+  createdAt: firebase.firestore.Timestamp.fromDate(new Date()),
+  dueDate: firebase.firestore.Timestamp.fromDate(new Date()),
+  lastActivity: firebase.firestore.Timestamp.fromDate(new Date()),
+  comments: [mockComment] as CommentInterface[],
+  completedBenchmark: [],
+  currentBenchmarking: ["a", "b"],
+  factsMastered: ["", ""],
+  factsSkipped: ["", ""],
+  factsTargeted: ["", ""],
 
-    creator: '',
-    currentApproach: '',
-    currentErrorApproach: '',
-    currentGrade: '',
-    currentSRApproach: '',
-    currentTarget: '',
-    details: '',
-    name: '',
-    problemSet: '',
+  creator: "",
+  currentApproach: "",
+  currentErrorApproach: "",
+  currentGrade: "",
+  currentSRApproach: "",
+  currentTarget: "",
+  details: "",
+  name: "",
+  problemSet: "",
 
-    minForTask: 2
+  minForTask: 2,
 } as StudentDataInterface;
 
 jest.mock("../../../firebase/hooks/useFirebaseDocument", () => {
-    const originalModule = jest.requireActual(
-        "../../../firebase/hooks/useFirebaseDocument"
-    );
-    return {
-        __esModule: true,
-        ...originalModule,
-        default: () => ({
-            document: mockData,
-            documentError: undefined
-        }),
-    };
+  const originalModule = jest.requireActual(
+    "../../../firebase/hooks/useFirebaseDocument"
+  );
+  return {
+    __esModule: true,
+    ...originalModule,
+    default: () => ({
+      document: mockData,
+      documentError: undefined,
+    }),
+  };
 });
 
-jest.mock('react-router-dom', () => ({
-    ...jest.requireActual('react-router-dom'),
-    useParams: () => ({
-        id: mockId,
-    }),
-    useRouteMatch: () => ({ url: `/benchmark/${mockId}` }),
+jest.mock("react-router-dom", () => ({
+  ...jest.requireActual("react-router-dom"),
+  useParams: () => ({
+    id: mockId,
+  }),
+  useRouteMatch: () => ({ url: `/benchmark/${mockId}` }),
 }));
 
-describe('DashboardPractice: Render', () => {
-    it('Should render all components', () => {
-        act(() => {
-            const wrapper = mount(<DashboardBenchmark />);
+describe("BenchmarkList: Render", () => {
+  it("Should render all components if students present", () => {
+    act(() => {
+      const mockData2 = {
+        ...mockData,
+        currentBenchmarking: [
+          "Addition-Sums to 18",
+          "Multiplication-Single Digit",
+        ],
+      };
 
-            setTimeout(() => {
-                const errorTag = wrapper.find({ 'class': 'error' });
-                const loadingTag = wrapper.find({ 'class': 'loading' });
-                const benchmarkListTag = wrapper.find({ 'class': 'benchmark-list' });
-                const benchmarkListItemTag = wrapper.find({ 'class': 'benchmark-list-card' });
+      const wrapper = mount(
+        <MemoryRouter>
+          <BenchmarkList student={mockData2} />
+        </MemoryRouter>
+      );
 
-                expect(errorTag.length).toBe(0);
-                expect(loadingTag.length).toBe(0);
-                expect(benchmarkListTag.length).toBe(1);
-                expect(benchmarkListItemTag.length).toBe(1);
-            }, 1000);
-        })
-    })
-})
+      setTimeout(() => {
+        const serializedOutput = JSON.stringify(wrapper);
+
+        expect(serializedOutput.includes("benchmark-list")).toBe(true);
+        expect(serializedOutput.includes("No benchmarking targets")).toBe(
+          false
+        );
+      }, 1000);
+    });
+  });
+
+  it("Should render nothing if benchmarks listed", () => {
+    act(() => {
+      const wrapper = mount(
+        <MemoryRouter>
+          <BenchmarkList student={mockData} />
+        </MemoryRouter>
+      );
+
+      setTimeout(() => {
+        const serializedOutput = JSON.stringify(wrapper);
+
+        expect(serializedOutput.includes("benchmark-list")).toBe(false);
+        expect(serializedOutput.includes("No benchmarking targets")).toBe(true);
+      }, 1000);
+    });
+  });
+});
+
+describe("Dashboard Benchmark: Render", () => {
+  it("Should render all components", () => {
+    act(() => {
+      const wrapper = mount(<DashboardBenchmark />);
+
+      setTimeout(() => {
+        const errorTag = wrapper.find({ class: "error" });
+        const loadingTag = wrapper.find({ class: "loading" });
+        const benchmarkListTag = wrapper.find({ class: "benchmark-list" });
+        const benchmarkListItemTag = wrapper.find({
+          class: "benchmark-list-card",
+        });
+
+        expect(errorTag.length).toBe(0);
+        expect(loadingTag.length).toBe(0);
+        expect(benchmarkListTag.length).toBe(1);
+        expect(benchmarkListItemTag.length).toBe(1);
+      }, 1000);
+    });
+  });
+});

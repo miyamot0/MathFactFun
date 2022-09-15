@@ -12,17 +12,29 @@
 
 import React from "react";
 
-import { checkIfCompletedBenchmark, generatedStyledFeedback, generateWrapperBenchmarkList } from "./helpers/DashboardSubcomponentHelpers"
+import {
+  checkIfCompletedBenchmark,
+  generatedStyledFeedback,
+  generateWrapperBenchmarkList,
+} from "./helpers/DashboardSubcomponentHelpers";
 import { BenchmarkInterface } from "../types/DashboardTypes";
 
 import "./styles/BenchmarkList.css";
 
-export default function BenchmarkList({ student }: BenchmarkInterface) {
-  return student ? (
+export default function BenchmarkList({
+  student,
+}: BenchmarkInterface): JSX.Element {
+  const errMessage =
+    student.currentBenchmarking.length === 0 ? (
+      <p>No benchmarking targets</p>
+    ) : (
+      <></>
+    );
+
+  const outputDisplay = student ? (
     <div className="benchmark-list" key={student.id}>
-      {student.currentBenchmarking.length === 0 && (
-        <p>No benchmarking targets</p>
-      )}
+      {errMessage}
+
       {student.currentBenchmarking.map((benchmark: any) => {
         const benchmarkCompleted = checkIfCompletedBenchmark(
           student,
@@ -35,7 +47,11 @@ export default function BenchmarkList({ student }: BenchmarkInterface) {
             style={{ opacity: benchmarkCompleted ? 0.5 : 1 }}
             key={`${student.id}-${benchmark}`}
           >
-            {generateWrapperBenchmarkList(student, benchmark, benchmarkCompleted)}
+            {generateWrapperBenchmarkList(
+              student,
+              benchmark,
+              benchmarkCompleted
+            )}
             <hr />
             <p>
               <b>Due Date:</b> {student.dueDate.toDate().toDateString()}
@@ -49,6 +65,13 @@ export default function BenchmarkList({ student }: BenchmarkInterface) {
       })}
     </div>
   ) : (
-    <div></div>
+    <></>
+  );
+
+  return (
+    <>
+      {errMessage}
+      {outputDisplay}
+    </>
   );
 }
