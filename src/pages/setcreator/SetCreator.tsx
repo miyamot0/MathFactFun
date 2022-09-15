@@ -6,10 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-/**
- * Set Creator file
- */
-
 import React, { useReducer } from "react";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
@@ -28,9 +24,7 @@ import {
   ItemMetrics,
   SetItem,
 } from "./types/SetCreatorTypes";
-import {
-  RoutedIdTargetParam,
-} from "../../interfaces/RoutingInterfaces";
+import { RoutedIdTargetParam } from "../../interfaces/RoutingInterfaces";
 import {
   generateItemHistory,
   getRelevantCCCSet,

@@ -1,17 +1,27 @@
+/** @license
+ *
+ * Copyright (c) Shawn P. Gilroy, Louisiana State University.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
 import { DropResult } from "react-beautiful-dnd";
 import { FactsOnFire } from "../../../maths/Mind";
 import { GetOperatorFromLabel, Sum } from "../../../utilities/LabelHelper";
 import { StudentDataInterface } from "../../student/interfaces/StudentInterfaces";
 import {
-  ColumnObject,
-  ColumnsObject,
   DragColumnContents,
   DragColumnsInterface,
-  DragDropActions,
   FactDataInterface,
   FactStructure,
   ItemHistory,
   SetItem,
+} from "../interfaces/SetCreatorInterfaces";
+import {
+  ColumnObject,
+  ColumnsObject,
+  DragDropActions,
 } from "../types/SetCreatorTypes";
 
 export const StartingColumnValues: ColumnObject = {
@@ -226,6 +236,13 @@ export function formatBackgroundColor(entry: SetItem): string {
   return backgroundColor;
 }
 
+/** generateItemHistory
+ *
+ * @param uniqueProblems
+ * @param flatItemSummaries
+ * @param target
+ * @returns
+ */
 export function generateItemHistory(
   uniqueProblems: string[],
   flatItemSummaries: FactDataInterface[],
@@ -258,6 +275,12 @@ export function generateItemHistory(
   });
 }
 
+/** populateColumnMetrics
+ *
+ * @param facts
+ * @param itemHistory
+ * @returns
+ */
 export function populateColumnMetrics(
   facts: string[],
   itemHistory: ItemHistory[]
