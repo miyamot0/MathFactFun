@@ -6,22 +6,20 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-/**
- * Dashboard for showing benchmarking needs
- */
-
 import React from "react";
+import BenchmarkList from "./subcomponents/BenchmarkList";
 import { useParams } from "react-router-dom";
 import { useFirebaseDocumentTyped } from "../../firebase/hooks/useFirebaseDocument";
-import BenchmarkList from "./subcomponents/BenchmarkList";
+import { RoutedIdParam } from "../../interfaces/RoutingInterfaces";
+import { StudentDataInterface } from "../student/interfaces/StudentInterfaces";
+import { dashboardGenerateError, dashboardLoadingError } from "./helpers/DashboardHelpers";
 
 // styles
 import "./Dashboards.css";
-import { RoutedIdParam } from "../../interfaces/RoutingInterfaces";
-import { StudentDataInterface } from "../student/interfaces/StudentInterfaces";
 
 export default function DashboardBenchmark() {
   const { id } = useParams<RoutedIdParam>();
+
   const { document, documentError } =
     useFirebaseDocumentTyped<StudentDataInterface>({
       collectionString: "students",
@@ -29,20 +27,21 @@ export default function DashboardBenchmark() {
     });
 
   if (documentError) {
-    return <div className="error">{documentError}</div>;
+    return dashboardGenerateError(documentError);
+  } else if (document === null && !documentError) {
+    return dashboardLoadingError(documentError);
+  } else if (document) {
+    return (
+      <div>
+        <h2 className="global-page-title">
+          Benchmark Dashboard: {document.name}
+        </h2>
+        <BenchmarkList student={document} />
+      </div>
+    );
+  } else {
+    throw Error("Error loading benchmark")
   }
 
-  if (!document) {
-    return <div className="loading">Loading benchmark data...</div>;
-  }
 
-  return (
-    <div>
-      <h2 className="global-page-title">
-        Benchmark Dashboard: {document.name}
-      </h2>
-      {documentError && <p className="error">{documentError}</p>}
-      {document && <BenchmarkList student={document} />}
-    </div>
-  );
 }

@@ -6,103 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-/**
- * Sidebar widget
- */
-
 import React from "react";
-import firebase from "firebase/app";
-
-import { Link } from "react-router-dom";
+import { checkIfDateCurrent, dynamicallyGenerateLink } from "./helpers/DashboardSubcomponentHelpers"
 import { GetApproachStringFromLabel } from "../../../utilities/LabelHelper";
+import { PracticeListInterface } from "../types/DashboardTypes";
 
 import "./styles/PracticeList.css";
-import { PracticeListInterface } from "../types/DashboardTypes";
-import { StudentDataInterface } from "../../student/interfaces/StudentInterfaces";
-
-const anchorStyle = {
-  marginTop: "5px",
-};
-
-/** generateRouteBaseOnStrategy
- *
- * Generate a link to practice screen
- *
- * @param {string} strategy Intervention type
- * @param {string} target Intervention target
- * @param {string} id Personal id
- * @returns {string} path
- */
-function generateRouteBaseOnStrategy(
-  strategy: string | undefined,
-  target: string | undefined,
-  id: string | undefined | null
-): string {
-  if (strategy === undefined || target === undefined || id === undefined) {
-    return "#!";
-  }
-
-  return `/${strategy}/${target}/${id}`;
-}
-
-/** checkIfDateCurrent
- *
- * Check to see if date within a days difference
- *
- * @param {firebase.firestore.Timestamp} date Stored date, to compare with current
- * @returns {Bool}
- */
-function checkIfDateCurrent(
-  date: firebase.firestore.Timestamp | null
-): boolean {
-  if (date === null) {
-    return false;
-  }
-
-  const dateObj = date.toDate();
-  dateObj.setHours(0, 0, 0, 0);
-
-  const dateNow = new Date();
-  dateNow.setHours(0, 0, 0, 0);
-
-  return dateNow.getTime() <= dateObj.getTime() ? true : false;
-}
-
-/** dynamicallyGenerateLink
- *
- * Build out a widget based on whether student has programming
- *
- * @param {StudentDataInterface} student student instance
- * @returns {JSX.Element}
- */
-function dynamicallyGenerateLink(student: StudentDataInterface): JSX.Element {
-  if (student.factsTargeted.length < 1) {
-    return (
-      <a
-        href="#!"
-        key={student.id}
-        onClick={() =>
-          alert("No math problems have been added to the targeted list yet.")
-        }
-      >
-        {student.name} ({student.currentGrade})
-      </a>
-    );
-  }
-
-  return (
-    <Link
-      to={generateRouteBaseOnStrategy(
-        student.currentApproach,
-        student.currentTarget,
-        student.id
-      )}
-      key={student.id}
-    >
-      {student.name} ({student.currentGrade})
-    </Link>
-  );
-}
 
 export default function PracticeList({
   students,
@@ -116,15 +25,21 @@ export default function PracticeList({
         <div className="practice-list-card" key={student.id}>
           {dynamicallyGenerateLink(student)}
           <hr />
-          <p style={anchorStyle}>
+          <p style={{
+            marginTop: "5px",
+          }}>
             <b>Approach:</b>{" "}
             {GetApproachStringFromLabel(student.currentApproach)}
           </p>
-          <p style={anchorStyle}>
+          <p style={{
+            marginTop: "5px",
+          }}>
             <b>Target:</b> {student.currentTarget} (
             {student.factsTargeted.length} in Set)
           </p>
-          <p style={anchorStyle}>
+          <p style={{
+            marginTop: "5px",
+          }}>
             <b>Items in Set:</b> {student.factsTargeted.length}
           </p>
           <br></br>

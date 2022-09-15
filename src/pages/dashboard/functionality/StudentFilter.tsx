@@ -6,17 +6,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-/**
- * Student filtering
- */
-
 import React from "react";
 import { useState } from "react";
 
-import "./../Dashboards.css";
+import "./styles/StudentFilter.css"
 import { StudentFilterInterface } from "../types/DashboardTypes";
 
-const filterList = [
+export const GradeFilterList = [
   "All",
   "Mine",
   "K",
@@ -48,9 +44,10 @@ export default function StudentFilter({
     <div className="student-filter">
       <nav>
         <p>Filter Students by: </p>
-        {filterList.map((f) => (
+        {GradeFilterList.map((f) => (
           <button
             key={f}
+            data-testid={`student-filter-${f}`}
             className={currentFilter === f ? "active" : ""}
             onClick={() => handleFilterEvent(f)}
           >

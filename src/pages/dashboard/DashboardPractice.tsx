@@ -6,29 +6,24 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-/**
- * Dashboard, for practice entry
- */
-
 import React from "react";
 import { useState } from "react";
 import { useFirebaseCollectionTyped } from "../../firebase/hooks/useFirebaseCollection";
 import { useAuthorizationContext } from "../../context/hooks/useAuthorizationContext";
 
-import StudentFilter from "./functionality/StudentFilter";
+import StudentFilter, { GradeFilterList } from "./functionality/StudentFilter";
 import PracticeList from "./subcomponents/PracticeList";
 import { StudentDataInterface } from "../student/interfaces/StudentInterfaces";
+import { dashboardGenerateError, practiceFilterMap } from "./helpers/DashboardHelpers";
 
 export default function DashboardPractice() {
   const { user, adminFlag } = useAuthorizationContext();
-
-  // Limit scope if not an admin
-  const queryString =
-    user && !adminFlag ? ["creator", "==", user.uid] : undefined;
-  const orderString = undefined;
-
   const { documents, error } = useFirebaseCollectionTyped<StudentDataInterface>(
-    { collectionString: "students", queryString, orderString }
+    {
+      collectionString: "students",
+      queryString: user && !adminFlag ? ["creator", "==", user.uid] : undefined,
+      orderString: undefined
+    }
   );
 
   const [filter, setFilter] = useState("Mine");
@@ -40,41 +35,19 @@ export default function DashboardPractice() {
    * @param {String} newFilter Filter criteria
    */
   function changeFilter(newFilter: string): void {
-    setFilter(newFilter);
+    if (GradeFilterList.includes(newFilter)) {
+      setFilter(newFilter);
+    } else {
+      throw Error("Value supplied incompatible")
+    }
   }
 
-  const students =
-    documents && user
-      ? documents.filter((document) => {
-        switch (filter) {
-          case "All":
-            return document.currentApproach !== "N/A";
-          case "Mine":
-            return (
-              document.creator === user.uid &&
-              document.currentApproach !== "N/A"
-            );
-          case "K":
-          case "1st":
-          case "2nd":
-          case "3rd":
-          case "4th":
-          case "5th":
-          case "6th":
-            return (
-              document.currentGrade === filter &&
-              document.currentApproach !== "N/A"
-            );
-          default:
-            return document.currentApproach !== "N/A";
-        }
-      })
-      : null;
+  const students = practiceFilterMap(documents, user, filter);
 
   return (
     <div>
       <h2 className="global-page-title">Intervention Dashboard</h2>
-      {error && <p className="error">{error}</p>}
+      {error && dashboardGenerateError(error)}
       {documents && <StudentFilter changeFilter={changeFilter} />}
       {students && <PracticeList students={students} />}
     </div>

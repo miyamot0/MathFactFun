@@ -1,4 +1,12 @@
-import { MultiValue, SingleValue } from "react-select";
+/** @license
+ *
+ * Copyright (c) Shawn P. Gilroy, Louisiana State University.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+import { MultiValue } from "react-select";
 import { ErrorHandling } from "../../../maths/Facts";
 import { SingleOptionType } from "../../../types/SharedComponentTypes";
 import {
@@ -8,6 +16,7 @@ import {
   confirmStringType,
 } from "../../../utilities/ReducerHelpers";
 import { StudentCreateState } from "../interfaces/StudentInterfaces";
+import { StudentActionObject } from "../types/StudentTypes";
 
 export enum StudentCreatorBehavior {
   SetName,
@@ -61,21 +70,6 @@ export const UserCreateSingleInitialState: StudentCreateState = {
     value: "A",
     label: "A",
   } as SingleOptionType,
-};
-
-export type StudentPayloadObjects = {
-  [key: string]:
-    | string
-    | SingleValue<SingleOptionType>
-    | MultiValue<SingleOptionType>
-    | number
-    | boolean
-    | undefined;
-};
-
-export type StudentActionObject = {
-  type: StudentCreatorBehavior;
-  payload: StudentPayloadObjects;
 };
 
 /** userCreationReducer
