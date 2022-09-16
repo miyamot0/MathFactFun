@@ -85,12 +85,11 @@ export function generateCard(
         ...provided.draggableProps.style,
       }}
     >
-      <p>
+      <p className="draggable-individual-card">
         {item.Answer}
         <br />
-        {`Set: ${label}${(setNumber + 1 - valueAdjustment).toString()} Item: ${
-          parseInt(item.id.split(":")[2]) + 1
-        }`}
+        {`Set: ${label}${(setNumber + 1 - valueAdjustment).toString()} Item: ${parseInt(item.id.split(":")[2]) + 1
+          }`}
         <br />
         {`OTRs: ${formatTextBox(item.OTRs, 0)}`}
         <br />
