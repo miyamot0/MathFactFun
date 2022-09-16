@@ -20,6 +20,8 @@ import { StudentWidgetInterface } from "../interfaces/StudentInterfaces";
 
 // styles
 import "./styles/StudentSummary.css";
+import { confirmDeletion} from "./helpers/StudentSummaryHelpers";
+import { renderAdministrativeButtons, renderSetCreatorButton, renderSpecificOutcomesButton } from "./views/StudentSummaryViews";
 
 export default function StudentSummary({ student }: StudentWidgetInterface) {
   const { deleteDocument, response } = useFirestore(
@@ -36,15 +38,21 @@ export default function StudentSummary({ student }: StudentWidgetInterface) {
    *
    * @param {React.MouseEvent<HTMLElement>} event Form submit event
    */
-  function handleDeleteEvent(event: React.MouseEvent<HTMLElement>): void {
+  async function handleDeleteEvent(event: React.MouseEvent<HTMLElement>): Promise<void> {
     event.preventDefault();
 
-    if (window.confirm("Are you sure to delete this student?")) {
-      deleteDocument(student.id as string);
+    const confirmDelete = confirmDeletion();
+
+    if (confirmDelete) {
+      await deleteDocument(student.id as string);
 
       if (!response.error) {
         history.push(`/dashboard`);
+      } else {
+        return;
       }
+    } else {
+      return;
     }
   }
 
@@ -83,15 +91,7 @@ export default function StudentSummary({ student }: StudentWidgetInterface) {
           </button>
         </Link>
 
-        {student.currentTarget && student.currentTarget !== "N/A" && (
-          <Link
-            to={`/ProgressMonitor/${student.currentTarget}/${student.id}/${student.currentApproach}/${student.aimLine}`}
-          >
-            <button className="global-btn global-btn-green btn-below">
-              Intervention-specific Targets
-            </button>
-          </Link>
-        )}
+        {renderSpecificOutcomesButton(student)}
       </div>
 
       <div className="student-summary">
@@ -99,33 +99,14 @@ export default function StudentSummary({ student }: StudentWidgetInterface) {
           Benchmarking and Intervention Settings
         </h2>
         <hr />
-
         <Link to={`/edit/${student.id}`}>
           <button className="global-btn btn-below">Student Settings</button>
         </Link>
 
-        {student.currentTarget && student.currentTarget !== "N/A" && (
-          <Link to={`/set/${student.currentTarget}/${student.id}`}>
-            <button className="global-btn btn-below">Targeted Item Sets</button>
-          </Link>
-        )}
+        {renderSetCreatorButton(student)}
       </div>
 
-      {user && adminFlag && (
-        <div className="student-summary">
-          <h2 className="global-page-title">
-            Advanced and Administrative Options
-          </h2>
-          <hr />
-
-          <button
-            className="global-btn global-btn-red btn-below"
-            onClick={handleDeleteEvent}
-          >
-            Delete Student
-          </button>
-        </div>
-      )}
+      {renderAdministrativeButtons(user, adminFlag, handleDeleteEvent)}
     </div>
   );
 }

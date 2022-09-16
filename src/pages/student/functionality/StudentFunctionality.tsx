@@ -21,7 +21,7 @@ import {
   StudentCreatorBehavior,
 } from "../types/StudentTypes";
 
-export const UserCreateSingleInitialState: StudentCreateState = {
+export const StudentCreateSingleInitialState: StudentCreateState = {
   Name: "",
   Names: [],
   Details: "",

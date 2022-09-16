@@ -25,7 +25,7 @@ import {
 } from "../../maths/Facts";
 import { RoutedIdParam } from "../../interfaces/RoutingInterfaces";
 import {
-  UserCreateSingleInitialState,
+  StudentCreateSingleInitialState,
   userCreationReducer,
 } from "./functionality/StudentFunctionality";
 import {
@@ -49,7 +49,7 @@ export default function CreateBulkStudents() {
 
   const [state, dispatch] = useReducer(
     userCreationReducer,
-    UserCreateSingleInitialState
+    StudentCreateSingleInitialState
   );
 
   const CoreOperations = Operations.filter((op) => op.value !== "N/A");

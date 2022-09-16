@@ -41,6 +41,7 @@ import { AuthorizationContext } from "../context/AuthorizationContext";
 import { mount } from "enzyme";
 import { Redirect, Route, Router, Switch } from "react-router-dom";
 import { createMemoryHistory } from "history";
+import { FirestoreState } from "../firebase/interfaces/FirebaseInterfaces";
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -50,6 +51,20 @@ const generalAuthObj = {
   adminFlag: false,
   dispatch: jest.fn(),
 };
+
+jest.mock("./../firebase/hooks/useFirebaseDocument", () => {
+  const originalModule = jest.requireActual(
+    "./../firebase/hooks/useFirebaseDocument"
+  );
+  return {
+    __esModule: true,
+    ...originalModule,
+    default: () => ({
+      addDocument: jest.fn(),
+      response: {} as FirestoreState,
+    }),
+  };
+});
 
 describe("Routing (No Admin)", () => {
   ReactModal.setAppElement = () => null;
@@ -189,6 +204,8 @@ describe("Routing (No Admin)", () => {
 
     expect(wrapper.find("div.navbar")).toHaveLength(1);
     expect(wrapper.find(DashboardPractice)).toHaveLength(1);
+
+    // TODO
 
     history.push("/create");
     wrapper.update();

@@ -16,7 +16,7 @@ import { act } from "react-dom/test-utils";
 import { ErrorHandling } from "../../../../maths/Facts";
 import { SingleOptionType } from "../../../../types/SharedComponentTypes";
 import {
-  UserCreateSingleInitialState,
+  StudentCreateSingleInitialState,
   userCreationReducer,
 } from "../StudentFunctionality";
 import {
@@ -27,16 +27,16 @@ import {
 describe("Create Student Form: Reducer", () => {
   it("Should match original state", () => {
     const { result } = renderHook(() =>
-      useReducer(userCreationReducer, UserCreateSingleInitialState)
+      useReducer(userCreationReducer, StudentCreateSingleInitialState)
     );
     const [state] = result.current;
 
-    expect(UserCreateSingleInitialState).toBe(state);
+    expect(StudentCreateSingleInitialState).toBe(state);
   });
 
   it("Should match original state, DEFAULT", async () => {
     const { result } = renderHook(() =>
-      useReducer(userCreationReducer, UserCreateSingleInitialState)
+      useReducer(userCreationReducer, StudentCreateSingleInitialState)
     );
 
     const [, dispatch] = result.current;
@@ -58,7 +58,7 @@ describe("Create Student Form: Reducer", () => {
 
     await act(async () => {
       const { result, waitForValueToChange } = renderHook(() =>
-        useReducer(userCreationReducer, UserCreateSingleInitialState)
+        useReducer(userCreationReducer, StudentCreateSingleInitialState)
       );
 
       expect(result.current).toBeTruthy();
@@ -81,7 +81,7 @@ describe("Create Student Form: Reducer", () => {
 
     await act(async () => {
       const { result, waitForValueToChange } = renderHook(() =>
-        useReducer(userCreationReducer, UserCreateSingleInitialState)
+        useReducer(userCreationReducer, StudentCreateSingleInitialState)
       );
 
       expect(result.current).toBeTruthy();
@@ -104,7 +104,7 @@ describe("Create Student Form: Reducer", () => {
 
     await act(async () => {
       const { result, waitForValueToChange } = renderHook(() =>
-        useReducer(userCreationReducer, UserCreateSingleInitialState)
+        useReducer(userCreationReducer, StudentCreateSingleInitialState)
       );
 
       expect(result.current).toBeTruthy();
@@ -128,7 +128,7 @@ describe("Create Student Form: Reducer", () => {
     await act(async () => {
       const { result, waitForValueToChange } = renderHook(() =>
         useReducer(userCreationReducer, {
-          ...UserCreateSingleInitialState,
+          ...StudentCreateSingleInitialState,
           FormError: "asdf",
         })
       );
@@ -156,7 +156,7 @@ describe("Create Student Form: Reducer", () => {
 
     await act(async () => {
       const { result, waitForValueToChange } = renderHook(() =>
-        useReducer(userCreationReducer, UserCreateSingleInitialState)
+        useReducer(userCreationReducer, StudentCreateSingleInitialState)
       );
 
       expect(result.current).toBeTruthy();
@@ -182,7 +182,7 @@ describe("Create Student Form: Reducer", () => {
 
     await act(async () => {
       const { result, waitForValueToChange } = renderHook(() =>
-        useReducer(userCreationReducer, UserCreateSingleInitialState)
+        useReducer(userCreationReducer, StudentCreateSingleInitialState)
       );
 
       expect(result.current).toBeTruthy();
@@ -208,7 +208,7 @@ describe("Create Student Form: Reducer", () => {
 
     await act(async () => {
       const { result, waitForValueToChange } = renderHook(() =>
-        useReducer(userCreationReducer, UserCreateSingleInitialState)
+        useReducer(userCreationReducer, StudentCreateSingleInitialState)
       );
 
       expect(result.current).toBeTruthy();
@@ -234,7 +234,7 @@ describe("Create Student Form: Reducer", () => {
 
     await act(async () => {
       const { result, waitForValueToChange } = renderHook(() =>
-        useReducer(userCreationReducer, UserCreateSingleInitialState)
+        useReducer(userCreationReducer, StudentCreateSingleInitialState)
       );
 
       expect(result.current).toBeTruthy();
@@ -257,7 +257,7 @@ describe("Create Student Form: Reducer", () => {
 
     await act(async () => {
       const { result, waitForValueToChange } = renderHook(() =>
-        useReducer(userCreationReducer, UserCreateSingleInitialState)
+        useReducer(userCreationReducer, StudentCreateSingleInitialState)
       );
 
       expect(result.current).toBeTruthy();
@@ -283,7 +283,7 @@ describe("Create Student Form: Reducer", () => {
 
     await act(async () => {
       const { result, waitForValueToChange } = renderHook(() =>
-        useReducer(userCreationReducer, UserCreateSingleInitialState)
+        useReducer(userCreationReducer, StudentCreateSingleInitialState)
       );
 
       expect(result.current).toBeTruthy();
@@ -308,7 +308,7 @@ describe("Create Student Form: Reducer", () => {
 
     await act(async () => {
       const { result, waitForValueToChange } = renderHook(() =>
-        useReducer(userCreationReducer, UserCreateSingleInitialState)
+        useReducer(userCreationReducer, StudentCreateSingleInitialState)
       );
 
       expect(result.current).toBeTruthy();
@@ -331,7 +331,7 @@ describe("Create Student Form: Reducer", () => {
 
     await act(async () => {
       const { result, waitForValueToChange } = renderHook(() =>
-        useReducer(userCreationReducer, UserCreateSingleInitialState)
+        useReducer(userCreationReducer, StudentCreateSingleInitialState)
       );
 
       expect(result.current).toBeTruthy();
@@ -354,7 +354,7 @@ describe("Create Student Form: Reducer", () => {
 
     await act(async () => {
       const { result, waitForValueToChange } = renderHook(() =>
-        useReducer(userCreationReducer, UserCreateSingleInitialState)
+        useReducer(userCreationReducer, StudentCreateSingleInitialState)
       );
 
       expect(result.current).toBeTruthy();
@@ -377,7 +377,7 @@ describe("Create Student Form: Reducer", () => {
 
     await act(async () => {
       const { result, waitForValueToChange } = renderHook(() =>
-        useReducer(userCreationReducer, UserCreateSingleInitialState)
+        useReducer(userCreationReducer, StudentCreateSingleInitialState)
       );
 
       expect(result.current).toBeTruthy();
@@ -400,7 +400,7 @@ describe("Create Student Form: Reducer", () => {
 
     await act(async () => {
       const { result, waitForValueToChange } = renderHook(() =>
-        useReducer(userCreationReducer, UserCreateSingleInitialState)
+        useReducer(userCreationReducer, StudentCreateSingleInitialState)
       );
 
       expect(result.current).toBeTruthy();
@@ -441,7 +441,7 @@ describe("Create Student Form: Reducer", () => {
 
     await act(async () => {
       const { result, waitForValueToChange } = renderHook(() =>
-        useReducer(userCreationReducer, UserCreateSingleInitialState)
+        useReducer(userCreationReducer, StudentCreateSingleInitialState)
       );
 
       expect(result.current).toBeTruthy();

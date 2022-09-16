@@ -25,7 +25,7 @@ import {
   Contingencies,
 } from "../../maths/Facts";
 import {
-  UserCreateSingleInitialState,
+  StudentCreateSingleInitialState,
   userCreationReducer,
 } from "./functionality/StudentFunctionality";
 import {
@@ -48,7 +48,7 @@ export default function CreateStudent() {
 
   const [state, dispatch] = useReducer(
     userCreationReducer,
-    UserCreateSingleInitialState
+    StudentCreateSingleInitialState
   );
 
   const CoreOperations = Operations.filter((op) => op.value !== "N/A");
@@ -64,7 +64,7 @@ export default function CreateStudent() {
   ): Promise<void> {
     event.preventDefault();
 
-    if (user === null) {
+    if (user === null || user === undefined) {
       return;
     }
 
