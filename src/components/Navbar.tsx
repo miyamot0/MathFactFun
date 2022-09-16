@@ -21,6 +21,8 @@ import Modal from "react-modal";
 
 // styles & images
 import "./styles/Navbar.css";
+import { exportLogoutPanel } from "./subcomponents/NavbarButtonPanels";
+import { navbarButtonCloseModal } from "./subcomponents/NavbarButtonCloseModal";
 
 const customStyles = {
   content: {
@@ -80,20 +82,7 @@ export default function Navbar() {
           </li>
         )}
 
-        {user && (
-          <li>
-            {!logoutPending && (
-              <button className="global-btn global-btn-red" onClick={logout}>
-                Logout
-              </button>
-            )}
-            {logoutPending && (
-              <button className="global-btn" onClick={logout}>
-                Logging out...
-              </button>
-            )}
-          </li>
-        )}
+        {exportLogoutPanel(user, logoutPending, logout)}
       </ul>
 
       <Modal
@@ -140,15 +129,7 @@ export default function Navbar() {
             <li>react-select - Jed Watson (MIT)</li>
           </ul>
         </div>
-        <button
-          className="global-btn "
-          style={{ float: "right" }}
-          onClick={() => {
-            closeModal();
-          }}
-        >
-          Close
-        </button>
+        {navbarButtonCloseModal(closeModal)}
       </Modal>
     </div>
   );
