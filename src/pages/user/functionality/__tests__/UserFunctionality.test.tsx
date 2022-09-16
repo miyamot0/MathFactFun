@@ -6,19 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-/** @license
- *
- * Copyright (c) Shawn P. Gilroy, Louisiana State University.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- */
-
-import firebase from "firebase";
 import { act, renderHook } from "@testing-library/react-hooks";
 import { useReducer } from "react";
 import { UserGenerationReducer } from "../UserFunctionality";
-import { UserDataInitialState } from "../../interfaces/UserInterfaces";
+import { UserDataInitialState } from "../../functionality/UserFunctionality";
 import { UserCreatorBehavior } from "../../types/UserTypes";
 
 describe("User Functionality: Reducer behavior", () => {
@@ -33,7 +24,7 @@ describe("User Functionality: Reducer behavior", () => {
   });
 
   it("Should match original state, DEFAULT", async () => {
-    const { result, waitForValueToChange } = renderHook(() =>
+    const { result } = renderHook(() =>
       useReducer(UserGenerationReducer, UserDataInitialState)
     );
 

@@ -18,8 +18,7 @@ import { useFirebaseDocumentTyped } from "../../firebase/hooks/useFirebaseDocume
 import { RoutedIdParam } from "../../interfaces/RoutingInterfaces";
 import { UserCreatorBehavior, UserDataInterface } from "./types/UserTypes";
 import { streamlinedCheck } from "../../utilities/FormHelpers";
-import { UserGenerationReducer } from "./functionality/UserFunctionality";
-import { UserDataInitialState } from "./interfaces/UserInterfaces";
+import { UserDataInitialState, UserGenerationReducer } from "./functionality/UserFunctionality";
 
 export default function EditUser() {
   const history = useHistory();
@@ -106,49 +105,47 @@ export default function EditUser() {
 
   if (documentError) {
     return <div className="error">{documentError}</div>;
-  }
-
-  if (!document) {
+  } else if (!document) {
     return <div className="loading">Loading...</div>;
+  } else {
+    return (
+      <div style={{ maxWidth: "600px" }}>
+        <h2 className="global-page-title">Edit current teacher</h2>
+
+        <form onSubmit={handleEditFormSubmit}>
+          <label>
+            <span>Teacher Name:</span>
+            <input
+              required
+              type="text"
+              onChange={(e) => {
+                dispatch({
+                  type: UserCreatorBehavior.SetName,
+                  payload: { uName: e.target.value },
+                });
+              }}
+              value={state.Name}
+            ></input>
+          </label>
+          <label>
+            <span>Teacher School:</span>
+            <textarea
+              required
+              onChange={(e) => {
+                dispatch({
+                  type: UserCreatorBehavior.SetSchool,
+                  payload: { uSchool: e.target.value },
+                });
+              }}
+              value={state.School}
+            ></textarea>
+          </label>
+
+          <button className="global-btn ">Edit Teacher</button>
+          {state.FormError && <p className="error">{state.FormError}</p>}
+        </form>
+        <br></br>
+      </div>
+    );
   }
-
-  return (
-    <div style={{ maxWidth: "600px" }}>
-      <h2 className="global-page-title">Edit current teacher</h2>
-
-      <form onSubmit={handleEditFormSubmit}>
-        <label>
-          <span>Teacher Name:</span>
-          <input
-            required
-            type="text"
-            onChange={(e) => {
-              dispatch({
-                type: UserCreatorBehavior.SetName,
-                payload: { uName: e.target.value },
-              });
-            }}
-            value={state.Name}
-          ></input>
-        </label>
-        <label>
-          <span>Teacher School:</span>
-          <textarea
-            required
-            onChange={(e) => {
-              dispatch({
-                type: UserCreatorBehavior.SetSchool,
-                payload: { uSchool: e.target.value },
-              });
-            }}
-            value={state.School}
-          ></textarea>
-        </label>
-
-        <button className="global-btn ">Edit Teacher</button>
-        {state.FormError && <p className="error">{state.FormError}</p>}
-      </form>
-      <br></br>
-    </div>
-  );
 }

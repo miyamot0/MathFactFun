@@ -42,3 +42,19 @@ export interface ItemPerformanceMetrics {
   Correct: number;
   Total: number;
 }
+
+export interface OverallCalculationObject {
+  MappedDocument: RemappedPerformances[],
+  AggregatePerformancesDaily: DailyPerformanceMetrics[],
+  DateArray: number[],
+  MaxDate: Date,
+  MinDate: Date,
+  MaxYAxis: number
+}
+
+export interface ItemLevelCalculationsObject {
+  ItemSummaries: FactDataInterface[][],
+  FlatItemSummaries: FactDataInterface[],
+  UniqueMathFacts: string[],
+  UniqueQuants: ItemPerformanceMetrics[]
+}

@@ -15,13 +15,3 @@ export interface UserDataState {
   FormError: undefined | string;
   DidBuild: boolean;
 }
-
-export const UserDataInitialState: UserDataState = {
-  Name: "",
-  Email: "",
-  Password: "",
-  School: "",
-  id: null,
-  FormError: undefined,
-  DidBuild: false,
-};

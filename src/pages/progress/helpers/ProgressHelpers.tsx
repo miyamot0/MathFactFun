@@ -16,9 +16,11 @@ import { PerformanceDataInterface } from "../../intervention/types/InterventionT
 import { FactDataInterface } from "../../setcreator/interfaces/SetCreatorInterfaces";
 import {
   DailyPerformanceMetrics,
+  ItemLevelCalculationsObject,
   ItemPerformanceMetrics,
+  OverallCalculationObject,
   RemappedPerformances,
-} from "../types/ProgressTypes";
+} from "../interfaces/ProgressInterfaces";
 
 /** modifyDate
  *
@@ -183,4 +185,203 @@ export function aggregateItemLevelPerformances(
       Total: relevantPerformances.length,
     };
   });
+}
+
+/** prepareOverallCalculations
+ * 
+ * @param documents 
+ * @param aim 
+ * @returns 
+ */
+export function prepareOverallCalculations(documents: PerformanceDataInterface[], aim: string) {
+
+  // Generate object from document collection
+  const mappedDocument = remapPerformances(documents);
+
+  // Bring together all performances, by day
+  const aggregatePerformancesDaily = aggregatePerformances(mappedDocument);
+
+  // Extract all dates
+  const dateArr = mappedDocument.map((d) => d.Date.getTime());
+  const maxDate = modifyDate(new Date(Math.max.apply(null, dateArr)));
+  const minDate = modifyDate(new Date(Math.min.apply(null, dateArr)));
+
+  // Extract max for y-axis
+  let maxYAxis = Math.ceil(
+    Math.max.apply(
+      null,
+      aggregatePerformancesDaily.map((obj) => obj.DCPM)
+    )
+  );
+
+  // Extend out, if aim line exceeds current max
+  maxYAxis = maxYAxis < parseInt(aim) ? parseInt(aim) + 1 : maxYAxis + 1;
+
+  return {
+    MappedDocument: mappedDocument,
+    AggregatePerformancesDaily: aggregatePerformancesDaily,
+    DateArray: dateArr,
+    MaxDate: maxDate,
+    MinDate: minDate,
+    MaxYAxis: maxYAxis
+  } as OverallCalculationObject
+}
+
+/** getPrimaryProgressChartData
+ * 
+ * @param overallCalculations 
+ * @param aim 
+ * @returns 
+ */
+export function getPrimaryProgressChartData(overallCalculations: OverallCalculationObject, aim: string) {
+  return {
+    chart: {
+      height: "600px",
+    },
+    title: {
+      text: null,
+    },
+    series: {
+      name: "Digits Correct Per Minute",
+      data: overallCalculations.AggregatePerformancesDaily.map((obj) => {
+        return {
+          x: moment(obj.Date).toDate().getTime(),
+          y: Math.round(obj.DCPM * 100) / 100,
+        };
+      }),
+      type: "line",
+    },
+    xAxis: {
+      type: "datetime",
+      minTickInterval: 24 * 3600 * 1000,
+    },
+    yAxis: {
+      title: {
+        text: "Digits Correct/Minute (DCPM)",
+      },
+      min: 0,
+      max: overallCalculations.MaxYAxis,
+    },
+    annotations: [
+      {
+        draggable: "",
+        shapeOptions: {
+          type: "path",
+          dashStyle: "Solid",
+          strokeWidth: 1,
+          stroke: "red",
+          fill: "red",
+        },
+        shapes: [
+          {
+            type: "path",
+            points: [
+              {
+                x: overallCalculations.MinDate.getTime(),
+                y: parseInt(aim),
+                xAxis: 0,
+                yAxis: 0,
+              },
+              {
+                x: overallCalculations.MaxDate.getTime(),
+                y: parseInt(aim),
+                xAxis: 0,
+                yAxis: 0,
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  }
+}
+
+/** prepareItemLevelCalculations
+ * 
+ * @param overallCalculations 
+ * @param target 
+ * @returns 
+ */
+export function prepareItemLevelCalculations(overallCalculations: OverallCalculationObject, target: string) {
+  const itemSummaries = overallCalculations.MappedDocument.map(({ Items }) => Items);
+
+  const flatItemSummaries: FactDataInterface[] = itemSummaries.reduce(
+    (accumulator, value) => accumulator.concat(value)
+  );
+
+  const uniqueMathFacts = flatItemSummaries
+    .map((obj) => obj.factString)
+    .filter(OnlyUnique)
+    .sort();
+
+  const uniqueQuants = aggregateItemLevelPerformances(
+    uniqueMathFacts,
+    flatItemSummaries,
+    target
+  );
+
+  return {
+    ItemSummaries: itemSummaries,
+    FlatItemSummaries: flatItemSummaries,
+    UniqueMathFacts: uniqueMathFacts,
+    UniqueQuants: uniqueQuants
+  } as ItemLevelCalculationsObject;
+}
+
+/** getSecondaryProgressChartData
+ * 
+ * @param itemLevelCalculations 
+ * @param target 
+ * @returns 
+ */
+export function getSecondaryProgressChartData(itemLevelCalculations: ItemLevelCalculationsObject, target: string) {
+  return {
+    title: {
+      text: null,
+    },
+    chart: {
+      type: "scatter",
+      zoomType: "xy",
+      height: "600px",
+    },
+    tooltip: {
+      formatter: function (this: Highcharts.Point): string {
+        return (
+          "Problem: " +
+          this.x +
+          GetOperatorFromLabel(target) +
+          this.y +
+          "</b>"
+        );
+      },
+    },
+    series: {
+      name: "Item Metrics",
+      data: itemLevelCalculations.UniqueQuants.map((item) => {
+        return {
+          x: item.X,
+          y: item.Y,
+          marker: {
+            symbol: getMappedMarker(item.Latency),
+            fillColor: getMappedColor(item.AverageCorrect),
+            radius: item.Total > 5 ? 5 + 1 : item.Total + 1,
+          },
+        };
+      }),
+    },
+    yAxis: {
+      title: {
+        text: "Magnitude Change",
+      },
+      min: 0,
+      gridLineWidth: 1,
+    },
+    xAxis: {
+      title: {
+        text: "Base Value",
+      },
+      min: 0,
+      gridLineWidth: 1,
+    },
+  };
 }

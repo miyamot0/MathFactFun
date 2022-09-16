@@ -1,7 +1,7 @@
 import moment from "moment";
 import { OnlyUnique, Sum } from "../../../utilities/LabelHelper";
 import { PerformanceDataInterface } from "../../intervention/types/InterventionTypes";
-import { DailyPerformanceMetrics } from "../../progress/types/ProgressTypes";
+import { DailyPerformanceMetrics } from "../../progress/interfaces/ProgressInterfaces";
 import { FactDataInterface } from "../../setcreator/interfaces/SetCreatorInterfaces";
 
 /** reducerPerOperation

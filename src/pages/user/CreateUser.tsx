@@ -16,7 +16,7 @@ import { useHistory } from "react-router-dom";
 import { UserCreatorBehavior } from "./types/UserTypes";
 import { streamlinedCheck } from "../../utilities/FormHelpers";
 import { UserGenerationReducer } from "./functionality/UserFunctionality";
-import { UserDataInitialState } from "./interfaces/UserInterfaces";
+import { UserDataInitialState } from "./functionality/UserFunctionality";
 
 // Page to create new students
 export default function CreateUser(): JSX.Element {

@@ -9,6 +9,16 @@
 import { UserDataState } from "../interfaces/UserInterfaces";
 import { UserCreatorBehavior } from "../types/UserTypes";
 
+export const UserDataInitialState: UserDataState = {
+  Name: "",
+  Email: "",
+  Password: "",
+  School: "",
+  id: null,
+  FormError: undefined,
+  DidBuild: false,
+};
+
 /**
  * Reducer for create
  *

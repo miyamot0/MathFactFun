@@ -13,6 +13,9 @@ import Adapter from "enzyme-adapter-react-16";
 import Enzyme from "enzyme";
 import EditUser from "../EditUser";
 import { UserDataInterface } from "../types/UserTypes";
+import { UserDataState } from "../interfaces/UserInterfaces";
+//import { UserDataInitialState } from "";
+
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -46,8 +49,14 @@ jest.mock("../../../firebase/hooks/useFirebaseDocument", () => {
     __esModule: true,
     ...originalModule,
     default: () => ({
-      document: {} as UserDataInterface,
-      documentError: undefined,
+      useFirebaseDocumentTyped: jest.fn(() => ({
+        document: {
+          displayName: '',
+          displayEmail: '',
+          displaySchool: ''
+        } as UserDataInterface,
+        documentError: undefined,
+      }))
     }),
   };
 });
@@ -64,11 +73,31 @@ jest.mock("react-router-dom", () => ({
 }));
 
 describe("EditUser", () => {
-  it("Should render component", () => {
+  it("Should render component: base state", () => {
     const wrapper = mount(<EditUser />);
 
     expect(wrapper.containsMatchingElement(<EditUser />)).toEqual(true);
   });
 
+  it("Should render component: modified state", () => {
+    jest.mock('../functionality/UserFunctionality', () => ({
+      Name: "",
+      Email: "",
+      Password: "",
+      School: "",
+      id: null,
+      FormError: undefined,
+      DidBuild: true,
+    }));
+
+    const wrapper = mount(<EditUser />);
+
+    setTimeout(() => {
+      const wrapperJson = JSON.stringify(wrapper);
+      console.log(wrapperJson)
+    }, 1000);
+
+    expect(wrapper.containsMatchingElement(<EditUser />)).toEqual(true);
+  });
   // TODO
 });

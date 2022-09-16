@@ -21,14 +21,15 @@ import moment from "moment";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import AnnotationsModule from "highcharts/modules/annotations";
-import { RoutedStudentProgressSet } from "./types/ProgressTypes";
+import { RoutedStudentProgressSet } from "./interfaces/ProgressInterfaces";
 import {
   aggregateItemLevelPerformances,
-  aggregatePerformances,
   getMappedColor,
   getMappedMarker,
-  modifyDate,
-  remapPerformances,
+  getPrimaryProgressChartData,
+  getSecondaryProgressChartData,
+  prepareItemLevelCalculations,
+  prepareOverallCalculations,
 } from "./helpers/ProgressHelpers";
 
 require("highcharts/modules/annotations")(Highcharts);
@@ -46,15 +47,10 @@ export default function ProgressMonitor() {
   const { id, target, method, aim } = useParams<RoutedStudentProgressSet>();
   const { user, adminFlag } = useAuthorizationContext();
 
-  // Limit scope if not an admin
-  const queryString =
-    user && !adminFlag ? ["creator", "==", user.uid] : undefined;
-  const orderString = undefined;
-
   const { documents } = useFirebaseCollectionTyped<PerformanceDataInterface>({
     collectionString: `performances/${target}/${id}`,
-    queryString,
-    orderString,
+    queryString: user && !adminFlag ? ["creator", "==", user.uid] : undefined,
+    orderString: undefined,
   });
 
   const [chartOptions, setChartOptions] = useState({});
@@ -66,158 +62,11 @@ export default function ProgressMonitor() {
     }
 
     if (documents) {
-      // Generate object from document collection
-      const mappedDocument = remapPerformances(documents);
+      const overallCalculations = prepareOverallCalculations(documents, aim);
+      setChartOptions(getPrimaryProgressChartData(overallCalculations, aim));
 
-      // Bring together all performances, by day
-      const aggregatePerformancesDaily = aggregatePerformances(mappedDocument);
-
-      // Extract all dates
-      const dateArr = mappedDocument.map((d) => d.Date.getTime());
-      const maxDate = modifyDate(new Date(Math.max.apply(null, dateArr)));
-      const minDate = modifyDate(new Date(Math.min.apply(null, dateArr)));
-
-      // Extract max for y-axis
-      let maxYAxis = Math.ceil(
-        Math.max.apply(
-          null,
-          aggregatePerformancesDaily.map((obj) => obj.DCPM)
-        )
-      );
-
-      // Extend out, if aim line exceeds current max
-      maxYAxis = maxYAxis < parseInt(aim) ? parseInt(aim) + 1 : maxYAxis + 1;
-
-      setChartOptions({
-        chart: {
-          height: "600px",
-        },
-        title: {
-          text: null,
-        },
-        series: {
-          name: "Digits Correct Per Minute",
-          data: aggregatePerformancesDaily.map((obj) => {
-            return {
-              x: moment(obj.Date).toDate().getTime(),
-              y: Math.round(obj.DCPM * 100) / 100,
-            };
-          }),
-          type: "line",
-        },
-        xAxis: {
-          type: "datetime",
-          minTickInterval: 24 * 3600 * 1000,
-        },
-        yAxis: {
-          title: {
-            text: "Digits Correct/Minute (DCPM)",
-          },
-          min: 0,
-          max: maxYAxis,
-        },
-        annotations: [
-          {
-            draggable: "",
-            shapeOptions: {
-              type: "path",
-              dashStyle: "Solid",
-              strokeWidth: 1,
-              stroke: "red",
-              fill: "red",
-            },
-            shapes: [
-              {
-                type: "path",
-                points: [
-                  {
-                    x: minDate.getTime(),
-                    y: parseInt(aim),
-                    xAxis: 0,
-                    yAxis: 0,
-                  },
-                  {
-                    x: maxDate.getTime(),
-                    y: parseInt(aim),
-                    xAxis: 0,
-                    yAxis: 0,
-                  },
-                ],
-              },
-            ],
-          },
-        ],
-      });
-
-      // Extract items from document collection
-      const itemSummaries = mappedDocument.map(({ Items }) => Items);
-
-      const flatItemSummaries: FactDataInterface[] = itemSummaries.reduce(
-        (accumulator, value) => accumulator.concat(value)
-      );
-
-      // Extract unique problems targeted
-      const uniqueMathFacts = flatItemSummaries
-        .map((obj) => obj.factString)
-        .filter(OnlyUnique)
-        .sort();
-
-      // Map properties based on facts in collection
-      const uniqueQuants = aggregateItemLevelPerformances(
-        uniqueMathFacts,
-        flatItemSummaries,
-        target
-      );
-
-      setItemChartOptions({
-        title: {
-          text: null,
-        },
-        chart: {
-          type: "scatter",
-          zoomType: "xy",
-          height: "600px",
-        },
-        tooltip: {
-          formatter: function (this: Highcharts.Point): string {
-            return (
-              "Problem: " +
-              this.x +
-              GetOperatorFromLabel(target) +
-              this.y +
-              "</b>"
-            );
-          },
-        },
-        series: {
-          name: "Item Metrics",
-          data: uniqueQuants.map((item) => {
-            return {
-              x: item.X,
-              y: item.Y,
-              marker: {
-                symbol: getMappedMarker(item.Latency),
-                fillColor: getMappedColor(item.AverageCorrect),
-                radius: item.Total > 5 ? 5 + 1 : item.Total + 1,
-              },
-            };
-          }),
-        },
-        yAxis: {
-          title: {
-            text: "Magnitude Change",
-          },
-          min: 0,
-          gridLineWidth: 1,
-        },
-        xAxis: {
-          title: {
-            text: "Base Value",
-          },
-          min: 0,
-          gridLineWidth: 1,
-        },
-      });
+      const itemLevelCalculations = prepareItemLevelCalculations(overallCalculations, target);
+      setItemChartOptions(getSecondaryProgressChartData(itemLevelCalculations, target));
     }
   }, [documents, aim, target, method]);
 
