@@ -50,60 +50,61 @@ export function onDragEnd(
   columns: DragColumnsInterface,
   dispatch: any
 ): void {
-  if (!result.destination) return;
-  const { source, destination } = result;
-
-  let columnObject: DragColumnsInterface = {
-    Available: {} as DragColumnContents,
-    Targeted: {} as DragColumnContents,
-    Mastered: {} as DragColumnContents,
-    Skipped: {} as DragColumnContents,
-  };
-
-  // Source and destination differ
-  if (source.droppableId !== destination.droppableId) {
-    const sourceColumn = columns[source.droppableId];
-    const destColumn = columns[destination.droppableId];
-    const sourceItems = [...sourceColumn.items];
-    const destItems = [...destColumn.items];
-    const [removed] = sourceItems.splice(source.index, 1);
-    destItems.splice(destination.index, 0, removed);
-
-    //setIncomingChange(true);
-
-    columnObject = {
-      ...columns,
-      [source.droppableId]: {
-        ...sourceColumn,
-        items: sourceItems,
-      },
-      [destination.droppableId]: {
-        ...destColumn,
-        items: destItems,
-      },
-    } as DragColumnsInterface;
-
-    columnObject.Available.name = `Available (${columnObject.Available.items.length})`;
-    columnObject.Targeted.name = `Targeted (${columnObject.Targeted.items.length})`;
-    columnObject.Mastered.name = `Mastered (${columnObject.Mastered.items.length})`;
-    columnObject.Skipped.name = `Skipped (${columnObject.Skipped.items.length})`;
-
-    dispatch({ type: DragDropActions.UpdateColumns, payload: columnObject });
+  if (!result.destination) {
+    return;
   } else {
-    const column = columns[source.droppableId];
-    const copiedItems = [...column.items];
-    const [removed] = copiedItems.splice(source.index, 1);
-    copiedItems.splice(destination.index, 0, removed);
+    const { source, destination } = result;
 
-    columnObject = {
-      ...columns,
-      [source.droppableId]: {
-        ...column,
-        items: copiedItems,
-      },
+    let columnObject = {
+      Available: {} as DragColumnContents,
+      Targeted: {} as DragColumnContents,
+      Mastered: {} as DragColumnContents,
+      Skipped: {} as DragColumnContents,
     } as DragColumnsInterface;
 
-    dispatch({ type: DragDropActions.UpdateColumns, payload: columnObject });
+    // Source and destination differ
+    if (source.droppableId !== destination.droppableId) {
+      const sourceColumn = columns[source.droppableId];
+      const destColumn = columns[destination.droppableId];
+      const sourceItems = [...sourceColumn.items];
+      const destItems = [...destColumn.items];
+      const [removed] = sourceItems.splice(source.index, 1);
+      destItems.splice(destination.index, 0, removed);
+
+      columnObject = {
+        ...columns,
+        [source.droppableId]: {
+          ...sourceColumn,
+          items: sourceItems,
+        },
+        [destination.droppableId]: {
+          ...destColumn,
+          items: destItems,
+        },
+      } as DragColumnsInterface;
+
+      columnObject.Available.name = `Available (${columnObject.Available.items.length})`;
+      columnObject.Targeted.name = `Targeted (${columnObject.Targeted.items.length})`;
+      columnObject.Mastered.name = `Mastered (${columnObject.Mastered.items.length})`;
+      columnObject.Skipped.name = `Skipped (${columnObject.Skipped.items.length})`;
+
+      dispatch({ type: DragDropActions.UpdateColumns, payload: columnObject });
+    } else {
+      const column = columns[source.droppableId];
+      const copiedItems = [...column.items];
+      const [removed] = copiedItems.splice(source.index, 1);
+      copiedItems.splice(destination.index, 0, removed);
+
+      columnObject = {
+        ...columns,
+        [source.droppableId]: {
+          ...column,
+          items: copiedItems,
+        },
+      } as DragColumnsInterface;
+
+      dispatch({ type: DragDropActions.UpdateColumns, payload: columnObject });
+    }
   }
 }
 

@@ -8,8 +8,11 @@ import {
 import {
   formatBackgroundColor,
   formatTextBox,
-} from "../functionality/SetCreatorBehavior";
-import { DragColumnsInterface, SetItem } from "../types/SetCreatorTypes";
+} from "../helpers/SetCreatorHelpers";
+import {
+  DragColumnsInterface,
+  SetItem,
+} from "../interfaces/SetCreatorInterfaces";
 
 const DropContainer = {
   display: "flex",
