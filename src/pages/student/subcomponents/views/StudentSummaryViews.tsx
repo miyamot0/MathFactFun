@@ -10,27 +10,26 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { StudentDataInterface } from "../../interfaces/StudentInterfaces";
 
-
 /** renderCurrentTargetButton
  * 
  * @param {StudentDataInterface} student 
  * @returns {JSX.Element}
  */
- export function renderSpecificOutcomesButton(student: StudentDataInterface): JSX.Element {
+export function renderSpecificOutcomesButton(student: StudentDataInterface): JSX.Element {
 
-    const hasATarget = student.currentTarget !== "N/A";
+  const hasATarget = student.currentTarget !== "N/A";
 
-    if (hasATarget) {
-        return <Link
-        to={`/ProgressMonitor/${student.currentTarget}/${student.id}/${student.currentApproach}/${student.aimLine}`}
-        >
-            <button className="global-btn global-btn-green btn-below">
-                Intervention-specific Targets
-            </button>
-        </Link>;
-    } else {
-        return <div className="no-specific-outcomes-button"></div>
-    }
+  if (hasATarget) {
+    return <Link
+      to={`/ProgressMonitor/${student.currentTarget}/${student.id}/${student.currentApproach}/${student.aimLine}`}
+    >
+      <button className="global-btn global-btn-green btn-below">
+        Intervention-specific Targets
+      </button>
+    </Link>;
+  } else {
+    return <div className="no-specific-outcomes-button"></div>
+  }
 }
 
 /** renderCurrentTargetButton
@@ -38,17 +37,17 @@ import { StudentDataInterface } from "../../interfaces/StudentInterfaces";
  * @param {StudentDataInterface} student 
  * @returns {JSX.Element}
  */
- export function renderSetCreatorButton(student: StudentDataInterface): JSX.Element {
+export function renderSetCreatorButton(student: StudentDataInterface): JSX.Element {
 
-    const hasATarget = student.currentTarget !== "N/A";
+  const hasATarget = student.currentTarget !== "N/A";
 
-    if (hasATarget) {
-        return <Link to={`/set/${student.currentTarget}/${student.id}`}>
-        <button className="global-btn btn-below">Targeted Item Sets</button>
-      </Link>;
-    } else {
-        return <div className="no-set-items-button"></div>
-    }
+  if (hasATarget) {
+    return <Link to={`/set/${student.currentTarget}/${student.id}`}>
+      <button className="global-btn btn-below">Targeted Item Sets</button>
+    </Link>;
+  } else {
+    return <div className="no-set-items-button"></div>
+  }
 }
 
 /** renderAdministrativeButtons
@@ -60,23 +59,23 @@ import { StudentDataInterface } from "../../interfaces/StudentInterfaces";
  */
 export function renderAdministrativeButtons(user: any, adminFlag: boolean, handleDeleteEvent: any): JSX.Element {
 
-    const shouldShowPanel = user && adminFlag;
+  const shouldShowPanel = user && adminFlag;
 
-    if (shouldShowPanel) {
-        return <div className="student-summary">
-        <h2 className="global-page-title">
-          Advanced and Administrative Options
-        </h2>
-        <hr />
+  if (shouldShowPanel) {
+    return <div className="student-summary">
+      <h2 className="global-page-title">
+        Advanced and Administrative Options
+      </h2>
+      <hr />
 
-        <button
-          className="global-btn global-btn-red btn-below"
-          onClick={handleDeleteEvent}
-        >
-          Delete Student
-        </button>
-      </div>;
-    } else {
-        return <div className="no-admin-panel"></div>
-    }
+      <button
+        className="global-btn global-btn-red btn-below"
+        onClick={handleDeleteEvent}
+      >
+        Delete Student
+      </button>
+    </div>;
+  } else {
+    return <div className="no-admin-panel"></div>
+  }
 }

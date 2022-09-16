@@ -30,7 +30,7 @@ import { formatDate } from "../../utilities/LabelHelper";
 import Select, { MultiValue } from "react-select";
 import { RoutedIdParam } from "../../interfaces/RoutingInterfaces";
 import {
-  UserCreateSingleInitialState,
+  StudentCreateSingleInitialState,
   userCreationReducer,
 } from "./functionality/StudentFunctionality";
 import {
@@ -59,7 +59,7 @@ export default function EditStudent() {
 
   const [state, dispatch] = useReducer(
     userCreationReducer,
-    UserCreateSingleInitialState
+    StudentCreateSingleInitialState
   );
 
   const CoreOperations = Operations.filter((op) => op.value !== "N/A");

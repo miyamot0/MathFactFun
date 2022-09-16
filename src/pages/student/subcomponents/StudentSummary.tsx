@@ -20,7 +20,7 @@ import { StudentWidgetInterface } from "../interfaces/StudentInterfaces";
 
 // styles
 import "./styles/StudentSummary.css";
-import { confirmDeletion} from "./helpers/StudentSummaryHelpers";
+import { confirmDeletion } from "./helpers/StudentSummaryHelpers";
 import { renderAdministrativeButtons, renderSetCreatorButton, renderSpecificOutcomesButton } from "./views/StudentSummaryViews";
 
 export default function StudentSummary({ student }: StudentWidgetInterface) {

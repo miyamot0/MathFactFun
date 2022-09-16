@@ -19,6 +19,7 @@ import { useFirestore } from "../../../firebase/hooks/useFirestore";
 import "./styles/StudentComments.css";
 import { StudentWidgetInterface } from "../interfaces/StudentInterfaces";
 import { CommentInterface } from "./types/CommentTypes";
+import { renderCommentForm, renderCommentListView } from "./views/StudentCommentsViews";
 
 export default function StudentComments({ student }: StudentWidgetInterface) {
   const { updateDocument, response } = useFirestore(
@@ -88,55 +89,10 @@ export default function StudentComments({ student }: StudentWidgetInterface) {
     <div className="student-comments">
       <h4>Student Notes</h4>
 
-      <ul>
-        {student.comments.length > 0 &&
-          student.comments.map((comment: CommentInterface) => (
-            <li key={comment.id} style={{ position: "relative" }}>
-              {user && adminFlag && (
-                <div
-                  style={{ position: "absolute", right: "10px", top: "10px" }}
-                >
-                  <a
-                    style={{ textDecoration: "none" }}
-                    href="#!"
-                    onClick={() => removeComment(comment)}
-                  >
-                    X
-                  </a>
-                </div>
-              )}
+      {renderCommentListView(user, adminFlag, student, removeComment)}
 
-              <div className="comment-author">
-                <p>
-                  {comment.displayName
-                    ?.split(" ")
-                    .map(
-                      (w: any) => w[0].toUpperCase() + w.substring(1).toLowerCase()
-                    )
-                    .join(" ")}
-                </p>
-              </div>
-              <div className="comment-date">
-                <p>{comment.createdAt.toDate().toLocaleDateString("en-US")}</p>
-              </div>
-              <div className="comment-content">
-                <p>{comment.content}</p>
-              </div>
-            </li>
-          ))}
-      </ul>
+      {renderCommentForm(newComment, setNewComment, submitComment)}
 
-      <form className="add-comment">
-        <span>Add a new note:</span>
-        <textarea
-          required
-          onChange={(event) => setNewComment(event.target.value)}
-          value={newComment}
-        ></textarea>
-        <button className="global-btn button-padding" onClick={submitComment}>
-          Add Note
-        </button>
-      </form>
     </div>
   );
 }
