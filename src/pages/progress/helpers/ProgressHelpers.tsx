@@ -13,7 +13,7 @@ import {
   Sum,
 } from "../../../utilities/LabelHelper";
 import { PerformanceDataInterface } from "../../intervention/types/InterventionTypes";
-import { FactDataInterface } from "../../setcreator/types/SetCreatorTypes";
+import { FactDataInterface } from "../../setcreator/interfaces/SetCreatorInterfaces";
 import {
   DailyPerformanceMetrics,
   ItemPerformanceMetrics,
@@ -27,7 +27,7 @@ import {
  * @param {Date} newDate Raw date object
  * @returns {Date} Amended date object
  */
-export function modifyDate(newDate: Date = new Date()): Date {
+export function modifyDate(newDate: Date): Date {
   const modDate = newDate;
   modDate.setHours(0);
   modDate.setMinutes(0);

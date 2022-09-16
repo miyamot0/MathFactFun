@@ -30,7 +30,6 @@ import {
   modifyDate,
   remapPerformances,
 } from "./helpers/ProgressHelpers";
-import { FactDataInterface } from "../setcreator/types/SetCreatorTypes";
 
 require("highcharts/modules/annotations")(Highcharts);
 require("highcharts/modules/accessibility")(Highcharts);
@@ -41,6 +40,7 @@ import {
   CommonPanelWidth,
 } from "../../utilities/FormHelpers";
 import { PerformanceDataInterface } from "../intervention/types/InterventionTypes";
+import { FactDataInterface } from "../setcreator/interfaces/SetCreatorInterfaces";
 
 export default function ProgressMonitor() {
   const { id, target, method, aim } = useParams<RoutedStudentProgressSet>();
