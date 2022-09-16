@@ -10,9 +10,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { act, renderHook } from "@testing-library/react-hooks";
+import { act, renderHook, WaitOptions } from "@testing-library/react-hooks";
 import { useReducer } from "react";
-import { DragDropActions } from "../../types/SetCreatorTypes";
+import { ColumnObject, DragDropActions } from "../../types/SetCreatorTypes";
 import {
   InitialSetCreatorState,
   SetCreatorReducer,
@@ -133,6 +133,81 @@ describe("Set Creator: Reducer", () => {
 
       expect(result.current[0].BaseItems).toBe(newValue);
     });
+  });
+
+  it("Should update: SetColumns", async () => {
+    act(async () => {
+      const { result, waitForValueToChange } = renderHook(() =>
+        useReducer(SetCreatorReducer, InitialSetCreatorState)
+      );
+
+      expect(result.current).toBeTruthy();
+
+      const [, dispatch] = result.current;
+
+      const newColumnValues = {
+        Available: {
+          name: "Available",
+          items: [],
+        },
+        Targeted: {
+          name: "Targeted",
+          items: [],
+        },
+        Mastered: {
+          name: "Mastered",
+          items: [],
+        },
+        Skipped: {
+          name: "Skipped",
+          items: [],
+        },
+        Sham: {
+          name: "Sham",
+          items: [],
+        },
+      } as ColumnObject;
+
+      const newValue = (a: any, b: any) => true;
+
+      dispatch({
+        type: DragDropActions.LoadCallback,
+        payload: newValue,
+      });
+
+      await waitForValueToChange(() => result.current[0].Callback);
+
+      dispatch({
+        type: DragDropActions.UpdateColumns,
+        payload: newColumnValues,
+      });
+
+      const waitOptions = {
+        interval: false,
+        timeout: false,
+      } as WaitOptions;
+
+      await waitForValueToChange(() => result.current[0].columns, waitOptions);
+
+      expect(result.current[0].columns).toBe(newColumnValues);
+    });
+  });
+
+  it("Should update: ToggleLoaded", async () => {
+    const { result } = renderHook(() =>
+      useReducer(SetCreatorReducer, InitialSetCreatorState)
+    );
+
+    const [, dispatch] = result.current;
+
+    const newValue = true;
+
+    dispatch({
+      type: DragDropActions.ToggleLoaded,
+      payload: newValue,
+    });
+
+    expect(result.current[0].LoadedData).toBe(newValue);
   });
 
   // TODO: incomplete!

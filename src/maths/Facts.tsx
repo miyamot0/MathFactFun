@@ -6,10 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-/**
- * Constants
- */
-
 // eslint-disable-next-line
 export const Grades = [
   { value: "K", label: "Kindergarten" },
@@ -49,6 +45,7 @@ export const InterventionApproach = [
 export enum ErrorHandling {
   EveryTime = "Everytime",
   Never = "Never",
+  ThrowError = "ThrowError",
 }
 
 // eslint-disable-next-line

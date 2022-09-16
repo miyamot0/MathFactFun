@@ -11,13 +11,10 @@ import ReactModal from "react-modal";
 import Adapter from "enzyme-adapter-react-16";
 import Enzyme from "enzyme";
 import { mount } from "enzyme";
-import Login from "../Login";
+import Login from "../../Login";
 import { renderHook } from "@testing-library/react-hooks";
-import {
-  InitialLoginState,
-  UserLoginReducer,
-} from "../functionality/LoginBehavior";
-import { LoginDataBehavior } from "../types/LoginTypes";
+import { InitialLoginState, UserLoginReducer } from "../LoginBehavior";
+import { LoginDataBehavior } from "../../types/LoginTypes";
 import { act } from "react-dom/test-utils";
 
 Enzyme.configure({ adapter: new Adapter() });
@@ -26,9 +23,9 @@ ReactModal.setAppElement = () => null;
 
 const mockUploadFunction = jest.fn(() => "Success");
 
-jest.mock("../../../firebase/hooks/useFirebaseLogin", () => {
+jest.mock("../../../../firebase/hooks/useFirebaseLogin", () => {
   const originalModule = jest.requireActual(
-    "../../../firebase/hooks/useFirebaseLogin"
+    "../../../../firebase/hooks/useFirebaseLogin"
   );
   return {
     __esModule: true,
@@ -41,7 +38,7 @@ jest.mock("../../../firebase/hooks/useFirebaseLogin", () => {
   };
 });
 
-describe("Login: Reducer behavior", () => {
+describe("LoginBehavior: Reducer behavior", () => {
   it("Should have persisting state", () => {
     const { result } = renderHook(() =>
       useReducer(UserLoginReducer, InitialLoginState)

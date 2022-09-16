@@ -19,7 +19,7 @@ import { UserGenerationReducer } from "./functionality/UserFunctionality";
 import { UserDataInitialState } from "./interfaces/UserInterfaces";
 
 // Page to create new students
-export default function CreateUser() {
+export default function CreateUser(): JSX.Element {
   const history = useHistory();
   const { addDocument, response } = useFirestore(
     "tempUsers",
@@ -48,42 +48,36 @@ export default function CreateUser() {
       payload: { uFormError: undefined },
     });
 
-    if (streamlinedCheck(state.Name, "Please enter a valid name", dispatch)) {
-      return;
-    }
+    const checkName = streamlinedCheck(
+      state.Name,
+      "Please enter a valid name",
+      dispatch
+    );
+    const checkEmail = streamlinedCheck(
+      state.Email,
+      "Please enter a valid email address",
+      dispatch
+    );
+    const checkSchool = streamlinedCheck(
+      state.School,
+      "Please enter a valid school name",
+      dispatch
+    );
 
-    if (
-      streamlinedCheck(
-        state.Email,
-        "Please enter a valid email address",
-        dispatch
-      )
-    ) {
-      return;
-    }
+    if (checkName && checkEmail && checkSchool) {
+      const userObject = {
+        displayEmail: state.Email,
+        displayName: state.Name,
+        displaySchool: state.School,
+        password: state.Password,
+        id: undefined,
+      };
 
-    if (
-      streamlinedCheck(
-        state.School,
-        "Please enter a valid school name",
-        dispatch
-      )
-    ) {
-      return;
-    }
+      await addDocument(userObject);
 
-    const userObject = {
-      displayEmail: state.Email,
-      displayName: state.Name,
-      displaySchool: state.School,
-      password: state.Password,
-      id: undefined,
-    };
-
-    await addDocument(userObject);
-
-    if (!response.error) {
-      history.push("/admin");
+      if (!response.error) {
+        history.push("/admin");
+      }
     }
   }
 

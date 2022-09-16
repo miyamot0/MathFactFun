@@ -6,10 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-/**
- * Progress file
- */
-
 import React from "react";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -27,7 +23,7 @@ import {
   CommonPanelWidth,
 } from "../../utilities/FormHelpers";
 import { PerformanceDataInterface } from "../intervention/types/InterventionTypes";
-import { reducerPerOperation } from "./functionality/ScreeningBehavior";
+import { reducerPerOperation } from "./helper/ScreeningHelper";
 
 require("highcharts/modules/annotations")(Highcharts);
 require("highcharts/modules/accessibility")(Highcharts);
@@ -38,37 +34,32 @@ export default function Screening() {
   const { user, adminFlag } = useAuthorizationContext();
   const [chartOptions, setChartOptions] = useState({});
 
-  // Limit scope if not an admin
-  const queryString =
-    user && !adminFlag ? ["creator", "==", user.uid] : undefined;
-  const orderString = undefined;
-
   const { documents: additionDocuments } =
     useFirebaseCollectionTyped<PerformanceDataInterface>({
       collectionString: `performances/Addition/${id}`,
-      queryString,
-      orderString,
+      queryString: user && !adminFlag ? ["creator", "==", user.uid] : undefined,
+      orderString: undefined,
     });
 
   const { documents: subtractionDocuments } =
     useFirebaseCollectionTyped<PerformanceDataInterface>({
       collectionString: `performances/Subtraction/${id}`,
-      queryString,
-      orderString,
+      queryString: user && !adminFlag ? ["creator", "==", user.uid] : undefined,
+      orderString: undefined,
     });
 
   const { documents: multiplicationDocuments } =
     useFirebaseCollectionTyped<PerformanceDataInterface>({
       collectionString: `performances/Multiplication/${id}`,
-      queryString,
-      orderString,
+      queryString: user && !adminFlag ? ["creator", "==", user.uid] : undefined,
+      orderString: undefined,
     });
 
   const { documents: divisionDocuments } =
     useFirebaseCollectionTyped<PerformanceDataInterface>({
       collectionString: `performances/Division/${id}`,
-      queryString,
-      orderString,
+      queryString: user && !adminFlag ? ["creator", "==", user.uid] : undefined,
+      orderString: undefined,
     });
 
   useEffect(() => {

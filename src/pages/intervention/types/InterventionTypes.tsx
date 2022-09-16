@@ -1,5 +1,5 @@
 import firebase from "firebase/app";
-import { FactDataInterface } from "../../setcreator/types/SetCreatorTypes";
+import { FactDataInterface } from "../../setcreator/interfaces/SetCreatorInterfaces";
 
 /**
  * Actions for reducer

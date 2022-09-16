@@ -1,6 +1,3 @@
-import { ErrorHandling } from "../../../maths/Facts";
-import { StudentDataInterface } from "../../student/interfaces/StudentInterfaces";
-
 /** @license
  *
  * Copyright (c) Shawn P. Gilroy, Louisiana State University.
@@ -9,9 +6,8 @@ import { StudentDataInterface } from "../../student/interfaces/StudentInterfaces
  * LICENSE file in the root directory of this source tree.
  */
 
-/**
- * Shared logic file
- */
+import { ErrorHandling } from "../../../maths/Facts";
+import { StudentDataInterface } from "../../student/interfaces/StudentInterfaces";
 
 /** DetermineErrorCorrection
  *
@@ -52,6 +48,11 @@ export function shouldShowFeedback(
   return DetermineErrorCorrection(trialError, document.currentErrorApproach);
 }
 
-export function checkLiNullUndefinedBlank(str: string) {
+/** checkLiNullUndefinedBlank
+ *
+ * @param {string} str
+ * @returns {boolean}
+ */
+export function checkLiNullUndefinedBlank(str: string): boolean {
   return str === null || str === undefined || str.trim().length === 0;
 }

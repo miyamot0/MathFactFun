@@ -2,7 +2,7 @@ import moment from "moment";
 import { OnlyUnique, Sum } from "../../../utilities/LabelHelper";
 import { PerformanceDataInterface } from "../../intervention/types/InterventionTypes";
 import { DailyPerformanceMetrics } from "../../progress/types/ProgressTypes";
-import { FactDataInterface } from "../../setcreator/types/SetCreatorTypes";
+import { FactDataInterface } from "../../setcreator/interfaces/SetCreatorInterfaces";
 
 /** reducerPerOperation
  *
