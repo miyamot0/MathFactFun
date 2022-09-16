@@ -25,7 +25,6 @@ import {
   Contingencies,
 } from "../../maths/Facts";
 import {
-  StudentCreatorBehavior,
   UserCreateSingleInitialState,
   userCreationReducer,
 } from "./functionality/StudentFunctionality";
@@ -33,10 +32,9 @@ import {
   checkInputNullOrUndefined,
   streamlinedCheck,
 } from "../../utilities/FormHelpers";
-import {
-  StudentDataInterface,
-} from "./interfaces/StudentInterfaces";
+import { StudentDataInterface } from "./interfaces/StudentInterfaces";
 import { SingleOptionType } from "../../types/SharedComponentTypes";
+import { StudentCreatorBehavior } from "./types/StudentTypes";
 
 // Page to create new students
 export default function CreateStudent() {

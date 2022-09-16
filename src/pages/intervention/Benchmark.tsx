@@ -44,7 +44,7 @@ import {
 // Styles
 import "./styles/ExplicitTiming.css";
 import { StudentDataInterface } from "../student/interfaces/StudentInterfaces";
-import { FactDataInterface } from "../setcreator/types/SetCreatorTypes";
+import { FactDataInterface } from "../setcreator/interfaces/SetCreatorInterfaces";
 
 export default function Benchmark() {
   const { id, target } = useParams<RoutedIdTargetParam>();

@@ -46,12 +46,12 @@ export function calculateDigitsTotalInProblem(entry: string): number {
   } else if (entry.includes("/")) {
     operator = "/";
   } else {
-    throw Error('No operator found in fact string');
+    throw Error("No operator found in fact string");
   }
 
   // Check out operators
   if (!entry.includes("=")) {
-    throw Error('No equality sign found in fact string');
+    throw Error("No equality sign found in fact string");
   }
 
   const prefixTotal = entry.split("=")[0];
@@ -129,13 +129,10 @@ export function CalculateDigitsCorrect(
 
   /* istanbul ignore else*/
   if (entryPrefixFirst && entryPrefixFirst.trim().length !== 0) {
-
     // Initial prefix
     for (i = 0; i < dsplyPrefixFirst.length; i++) {
-
       /* istanbul ignore else*/
       if (entryPrefixFirst.length - 1 >= i) {
-
         /* istanbul ignore else*/
         if (entryPrefixFirst[i] === dsplyPrefixFirst[i]) {
           digitsCorrect++;
@@ -151,13 +148,10 @@ export function CalculateDigitsCorrect(
 
     /* istanbul ignore else*/
     if (entryPrefixSecond !== null && entryPrefixSecond.trim().length !== 0) {
-
       // Secondary prefix
       for (i = 0; i < dsplyPrefixSecond.length; i++) {
-
         /* istanbul ignore else*/
         if (entryPrefixSecond.length - 1 >= i) {
-
           /* istanbul ignore else*/
           if (entryPrefixSecond[i] === dsplyPrefixSecond[i]) {
             digitsCorrect++;
@@ -176,10 +170,8 @@ export function CalculateDigitsCorrect(
       // suffix
 
       for (i = 0; i < dsplyprefixTerminal.length; i++) {
-
         /* istanbul ignore else*/
         if (entryPrefixTerminal.length - 1 >= i) {
-
           /* istanbul ignore else*/
           if (entryPrefixTerminal[i] === dsplyprefixTerminal[i]) {
             digitsCorrect++;
@@ -222,10 +214,8 @@ export function CalculateDigitsCorrectAnswer(
       if (entryPrefixTerminal && entryPrefixTerminal.trim().length !== 0) {
         // suffix
         for (let i = 0; i < dsplyprefixTerminal.length; i++) {
-
           /* istanbul ignore else*/
           if (entryPrefixTerminal.length - 1 >= i) {
-
             /* istanbul ignore else*/
             if (entryPrefixTerminal[i] === dsplyprefixTerminal[i]) {
               digitsCorrect++;
@@ -277,7 +267,7 @@ export function GetApproachStringFromLabel(
   | "Cloze"
   | "Taped Problems"
   | "Explicit Timing"
-  | "---" {
+  | "N/A" {
   switch (label) {
     case "CoverCopyCompare":
       return "Cover Copy Compare";
@@ -287,8 +277,10 @@ export function GetApproachStringFromLabel(
       return "Taped Problems";
     case "ExplicitTiming":
       return "Explicit Timing";
+    case "N/A":
+      return "N/A";
     default:
-      throw Error("No matching approach found")
+      throw Error("No matching approach found");
   }
 }
 
@@ -306,9 +298,8 @@ export function OnlyUnique(
   index: any,
   self: string | any[]
 ): boolean {
-
   if (self === undefined || value === undefined || index === undefined) {
-    throw Error("Value was undefined")
+    throw Error("Value was undefined");
   }
 
   return self.indexOf(value) === index;
@@ -322,10 +313,12 @@ export function OnlyUnique(
  * @param {number | undefined} next Next value
  * @returns {number} total
  */
-export function Sum(prev: number | undefined,
-  next: number | undefined): number {
+export function Sum(
+  prev: number | undefined,
+  next: number | undefined
+): number {
   if (prev === undefined || next === undefined) {
-    throw Error("A value was undefined")
+    throw Error("A value was undefined");
   }
 
   return prev + next;

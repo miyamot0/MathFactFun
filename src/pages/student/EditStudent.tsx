@@ -28,12 +28,8 @@ import { formatDate } from "../../utilities/LabelHelper";
 
 // components
 import Select, { MultiValue } from "react-select";
+import { RoutedIdParam } from "../../interfaces/RoutingInterfaces";
 import {
-  RoutedIdParam,
-
-} from "../../interfaces/RoutingInterfaces";
-import {
-  StudentCreatorBehavior,
   UserCreateSingleInitialState,
   userCreationReducer,
 } from "./functionality/StudentFunctionality";
@@ -41,10 +37,9 @@ import {
   checkInputNullOrUndefined,
   streamlinedCheck,
 } from "../../utilities/FormHelpers";
-import {
-  StudentDataInterface,
-} from "./interfaces/StudentInterfaces";
+import { StudentDataInterface } from "./interfaces/StudentInterfaces";
 import { SingleOptionType } from "../../types/SharedComponentTypes";
+import { StudentCreatorBehavior } from "./types/StudentTypes";
 
 // TODO: reducer
 
@@ -73,7 +68,7 @@ export default function EditStudent() {
     dispatch({
       type: StudentCreatorBehavior.SetBuilt,
       payload: {
-        uDidBuild: true
+        uDidBuild: true,
       },
     });
 

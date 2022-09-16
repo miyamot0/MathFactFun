@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { FactDataInterface } from "../../setcreator/types/SetCreatorTypes";
+import { FactDataInterface } from "../../setcreator/interfaces/SetCreatorInterfaces";
 
 export interface RoutedStudentProgressSet {
   id: string;

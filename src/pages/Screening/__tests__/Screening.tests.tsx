@@ -37,7 +37,7 @@ jest.mock("../../../context/hooks/useAuthorizationContext", () => {
       user: { uid: "456" } as firebase.User,
       adminFlag: true,
       authIsReady: true,
-      dispatch: jest.fn(() => {}),
+      dispatch: jest.fn(() => true),
     }),
   };
 });

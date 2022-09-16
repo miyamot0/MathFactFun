@@ -6,10 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-/**
- * Explicit Timing intervention
- */
-
 import React, { useReducer, useState, useEffect } from "react";
 
 import { useParams, useHistory } from "react-router-dom";
@@ -50,8 +46,8 @@ import "./styles/ExplicitTiming.css";
 import { ErrorModalCustomStyle } from "./subcomponents/ModalStyles";
 import { InterventionFormat } from "../../maths/Facts";
 import { StudentDataInterface } from "../student/interfaces/StudentInterfaces";
-import { FactDataInterface } from "../setcreator/types/SetCreatorTypes";
 import { shouldShowFeedback } from "./helpers/InterventionHelpers";
+import { FactDataInterface } from "../setcreator/interfaces/SetCreatorInterfaces";
 
 export default function ExplicitTiming() {
   const { id, target } = useParams<RoutedIdTargetParam>();
@@ -366,7 +362,7 @@ export default function ExplicitTiming() {
         shouldCloseOnOverlayClick={false}
         preventScroll={true}
         style={ErrorModalCustomStyle}
-        ariaHideApp={!(process.env.NODE_ENV === 'test')}
+        ariaHideApp={!(process.env.NODE_ENV === "test")}
         contentLabel="Example Modal"
       >
         <h2 style={{ color: "#5F686D" }}>Double-check your math!</h2>

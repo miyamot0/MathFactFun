@@ -12,7 +12,7 @@
 
 import React, { useReducer } from "react";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import { timestamp } from "../../firebase/config";
 import Modal from "react-modal";
@@ -32,10 +32,7 @@ import {
   CalculateDigitsTotalAnswer,
   CalculateDigitsCorrectAnswer,
 } from "../../utilities/LabelHelper";
-import { RelevantKeys } from "../../maths/Facts";
 
-// styles
-import "./styles/TapedProblems.css";
 import {
   BenchmarkActions,
   SharedActionSequence,
@@ -47,8 +44,10 @@ import {
   useEventListener,
 } from "./functionality/InterventionBehavior";
 import { StudentDataInterface } from "../student/interfaces/StudentInterfaces";
-import { FactDataInterface } from "../setcreator/types/SetCreatorTypes";
-import { shouldShowFeedback } from "./helpers/InterventionHelpers";
+import { shouldShowFeedback } from "./helpers/InterventionHelpers"; // styles
+
+import "./styles/TapedProblems.css";
+import { FactDataInterface } from "../setcreator/interfaces/SetCreatorInterfaces";
 
 const DelCode = "Del";
 
@@ -412,7 +411,7 @@ export default function TapedProblems() {
         shouldCloseOnOverlayClick={false}
         preventScroll={true}
         style={customStyles}
-        ariaHideApp={!(process.env.NODE_ENV === 'test')}
+        ariaHideApp={!(process.env.NODE_ENV === "test")}
         contentLabel="Example Modal"
       >
         <h2 style={{ color: "#5F686D" }}>Double-check your math!</h2>

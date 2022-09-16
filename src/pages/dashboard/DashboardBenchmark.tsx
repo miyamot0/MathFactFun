@@ -12,10 +12,13 @@ import { useParams } from "react-router-dom";
 import { useFirebaseDocumentTyped } from "../../firebase/hooks/useFirebaseDocument";
 import { RoutedIdParam } from "../../interfaces/RoutingInterfaces";
 import { StudentDataInterface } from "../student/interfaces/StudentInterfaces";
-import { dashboardGenerateError, dashboardLoadingError } from "./helpers/DashboardHelpers";
+import {
+  dashboardGenerateError,
+  dashboardLoadingError,
+} from "./helpers/DashboardHelpers";
 
 // styles
-import "./Dashboards.css";
+import "./styles/Dashboards.css";
 
 export default function DashboardBenchmark() {
   const { id } = useParams<RoutedIdParam>();
@@ -40,8 +43,6 @@ export default function DashboardBenchmark() {
       </div>
     );
   } else {
-    throw Error("Error loading benchmark")
+    throw Error("Error loading benchmark");
   }
-
-
 }

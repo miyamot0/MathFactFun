@@ -23,12 +23,8 @@ import {
   ErrorCorrection,
   Contingencies,
 } from "../../maths/Facts";
+import { RoutedIdParam } from "../../interfaces/RoutingInterfaces";
 import {
-  RoutedIdParam,
-
-} from "../../interfaces/RoutingInterfaces";
-import {
-  StudentCreatorBehavior,
   UserCreateSingleInitialState,
   userCreationReducer,
 } from "./functionality/StudentFunctionality";
@@ -36,11 +32,10 @@ import {
   checkInputNullOrUndefined,
   streamlinedCheck,
 } from "../../utilities/FormHelpers";
-import {
-  StudentDataInterface,
-} from "./interfaces/StudentInterfaces";
+import { StudentDataInterface } from "./interfaces/StudentInterfaces";
 import { SingleOptionType } from "../../types/SharedComponentTypes";
 import { CommentInterface } from "./subcomponents/types/CommentTypes";
+import { StudentCreatorBehavior } from "./types/StudentTypes";
 
 // Page to create new students
 export default function CreateBulkStudents() {

@@ -45,11 +45,11 @@ import {
 } from "./functionality/InterventionBehavior";
 import { RoutedIdTargetParam } from "../../interfaces/RoutingInterfaces";
 import { StudentDataInterface } from "../student/interfaces/StudentInterfaces";
-import { FactDataInterface } from "../setcreator/types/SetCreatorTypes";
 import {
   checkLiNullUndefinedBlank,
   shouldShowFeedback,
 } from "./helpers/InterventionHelpers";
+import { FactDataInterface } from "../setcreator/interfaces/SetCreatorInterfaces";
 
 export default function CoverCopyCompare() {
   const { id, target } = useParams<RoutedIdTargetParam>();
@@ -492,7 +492,7 @@ export default function CoverCopyCompare() {
         shouldCloseOnOverlayClick={false}
         preventScroll={true}
         style={ErrorModalCustomStyle}
-        ariaHideApp={!(process.env.NODE_ENV === 'test')}
+        ariaHideApp={!(process.env.NODE_ENV === "test")}
         contentLabel="Example Modal"
       >
         <h2>Double-check your math!</h2>
