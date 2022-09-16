@@ -113,7 +113,7 @@ describe('studentFilterMap', () => {
     })
 
     it("Test value, Mine", () => {
-        const value = "K"
+        const value = "Mine"
         const gradedObj = [generateGradedObject(value, "123")];
         const test = studentFilterMap(gradedObj, user, value);
 
@@ -204,7 +204,7 @@ describe('practiceFilterMap', () => {
     })
 
     it("Test value, Mine", () => {
-        const value = "K"
+        const value = "Mine"
         const gradedObj = [generateGradedObject(value, "123")];
         const test = practiceFilterMap(gradedObj, user, value);
 

@@ -55,7 +55,7 @@ export function checkIfDateCurrent(
  * @param {StudentDataInterface} student student instance
  * @returns {JSX.Element}
  */
-export function dynamicallyGenerateLink(student: StudentDataInterface): JSX.Element {
+export function dynamicallyGenerateLink(student: StudentDataInterface, callback: any): JSX.Element {
     if (student.factsTargeted && student.factsTargeted.length === 1) {
         return (
             <Link
@@ -74,14 +74,16 @@ export function dynamicallyGenerateLink(student: StudentDataInterface): JSX.Elem
             <Link
                 to={'#!'}
                 key={student.id}
-                onClick={() =>
-                    alert("No math problems have been added to the targeted list yet.")
-                }
+                onClick={callback}
             >
                 {student.name} ({student.currentGrade})
             </Link>
         );
     }
+}
+
+export function warnNoProblemsAssigned() {
+    alert("No math problems have been added to the targeted list yet.");
 }
 
 /** checkIfCompletedBenchmark

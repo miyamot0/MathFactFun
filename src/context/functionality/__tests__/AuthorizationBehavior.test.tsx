@@ -114,4 +114,28 @@ describe("Authorization Behavior: Reducer behavior", () => {
       expect(result.current[0].adminFlag).toBe(true);
     });
   });
+
+  it("test dispatch: THROWERR", async () => {
+    act(async () => {
+      const { result, waitForValueToChange } = renderHook(() =>
+        useReducer(authorizationReducer, InitialAuthorizationState)
+      );
+
+      const [, dispatch] = result.current;
+
+      const newAuth = { uid: "123" } as firebase.User;
+
+      dispatch({
+        type: AuthorizationStates.THROWERR,
+        payload: newAuth,
+        payload2: true,
+      });
+
+      await waitForValueToChange(() => result.current[0].user);
+      await waitForValueToChange(() => result.current[0].adminFlag);
+
+      expect(result.current[0].user).toBe(newAuth);
+      expect(result.current[0].adminFlag).toBe(true);
+    });
+  });
 });

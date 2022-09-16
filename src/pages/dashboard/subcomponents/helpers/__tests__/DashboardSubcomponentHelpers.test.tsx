@@ -6,12 +6,17 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import { mount } from "enzyme";
 import firebase from "firebase";
 import React from "react";
-import { Link } from "react-router-dom";
-import { StudentDataInterface } from "../../../student/interfaces/StudentInterfaces";
-import { CommentInterface } from "../../../student/subcomponents/types/CommentTypes";
-import { checkIfBenchmarksCompleted, checkIfCompletedBenchmark, checkIfDateCurrent, checkIfProgrammingCurrent, dynamicallyGenerateLink, generatedStyledFeedback, generateRouteBaseOnStrategy, generateWrapperBenchmarkList, generateWrapperStudentList } from "../helpers/DashboardSubcomponentHelpers";
+import Adapter from "enzyme-adapter-react-16";
+import Enzyme from "enzyme";
+import { Link, MemoryRouter } from "react-router-dom";
+import { StudentDataInterface } from "../../../../student/interfaces/StudentInterfaces";
+import { CommentInterface } from "../../../../student/subcomponents/types/CommentTypes";
+import { checkIfBenchmarksCompleted, checkIfCompletedBenchmark, checkIfDateCurrent, checkIfProgrammingCurrent, dynamicallyGenerateLink, generatedStyledFeedback, generateRouteBaseOnStrategy, generateWrapperBenchmarkList, generateWrapperStudentList, warnNoProblemsAssigned } from "../DashboardSubcomponentHelpers";
+
+Enzyme.configure({ adapter: new Adapter() });
 
 describe('generateRouteBaseOnStrategy', () => {
     const errorRoute = '#!';
@@ -148,56 +153,33 @@ describe('dynamicallyGenerateLink', () => {
             {mockData.name} ({mockData.currentGrade})
         </Link>;
 
-        const value = dynamicallyGenerateLink(mockData);
+        const value = dynamicallyGenerateLink(mockData, warnNoProblemsAssigned);
 
         expect(value).toStrictEqual(expected);
     })
 
-    // TODO
-
-    /*
-    it('Should return bad link, no facts', () => {
+    it('Should return warning that there are no problems', () => {
         const mockData2 = {
-            id: mockId,
-            aimLine: 0,
-            createdAt: firebase.firestore.Timestamp.fromDate(new Date()),
-            dueDate: firebase.firestore.Timestamp.fromDate(new Date()),
-            lastActivity: firebase.firestore.Timestamp.fromDate(new Date()),
-            comments: [mockComment] as CommentInterface[],
-            completedBenchmark: [],
-            currentBenchmarking: ['', ''],
-            factsMastered: ['', ''],
-            factsSkipped: ['', ''],
-            factsTargeted: [],
+            ...mockData,
+            factsTargeted: []
+        };
 
-            creator: mockId,
-            currentApproach: 'ExplicitTiming',
-            currentErrorApproach: '',
-            currentGrade: 'K',
-            currentSRApproach: '',
-            currentTarget: 'Addition',
-            details: '',
-            name: 'name',
-            problemSet: '',
+        const cb = jest.fn();
 
-            minForTask: 2
-        } as StudentDataInterface;
+        const wrapper = mount(<MemoryRouter>{dynamicallyGenerateLink(mockData2, cb)}</MemoryRouter>);
 
-        const expected = <Link
-            to={'#!'}
-            //key={`${mockData.id}`}
-            onClick={() =>
-                alert("No math problems have been added to the targeted list yet.")
-            }
-        >
-            {mockData2.name} ({mockData2.currentGrade})
-        </Link>;
+        wrapper.find(Link).simulate('click');
 
-        const value = dynamicallyGenerateLink(mockData2);
-
-        expect(value).toStrictEqual(expected);
+        setTimeout(() => {
+            expect(cb).toHaveBeenCalled();
+        }, 1000);
     })
-    */
+})
+
+describe('warnNoProblemsAssigned', () => {
+    it('Should fire', () => {
+        expect(() => warnNoProblemsAssigned()).not.toThrow();
+    })
 })
 
 describe("checkIfCompletedBenchmark", () => {
@@ -265,6 +247,19 @@ describe("checkIfCompletedBenchmark", () => {
         const value = checkIfCompletedBenchmark(mockData2, mockData.currentBenchmarking[0]);
 
         expect(value).toBe(true)
+    })
+
+    it('Should return false if the tag is not well formed', () => {
+        const tag = `${mockData.currentBenchmarking[0]} ${mockData.dueDate.toDate().toDateString()} asdf`;
+
+        const mockData2 = {
+            ...mockData,
+            completedBenchmark: [tag]
+        }
+
+        const value = checkIfCompletedBenchmark(mockData2, mockData.currentBenchmarking[0]);
+
+        expect(value).toBe(false)
     })
 })
 

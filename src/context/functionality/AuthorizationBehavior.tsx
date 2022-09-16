@@ -19,6 +19,7 @@ export enum AuthorizationStates {
   LOGOUT = "LOGOUT",
   READY = "READY",
   CLAIMS = "CLAIMS",
+  THROWERR = "THROWERR"
 }
 
 /** AuthorizationReducer
