@@ -65,6 +65,40 @@ export function standardEntryFieldTextArea(
   );
 }
 
+/** standardEntryFieldNumber
+ *
+ * @param label
+ * @param currentValue
+ * @param type
+ * @param dispatch
+ * @returns
+ */
+export function standardEntryFieldNumber(
+  label: string,
+  currentValue: number,
+  type: StudentCreatorBehavior,
+  dispatch: any
+) {
+  return (
+    <label>
+      <span>{label}:</span>
+      <input
+        required
+        type="number"
+        min="0"
+        max="80"
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+          dispatch({
+            type: type,
+            payload: e.target.value,
+          });
+        }}
+        value={currentValue}
+      ></input>
+    </label>
+  );
+}
+
 /** standardEntryFieldDate
  *
  * @param label
