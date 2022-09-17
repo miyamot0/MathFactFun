@@ -6,17 +6,18 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from "react"
+import React from "react";
 
 export function navbarButtonCloseModal(closeModal: any) {
-    return <button
-        className="global-btn "
-        style={{ float: "right" }}
-        onClick={() => {
-            closeModal();
-        }}
+  return (
+    <button
+      className="global-btn"
+      style={{ float: "right" }}
+      onClick={() => {
+        closeModal();
+      }}
     >
-        Close
-    </button>;
+      Close
+    </button>
+  );
 }
-

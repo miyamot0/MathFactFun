@@ -10,41 +10,33 @@ import React from "react";
 import Enzyme, { mount } from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
 import StudentFilter from "../StudentFilter";
+import * as StudentFilterHelpers from "./../helpers/StudentFilterHelpers";
 
 Enzyme.configure({ adapter: new Adapter() });
 
 const mockCallback = jest.fn();
 
-describe('StudentFilter', () => {
-    it('Check state behavior, mocked callback', () => {
+describe("StudentFilter", () => {
+  it("Check state behavior, trigger event", () => {
+    const docMock = jest.spyOn(StudentFilterHelpers, "handleFilterEvent");
 
-        const wrapper = mount(<StudentFilter changeFilter={mockCallback} />)
+    docMock.mockImplementation(mockCallback);
 
-        setTimeout(() => {
-            const studentFilterTag = wrapper.find({ 'class': 'student-filter' });
-            const buttonTag = wrapper.find({ "data-testid": "student-filter-k" });
+    const wrapper = mount(<StudentFilter changeFilter={() => true} />);
+    const button = wrapper.find("button").first();
+    button.simulate("click");
 
-            buttonTag.simulate('click');
+    setTimeout(() => {
+      expect(mockCallback).toBeCalled();
+    }, 1000);
+  });
 
-            expect(studentFilterTag.length).toBe(1);
-            expect(buttonTag.length).toBe(1);
-            expect(mockCallback.mock.calls.length).toEqual(1)
-        }, 1000);
-    })
+  it("Check state behavior, mocked callback", () => {
+    const wrapper = mount(<StudentFilter changeFilter={mockCallback} />);
+    const studentFilterTag = wrapper.find({ class: "student-filter" });
 
-    it('Check state behavior, mocked callback', () => {
-
-        const wrapper = mount(<StudentFilter changeFilter={mockCallback} />)
-
-        setTimeout(() => {
-            const studentFilterTag = wrapper.find({ 'class': 'student-filter' });
-            const buttonTag = wrapper.find({ "data-testid": "student-filter-k" });
-
-            buttonTag.simulate('click');
-
-            expect(studentFilterTag.length).toBe(1);
-            expect(buttonTag.length).toBe(1);
-            expect(mockCallback.mock.calls.length).toEqual(1)
-        }, 1000);
-    })
-})
+    setTimeout(() => {
+      expect(studentFilterTag.length).toBe(1);
+    }, 1000);
+  });
+});

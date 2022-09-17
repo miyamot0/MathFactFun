@@ -15,6 +15,7 @@ import {
 import { PerformanceDataInterface } from "../../intervention/types/InterventionTypes";
 import { FactDataInterface } from "../../setcreator/interfaces/SetCreatorInterfaces";
 import {
+  ChartInformation,
   DailyPerformanceMetrics,
   ItemLevelCalculationsObject,
   ItemPerformanceMetrics,
@@ -188,13 +189,15 @@ export function aggregateItemLevelPerformances(
 }
 
 /** prepareOverallCalculations
- * 
- * @param documents 
- * @param aim 
- * @returns 
+ *
+ * @param documents
+ * @param aim
+ * @returns
  */
-export function prepareOverallCalculations(documents: PerformanceDataInterface[], aim: string) {
-
+export function prepareOverallCalculations(
+  documents: PerformanceDataInterface[],
+  aim: string
+) {
   // Generate object from document collection
   const mappedDocument = remapPerformances(documents);
 
@@ -223,17 +226,20 @@ export function prepareOverallCalculations(documents: PerformanceDataInterface[]
     DateArray: dateArr,
     MaxDate: maxDate,
     MinDate: minDate,
-    MaxYAxis: maxYAxis
-  } as OverallCalculationObject
+    MaxYAxis: maxYAxis,
+  } as OverallCalculationObject;
 }
 
 /** getPrimaryProgressChartData
- * 
- * @param overallCalculations 
- * @param aim 
- * @returns 
+ *
+ * @param overallCalculations
+ * @param aim
+ * @returns
  */
-export function getPrimaryProgressChartData(overallCalculations: OverallCalculationObject, aim: string) {
+export function getPrimaryProgressChartData(
+  overallCalculations: OverallCalculationObject,
+  aim: string
+): ChartInformation {
   return {
     chart: {
       height: "600px",
@@ -262,6 +268,7 @@ export function getPrimaryProgressChartData(overallCalculations: OverallCalculat
       min: 0,
       max: overallCalculations.MaxYAxis,
     },
+    tooltip: null,
     annotations: [
       {
         draggable: "",
@@ -293,17 +300,22 @@ export function getPrimaryProgressChartData(overallCalculations: OverallCalculat
         ],
       },
     ],
-  }
+  };
 }
 
 /** prepareItemLevelCalculations
- * 
- * @param overallCalculations 
- * @param target 
- * @returns 
+ *
+ * @param overallCalculations
+ * @param target
+ * @returns
  */
-export function prepareItemLevelCalculations(overallCalculations: OverallCalculationObject, target: string) {
-  const itemSummaries = overallCalculations.MappedDocument.map(({ Items }) => Items);
+export function prepareItemLevelCalculations(
+  overallCalculations: OverallCalculationObject,
+  target: string
+) {
+  const itemSummaries = overallCalculations.MappedDocument.map(
+    ({ Items }) => Items
+  );
 
   const flatItemSummaries: FactDataInterface[] = itemSummaries.reduce(
     (accumulator, value) => accumulator.concat(value)
@@ -324,17 +336,20 @@ export function prepareItemLevelCalculations(overallCalculations: OverallCalcula
     ItemSummaries: itemSummaries,
     FlatItemSummaries: flatItemSummaries,
     UniqueMathFacts: uniqueMathFacts,
-    UniqueQuants: uniqueQuants
+    UniqueQuants: uniqueQuants,
   } as ItemLevelCalculationsObject;
 }
 
 /** getSecondaryProgressChartData
- * 
- * @param itemLevelCalculations 
- * @param target 
- * @returns 
+ *
+ * @param itemLevelCalculations
+ * @param target
+ * @returns
  */
-export function getSecondaryProgressChartData(itemLevelCalculations: ItemLevelCalculationsObject, target: string) {
+export function getSecondaryProgressChartData(
+  itemLevelCalculations: ItemLevelCalculationsObject,
+  target: string
+): ChartInformation {
   return {
     title: {
       text: null,
@@ -347,11 +362,7 @@ export function getSecondaryProgressChartData(itemLevelCalculations: ItemLevelCa
     tooltip: {
       formatter: function (this: Highcharts.Point): string {
         return (
-          "Problem: " +
-          this.x +
-          GetOperatorFromLabel(target) +
-          this.y +
-          "</b>"
+          "Problem: " + this.x + GetOperatorFromLabel(target) + this.y + "</b>"
         );
       },
     },
@@ -383,5 +394,6 @@ export function getSecondaryProgressChartData(itemLevelCalculations: ItemLevelCa
       min: 0,
       gridLineWidth: 1,
     },
+    annotations: [],
   };
 }

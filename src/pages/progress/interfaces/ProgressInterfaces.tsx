@@ -44,17 +44,27 @@ export interface ItemPerformanceMetrics {
 }
 
 export interface OverallCalculationObject {
-  MappedDocument: RemappedPerformances[],
-  AggregatePerformancesDaily: DailyPerformanceMetrics[],
-  DateArray: number[],
-  MaxDate: Date,
-  MinDate: Date,
-  MaxYAxis: number
+  MappedDocument: RemappedPerformances[];
+  AggregatePerformancesDaily: DailyPerformanceMetrics[];
+  DateArray: number[];
+  MaxDate: Date;
+  MinDate: Date;
+  MaxYAxis: number;
 }
 
 export interface ItemLevelCalculationsObject {
-  ItemSummaries: FactDataInterface[][],
-  FlatItemSummaries: FactDataInterface[],
-  UniqueMathFacts: string[],
-  UniqueQuants: ItemPerformanceMetrics[]
+  ItemSummaries: FactDataInterface[][];
+  FlatItemSummaries: FactDataInterface[];
+  UniqueMathFacts: string[];
+  UniqueQuants: ItemPerformanceMetrics[];
+}
+
+export interface ChartInformation {
+  chart: any;
+  title: any;
+  series: any;
+  xAxis: any;
+  yAxis: any;
+  tooltip: any;
+  annotations: any;
 }

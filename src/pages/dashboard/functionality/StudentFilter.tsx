@@ -9,8 +9,8 @@
 import React from "react";
 import { useState } from "react";
 
-//import "./styles/StudentFilter.css"
 import { StudentFilterInterface } from "../types/DashboardTypes";
+import { handleFilterEvent } from "./helpers/StudentFilterHelpers";
 
 export const GradeFilterList = [
   "All",
@@ -29,17 +29,6 @@ export default function StudentFilter({
 }: StudentFilterInterface) {
   const [currentFilter, setCurrentFilter] = useState("Mine");
 
-  /** handleFilterEvent
-   *
-   * Update interface with filter
-   *
-   * @param {String} newFilter Filter criteria
-   */
-  function handleFilterEvent(newFilter: string): void {
-    setCurrentFilter(newFilter);
-    changeFilter(newFilter);
-  }
-
   return (
     <div className="student-filter">
       <nav>
@@ -49,7 +38,7 @@ export default function StudentFilter({
             key={f}
             data-testid={`student-filter-${f}`}
             className={currentFilter === f ? "active" : ""}
-            onClick={() => handleFilterEvent(f)}
+            onClick={() => handleFilterEvent(f, setCurrentFilter, changeFilter)}
           >
             {f}
           </button>

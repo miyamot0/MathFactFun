@@ -15,9 +15,9 @@ import Enzyme, { mount } from "enzyme";
 import ReactModal from "react-modal";
 import firebase from "firebase";
 import Adapter from "enzyme-adapter-react-16";
-import { App } from "../App";
-import { AuthorizationContext } from "../context/AuthorizationContext";
-import Sidebar from "../components/Sidebar";
+import { App } from "../../App";
+import { AuthorizationContext } from "../../context/AuthorizationContext";
+import Sidebar from "../Sidebar";
 
 Enzyme.configure({ adapter: new Adapter() });
 

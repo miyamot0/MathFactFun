@@ -11,21 +11,16 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useFirebaseCollectionTyped } from "../../firebase/hooks/useFirebaseCollection";
 import { useAuthorizationContext } from "../../context/hooks/useAuthorizationContext";
-import { GetOperatorFromLabel } from "../../utilities/LabelHelper";
-import {
-  OnlyUnique,
-  GetApproachStringFromLabel,
-} from "../../utilities/LabelHelper";
+import { GetApproachStringFromLabel } from "../../utilities/LabelHelper";
 
-import moment from "moment";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import AnnotationsModule from "highcharts/modules/annotations";
-import { RoutedStudentProgressSet } from "./interfaces/ProgressInterfaces";
 import {
-  aggregateItemLevelPerformances,
-  getMappedColor,
-  getMappedMarker,
+  ChartInformation,
+  RoutedStudentProgressSet,
+} from "./interfaces/ProgressInterfaces";
+import {
   getPrimaryProgressChartData,
   getSecondaryProgressChartData,
   prepareItemLevelCalculations,
@@ -41,7 +36,6 @@ import {
   CommonPanelWidth,
 } from "../../utilities/FormHelpers";
 import { PerformanceDataInterface } from "../intervention/types/InterventionTypes";
-import { FactDataInterface } from "../setcreator/interfaces/SetCreatorInterfaces";
 
 export default function ProgressMonitor() {
   const { id, target, method, aim } = useParams<RoutedStudentProgressSet>();
@@ -53,8 +47,15 @@ export default function ProgressMonitor() {
     orderString: undefined,
   });
 
-  const [chartOptions, setChartOptions] = useState({});
-  const [itemChartOptions, setItemChartOptions] = useState({});
+  //const [chartOptions, setChartOptions] = useState<ChartInformation>(
+  //  {} as ChartInformation
+  //);
+  //const [itemChartOptions, setItemChartOptions] = useState({});
+
+  const [chartOptions, setChartOptions] = useState({
+    mainChart: {},
+    itemChart: {},
+  });
 
   useEffect(() => {
     if (!target && !aim && parseInt(aim) !== null) {
@@ -63,21 +64,30 @@ export default function ProgressMonitor() {
 
     if (documents) {
       const overallCalculations = prepareOverallCalculations(documents, aim);
-      setChartOptions(getPrimaryProgressChartData(overallCalculations, aim));
 
-      const itemLevelCalculations = prepareItemLevelCalculations(overallCalculations, target);
-      setItemChartOptions(getSecondaryProgressChartData(itemLevelCalculations, target));
+      const itemLevelCalculations = prepareItemLevelCalculations(
+        overallCalculations,
+        target
+      );
+
+      setChartOptions({
+        mainChart: getPrimaryProgressChartData(overallCalculations, aim),
+        itemChart: getSecondaryProgressChartData(itemLevelCalculations, target),
+      });
     }
   }, [documents, aim, target, method]);
 
   return (
     <>
-      <div style={CommonPanelWidth}>
+      <div style={CommonPanelWidth} className="progress-monitor-page">
         <h2 style={CommonDisplayHeadingStyle}>
           Current Progress (Overall Fluency/{GetApproachStringFromLabel(method)}
           )
         </h2>
-        <HighchartsReact highcharts={Highcharts} options={chartOptions} />
+        <HighchartsReact
+          highcharts={Highcharts}
+          options={chartOptions.mainChart}
+        />
       </div>
       <br></br>
 
@@ -90,7 +100,10 @@ export default function ProgressMonitor() {
           Current Progress (Item-level Performance/
           {GetApproachStringFromLabel(method)})
         </h2>
-        <HighchartsReact highcharts={Highcharts} options={itemChartOptions} />
+        <HighchartsReact
+          highcharts={Highcharts}
+          options={chartOptions.itemChart}
+        />
         <p>
           Latency Legend: Circle (&lt;5s), Triange (&lt;10s), Diamond (&lt;15s),
           otherwise Square

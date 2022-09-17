@@ -13,7 +13,6 @@ import Adapter from "enzyme-adapter-react-16";
 import Enzyme from "enzyme";
 import EditUser from "../EditUser";
 import { UserDataInterface } from "../types/UserTypes";
-import { UserDataState } from "../interfaces/UserInterfaces";
 import * as useFirebaseDocumentTyped from "./../../../firebase/hooks/useFirebaseDocument";
 import * as UserHelpers from "./../helpers/UserHelpers";
 
