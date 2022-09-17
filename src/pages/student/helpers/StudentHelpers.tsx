@@ -311,9 +311,7 @@ export function onLoadSingleStudentEdit(
 ) {
   dispatch({
     type: StudentCreatorBehavior.SetBuilt,
-    payload: {
-      uDidBuild: true,
-    },
+    payload: true,
   });
 
   const uCurrentTarget = Operations.find(

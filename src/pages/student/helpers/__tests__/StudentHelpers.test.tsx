@@ -18,6 +18,8 @@ import {
 import { StudentCreateSingleInitialState } from "../../functionality/StudentFunctionality";
 import { FirestoreState } from "../../../../firebase/interfaces/FirebaseInterfaces";
 import {
+  onLoadSingleStudentEdit,
+  verifyBulkStudentCreate,
   verifySingleStudentCreate,
   verifySingleStudentEdit,
 } from "../StudentHelpers";
@@ -774,9 +776,400 @@ describe("verifySingleStudentEdit", () => {
 });
 
 describe("onLoadSingleStudentEdit", () => {
-  it("...", () => {});
+  it("Should dispatch out at base state", () => {
+    const document = {
+      ...mockDoc,
+      currentTarget: "Addition",
+    } as StudentDataInterface;
+    const dispatch = jest.fn();
+
+    onLoadSingleStudentEdit(document, dispatch);
+  });
 });
 
 describe("verifyBulkStudentCreate", () => {
-  it("...", () => {});
+  it("Should dispatch out at Grade", () => {
+    const id = "123";
+    const state = mockData;
+
+    verifyBulkStudentCreate(
+      id,
+      state,
+      history,
+      addDocument,
+      response,
+      dispatch
+    );
+
+    expect(dispatch).toBeCalled();
+    expect(addDocument).toBeCalledTimes(0);
+  });
+
+  it("Should dispatch out at CurrentTarget", () => {
+    const id = "123";
+    const state = {
+      ...mockData,
+      CurrentGrade: {
+        value: "N/A",
+        label: "No Current Intervention",
+      } as SingleOptionType,
+    };
+
+    verifyBulkStudentCreate(
+      id,
+      state,
+      history,
+      addDocument,
+      response,
+      dispatch
+    );
+
+    expect(dispatch).toBeCalledTimes(1);
+    expect(addDocument).toBeCalledTimes(0);
+  });
+
+  it("Should dispatch out at CurrentApproach", () => {
+    const id = "123";
+    const state = {
+      ...mockData,
+      CurrentGrade: {
+        value: "N/A",
+        label: "No Current Intervention",
+      } as SingleOptionType,
+      CurrentTarget: {
+        value: "N/A",
+        label: "No Current Target",
+      } as SingleOptionType,
+    };
+
+    verifyBulkStudentCreate(
+      id,
+      state,
+      history,
+      addDocument,
+      response,
+      dispatch
+    );
+
+    expect(dispatch).toBeCalledTimes(1);
+    expect(addDocument).toBeCalledTimes(0);
+  });
+
+  it("Should dispatch out at CurrentErrorApproach", () => {
+    const id = "123";
+    const state = {
+      ...mockData,
+      CurrentGrade: {
+        value: "N/A",
+        label: "No Current Intervention",
+      } as SingleOptionType,
+      CurrentTarget: {
+        value: "N/A",
+        label: "No Current Target",
+      } as SingleOptionType,
+      CurrentApproach: {
+        value: "N/A",
+        label: "No Current Intervention",
+      } as SingleOptionType,
+    };
+
+    verifyBulkStudentCreate(
+      id,
+      state,
+      history,
+      addDocument,
+      response,
+      dispatch
+    );
+
+    expect(dispatch).toBeCalledTimes(1);
+    expect(addDocument).toBeCalledTimes(0);
+  });
+
+  it("Should dispatch out at CurrentSRApproach", () => {
+    const id = "123";
+    const state = {
+      ...mockData,
+      CurrentGrade: {
+        value: "N/A",
+        label: "No Current Intervention",
+      } as SingleOptionType,
+      CurrentTarget: {
+        value: "N/A",
+        label: "No Current Target",
+      } as SingleOptionType,
+      CurrentApproach: {
+        value: "N/A",
+        label: "No Current Intervention",
+      } as SingleOptionType,
+      CurrentErrorApproach: {
+        value: ErrorHandling.EveryTime,
+        label: "Give feedback every time",
+      } as SingleOptionType,
+    };
+
+    verifyBulkStudentCreate(
+      id,
+      state,
+      history,
+      addDocument,
+      response,
+      dispatch
+    );
+
+    expect(dispatch).toBeCalledTimes(1);
+    expect(addDocument).toBeCalledTimes(0);
+  });
+
+  it("Should dispatch out at CurrentBenchmarking", () => {
+    const id = "123";
+    const state = {
+      ...mockData,
+      CurrentGrade: {
+        value: "N/A",
+        label: "No Current Intervention",
+      } as SingleOptionType,
+      CurrentTarget: {
+        value: "N/A",
+        label: "No Current Target",
+      } as SingleOptionType,
+      CurrentApproach: {
+        value: "N/A",
+        label: "No Current Intervention",
+      } as SingleOptionType,
+      CurrentErrorApproach: {
+        value: ErrorHandling.EveryTime,
+        label: "Give feedback every time",
+      } as SingleOptionType,
+      CurrentSRApproach: {
+        value: "None",
+        label: "No programmed contingencies",
+      } as SingleOptionType,
+    };
+
+    verifyBulkStudentCreate(
+      id,
+      state,
+      history,
+      addDocument,
+      response,
+      dispatch
+    );
+
+    expect(dispatch).toBeCalledTimes(2);
+    expect(addDocument).toBeCalledTimes(0);
+  });
+
+  it("Should dispatch out at CurrentBenchmarking (empty array)", () => {
+    const id = "123";
+    const state = {
+      ...mockData,
+      CurrentGrade: {
+        value: "N/A",
+        label: "No Current Intervention",
+      } as SingleOptionType,
+      CurrentTarget: {
+        value: "N/A",
+        label: "No Current Target",
+      } as SingleOptionType,
+      CurrentApproach: {
+        value: "N/A",
+        label: "No Current Intervention",
+      } as SingleOptionType,
+      CurrentErrorApproach: {
+        value: ErrorHandling.EveryTime,
+        label: "Give feedback every time",
+      } as SingleOptionType,
+      CurrentSRApproach: {
+        value: "None",
+        label: "No programmed contingencies",
+      } as SingleOptionType,
+      CurrentBenchmarking: [] as MultiValue<SingleOptionType>,
+    };
+
+    verifyBulkStudentCreate(
+      id,
+      state,
+      history,
+      addDocument,
+      response,
+      dispatch
+    );
+
+    expect(dispatch).toBeCalledTimes(2);
+    expect(addDocument).toBeCalledTimes(0);
+  });
+
+  it("Should make it to submit", () => {
+    const id = "123";
+    const state = {
+      Name: "Kid 1\nKid 2",
+      Names: ["Kid 1", "Kid 2"],
+      Details: "",
+      FormError: undefined,
+      DueDate: "",
+      CurrentApproach: {
+        value: "N/A",
+        label: "No Current Intervention",
+      } as SingleOptionType,
+      CurrentGrade: {
+        value: "N/A",
+        label: "No Current Intervention",
+      } as SingleOptionType,
+      CurrentTarget: {
+        value: "N/A",
+        label: "No Current Target",
+      } as SingleOptionType,
+      CurrentErrorApproach: {
+        value: ErrorHandling.EveryTime,
+        label: "Give feedback every time",
+      } as SingleOptionType,
+      CurrentSRApproach: {
+        value: "None",
+        label: "No programmed contingencies",
+      } as SingleOptionType,
+      CurrentBenchmarking: [
+        {
+          value: "Asdf",
+          label: "Asdf",
+        },
+      ] as MultiValue<SingleOptionType>,
+      DidBuild: false,
+      AimLine: 0,
+      ExplicitTime: 2,
+      CurrentProblemSet: {
+        value: "A",
+        label: "A",
+      } as SingleOptionType,
+    };
+
+    verifyBulkStudentCreate(
+      id,
+      state,
+      history,
+      addDocument,
+      response,
+      dispatch
+    );
+
+    expect(dispatch).toBeCalledTimes(1);
+    expect(addDocument).toBeCalledTimes(1);
+  });
+
+  it("Should make it to submit, but have to skip empty lines", () => {
+    const id = "123";
+    const state = {
+      Name: "Kid 1\n",
+      Names: ["Kid 1", "Kid 2"],
+      Details: "",
+      FormError: undefined,
+      DueDate: "",
+      CurrentApproach: {
+        value: "N/A",
+        label: "No Current Intervention",
+      } as SingleOptionType,
+      CurrentGrade: {
+        value: "N/A",
+        label: "No Current Intervention",
+      } as SingleOptionType,
+      CurrentTarget: {
+        value: "N/A",
+        label: "No Current Target",
+      } as SingleOptionType,
+      CurrentErrorApproach: {
+        value: ErrorHandling.EveryTime,
+        label: "Give feedback every time",
+      } as SingleOptionType,
+      CurrentSRApproach: {
+        value: "None",
+        label: "No programmed contingencies",
+      } as SingleOptionType,
+      CurrentBenchmarking: [
+        {
+          value: "Asdf",
+          label: "Asdf",
+        },
+      ] as MultiValue<SingleOptionType>,
+      DidBuild: false,
+      AimLine: 0,
+      ExplicitTime: 2,
+      CurrentProblemSet: {
+        value: "A",
+        label: "A",
+      } as SingleOptionType,
+    };
+
+    verifyBulkStudentCreate(
+      id,
+      state,
+      history,
+      addDocument,
+      response,
+      dispatch
+    );
+
+    expect(dispatch).toBeCalledTimes(1);
+    expect(addDocument).toBeCalledTimes(1);
+  });
+
+  it("Should make it to submit but trip response error", () => {
+    const id = "123";
+    const state = {
+      Name: "Kid 1\nKid 2",
+      Names: ["Kid 1", "Kid 2"],
+      Details: "",
+      FormError: undefined,
+      DueDate: "",
+      CurrentApproach: {
+        value: "N/A",
+        label: "No Current Intervention",
+      } as SingleOptionType,
+      CurrentGrade: {
+        value: "N/A",
+        label: "No Current Intervention",
+      } as SingleOptionType,
+      CurrentTarget: {
+        value: "N/A",
+        label: "No Current Target",
+      } as SingleOptionType,
+      CurrentErrorApproach: {
+        value: ErrorHandling.EveryTime,
+        label: "Give feedback every time",
+      } as SingleOptionType,
+      CurrentSRApproach: {
+        value: "None",
+        label: "No programmed contingencies",
+      } as SingleOptionType,
+      CurrentBenchmarking: [
+        {
+          value: "Asdf",
+          label: "Asdf",
+        },
+      ] as MultiValue<SingleOptionType>,
+      DidBuild: false,
+      AimLine: 0,
+      ExplicitTime: 2,
+      CurrentProblemSet: {
+        value: "A",
+        label: "A",
+      } as SingleOptionType,
+    };
+
+    const response2 = {
+      ...response,
+      error: "error",
+    };
+
+    verifyBulkStudentCreate(
+      id,
+      state,
+      history,
+      addDocument,
+      response2,
+      dispatch
+    );
+
+    expect(dispatch).toBeCalledTimes(1);
+    expect(addDocument).toBeCalledTimes(1);
+  });
 });
