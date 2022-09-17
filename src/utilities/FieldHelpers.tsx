@@ -89,6 +89,7 @@ export function studentSelectField(label: string, options: any, currentValue: Si
     return <label>
         <span>{label}:</span>
         <Select
+            className="single-select-field"
             options={options}
             onChange={(option) => {
                 dispatch({
