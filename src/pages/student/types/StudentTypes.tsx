@@ -11,17 +11,18 @@ import { SingleOptionType } from "../../../types/SharedComponentTypes";
 
 export type StudentPayloadObjects = {
   [key: string]:
-    | string
-    | SingleValue<SingleOptionType>
-    | MultiValue<SingleOptionType>
-    | number
-    | boolean
-    | undefined;
+  | string
+  | SingleValue<SingleOptionType>
+  | MultiValue<SingleOptionType>
+  | number
+  | boolean
+  | undefined;
 };
 
+// TODO: restore payload types at end!
 export type StudentActionObject = {
   type: StudentCreatorBehavior;
-  payload: StudentPayloadObjects;
+  payload: any;
 };
 
 export enum StudentCreatorBehavior {

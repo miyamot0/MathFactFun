@@ -10,6 +10,7 @@ import React from "react";
 import {
   checkIfDateCurrent,
   dynamicallyGenerateLink,
+  warnNoProblemsAssigned,
 } from "./helpers/DashboardSubcomponentHelpers";
 import { GetApproachStringFromLabel } from "../../../utilities/LabelHelper";
 import { PracticeListInterface } from "../types/DashboardTypes";
@@ -29,7 +30,7 @@ export default function PracticeList({
   const outputDisplay = students ? (
     students.map((student) => (
       <div className="practice-list-card" key={student.id}>
-        {dynamicallyGenerateLink(student)}
+        {dynamicallyGenerateLink(student, warnNoProblemsAssigned)}
         <hr />
         <p
           style={{

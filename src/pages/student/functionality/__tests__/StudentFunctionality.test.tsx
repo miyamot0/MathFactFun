@@ -67,7 +67,7 @@ describe("Create Student Form: Reducer", () => {
 
       dispatch({
         type: StudentCreatorBehavior.SetName,
-        payload: { uName: newName },
+        payload: newName,
       } as StudentActionObject);
 
       await waitForValueToChange(() => result.current[0].Name);
@@ -90,7 +90,7 @@ describe("Create Student Form: Reducer", () => {
 
       dispatch({
         type: StudentCreatorBehavior.SetDetails,
-        payload: { uDetails: newDetails },
+        payload: newDetails,
       } as StudentActionObject);
 
       await waitForValueToChange(() => result.current[0].Details);
@@ -113,7 +113,7 @@ describe("Create Student Form: Reducer", () => {
 
       dispatch({
         type: StudentCreatorBehavior.SetFormError,
-        payload: { uFormError: newFormError },
+        payload: newFormError,
       } as StudentActionObject);
 
       await waitForValueToChange(() => result.current[0].FormError);
@@ -139,7 +139,7 @@ describe("Create Student Form: Reducer", () => {
 
       dispatch({
         type: StudentCreatorBehavior.SetFormError,
-        payload: { uFormError: newFormError },
+        payload: newFormError,
       } as StudentActionObject);
 
       await waitForValueToChange(() => result.current[0].FormError);
@@ -165,7 +165,7 @@ describe("Create Student Form: Reducer", () => {
 
       dispatch({
         type: StudentCreatorBehavior.SetCurrentApproach,
-        payload: { uCurrentApproach: newCurrentApproach },
+        payload: newCurrentApproach,
       } as StudentActionObject);
 
       await waitForValueToChange(() => result.current[0].CurrentApproach);
@@ -191,7 +191,7 @@ describe("Create Student Form: Reducer", () => {
 
       dispatch({
         type: StudentCreatorBehavior.SetCurrentGrade,
-        payload: { uCurrentGrade: newCurrentValue },
+        payload: newCurrentValue,
       } as StudentActionObject);
 
       await waitForValueToChange(() => result.current[0].CurrentGrade);
@@ -217,7 +217,7 @@ describe("Create Student Form: Reducer", () => {
 
       dispatch({
         type: StudentCreatorBehavior.SetCurrentTarget,
-        payload: { uCurrentTarget: newCurrentValue },
+        payload: newCurrentValue,
       } as StudentActionObject);
 
       await waitForValueToChange(() => result.current[0].CurrentTarget);
@@ -243,7 +243,7 @@ describe("Create Student Form: Reducer", () => {
 
       dispatch({
         type: StudentCreatorBehavior.SetCurrentErrorApproach,
-        payload: { uCurrentErrorApproach: newCurrentValue },
+        payload: newCurrentValue,
       } as StudentActionObject);
 
       await waitForValueToChange(() => result.current[0].CurrentErrorApproach);
@@ -266,7 +266,7 @@ describe("Create Student Form: Reducer", () => {
 
       dispatch({
         type: StudentCreatorBehavior.SetDueDate,
-        payload: { uDueDate: newCurrentValue },
+        payload: newCurrentValue,
       } as StudentActionObject);
 
       await waitForValueToChange(() => result.current[0].DueDate);
@@ -292,7 +292,7 @@ describe("Create Student Form: Reducer", () => {
 
       dispatch({
         type: StudentCreatorBehavior.SetCurrentSRApproach,
-        payload: { uCurrentSRApproach: newCurrentValue },
+        payload: newCurrentValue,
       } as StudentActionObject);
 
       await waitForValueToChange(() => result.current[0].CurrentSRApproach);
@@ -317,7 +317,7 @@ describe("Create Student Form: Reducer", () => {
 
       dispatch({
         type: StudentCreatorBehavior.SetCurrentBenchmarking,
-        payload: { uCurrentBenchmarking: newCurrentValue },
+        payload: newCurrentValue,
       } as StudentActionObject);
 
       await waitForValueToChange(() => result.current[0].CurrentBenchmarking);
@@ -340,7 +340,7 @@ describe("Create Student Form: Reducer", () => {
 
       dispatch({
         type: StudentCreatorBehavior.SetProblemSet,
-        payload: { uProblemSet: newCurrentValue },
+        payload: newCurrentValue,
       } as StudentActionObject);
 
       await waitForValueToChange(() => result.current[0].CurrentProblemSet);
@@ -363,7 +363,7 @@ describe("Create Student Form: Reducer", () => {
 
       dispatch({
         type: StudentCreatorBehavior.SetBuilt,
-        payload: { uDidBuild: newCurrentValue },
+        payload: newCurrentValue,
       } as StudentActionObject);
 
       await waitForValueToChange(() => result.current[0].DidBuild);
@@ -386,7 +386,7 @@ describe("Create Student Form: Reducer", () => {
 
       dispatch({
         type: StudentCreatorBehavior.SetAimLine,
-        payload: { uAimLine: newCurrentValue },
+        payload: newCurrentValue,
       } as StudentActionObject);
 
       await waitForValueToChange(() => result.current[0].AimLine);
@@ -409,7 +409,7 @@ describe("Create Student Form: Reducer", () => {
 
       dispatch({
         type: StudentCreatorBehavior.SetExplicitTime,
-        payload: { uExplicitTime: newCurrentValue },
+        payload: newCurrentValue,
       } as StudentActionObject);
 
       await waitForValueToChange(() => result.current[0].ExplicitTime);

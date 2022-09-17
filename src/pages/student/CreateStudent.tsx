@@ -11,7 +11,6 @@
  */
 
 import React, { useReducer } from "react";
-import Select, { MultiValue } from "react-select";
 
 import { timestamp } from "../../firebase/config";
 import { useAuthorizationContext } from "../../context/hooks/useAuthorizationContext";
@@ -35,6 +34,7 @@ import {
 import { StudentDataInterface } from "./interfaces/StudentInterfaces";
 import { SingleOptionType } from "../../types/SharedComponentTypes";
 import { StudentCreatorBehavior } from "./types/StudentTypes";
+import { studentEntryFieldDate, studentEntryFieldText, studentEntryFieldTextArea, studentErrorField, studentSelectField, studentSelectFieldMulti } from "../../utilities/FieldHelpers";
 
 // Page to create new students
 export default function CreateStudent() {
@@ -70,7 +70,7 @@ export default function CreateStudent() {
 
     dispatch({
       type: StudentCreatorBehavior.SetFormError,
-      payload: { uFormError: undefined },
+      payload: undefined,
     });
 
     if (checkInputNullOrUndefined(user)) {
@@ -129,7 +129,7 @@ export default function CreateStudent() {
     ) {
       dispatch({
         type: StudentCreatorBehavior.SetFormError,
-        payload: { uFormError: "Please select benchmarking options" },
+        payload: "Please select benchmarking options",
       });
 
       return;
@@ -181,130 +181,68 @@ export default function CreateStudent() {
       <h2 className="global-page-title">Add a new student</h2>
 
       <form onSubmit={handleCreateStudentSubmit}>
-        <label>
-          <span>Student ID:</span>
-          <input
-            required
-            type="text"
-            onChange={(e) => {
-              dispatch({
-                type: StudentCreatorBehavior.SetName,
-                payload: { uName: e.target.value },
-              });
-            }}
-            value={state.Name}
-          ></input>
-        </label>
-        <label>
-          <span>Student Details:</span>
-          <textarea
-            required
-            onChange={(e) => {
-              dispatch({
-                type: StudentCreatorBehavior.SetDetails,
-                payload: { uDetails: e.target.value },
-              });
-            }}
-            value={state.Details}
-          ></textarea>
-        </label>
-        <label>
-          <span>Next Benchmark Date:</span>
-          <input
-            required
-            type="date"
-            onChange={(e) => {
-              dispatch({
-                type: StudentCreatorBehavior.SetDueDate,
-                payload: { uDueDate: e.target.value },
-              });
-            }}
-            value={state.DueDate}
-          ></input>
-        </label>
-        <label>
-          <span>Current Grade</span>
-          <Select
-            options={Grades}
-            onChange={(option) => {
-              dispatch({
-                type: StudentCreatorBehavior.SetCurrentGrade,
-                payload: { uCurrentGrade: option },
-              });
-            }}
-          />
-        </label>
-        <label>
-          <span>Target For Benchmarking</span>
-          <Select
-            options={CoreOperations}
-            onChange={(option: MultiValue<SingleOptionType>) => {
-              dispatch({
-                type: StudentCreatorBehavior.SetCurrentBenchmarking,
-                payload: { uCurrentBenchmarking: option },
-              });
-            }}
-            value={state.CurrentBenchmarking}
-            isMulti={true}
-          />
-        </label>
-        <label>
-          <span>Target For Intervention</span>
-          <Select
-            options={Operations}
-            onChange={(option) => {
-              dispatch({
-                type: StudentCreatorBehavior.SetCurrentTarget,
-                payload: { uCurrentTarget: option },
-              });
-            }}
-            value={state.CurrentTarget}
-          />
-        </label>
-        <label>
-          <span>Intervention Approach</span>
-          <Select
-            options={InterventionApproach}
-            onChange={(option) => {
-              dispatch({
-                type: StudentCreatorBehavior.SetCurrentApproach,
-                payload: { uCurrentApproach: option },
-              });
-            }}
-            value={state.CurrentApproach}
-          />
-        </label>
-        <label>
-          <span>Error Correction Procedures</span>
-          <Select
-            options={ErrorCorrection}
-            onChange={(option) => {
-              dispatch({
-                type: StudentCreatorBehavior.SetCurrentErrorApproach,
-                payload: { uCurrentErrorApproach: option },
-              });
-            }}
-            value={state.CurrentErrorApproach}
-          />
-        </label>
-        <label>
-          <span>Reinforcement Procedures</span>
-          <Select
-            options={Contingencies}
-            onChange={(option) => {
-              dispatch({
-                type: StudentCreatorBehavior.SetCurrentSRApproach,
-                payload: { uCurrentSRApproach: option },
-              });
-            }}
-            value={state.CurrentSRApproach}
-          />
-        </label>
+        {studentEntryFieldText("Student ID:",
+          state.Name,
+          StudentCreatorBehavior.SetName,
+          dispatch)}
+
+        {studentEntryFieldTextArea("Student Details:",
+          state.Details,
+          StudentCreatorBehavior.SetDetails,
+          dispatch)}
+
+        {studentEntryFieldDate("Next Benchmark Date:",
+          state.DueDate,
+          StudentCreatorBehavior.SetDueDate,
+          dispatch)}
+
+        {studentSelectField("Current Grade:",
+          Grades,
+          state.CurrentGrade,
+          StudentCreatorBehavior.SetCurrentGrade,
+          dispatch
+        )}
+
+        {studentSelectFieldMulti("Target For Benchmarking:",
+          CoreOperations,
+          state.CurrentBenchmarking,
+          StudentCreatorBehavior.SetCurrentBenchmarking,
+          dispatch
+        )}
+
+        {studentSelectField("Target For Intervention:",
+          Operations,
+          state.CurrentTarget,
+          StudentCreatorBehavior.SetCurrentTarget,
+          dispatch
+        )}
+
+        {studentSelectField("Intervention Approach:",
+          InterventionApproach,
+          state.CurrentApproach,
+          StudentCreatorBehavior.SetCurrentApproach,
+          dispatch
+        )}
+
+        {studentSelectField("Error Correction Procedures:",
+          ErrorCorrection,
+          state.CurrentErrorApproach,
+          StudentCreatorBehavior.SetCurrentErrorApproach,
+          dispatch
+        )}
+
+        {studentSelectField("Reinforcement Procedures:",
+          Contingencies,
+          state.CurrentSRApproach,
+          StudentCreatorBehavior.SetCurrentSRApproach,
+          dispatch
+        )}
 
         <button className="global-btn global-btn-light-red">
           Create New Student
         </button>
-        {state.FormError && <p className="error">{state.FormError}</p>}
+
+        {studentErrorField(state.FormError)}
       </form>
       <br></br>
     </div>
