@@ -17,6 +17,14 @@ import { UserCreatorBehavior } from "./types/UserTypes";
 import { streamlinedCheck } from "../../utilities/FormHelpers";
 import { UserGenerationReducer } from "./functionality/UserFunctionality";
 import { UserDataInitialState } from "./functionality/UserFunctionality";
+import {
+  standardEmailFieldText,
+  standardEntryFieldText,
+  standardEntryFieldTextArea,
+  standardErrorField,
+  standardPasswordFieldText,
+} from "../../utilities/FieldHelpers";
+import { verifyUserCreate } from "./helpers/UserHelpers";
 
 // Page to create new students
 export default function CreateUser(): JSX.Element {
@@ -32,122 +40,50 @@ export default function CreateUser(): JSX.Element {
     UserDataInitialState
   );
 
-  /** handleCreateStudentSubmit
-   *
-   * Event for creating a student
-   *
-   * @param {React.FormEvent<HTMLFormElement>} event
-   */
-  async function handleCreateUserSubmit(
-    event: React.FormEvent<HTMLFormElement>
-  ): Promise<void> {
-    event.preventDefault();
-
-    dispatch({
-      type: UserCreatorBehavior.SetFormError,
-      payload: { uFormError: undefined },
-    });
-
-    const checkName = streamlinedCheck(
-      state.Name,
-      "Please enter a valid name",
-      dispatch
-    );
-    const checkEmail = streamlinedCheck(
-      state.Email,
-      "Please enter a valid email address",
-      dispatch
-    );
-    const checkSchool = streamlinedCheck(
-      state.School,
-      "Please enter a valid school name",
-      dispatch
-    );
-
-    if (checkName && checkEmail && checkSchool) {
-      const userObject = {
-        displayEmail: state.Email,
-        displayName: state.Name,
-        displaySchool: state.School,
-        password: state.Password,
-        id: undefined,
-      };
-
-      await addDocument(userObject);
-
-      if (!response.error) {
-        history.push("/admin");
-      }
-    }
-  }
-
   return (
-    <div style={{ maxWidth: "600px" }}>
+    <div style={{ maxWidth: "600px" }} className="create-user-page">
       <h2 className="global-page-title">Add a new user (Teacher)</h2>
 
-      <form onSubmit={handleCreateUserSubmit}>
-        <label>
-          <span>Teacher Name:</span>
-          <input
-            required
-            type="text"
-            onChange={(e) => {
-              dispatch({
-                type: UserCreatorBehavior.SetName,
-                payload: { uName: e.target.value },
-              });
-            }}
-            value={state.Name}
-          ></input>
-        </label>
+      <form
+        onSubmit={(event) => {
+          event.preventDefault();
 
-        <label>
-          <span>Teacher Email:</span>
-          <input
-            required
-            type="email"
-            onChange={(e) => {
-              dispatch({
-                type: UserCreatorBehavior.SetEmail,
-                payload: { uEmail: e.target.value },
-              });
-            }}
-            value={state.Email}
-          ></input>
-        </label>
+          verifyUserCreate(state, history, addDocument, response, dispatch);
+        }}
+      >
+        {standardEntryFieldText(
+          "Teacher Name:",
+          state.Name,
+          UserCreatorBehavior.SetName,
+          dispatch
+        )}
 
-        <label>
-          <span>Teacher Password:</span>
-          <input
-            required
-            type="password"
-            onChange={(e) => {
-              dispatch({
-                type: UserCreatorBehavior.SetPassword,
-                payload: { uPassword: e.target.value },
-              });
-            }}
-            value={state.Password}
-          ></input>
-        </label>
+        {standardEmailFieldText(
+          "Teacher Email:",
+          state.Email,
+          UserCreatorBehavior.SetEmail,
+          dispatch
+        )}
 
-        <label>
-          <span>Teacher School:</span>
-          <textarea
-            required
-            onChange={(e) => {
-              dispatch({
-                type: UserCreatorBehavior.SetSchool,
-                payload: { uSchool: e.target.value },
-              });
-            }}
-            value={state.School}
-          ></textarea>
-        </label>
+        {standardPasswordFieldText(
+          "Teacher Password:",
+          state.Password,
+          UserCreatorBehavior.SetPassword,
+          dispatch
+        )}
+
+        {standardEntryFieldTextArea(
+          "Teacher School:",
+          state.School,
+          UserCreatorBehavior.SetSchool,
+          dispatch
+        )}
+
+        {standardErrorField(state.FormError)}
+
         <button className="global-btn global-btn-light-red">
           Create New User
         </button>
-        {state.FormError && <p className="error">{state.FormError}</p>}
       </form>
       <br></br>
     </div>

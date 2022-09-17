@@ -14,17 +14,31 @@ import Enzyme from "enzyme";
 import EditUser from "../EditUser";
 import { UserDataInterface } from "../types/UserTypes";
 import { UserDataState } from "../interfaces/UserInterfaces";
-//import { UserDataInitialState } from "";
-
+import * as useFirebaseDocumentTyped from "./../../../firebase/hooks/useFirebaseDocument";
+import * as UserHelpers from "./../helpers/UserHelpers";
 
 Enzyme.configure({ adapter: new Adapter() });
+
+const mockId = "123";
+
+const mockDoc = {
+  id: mockId,
+  displayEmail: "asdf@asdf.com",
+  displayName: "asdf",
+  displaySchool: "asdf",
+} as UserDataInterface;
+
+jest.mock("../helpers/UserHelpers");
 
 jest.mock("react-router-dom", () => ({
   ...jest.requireActual("react-router-dom"),
   useParams: () => ({
-    id: 123,
+    id: mockId,
   }),
-  useRouteMatch: () => ({ url: `/editUser/${123}` }),
+  useHistory: () => ({
+    push: jest.fn(),
+  }),
+  useRouteMatch: () => ({ url: `/editUser/${mockId}` }),
 }));
 
 jest.mock("../../../firebase/hooks/useFirestore", () => {
@@ -50,13 +64,9 @@ jest.mock("../../../firebase/hooks/useFirebaseDocument", () => {
     ...originalModule,
     default: () => ({
       useFirebaseDocumentTyped: jest.fn(() => ({
-        document: {
-          displayName: '',
-          displayEmail: '',
-          displaySchool: ''
-        } as UserDataInterface,
+        document: mockDoc,
         documentError: undefined,
-      }))
+      })),
     }),
   };
 });
@@ -73,31 +83,81 @@ jest.mock("react-router-dom", () => ({
 }));
 
 describe("EditUser", () => {
-  it("Should render component: base state", () => {
-    const wrapper = mount(<EditUser />);
-
-    expect(wrapper.containsMatchingElement(<EditUser />)).toEqual(true);
-  });
-
   it("Should render component: modified state", () => {
-    jest.mock('../functionality/UserFunctionality', () => ({
-      Name: "",
-      Email: "",
-      Password: "",
-      School: "",
-      id: null,
-      FormError: undefined,
-      DidBuild: true,
+    const docMock = jest.spyOn(
+      useFirebaseDocumentTyped,
+      "useFirebaseDocumentTyped"
+    );
+    docMock.mockImplementation(() => ({
+      document: mockDoc,
+      documentError: undefined,
     }));
 
     const wrapper = mount(<EditUser />);
 
     setTimeout(() => {
-      const wrapperJson = JSON.stringify(wrapper);
-      console.log(wrapperJson)
+      expect(wrapper.find(".edit-user-page").length).toBe(1);
+    }, 1000);
+  });
+
+  it("Will render error upon error", () => {
+    const docMock = jest.spyOn(
+      useFirebaseDocumentTyped,
+      "useFirebaseDocumentTyped"
+    );
+    docMock.mockImplementation(() => ({
+      document: null,
+      documentError: "error",
+    }));
+
+    const wrapper = mount(<EditUser />);
+
+    setTimeout(() => {
+      expect(wrapper.find(".error").length).toBe(1);
+    }, 1000);
+  });
+
+  it("Will render loading upon loading", () => {
+    const docMock = jest.spyOn(
+      useFirebaseDocumentTyped,
+      "useFirebaseDocumentTyped"
+    );
+    docMock.mockImplementation(() => ({
+      document: null,
+      documentError: undefined,
+    }));
+
+    const wrapper = mount(<EditUser />);
+
+    setTimeout(() => {
+      expect(wrapper.find(".loading").length).toBe(1);
+    }, 1000);
+  });
+
+  it("Will call function as designed", () => {
+    const docMock = jest.spyOn(
+      useFirebaseDocumentTyped,
+      "useFirebaseDocumentTyped"
+    );
+    docMock.mockImplementation(() => ({
+      document: mockDoc,
+      documentError: undefined,
+    }));
+
+    const docMock2 = jest.spyOn(UserHelpers, "verifyUserEdit");
+    const mockedFuntion = jest.fn();
+    docMock2.mockImplementation(() => mockedFuntion());
+
+    const wrapper = mount(<EditUser />);
+    const form = wrapper.find("form").first();
+    form.simulate("submit");
+
+    setTimeout(() => {
+      expect(mockedFuntion).toHaveBeenCalled();
     }, 1000);
 
-    expect(wrapper.containsMatchingElement(<EditUser />)).toEqual(true);
+    setTimeout(() => {
+      expect(wrapper.find(".edit-user-page").length).toBe(1);
+    }, 1000);
   });
-  // TODO
 });

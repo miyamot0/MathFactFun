@@ -6,10 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from "react";
 import firebase from "firebase";
 import Adapter from "enzyme-adapter-react-16";
-import Enzyme, { mount } from "enzyme";
+import Enzyme from "enzyme";
 import { CommentInterface } from "../../subcomponents/types/CommentTypes";
 import {
   StudentCreateState,

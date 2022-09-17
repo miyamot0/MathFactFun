@@ -58,22 +58,6 @@ const mockData = {
   minForTask: 2,
 } as StudentDataInterface;
 
-jest.mock("./../../../firebase/hooks/useFirebaseDocument", () => {
-  const originalModule = jest.requireActual(
-    "./../../../firebase/hooks/useFirebaseDocument"
-  );
-  return {
-    __esModule: true,
-    ...originalModule,
-    default: () => ({
-      useFirebaseDocumentTyped: {
-        document: mockData,
-        documentError: undefined,
-      },
-    }),
-  };
-});
-
 jest.mock("react-router-dom", () => ({
   ...jest.requireActual("react-router-dom"),
   useParams: () => ({
@@ -82,7 +66,7 @@ jest.mock("react-router-dom", () => ({
   useHistory: () => ({
     push: jest.fn(),
   }),
-  useRouteMatch: () => ({ url: `/create/${mockId}` }),
+  useRouteMatch: () => ({ url: `/edit/${mockId}` }),
 }));
 
 jest.mock("./../../../firebase/hooks/useFirestore", () => {
@@ -95,6 +79,22 @@ jest.mock("./../../../firebase/hooks/useFirestore", () => {
     default: () => ({
       updateDocument: jest.fn(),
       response: {} as FirestoreState,
+    }),
+  };
+});
+
+jest.mock("./../../../firebase/hooks/useFirebaseDocument", () => {
+  const originalModule = jest.requireActual(
+    "./../../../firebase/hooks/useFirebaseDocument"
+  );
+  return {
+    __esModule: true,
+    ...originalModule,
+    default: () => ({
+      useFirebaseDocumentTyped: {
+        document: mockData,
+        documentError: undefined,
+      },
     }),
   };
 });

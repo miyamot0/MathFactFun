@@ -18,7 +18,16 @@ import { useFirebaseDocumentTyped } from "../../firebase/hooks/useFirebaseDocume
 import { RoutedIdParam } from "../../interfaces/RoutingInterfaces";
 import { UserCreatorBehavior, UserDataInterface } from "./types/UserTypes";
 import { streamlinedCheck } from "../../utilities/FormHelpers";
-import { UserDataInitialState, UserGenerationReducer } from "./functionality/UserFunctionality";
+import {
+  UserDataInitialState,
+  UserGenerationReducer,
+} from "./functionality/UserFunctionality";
+import {
+  standardEntryFieldText,
+  standardEntryFieldTextArea,
+  standardErrorField,
+} from "../../utilities/FieldHelpers";
+import { verifyUserEdit } from "./helpers/UserHelpers";
 
 export default function EditUser() {
   const history = useHistory();
@@ -53,96 +62,45 @@ export default function EditUser() {
     });
   }
 
-  /** handleEditFormSubmit
-   *
-   * Submission event for student edit form
-   *
-   * @param {React.FormEvent<HTMLFormElement>} event Submitted event
-   */
-  async function handleEditFormSubmit(
-    event: React.FormEvent<HTMLFormElement>
-  ): Promise<any> {
-    event.preventDefault();
-
-    if (document === null || id === undefined) {
-      return;
-    }
-
-    dispatch({
-      type: UserCreatorBehavior.SetFormError,
-      payload: { uFormError: undefined },
-    });
-
-    if (streamlinedCheck(state.Name, "Please enter a valid name", dispatch)) {
-      return;
-    }
-
-    if (
-      streamlinedCheck(
-        state.School,
-        "Please enter a valid school name",
-        dispatch
-      )
-    ) {
-      return;
-    }
-
-    const teacherObject = {
-      displayName: state.Name,
-      displaySchool: state.School,
-    };
-
-    await updateDocument(id, teacherObject);
-
-    if (!response.error || response.success === true) {
-      history.push(`/admin`);
-    } else {
-      alert(response.error);
-    }
-
-    return null;
-  }
-
   if (documentError) {
     return <div className="error">{documentError}</div>;
   } else if (!document) {
     return <div className="loading">Loading...</div>;
   } else {
     return (
-      <div style={{ maxWidth: "600px" }}>
+      <div style={{ maxWidth: "600px" }} className="edit-user-page">
         <h2 className="global-page-title">Edit current teacher</h2>
 
-        <form onSubmit={handleEditFormSubmit}>
-          <label>
-            <span>Teacher Name:</span>
-            <input
-              required
-              type="text"
-              onChange={(e) => {
-                dispatch({
-                  type: UserCreatorBehavior.SetName,
-                  payload: { uName: e.target.value },
-                });
-              }}
-              value={state.Name}
-            ></input>
-          </label>
-          <label>
-            <span>Teacher School:</span>
-            <textarea
-              required
-              onChange={(e) => {
-                dispatch({
-                  type: UserCreatorBehavior.SetSchool,
-                  payload: { uSchool: e.target.value },
-                });
-              }}
-              value={state.School}
-            ></textarea>
-          </label>
+        <form
+          onSubmit={(event: React.FormEvent<HTMLFormElement>) => {
+            event.preventDefault();
+            verifyUserEdit(
+              id,
+              state,
+              history,
+              updateDocument,
+              response,
+              dispatch
+            );
+          }}
+        >
+          {standardEntryFieldText(
+            "Teacher Name:",
+            state.Name,
+            UserCreatorBehavior.SetName,
+            dispatch
+          )}
+
+          {standardEntryFieldTextArea(
+            "Teacher School:",
+            state.School,
+            UserCreatorBehavior.SetSchool,
+            dispatch
+          )}
+
+          {standardErrorField(state.FormError)}
 
           <button className="global-btn ">Edit Teacher</button>
-          {state.FormError && <p className="error">{state.FormError}</p>}
         </form>
         <br></br>
       </div>

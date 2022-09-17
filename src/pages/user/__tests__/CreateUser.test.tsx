@@ -12,6 +12,7 @@ import React from "react";
 import Adapter from "enzyme-adapter-react-16";
 import Enzyme from "enzyme";
 import CreateUser from "../CreateUser";
+import * as UserHelpers from "./../helpers/UserHelpers";
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -42,5 +43,19 @@ describe("CreateUser", () => {
     expect(wrapper.containsMatchingElement(<CreateUser />)).toEqual(true);
   });
 
-  // TODO
+  it("Should render component, fire relevent event", () => {
+    const docMock = jest.spyOn(UserHelpers, "verifyUserCreate");
+    const mockedFuntion = jest.fn();
+    docMock.mockImplementation(() => mockedFuntion());
+
+    const wrapper = mount(<CreateUser />);
+    const form = wrapper.find("form").first();
+    form.simulate("submit");
+
+    setTimeout(() => {
+      expect(mockedFuntion).toHaveBeenCalled();
+    }, 1000);
+
+    expect(wrapper.find(".create-user-page").length).toBe(1);
+  });
 });

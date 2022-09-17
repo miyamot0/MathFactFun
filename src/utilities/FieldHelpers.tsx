@@ -2,6 +2,7 @@ import React from "react";
 import { StudentCreatorBehavior } from "../pages/student/types/StudentTypes";
 import Select, { MultiValue } from "react-select";
 import { SingleOptionType } from "../types/SharedComponentTypes";
+import { UserCreatorBehavior } from "../pages/user/types/UserTypes";
 
 /** standardEntryFieldText
  *
@@ -13,7 +14,7 @@ import { SingleOptionType } from "../types/SharedComponentTypes";
 export function standardEntryFieldText(
   label: string,
   currentValue: string,
-  type: StudentCreatorBehavior,
+  type: StudentCreatorBehavior | UserCreatorBehavior,
   dispatch: any
 ) {
   return (
@@ -22,6 +23,68 @@ export function standardEntryFieldText(
       <input
         required
         type="text"
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+          dispatch({
+            type: type,
+            payload: e.target.value,
+          });
+        }}
+        value={currentValue}
+      ></input>
+    </label>
+  );
+}
+
+/** standardEmailFieldText
+ *
+ * @param currentValue
+ * @param type
+ * @param dispatch
+ * @returns
+ */
+export function standardEmailFieldText(
+  label: string,
+  currentValue: string,
+  type: StudentCreatorBehavior | UserCreatorBehavior,
+  dispatch: any
+) {
+  return (
+    <label>
+      <span>{label}:</span>
+      <input
+        required
+        type="email"
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+          dispatch({
+            type: type,
+            payload: e.target.value,
+          });
+        }}
+        value={currentValue}
+      ></input>
+    </label>
+  );
+}
+
+/** standardPasswordFieldText
+ *
+ * @param currentValue
+ * @param type
+ * @param dispatch
+ * @returns
+ */
+export function standardPasswordFieldText(
+  label: string,
+  currentValue: string,
+  type: StudentCreatorBehavior | UserCreatorBehavior,
+  dispatch: any
+) {
+  return (
+    <label>
+      <span>{label}:</span>
+      <input
+        required
+        type="password"
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
           dispatch({
             type: type,
@@ -45,7 +108,7 @@ export function standardEntryFieldText(
 export function standardEntryFieldTextArea(
   label: string,
   currentValue: string,
-  type: StudentCreatorBehavior,
+  type: StudentCreatorBehavior | UserCreatorBehavior,
   dispatch: any
 ) {
   return (
