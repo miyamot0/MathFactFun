@@ -79,12 +79,10 @@ export function streamlinedCheck(
   if (typeof value === "string") {
     const statusOfCheck = checkInputNullOrUndefined(value);
 
-    if (statusOfCheck) {
-      dispatch({
-        type: type,
-        payload: err,
-      });
-    }
+    dispatch({
+      type: type,
+      payload: err,
+    });
 
     return statusOfCheck;
   }

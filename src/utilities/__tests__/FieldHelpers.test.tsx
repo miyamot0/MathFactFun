@@ -14,6 +14,7 @@ import selectEvent from "react-select-event";
 
 import {
   standardEntryFieldDate,
+  standardEntryFieldNumber,
   standardEntryFieldText,
   standardEntryFieldTextArea,
   standardErrorField,
@@ -84,6 +85,27 @@ describe("standardEntryFieldDate", () => {
 
     const wrapper = mount(
       standardEntryFieldDate(label, currentValue, type, dispatch)
+    );
+
+    wrapper.find("input").simulate("change", event);
+
+    expect(dispatch).toBeCalled();
+  });
+});
+
+describe("standardEntryFieldNumber", () => {
+  it("Should fire dispatch", () => {
+    const label = "";
+    const currentValue = 0;
+    const type = 0;
+    const dispatch = jest.fn();
+
+    const event = {
+      target: { value: 2 },
+    };
+
+    const wrapper = mount(
+      standardEntryFieldNumber(label, currentValue, type, dispatch)
     );
 
     wrapper.find("input").simulate("change", event);
