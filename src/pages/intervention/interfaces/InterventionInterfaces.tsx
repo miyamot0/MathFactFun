@@ -1,36 +1,13 @@
+/** @license
+ *
+ * Copyright (c) Shawn P. Gilroy, Louisiana State University.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
 import firebase from "firebase/app";
 import { FactDataInterface } from "../../setcreator/interfaces/SetCreatorInterfaces";
-
-/**
- * Actions for reducer
- */
-export enum BenchmarkActions {
-  //GeneralOpenModal = "GeneralOpenModal",
-  //GeneralCloseModal = "GeneralCloseModal",
-  GeneralUpdateEntry,
-
-  BenchmarkBatchStartPreflight,
-  BenchmarkBatchStartBegin,
-  BenchmarkBatchStartIncrement,
-  BenchmarkBatchStartIncrementPost,
-
-  ExplicitTimingBatchStartPreflight,
-  ExplicitTimingBatchIncrement,
-  ExplicitTimingModalPreErrorLog,
-  ExplicitTimingModalRetry,
-
-  TapedProblemsBatchStartPreflight,
-
-  CoverCopyCompareBatchStartPreflight,
-  CoverCopyCompareBatchStartBegin,
-  CoverCopyCompareTaskIncrement,
-  CoverCopyCompareTaskReset,
-  CoverCopyCompareBatchIncrement,
-  CoverCopyCompareBatchStartIncrementPost,
-  CoverCopyCompareModalPreErrorLog,
-  CoverCopyCompareModalRetry,
-  CoverCopyCompareItemIncrement,
-}
 
 export interface BenchmarkState {
   ViewRepresentationInternal: string;
@@ -84,14 +61,3 @@ export interface PerformanceDataInterface {
   // Timestamps
   createdAt: firebase.firestore.Timestamp | null;
 }
-
-// TODO: move this
-
-export const SharedActionSequence = {
-  Start: "ActionSequence.Start",
-  Answer: "ActionSequence.Answer",
-  Entry: "ActionSequence.Entry",
-  CoverCopy: "ActionSequence.CoverCopy",
-  Compare: "ActionSequence.Compare",
-  Begin: "ActionSequence.Begin",
-};

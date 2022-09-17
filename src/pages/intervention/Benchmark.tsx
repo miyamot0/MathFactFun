@@ -29,22 +29,22 @@ import { timestamp } from "../../firebase/config";
 import { RoutedIdTargetParam } from "../../interfaces/RoutingInterfaces";
 import { useAuthorizationContext } from "../../context/hooks/useAuthorizationContext";
 import {
+  BenchmarkActions,
   DelCode,
   InitialBenchmarkState,
   InterventionReducer,
-  keyHandler,
-  loadWorkingDataBenchmark,
-  useEventListener,
-} from "./functionality/InterventionBehavior";
-import {
-  BenchmarkActions,
   SharedActionSequence,
-} from "./types/InterventionTypes";
+} from "./functionality/InterventionBehavior";
 
 // Styles
 import "./styles/ExplicitTiming.css";
 import { StudentDataInterface } from "../student/interfaces/StudentInterfaces";
 import { FactDataInterface } from "../setcreator/interfaces/SetCreatorInterfaces";
+import {
+  keyHandler,
+  loadWorkingDataBenchmark,
+  useEventListener,
+} from "./helpers/InterventionHelpers";
 
 export default function Benchmark() {
   const { id, target } = useParams<RoutedIdTargetParam>();
@@ -71,7 +71,7 @@ export default function Benchmark() {
   );
 
   // Add event listener to hook
-  useEventListener("keydown", (key) =>
+  useEventListener("keydown", (key: any) =>
     keyHandler(key, captureKeyClick, captureButtonAction, state.CurrentAction)
   );
 

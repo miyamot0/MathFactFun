@@ -22,8 +22,8 @@ import {
   CommonDisplayHeadingStyle,
   CommonPanelWidth,
 } from "../../utilities/FormHelpers";
-import { PerformanceDataInterface } from "../intervention/types/InterventionTypes";
 import { reducerPerOperation } from "./helper/ScreeningHelper";
+import { PerformanceDataInterface } from "../intervention/interfaces/InterventionInterfaces";
 
 require("highcharts/modules/annotations")(Highcharts);
 require("highcharts/modules/accessibility")(Highcharts);

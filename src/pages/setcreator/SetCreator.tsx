@@ -30,7 +30,6 @@ import {
   TitleStyle,
 } from "./views/SetCreatorViews";
 import { StudentDataInterface } from "../student/interfaces/StudentInterfaces";
-import { PerformanceDataInterface } from "../intervention/types/InterventionTypes";
 import {
   checkIfNullUndefinedOrEmpty,
   generateItemHistory,
@@ -47,6 +46,7 @@ import {
   ItemMetrics,
   SetItem,
 } from "./interfaces/SetCreatorInterfaces";
+import { PerformanceDataInterface } from "../intervention/interfaces/InterventionInterfaces";
 
 export default function SetCreator() {
   const { target, id } = useParams<RoutedIdTargetParam>();

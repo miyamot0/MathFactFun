@@ -35,7 +35,7 @@ import {
   CommonDisplayHeadingStyle,
   CommonPanelWidth,
 } from "../../utilities/FormHelpers";
-import { PerformanceDataInterface } from "../intervention/types/InterventionTypes";
+import { PerformanceDataInterface } from "../intervention/interfaces/InterventionInterfaces";
 
 export default function ProgressMonitor() {
   const { id, target, method, aim } = useParams<RoutedStudentProgressSet>();

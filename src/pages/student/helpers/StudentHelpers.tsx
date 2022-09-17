@@ -19,7 +19,6 @@ import {
 import { StudentCreatorBehavior } from "../types/StudentTypes";
 import { timestamp } from "../../../firebase/config";
 import { UserDataInterface } from "../../user/types/UserTypes";
-import { PerformanceDataInterface } from "../../intervention/types/InterventionTypes";
 import { FirestoreState } from "../../../firebase/interfaces/FirebaseInterfaces";
 import {
   BenchmarkSets,
@@ -31,6 +30,7 @@ import {
 } from "../../../maths/Facts";
 import { formatDate } from "../../../utilities/LabelHelper";
 import { CommentInterface } from "../subcomponents/types/CommentTypes";
+import { PerformanceDataInterface } from "../../intervention/interfaces/InterventionInterfaces";
 
 /** verifySingleStudentCreate
  *

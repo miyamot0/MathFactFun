@@ -35,16 +35,16 @@ import {
 
 import {
   BenchmarkActions,
-  SharedActionSequence,
-} from "./types/InterventionTypes";
-import {
   InitialBenchmarkState,
   InterventionReducer,
-  keyHandler,
-  useEventListener,
+  SharedActionSequence,
 } from "./functionality/InterventionBehavior";
 import { StudentDataInterface } from "../student/interfaces/StudentInterfaces";
-import { shouldShowFeedback } from "./helpers/InterventionHelpers"; // styles
+import {
+  keyHandler,
+  shouldShowFeedback,
+  useEventListener,
+} from "./helpers/InterventionHelpers"; // styles
 
 import "./styles/TapedProblems.css";
 import { FactDataInterface } from "../setcreator/interfaces/SetCreatorInterfaces";
@@ -122,7 +122,7 @@ export default function TapedProblems() {
   const [secondsLeft, setSecondsLeft] = useState(0);
 
   // Add event listener to hook
-  useEventListener("keydown", (key) =>
+  useEventListener("keydown", (key: any) =>
     keyHandler(key, captureKeyClick, captureButtonAction, state.CurrentAction)
   );
 

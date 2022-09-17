@@ -1,6 +1,6 @@
 import moment from "moment";
 import { OnlyUnique, Sum } from "../../../utilities/LabelHelper";
-import { PerformanceDataInterface } from "../../intervention/types/InterventionTypes";
+import { PerformanceDataInterface } from "../../intervention/interfaces/InterventionInterfaces";
 import { DailyPerformanceMetrics } from "../../progress/interfaces/ProgressInterfaces";
 import { FactDataInterface } from "../../setcreator/interfaces/SetCreatorInterfaces";
 

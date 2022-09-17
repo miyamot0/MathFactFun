@@ -35,19 +35,17 @@ import "./styles/CoverCopyCompare.css";
 import { ErrorModalCustomStyle } from "./subcomponents/ModalStyles";
 import {
   BenchmarkActions,
-  SharedActionSequence,
-} from "./types/InterventionTypes";
-import {
   DelCode,
   InitialBenchmarkState,
   InterventionReducer,
-  useEventListener,
+  SharedActionSequence,
 } from "./functionality/InterventionBehavior";
 import { RoutedIdTargetParam } from "../../interfaces/RoutingInterfaces";
 import { StudentDataInterface } from "../student/interfaces/StudentInterfaces";
 import {
   checkLiNullUndefinedBlank,
   shouldShowFeedback,
+  useEventListener,
 } from "./helpers/InterventionHelpers";
 import { FactDataInterface } from "../setcreator/interfaces/SetCreatorInterfaces";
 

@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { PerformanceDataInterface } from "../../pages/intervention/types/InterventionTypes";
+import { PerformanceDataInterface } from "../../pages/intervention/interfaces/InterventionInterfaces";
 import { StudentDataInterface } from "../../pages/student/interfaces/StudentInterfaces";
 import { UserDataInterface } from "../../pages/user/types/UserTypes";
 
@@ -21,4 +21,3 @@ export type PossibleCollectionType =
   | PerformanceDataInterface[]
   | UserDataInterface[]
   | null;
-

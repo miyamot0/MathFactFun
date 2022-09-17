@@ -31,14 +31,10 @@ import {
 import { RoutedIdTargetParam } from "../../interfaces/RoutingInterfaces";
 import {
   BenchmarkActions,
-  SharedActionSequence,
-} from "./types/InterventionTypes";
-import {
   DelCode,
   InitialBenchmarkState,
   InterventionReducer,
-  keyHandler,
-  useEventListener,
+  SharedActionSequence,
 } from "./functionality/InterventionBehavior";
 
 // styles
@@ -46,7 +42,11 @@ import "./styles/ExplicitTiming.css";
 import { ErrorModalCustomStyle } from "./subcomponents/ModalStyles";
 import { InterventionFormat } from "../../maths/Facts";
 import { StudentDataInterface } from "../student/interfaces/StudentInterfaces";
-import { shouldShowFeedback } from "./helpers/InterventionHelpers";
+import {
+  keyHandler,
+  shouldShowFeedback,
+  useEventListener,
+} from "./helpers/InterventionHelpers";
 import { FactDataInterface } from "../setcreator/interfaces/SetCreatorInterfaces";
 
 export default function ExplicitTiming() {
@@ -79,7 +79,7 @@ export default function ExplicitTiming() {
   }
 
   // Add event listener to hook
-  useEventListener("keydown", (key) =>
+  useEventListener("keydown", (key: any) =>
     keyHandler(key, captureKeyClick, captureButtonAction, state.CurrentAction)
   );
 
