@@ -30,16 +30,14 @@ export default function DisplayStudent() {
 
   if (documentError) {
     return <div className="error">{documentError}</div>;
-  }
-
-  if (!document) {
+  } else if (!document) {
     return <div className="loading">Loading...</div>;
+  } else {
+    return (
+      <div className="student-details-style">
+        <StudentSummary student={document} />
+        <StudentComments student={document} />
+      </div>
+    );
   }
-
-  return (
-    <div className="student-details-style">
-      <StudentSummary student={document} />
-      <StudentComments student={document} />
-    </div>
-  );
 }

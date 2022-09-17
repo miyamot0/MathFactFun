@@ -7,9 +7,13 @@
  */
 
 export type CommentInterface = {
-    content: string,
-    displayName: string,
-    createdAt: any,
-    createdBy: any,
-    id: number
+  content: string;
+  displayName: string;
+  createdAt: any;
+  createdBy: any;
+  id: number;
+};
+
+export interface CommentTextInterface {
+  Comment: string;
 }

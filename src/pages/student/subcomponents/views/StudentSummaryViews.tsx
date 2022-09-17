@@ -8,74 +8,92 @@
 
 import React from "react";
 import { Link } from "react-router-dom";
+import { FirestoreState } from "../../../../firebase/interfaces/FirebaseInterfaces";
 import { StudentDataInterface } from "../../interfaces/StudentInterfaces";
+import { handleStudentDelete } from "../helpers/StudentSummaryHelpers";
 
 /** renderCurrentTargetButton
- * 
- * @param {StudentDataInterface} student 
+ *
+ * @param {StudentDataInterface} student
  * @returns {JSX.Element}
  */
-export function renderSpecificOutcomesButton(student: StudentDataInterface): JSX.Element {
-
+export function renderSpecificOutcomesButton(
+  student: StudentDataInterface
+): JSX.Element {
   const hasATarget = student.currentTarget !== "N/A";
 
   if (hasATarget) {
-    return <Link
-      to={`/ProgressMonitor/${student.currentTarget}/${student.id}/${student.currentApproach}/${student.aimLine}`}
-    >
-      <button className="global-btn global-btn-green btn-below">
-        Intervention-specific Targets
-      </button>
-    </Link>;
+    return (
+      <Link
+        to={`/ProgressMonitor/${student.currentTarget}/${student.id}/${student.currentApproach}/${student.aimLine}`}
+      >
+        <button className="global-btn global-btn-green btn-below">
+          Intervention-specific Targets
+        </button>
+      </Link>
+    );
   } else {
-    return <div className="no-specific-outcomes-button"></div>
+    return <div className="no-specific-outcomes-button"></div>;
   }
 }
 
 /** renderCurrentTargetButton
- * 
- * @param {StudentDataInterface} student 
+ *
+ * @param {StudentDataInterface} student
  * @returns {JSX.Element}
  */
-export function renderSetCreatorButton(student: StudentDataInterface): JSX.Element {
-
+export function renderSetCreatorButton(
+  student: StudentDataInterface
+): JSX.Element {
   const hasATarget = student.currentTarget !== "N/A";
 
   if (hasATarget) {
-    return <Link to={`/set/${student.currentTarget}/${student.id}`}>
-      <button className="global-btn btn-below">Targeted Item Sets</button>
-    </Link>;
+    return (
+      <Link to={`/set/${student.currentTarget}/${student.id}`}>
+        <button className="global-btn btn-below">Targeted Item Sets</button>
+      </Link>
+    );
   } else {
-    return <div className="no-set-items-button"></div>
+    return <div className="no-set-items-button"></div>;
   }
 }
 
 /** renderAdministrativeButtons
- * 
- * @param user 
- * @param adminFlag 
- * @param handleDeleteEvent 
+ *
+ * @param user
+ * @param adminFlag
+ * @param handleDeleteEvent
  * @returns {JSX.Element}
  */
-export function renderAdministrativeButtons(user: any, adminFlag: boolean, handleDeleteEvent: any): JSX.Element {
-
+export function renderAdministrativeButtons(
+  user: any,
+  adminFlag: boolean,
+  student: StudentDataInterface,
+  deleteDocument: (id: string) => Promise<void>,
+  response: FirestoreState,
+  history: any
+): JSX.Element {
   const shouldShowPanel = user && adminFlag;
 
   if (shouldShowPanel) {
-    return <div className="student-summary">
-      <h2 className="global-page-title">
-        Advanced and Administrative Options
-      </h2>
-      <hr />
+    return (
+      <div className="student-summary">
+        <h2 className="global-page-title">
+          Advanced and Administrative Options
+        </h2>
+        <hr />
 
-      <button
-        className="global-btn global-btn-red btn-below"
-        onClick={handleDeleteEvent}
-      >
-        Delete Student
-      </button>
-    </div>;
+        <button
+          className="global-btn global-btn-red btn-below"
+          onClick={() =>
+            handleStudentDelete(student, deleteDocument, response, history)
+          }
+        >
+          Delete Student
+        </button>
+      </div>
+    );
   } else {
-    return <div className="no-admin-panel"></div>
+    return <div className="no-admin-panel"></div>;
   }
 }

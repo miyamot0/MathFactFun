@@ -64,6 +64,7 @@ export function checkInputNullOrUndefined(
  */
 export function streamlinedCheck(
   value: string | SingleOptionType,
+  type: any,
   err: string,
   dispatch: any
 ): boolean {
@@ -77,8 +78,8 @@ export function streamlinedCheck(
     statusOfCheck = checkInputNullOrUndefined(value);
 
     dispatch({
-      type: "",
-      payload: { uFormError: err },
+      type: type,
+      payload: err,
     });
 
     return statusOfCheck;
@@ -97,7 +98,7 @@ export function streamlinedCheck(
   statusOfCheck = valueToCheck.value.trim().length < 1;
 
   dispatch({
-    type: "",
+    type: type,
     payload: { uFormError: err },
   });
 

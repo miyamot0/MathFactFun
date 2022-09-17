@@ -6,10 +6,34 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import { FirestoreState } from "../../../../firebase/interfaces/FirebaseInterfaces";
+import { StudentDataInterface } from "../../interfaces/StudentInterfaces";
+
 /** confirmDeletion
- * 
- * @returns 
+ *
+ * @returns
  */
-export function confirmDeletion():boolean {
-    return window.confirm("Are you sure to delete this student?");
+export function confirmDeletion(): boolean {
+  return window.confirm("Are you sure to delete this student?");
+}
+
+export async function handleStudentDelete(
+  student: StudentDataInterface,
+  deleteDocument: (id: string) => Promise<void>,
+  response: FirestoreState,
+  history: any
+) {
+  const confirmDelete = confirmDeletion();
+
+  if (confirmDelete && student.id !== undefined && student.id !== null) {
+    await deleteDocument(student.id);
+
+    if (!response.error) {
+      history.push(`/dashboard`);
+    } else {
+      return;
+    }
+  } else {
+    return;
+  }
 }

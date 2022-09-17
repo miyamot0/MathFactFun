@@ -30,6 +30,7 @@ import {
   Operations,
 } from "../../../maths/Facts";
 import { formatDate } from "../../../utilities/LabelHelper";
+import { CommentInterface } from "../subcomponents/types/CommentTypes";
 
 /** verifySingleStudentCreate
  *
@@ -67,6 +68,7 @@ export async function verifySingleStudentCreate(
   if (
     streamlinedCheck(
       state.CurrentGrade,
+      StudentCreatorBehavior.SetFormError,
       "Please select current grade",
       dispatch
     )
@@ -75,7 +77,12 @@ export async function verifySingleStudentCreate(
   }
 
   if (
-    streamlinedCheck(state.CurrentTarget, "Please select a target", dispatch)
+    streamlinedCheck(
+      state.CurrentTarget,
+      StudentCreatorBehavior.SetFormError,
+      "Please select a target",
+      dispatch
+    )
   ) {
     return;
   }
@@ -83,6 +90,7 @@ export async function verifySingleStudentCreate(
   if (
     streamlinedCheck(
       state.CurrentApproach,
+      StudentCreatorBehavior.SetFormError,
       "Please select an intervention approach",
       dispatch
     )
@@ -93,6 +101,7 @@ export async function verifySingleStudentCreate(
   if (
     streamlinedCheck(
       state.CurrentErrorApproach,
+      StudentCreatorBehavior.SetFormError,
       "Please select an error correct approach",
       dispatch
     )
@@ -103,6 +112,7 @@ export async function verifySingleStudentCreate(
   if (
     streamlinedCheck(
       state.CurrentSRApproach,
+      StudentCreatorBehavior.SetFormError,
       "Please select a reinforcement strategy",
       dispatch
     )
@@ -195,6 +205,7 @@ export async function verifySingleStudentEdit(
   if (
     streamlinedCheck(
       state.CurrentGrade,
+      StudentCreatorBehavior.SetFormError,
       "Please select current grade",
       dispatch
     )
@@ -203,7 +214,12 @@ export async function verifySingleStudentEdit(
   }
 
   if (
-    streamlinedCheck(state.CurrentTarget, "Please select a target", dispatch)
+    streamlinedCheck(
+      state.CurrentTarget,
+      StudentCreatorBehavior.SetFormError,
+      "Please select a target",
+      dispatch
+    )
   ) {
     return;
   }
@@ -211,6 +227,7 @@ export async function verifySingleStudentEdit(
   if (
     streamlinedCheck(
       state.CurrentApproach,
+      StudentCreatorBehavior.SetFormError,
       "Please select an intervention approach",
       dispatch
     )
@@ -221,6 +238,7 @@ export async function verifySingleStudentEdit(
   if (
     streamlinedCheck(
       state.CurrentErrorApproach,
+      StudentCreatorBehavior.SetFormError,
       "Please select an error correct approach",
       dispatch
     )
@@ -231,6 +249,7 @@ export async function verifySingleStudentEdit(
   if (
     streamlinedCheck(
       state.CurrentSRApproach,
+      StudentCreatorBehavior.SetFormError,
       "Please select a reinforcement strategy",
       dispatch
     )
@@ -342,4 +361,149 @@ export function onLoadSingleStudentEdit(
       uProblemSet,
     },
   });
+}
+
+/** verifyBulkStudentCreate
+ *
+ * @param id
+ * @param state
+ * @param history
+ * @param addDocument
+ * @param response
+ * @param dispatch
+ * @returns
+ */
+export async function verifyBulkStudentCreate(
+  id: string,
+  state: StudentCreateState,
+  history: any,
+  addDocument: (
+    doc: StudentDataInterface | UserDataInterface | PerformanceDataInterface
+  ) => Promise<void>,
+  response: FirestoreState,
+  dispatch: any
+) {
+  dispatch({
+    type: StudentCreatorBehavior.SetFormError,
+    payload: undefined,
+  });
+
+  if (
+    streamlinedCheck(
+      state.CurrentGrade,
+      StudentCreatorBehavior.SetFormError,
+      "Please select current grade",
+      dispatch
+    )
+  ) {
+    return;
+  }
+
+  if (
+    streamlinedCheck(
+      state.CurrentTarget,
+      StudentCreatorBehavior.SetFormError,
+      "Please select a target",
+      dispatch
+    )
+  ) {
+    return;
+  }
+
+  if (
+    streamlinedCheck(
+      state.CurrentApproach,
+      StudentCreatorBehavior.SetFormError,
+      "Please select an intervention approach",
+      dispatch
+    )
+  ) {
+    return;
+  }
+
+  if (
+    streamlinedCheck(
+      state.CurrentErrorApproach,
+      StudentCreatorBehavior.SetFormError,
+      "Please select an error correct approach",
+      dispatch
+    )
+  ) {
+    return;
+  }
+
+  if (
+    streamlinedCheck(
+      state.CurrentSRApproach,
+      StudentCreatorBehavior.SetFormError,
+      "Please select a reinforcement strategy",
+      dispatch
+    )
+  ) {
+    return;
+  }
+
+  if (
+    checkInputNullOrUndefined(state.CurrentBenchmarking) ||
+    state.CurrentBenchmarking.length < 1
+  ) {
+    dispatch({
+      type: StudentCreatorBehavior.SetFormError,
+      payload: "Please select benchmarking options",
+    });
+
+    return;
+  }
+
+  const laggedDate = new Date();
+  laggedDate.setDate(laggedDate.getDate() - 1);
+
+  const comments: CommentInterface[] = [];
+  const factsTargeted: string[] = [];
+  const factsMastered: string[] = [];
+  const factsSkipped: string[] = [];
+  const aimLine = 0;
+  const minForTask = 2;
+
+  const arrayTextAreaLines = state.Name.split("\n");
+
+  for (let i = 0; i < arrayTextAreaLines.length; i++) {
+    const currentStudentID = arrayTextAreaLines[i].trim();
+
+    if (currentStudentID.length < 1) continue;
+
+    const studentObject = {
+      name: currentStudentID,
+      details: "",
+      currentGrade: state.CurrentGrade.value,
+      currentTarget: state.CurrentTarget.value,
+      currentApproach: state.CurrentApproach.value,
+      currentErrorApproach: state.CurrentErrorApproach.value,
+      currentSRApproach: state.CurrentSRApproach.value,
+      currentBenchmarking: state.CurrentBenchmarking.map(
+        (benchmark: SingleOptionType) => benchmark.label
+      ),
+      completedBenchmark: [],
+      creator: id,
+      dueDate: timestamp.fromDate(new Date(state.DueDate)),
+      lastActivity: timestamp.fromDate(laggedDate),
+      createdAt: timestamp.fromDate(new Date()),
+      comments,
+      factsTargeted,
+      factsMastered,
+      factsSkipped,
+      aimLine,
+      minForTask,
+      problemSet: "A",
+      id: null,
+    } as StudentDataInterface;
+
+    await addDocument(studentObject);
+  }
+
+  if (!response.error || response.success === true) {
+    history.push(`/dashboard`);
+  } else {
+    alert(response.error);
+  }
 }

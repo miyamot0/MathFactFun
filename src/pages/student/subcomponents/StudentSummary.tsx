@@ -20,8 +20,15 @@ import { StudentWidgetInterface } from "../interfaces/StudentInterfaces";
 
 // styles
 import "./styles/StudentSummary.css";
-import { confirmDeletion } from "./helpers/StudentSummaryHelpers";
-import { renderAdministrativeButtons, renderSetCreatorButton, renderSpecificOutcomesButton } from "./views/StudentSummaryViews";
+import {
+  confirmDeletion,
+  handleStudentDelete,
+} from "./helpers/StudentSummaryHelpers";
+import {
+  renderAdministrativeButtons,
+  renderSetCreatorButton,
+  renderSpecificOutcomesButton,
+} from "./views/StudentSummaryViews";
 
 export default function StudentSummary({ student }: StudentWidgetInterface) {
   const { deleteDocument, response } = useFirestore(
@@ -32,34 +39,9 @@ export default function StudentSummary({ student }: StudentWidgetInterface) {
   const { user, adminFlag } = useAuthorizationContext();
   const history = useHistory();
 
-  /** handleDeleteEvent
-   *
-   * Remove student from firestore
-   *
-   * @param {React.MouseEvent<HTMLElement>} event Form submit event
-   */
-  async function handleDeleteEvent(event: React.MouseEvent<HTMLElement>): Promise<void> {
-    event.preventDefault();
-
-    const confirmDelete = confirmDeletion();
-
-    if (confirmDelete) {
-      await deleteDocument(student.id as string);
-
-      if (!response.error) {
-        history.push(`/dashboard`);
-      } else {
-        return;
-      }
-    } else {
-      return;
-    }
-  }
-
   return (
     <div>
       <h4 className="student-summary-h4">Student Settings: {student.name}</h4>
-
       <div className="student-summary">
         <h2 className="global-page-title">Student Information</h2>
         <hr />
@@ -71,7 +53,7 @@ export default function StudentSummary({ student }: StudentWidgetInterface) {
         </p>
         <p>
           <b>Current Intervention:</b>{" "}
-          {GetApproachStringFromLabel(student.currentApproach as string)}
+          {GetApproachStringFromLabel(student.currentApproach)}
         </p>
         <p>
           <b>Details</b>: {student.details}
@@ -80,7 +62,6 @@ export default function StudentSummary({ student }: StudentWidgetInterface) {
           Next Benchmark Scheduled: {student.dueDate?.toDate().toDateString()}
         </p>
       </div>
-
       <div className="student-summary">
         <h2 className="global-page-title">Student Performance</h2>
         <hr />
@@ -93,7 +74,6 @@ export default function StudentSummary({ student }: StudentWidgetInterface) {
 
         {renderSpecificOutcomesButton(student)}
       </div>
-
       <div className="student-summary">
         <h2 className="global-page-title">
           Benchmarking and Intervention Settings
@@ -105,8 +85,17 @@ export default function StudentSummary({ student }: StudentWidgetInterface) {
 
         {renderSetCreatorButton(student)}
       </div>
-
-      {renderAdministrativeButtons(user, adminFlag, handleDeleteEvent)}
+      {renderAdministrativeButtons(
+        user,
+        adminFlag,
+        student,
+        deleteDocument,
+        response,
+        history
+      )}
+      )
     </div>
   );
 }
+
+//

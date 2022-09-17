@@ -8,10 +8,10 @@
 
 import React from "react";
 import Adapter from "enzyme-adapter-react-16";
-import Enzyme, { shallow } from "enzyme";
+import Enzyme from "enzyme";
 import { mount } from "enzyme";
-import CreateStudent from "../CreateStudent";
 import { FirestoreState } from "../../../firebase/interfaces/FirebaseInterfaces";
+import CreateBulkStudents from "../CreateBulkStudents";
 
 import * as StudentHelpers from "./../helpers/StudentHelpers";
 
@@ -46,19 +46,19 @@ jest.mock("./../../../firebase/hooks/useFirestore", () => {
   };
 });
 
-describe("CreateStudent", () => {
-  it("Will render as normal", () => {
-    const wrapper = mount(<CreateStudent />);
+describe("CreateBulkStudents", () => {
+  it("Will render", () => {
+    const wrapper = mount(<CreateBulkStudents />);
 
-    expect(wrapper.find(".create-student-page").length).toBe(1);
+    expect(wrapper.find(".create-bulk-student-page").length).toBe(1);
   });
 
   it("Will call function designed", () => {
-    const docMock = jest.spyOn(StudentHelpers, "verifySingleStudentCreate");
+    const docMock = jest.spyOn(StudentHelpers, "verifyBulkStudentCreate");
     const mockedFuntion = jest.fn();
     docMock.mockImplementation(() => mockedFuntion());
 
-    const wrapper = mount(<CreateStudent />);
+    const wrapper = mount(<CreateBulkStudents />);
     const form = wrapper.find("form").first();
     form.simulate("submit");
 
@@ -66,6 +66,6 @@ describe("CreateStudent", () => {
       expect(mockedFuntion).toHaveBeenCalled();
     }, 1000);
 
-    expect(wrapper.find(".create-student-page").length).toBe(1);
+    expect(wrapper.find(".create-bulk-student-page").length).toBe(1);
   });
 });

@@ -10,16 +10,19 @@
  * Student comment panel
  */
 
-import React from "react";
-import { useState } from "react";
-import { timestamp } from "../../../firebase/config";
+import React, { useReducer } from "react";
 import { useAuthorizationContext } from "../../../context/hooks/useAuthorizationContext";
 import { useFirestore } from "../../../firebase/hooks/useFirestore";
-
-import "./styles/StudentComments.css";
 import { StudentWidgetInterface } from "../interfaces/StudentInterfaces";
-import { CommentInterface } from "./types/CommentTypes";
-import { renderCommentForm, renderCommentListView } from "./views/StudentCommentsViews";
+import {
+  renderCommentForm,
+  renderCommentListView,
+} from "./views/StudentCommentsViews";
+import {
+  commentReducer,
+  InitialCommentState,
+} from "./functionality/StudentCommentBehavior";
+import "./styles/StudentComments.css";
 
 export default function StudentComments({ student }: StudentWidgetInterface) {
   const { updateDocument, response } = useFirestore(
@@ -28,71 +31,22 @@ export default function StudentComments({ student }: StudentWidgetInterface) {
     undefined
   );
   const { user, adminFlag } = useAuthorizationContext();
-
-  const [newComment, setNewComment] = useState("");
-
-  /** submitComment
-   *
-   * Submit comment to firestore
-   *
-   * @param {React.MouseEvent<HTMLElement>} event Form submit event
-   */
-  async function submitComment(
-    event: React.MouseEvent<HTMLElement>
-  ): Promise<void> {
-    event.preventDefault();
-
-    if (user === null) {
-      return;
-    }
-
-    const usersComment = {
-      displayName: user.displayName,
-      content: newComment,
-      createdAt: timestamp.fromDate(new Date()),
-      createdBy: user.uid,
-      id: Math.random(),
-    };
-
-    await updateDocument(student.id as string, {
-      comments: [...student.comments, usersComment],
-    });
-
-    if (!response.error) {
-      setNewComment("");
-    }
-  }
-
-  /** removeComment
-   *
-   * Remove comment from firestore
-   *
-   * @param {CommentInterface} currentComment current member of array
-   */
-  async function removeComment(
-    currentComment: CommentInterface
-  ): Promise<void> {
-    const response = window.confirm("Are you sure you want to delete?");
-
-    if (response) {
-      const newCommentObj: CommentInterface[] = student.comments.filter(
-        (com: CommentInterface) => com.id !== currentComment.id
-      );
-
-      await updateDocument(student.id as string, {
-        comments: newCommentObj,
-      });
-    }
-  }
+  const [state, dispatch] = useReducer(commentReducer, InitialCommentState);
 
   return (
     <div className="student-comments">
       <h4>Student Notes</h4>
 
-      {renderCommentListView(user, adminFlag, student, removeComment)}
+      {renderCommentListView(user, adminFlag, student, updateDocument)}
 
-      {renderCommentForm(newComment, setNewComment, submitComment)}
-
+      {renderCommentForm(
+        state.Comment,
+        user,
+        student,
+        dispatch,
+        updateDocument,
+        response
+      )}
     </div>
   );
 }
