@@ -68,39 +68,41 @@ export function streamlinedCheck(
   err: string,
   dispatch: any
 ): boolean {
-  let statusOfCheck = true;
-
   if (dispatch === null || dispatch === undefined) {
-    throw Error("Dispatch cannot be null or undefined");
+    return true;
+  }
+
+  if (value === undefined) {
+    return true;
   }
 
   if (typeof value === "string") {
-    statusOfCheck = checkInputNullOrUndefined(value);
+    const statusOfCheck = checkInputNullOrUndefined(value);
 
+    if (statusOfCheck) {
+      dispatch({
+        type: type,
+        payload: err,
+      });
+    }
+
+    return statusOfCheck;
+  }
+
+  const valueToCheck: SingleOptionType = value as SingleOptionType;
+
+  if (
+    valueToCheck !== null &&
+    valueToCheck !== undefined &&
+    checkIfOptionKeysPresent(valueToCheck)
+  ) {
+    return false;
+  } else {
     dispatch({
       type: type,
       payload: err,
     });
 
-    return statusOfCheck;
+    return true;
   }
-
-  const valueToCheck = value as SingleOptionType;
-
-  if (
-    valueToCheck === null ||
-    valueToCheck === undefined ||
-    !checkIfOptionKeysPresent(valueToCheck)
-  ) {
-    throw Error("Value is not a valid option");
-  }
-
-  statusOfCheck = valueToCheck.value.trim().length < 1;
-
-  dispatch({
-    type: type,
-    payload: { uFormError: err },
-  });
-
-  return statusOfCheck;
 }

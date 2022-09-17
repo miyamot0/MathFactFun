@@ -17,6 +17,14 @@ export function confirmDeletion(): boolean {
   return window.confirm("Are you sure to delete this student?");
 }
 
+/** handleStudentDelete
+ *
+ * @param student
+ * @param deleteDocument
+ * @param response
+ * @param history
+ * @returns
+ */
 export async function handleStudentDelete(
   student: StudentDataInterface,
   deleteDocument: (id: string) => Promise<void>,

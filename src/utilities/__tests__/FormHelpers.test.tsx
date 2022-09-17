@@ -63,7 +63,7 @@ describe("FormHelpers: streamlinedCheck", () => {
     const dispatch = () => true;
     const type = StudentCreatorBehavior.SetFormError;
 
-    const expected = true;
+    const expected = false;
 
     const result = streamlinedCheck(value, type, err, dispatch);
 
@@ -77,6 +77,18 @@ describe("FormHelpers: streamlinedCheck", () => {
     const dispatch = () => true;
     const type = StudentCreatorBehavior.SetFormError;
 
+    const expected = true;
+
+    const result = streamlinedCheck(
+      value as unknown as SingleOptionType,
+      type,
+      err,
+      dispatch
+    );
+
+    expect(result).toEqual(expected);
+
+    /*
     expect(() =>
       streamlinedCheck(
         value as unknown as SingleOptionType,
@@ -85,6 +97,7 @@ describe("FormHelpers: streamlinedCheck", () => {
         dispatch
       )
     ).toThrow(Error("Value is not a valid option"));
+    */
   });
 
   it("Error: dispatch is null", () => {
@@ -97,9 +110,9 @@ describe("FormHelpers: streamlinedCheck", () => {
     const dispatch = null;
     const type = StudentCreatorBehavior.SetFormError;
 
-    expect(() => streamlinedCheck(value, type, err, dispatch)).toThrow(
-      Error("Dispatch cannot be null or undefined")
-    );
+    const result = streamlinedCheck(value, type, err, dispatch);
+
+    expect(result).toBe(true);
   });
 
   it("Error: dispatch is undefined", () => {
@@ -109,8 +122,8 @@ describe("FormHelpers: streamlinedCheck", () => {
     const dispatch = undefined;
     const type = StudentCreatorBehavior.SetFormError;
 
-    expect(() => streamlinedCheck(value, type, err, dispatch)).toThrow(
-      Error("Dispatch cannot be null or undefined")
-    );
+    const result = streamlinedCheck(value, type, err, dispatch);
+
+    expect(result).toBe(true);
   });
 });

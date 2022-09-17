@@ -61,10 +61,6 @@ export async function verifySingleStudentCreate(
     payload: undefined,
   });
 
-  if (checkInputNullOrUndefined(user)) {
-    return;
-  }
-
   if (
     streamlinedCheck(
       state.CurrentGrade,
@@ -193,13 +189,13 @@ export async function verifySingleStudentEdit(
   response: FirestoreState,
   dispatch: any
 ) {
-  if (document === null || id === undefined) {
+  if (document === null || id === undefined || id === null) {
     return;
   }
 
   dispatch({
     type: StudentCreatorBehavior.SetFormError,
-    payload: { uFormError: undefined },
+    payload: undefined,
   });
 
   if (

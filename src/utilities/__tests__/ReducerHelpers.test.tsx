@@ -116,7 +116,7 @@ describe("ReducerHelper: checkIfOptionKeysPresent", () => {
   it("Should pass when both keys present", () => {
     const value = {
       label: "",
-      value: ""
+      value: "",
     };
     const result = checkIfOptionKeysPresent(value);
 
@@ -125,7 +125,7 @@ describe("ReducerHelper: checkIfOptionKeysPresent", () => {
 
   it("Should fail when one key missing (1)", () => {
     const value = {
-      value: ""
+      value: "",
     };
     const result = checkIfOptionKeysPresent(value);
 
@@ -144,14 +144,16 @@ describe("ReducerHelper: checkIfOptionKeysPresent", () => {
   it("Should throw error when null", () => {
     const value = null;
 
-    expect(() => checkIfOptionKeysPresent(value)).toThrow(Error("Option is null, cannot check for keys"));
+    const result = checkIfOptionKeysPresent(value);
+
+    expect(result).toBe(false);
   });
 
   it("Should throw error when undefined", () => {
     const value = undefined;
 
-    expect(() => checkIfOptionKeysPresent(value)).toThrow(Error("Option is undefined, cannot check for keys"));
+    const result = checkIfOptionKeysPresent(value);
+
+    expect(result).toBe(false);
   });
-
 });
-

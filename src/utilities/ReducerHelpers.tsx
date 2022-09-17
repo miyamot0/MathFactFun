@@ -10,85 +10,83 @@ import { MultiValue } from "react-select";
 import { SingleOptionType } from "../types/SharedComponentTypes";
 
 /** confirmStringType
- * 
- * @param {unknown} value 
+ *
+ * @param {unknown} value
  * @returns {string}
  */
 export function confirmStringType(value: unknown): string {
+  if (!(typeof value === "string" || value instanceof String)) {
+    throw Error("Value not a string type");
+  }
 
-    if (!(typeof value === 'string' || value instanceof String)) {
-        throw Error("Value not a string type");
-    }
-
-    return value as string;
+  return value as string;
 }
 
 /** confirmNumberType
- * 
- * @param {unknown} value 
+ *
+ * @param {unknown} value
  * @returns {number}
  */
 export function confirmNumberType(value: unknown): number {
+  if (!Number.isFinite(value)) {
+    throw new Error("Value not a number type");
+  }
 
-    if (!Number.isFinite(value)) {
-        throw new Error("Value not a number type");
-    }
-
-    return value as number;
+  return value as number;
 }
 
 export function checkIfOptionKeysPresent(value: unknown): boolean {
-    const newObject = value as object;
+  const newObject = value as object;
 
-    if (newObject === null) {
-        throw new Error("Option is null, cannot check for keys");
-    }
+  if (newObject === null) {
+    return false;
+  }
 
-    if (newObject === undefined) {
-        throw new Error("Option is undefined, cannot check for keys");
-    }
+  if (newObject === undefined) {
+    return false;
+  }
 
-    const currentKeys = Object.keys(newObject);
+  const currentKeys = Object.keys(newObject);
 
-    if (!currentKeys.includes("label") || !currentKeys.includes("value")) {
-        return false;
-    }
+  if (!currentKeys.includes("label") || !currentKeys.includes("value")) {
+    return false;
+  }
 
-    return true;
+  return true;
 }
 
 /** confirmSingleOptionType
- * 
- * @param {unknown} value 
+ *
+ * @param {unknown} value
  * @returns {SingleOptionType}
  */
 export function confirmSingleOptionType(value: unknown): SingleOptionType {
-    if (!checkIfOptionKeysPresent(value)) {
-        throw Error("Value not a single option type");
-    }
+  if (!checkIfOptionKeysPresent(value)) {
+    throw Error("Value not a single option type");
+  }
 
-    return value as SingleOptionType;
+  return value as SingleOptionType;
 }
 
 /** confirmMultiSingleOptionType
- * 
- * @param {unknown} value 
+ *
+ * @param {unknown} value
  * @returns {MultiValue<SingleOptionType>}
  */
-export function confirmMultiSingleOptionType(value: unknown): MultiValue<SingleOptionType> {
+export function confirmMultiSingleOptionType(
+  value: unknown
+): MultiValue<SingleOptionType> {
+  const riskyCast = value as MultiValue<SingleOptionType>;
 
-    const riskyCast = value as MultiValue<SingleOptionType>;
+  if (riskyCast === null || riskyCast === undefined) {
+    throw Error("Value not a multiple single option type");
+  }
 
-    if (riskyCast === null || riskyCast === undefined) {
-        throw Error("Value not a multiple single option type");
+  riskyCast.forEach((singleOptionType: object) => {
+    if (!checkIfOptionKeysPresent(singleOptionType)) {
+      throw Error("Value not a multiple single option type");
     }
+  });
 
-    riskyCast.forEach((singleOptionType: object) => {
-
-        if (!checkIfOptionKeysPresent(singleOptionType)) {
-            throw Error("Value not a multiple single option type");
-        }
-    });
-
-    return value as MultiValue<SingleOptionType>;
+  return value as MultiValue<SingleOptionType>;
 }
