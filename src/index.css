@@ -119,6 +119,11 @@ label {
   margin: 30px auto;
 }
 
+.select-label {
+  display: block !important;
+  margin-bottom: 10px !important;
+}
+
 label span {
   display: block;
   margin-bottom: 10px;

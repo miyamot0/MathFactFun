@@ -3,139 +3,183 @@ import { StudentCreatorBehavior } from "../pages/student/types/StudentTypes";
 import Select, { MultiValue } from "react-select";
 import { SingleOptionType } from "../types/SharedComponentTypes";
 
-/** studentEntryFieldText
- * 
- * @param currentValue 
- * @param type 
- * @param dispatch 
- * @returns 
+/** standardEntryFieldText
+ *
+ * @param currentValue
+ * @param type
+ * @param dispatch
+ * @returns
  */
-export function studentEntryFieldText(label: string, currentValue: string, type: StudentCreatorBehavior, dispatch: any) {
-    return <label>
-        <span>{label}:</span>
-        <input
-            required
-            type="text"
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                dispatch({
-                    type: type,
-                    payload: e.target.value,
-                });
-            }}
-            value={currentValue}
-        ></input>
-    </label>;
+export function standardEntryFieldText(
+  label: string,
+  currentValue: string,
+  type: StudentCreatorBehavior,
+  dispatch: any
+) {
+  return (
+    <label>
+      <span>{label}:</span>
+      <input
+        required
+        type="text"
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+          dispatch({
+            type: type,
+            payload: e.target.value,
+          });
+        }}
+        value={currentValue}
+      ></input>
+    </label>
+  );
 }
 
-/** studentEntryFieldTextArea
- * 
- * @param label 
- * @param currentValue 
- * @param type 
- * @param dispatch 
- * @returns 
+/** standardEntryFieldTextArea
+ *
+ * @param label
+ * @param currentValue
+ * @param type
+ * @param dispatch
+ * @returns
  */
-export function studentEntryFieldTextArea(label: string, currentValue: string, type: StudentCreatorBehavior, dispatch: any) {
-    return <label>
-        <span>{label}:</span>
-        <textarea
-            required
-            onChange={(e) => {
-                dispatch({
-                    type: type,
-                    payload: e.target.value,
-                });
-            }}
-            value={currentValue}
-        ></textarea>
-    </label>;
+export function standardEntryFieldTextArea(
+  label: string,
+  currentValue: string,
+  type: StudentCreatorBehavior,
+  dispatch: any
+) {
+  return (
+    <label>
+      <span>{label}:</span>
+      <textarea
+        required
+        onChange={(e) => {
+          dispatch({
+            type: type,
+            payload: e.target.value,
+          });
+        }}
+        value={currentValue}
+      ></textarea>
+    </label>
+  );
 }
 
-/** studentEntryFieldDate
- * 
- * @param label 
- * @param currentValue 
- * @param type 
- * @param dispatch 
- * @returns 
+/** standardEntryFieldDate
+ *
+ * @param label
+ * @param currentValue
+ * @param type
+ * @param dispatch
+ * @returns
  */
-export function studentEntryFieldDate(label: string, currentValue: string, type: StudentCreatorBehavior, dispatch: any) {
-    return <label>
-        <span>{label}:</span>
-        <input
-            required
-            type="date"
-            onChange={(e) => {
-                dispatch({
-                    type: type,
-                    payload: e.target.value,
-                });
-            }}
-            value={currentValue}
-        ></input>
-    </label>;
+export function standardEntryFieldDate(
+  label: string,
+  currentValue: string,
+  type: StudentCreatorBehavior,
+  dispatch: any
+) {
+  return (
+    <label>
+      <span>{label}:</span>
+      <input
+        required
+        type="date"
+        onChange={(e) => {
+          dispatch({
+            type: type,
+            payload: e.target.value,
+          });
+        }}
+        value={currentValue}
+      ></input>
+    </label>
+  );
 }
 
 /**
- * 
- * @param label 
- * @param options 
- * @param currentValue 
- * @param type 
- * @param dispatch 
- * @returns 
+ *
+ * @param label
+ * @param options
+ * @param currentValue
+ * @param type
+ * @param dispatch
+ * @returns
  */
-export function studentSelectField(label: string, options: any, currentValue: SingleOptionType, type: StudentCreatorBehavior, dispatch: any) {
-    return <label>
-        <span>{label}:</span>
-        <Select
-            className="single-select-field"
-            options={options}
-            onChange={(option) => {
-                dispatch({
-                    type: type,
-                    payload: option,
-                });
-            }}
-        />
-    </label>;
+export function standardSelectField(
+  label: string,
+  options: any,
+  currentValue: SingleOptionType,
+  type: StudentCreatorBehavior,
+  dispatch: any
+) {
+  return (
+    <>
+      <label htmlFor="single-field" className="select-label">
+        {label}:
+      </label>
+      <Select
+        name={"single-field"}
+        inputId={"single-field"}
+        options={options}
+        onChange={(option) => {
+          dispatch({
+            type: type,
+            payload: option,
+          });
+        }}
+      />
+    </>
+  );
 }
 
-/** studentSelectFieldMulti
- * 
- * @param label 
- * @param options 
- * @param currentValue 
- * @param type 
- * @param dispatch 
- * @returns 
+/** standardSelectFieldMulti
+ *
+ * @param label
+ * @param options
+ * @param currentValue
+ * @param type
+ * @param dispatch
+ * @returns
  */
-export function studentSelectFieldMulti(label: string, options: any, currentValue: MultiValue<SingleOptionType>, type: StudentCreatorBehavior, dispatch: any) {
-    return <label>
-        <span>{label}</span>
-        <Select
-            options={options}
-            onChange={(option: MultiValue<SingleOptionType>) => {
-                dispatch({
-                    type: type,
-                    payload: option,
-                });
-            }}
-            value={currentValue}
-            isMulti={true}
-        />
-    </label>;
+export function standardSelectFieldMulti(
+  label: string,
+  options: any,
+  currentValue: MultiValue<SingleOptionType>,
+  type: StudentCreatorBehavior,
+  dispatch: any
+) {
+  return (
+    <>
+      <label htmlFor="multi-field" className="select-label">
+        {label}:
+      </label>
+      <Select
+        name={"multi-field"}
+        inputId={"multi-field"}
+        options={options}
+        onChange={(option: MultiValue<SingleOptionType>) => {
+          dispatch({
+            type: type,
+            payload: option,
+          });
+        }}
+        value={currentValue}
+        isMulti={true}
+      />
+    </>
+  );
 }
 
-/** studentErrorField
- * 
- * @param formError 
- * @returns 
+/** standardErrorField
+ *
+ * @param formError
+ * @returns
  */
-export function studentErrorField(formError: string | undefined | null) {
-    if (formError === undefined) {
-        return <></>
-    } else {
-        return formError && <p className="error">{formError}</p>;
-    }
+export function standardErrorField(formError: string | undefined | null) {
+  if (formError === undefined) {
+    return <></>;
+  } else {
+    return <p className="error">{formError}</p>;
+  }
 }

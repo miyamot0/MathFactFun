@@ -1,86 +1,177 @@
+/** @license
+ *
+ * Copyright (c) Shawn P. Gilroy, Louisiana State University.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
 import React from "react";
-import firebase from "firebase";
-import Select from 'react-select';
 import Adapter from "enzyme-adapter-react-16";
 import Enzyme from "enzyme";
 import { mount } from "enzyme";
+import selectEvent from "react-select-event";
 
-import { studentEntryFieldText, studentEntryFieldTextArea, studentSelectField } from "../FieldHelpers"
+import {
+  standardEntryFieldDate,
+  standardEntryFieldText,
+  standardEntryFieldTextArea,
+  standardErrorField,
+  standardSelectField,
+  standardSelectFieldMulti,
+} from "../FieldHelpers";
+import { render } from "@testing-library/react";
+import { act } from "react-dom/test-utils";
+import { SingleOptionType } from "../../types/SharedComponentTypes";
+import { MultiValue } from "react-select";
 
 Enzyme.configure({ adapter: new Adapter() });
 
-describe('studentEntryFieldText', () => {
-    it('Should submit', () => {
-        const label = "";
-        const currentValue = "";
-        const type = 0;
-        const dispatch = jest.fn();
+describe("standardEntryFieldText", () => {
+  it("Should fire dispatch", () => {
+    const label = "";
+    const currentValue = "";
+    const type = 0;
+    const dispatch = jest.fn();
 
-        const event = {
-            target: { value: 'the-value' }
-        };
+    const event = {
+      target: { value: "the-value" },
+    };
 
-        const wrapper = mount(studentEntryFieldText(label, currentValue, type, dispatch));
+    const wrapper = mount(
+      standardEntryFieldText(label, currentValue, type, dispatch)
+    );
 
-        wrapper.find('input').simulate('change', event);
+    wrapper.find("input").simulate("change", event);
 
-        expect(dispatch).toBeCalled();
-    })
-})
+    expect(dispatch).toBeCalled();
+  });
+});
 
-describe('studentEntryFieldTextArea', () => {
-    it('Should submit', () => {
-        const label = "";
-        const currentValue = "";
-        const type = 0;
-        const dispatch = jest.fn();
+describe("standardEntryFieldTextArea", () => {
+  it("Should fire dispatch", () => {
+    const label = "";
+    const currentValue = "";
+    const type = 0;
+    const dispatch = jest.fn();
 
-        const event = {
-            target: { value: 'the-value' }
-        };
+    const event = {
+      target: { value: "the-value" },
+    };
 
-        const wrapper = mount(studentEntryFieldTextArea(label, currentValue, type, dispatch));
+    const wrapper = mount(
+      standardEntryFieldTextArea(label, currentValue, type, dispatch)
+    );
 
-        console.log(JSON.stringify(wrapper))
+    console.log(JSON.stringify(wrapper));
 
-        wrapper.find('textarea').simulate('change', event);
+    wrapper.find("textarea").simulate("change", event);
 
-        expect(dispatch).toBeCalled();
-    })
-})
+    expect(dispatch).toBeCalled();
+  });
+});
 
-describe('studentSelectField', () => {
-    it('Should submit', () => {
-        const label = "";
-        const currentValue = "";
-        const type = 0;
-        const dispatch = jest.fn();
+describe("standardEntryFieldDate", () => {
+  it("Should fire dispatch", () => {
+    const label = "";
+    const currentValue = "9/16/2022";
+    const type = 0;
+    const dispatch = jest.fn();
 
-        const event = {
-            target: { value: "6th", label: "Sixth Grade" }
-        };
+    const event = {
+      target: { value: "9/18/2022" },
+    };
 
-        const options = [
-            { value: "K", label: "Kindergarten" },
-            { value: "1st", label: "First Grade" },
-            { value: "2nd", label: "Second Grade" },
-            { value: "3rd", label: "Third Grade" },
-            { value: "4th", label: "Fourth Grade" },
-            { value: "5th", label: "Fifth Grade" },
-            { value: "6th", label: "Sixth Grade" },
-        ];
+    const wrapper = mount(
+      standardEntryFieldDate(label, currentValue, type, dispatch)
+    );
 
-        const wrapper = mount(studentSelectField(label, options,
-            options[0], type, dispatch));
+    wrapper.find("input").simulate("change", event);
 
-        //https://github.com/romgain/react-select-event/blob/master/src/__tests__/select-event.test.tsx
+    expect(dispatch).toBeCalled();
+  });
+});
 
-        //const component = wrapper.find('.single-select-field').at(0);
-        //component.simulate('change', event);
-        //component.simulate('keyDown', { key: 'ArrowDown', keyCode: 40 });
+describe("standardSelectField", () => {
+  it("Should fire dispatch", async () => {
+    act(async () => {
+      const label = "single-select";
+      const type = 0;
+      const dispatch = jest.fn();
 
-        //expect(dispatch).toBeCalled();
+      const options = [
+        { value: "K", label: "Kindergarten" },
+        { value: "1st", label: "First Grade" },
+        { value: "2nd", label: "Second Grade" },
+        { value: "3rd", label: "Third Grade" },
+        { value: "4th", label: "Fourth Grade" },
+        { value: "5th", label: "Fifth Grade" },
+        { value: "6th", label: "Sixth Grade" },
+      ];
 
-        expect(1).toBe(1)
-    })
-})
+      const result = render(
+        <>{standardSelectField(label, options, options[0], type, dispatch)}</>
+      );
+      const input = result.getByLabelText(`${label}:`);
+
+      await selectEvent.select(input, "Second Grade");
+
+      expect(dispatch).toBeCalled();
+    });
+  });
+});
+
+describe("standardSelectFieldMulti", () => {
+  it("Should fire dispatch", async () => {
+    act(async () => {
+      const label = "multi-field";
+      const type = 0;
+      const dispatch = jest.fn();
+
+      const options = [
+        { value: "K", label: "Kindergarten" },
+        { value: "1st", label: "First Grade" },
+        { value: "2nd", label: "Second Grade" },
+        { value: "3rd", label: "Third Grade" },
+        { value: "4th", label: "Fourth Grade" },
+        { value: "5th", label: "Fifth Grade" },
+        { value: "6th", label: "Sixth Grade" },
+      ];
+
+      const result = render(
+        <>
+          {standardSelectFieldMulti(
+            label,
+            options,
+            [options[0]] as MultiValue<SingleOptionType>,
+            type,
+            dispatch
+          )}
+        </>
+      );
+      const input = result.getByLabelText(`${label}:`);
+
+      await selectEvent.select(input, "Second Grade");
+
+      await selectEvent.select(input, "Third Grade");
+
+      expect(dispatch).toBeCalled();
+    });
+  });
+});
+
+describe("standardErrorField", () => {
+  it("Should render same, if valid", () => {
+    const label = "";
+    const returner = standardErrorField(label);
+
+    expect(returner).toStrictEqual(<p className="error">{label}</p>);
+  });
+
+  it("Should render blank div, if undefined", () => {
+    const label = undefined;
+    const returner = standardErrorField(label);
+
+    expect(returner).toStrictEqual(<></>);
+  });
+});
