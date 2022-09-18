@@ -44,6 +44,7 @@ import { ErrorModalCustomStyle } from "./subcomponents/ModalStyles";
 import { InterventionFormat, RelevantKeys } from "../../maths/Facts";
 import { StudentDataInterface } from "../student/interfaces/StudentInterfaces";
 import {
+  sharedButtonActionSequence,
   shouldShowFeedback,
   useEventListener,
 } from "./helpers/InterventionHelpers";
@@ -138,180 +139,6 @@ export default function ExplicitTiming() {
     });
   }
 
-  /** captureButtonAction
-   *
-   * Button interactions to fire
-   *
-   */
-  function captureButtonAction(): void {
-    if (document === null) {
-      return;
-    }
-
-    if (
-      state.CurrentAction === SharedActionSequence.Start ||
-      state.CurrentAction === SharedActionSequence.Begin
-    ) {
-      const listItem = state.WorkingData[0];
-
-      const updatedList = state.WorkingData.filter(function (item) {
-        return item !== listItem;
-      });
-
-      dispatch({
-        type: InterventionActions.BenchmarkBatchStartBegin,
-        payload: {
-          ButtonText: "Check",
-          CoverProblem: false,
-          UpdateEntry: "",
-          UpdateView: listItem.split(":")[0],
-          WorkingData: updatedList,
-          StartTime: state.StartTime === null ? new Date() : state.StartTime,
-          TrialTime: new Date(),
-          CurrentAction: SharedActionSequence.Answer,
-        },
-      });
-
-      return;
-    }
-
-    const combinedResponse =
-      state.ViewRepresentationInternal.split("=")[0] +
-      "=" +
-      state.EntryRepresentationInternal;
-
-    // Compare if internal and inputted string match
-    const isMatching =
-      state.ViewRepresentationInternal.trim() === combinedResponse.trim();
-
-    let uNumberCorrectInitial = state.NumCorrectInitial;
-    let uNumberErrors = state.NumErrors;
-
-    // Increment initial attempt, if correct
-    if (state.OnInitialTry && isMatching) {
-      uNumberCorrectInitial = uNumberCorrectInitial + 1;
-    }
-
-    // Increment errors, if incorrect
-    if (!isMatching) {
-      uNumberErrors = state.NumErrors + 1;
-    }
-
-    const current = new Date();
-    const secs = (current.getTime() - state.PreTrialTime.getTime()) / 1000;
-
-    const holderPreTime = state.PreTrialTime;
-
-    if (shouldShowFeedback(!isMatching, document)) {
-      const totalDigitsShown = CalculateDigitsTotalAnswer(
-        state.ViewRepresentationInternal
-      );
-
-      const totalDigitsCorrect = CalculateDigitsCorrectAnswer(
-        combinedResponse,
-        state.ViewRepresentationInternal
-      );
-
-      const currentItem2: FactDataInterface = {
-        factCorrect: isMatching,
-        initialTry: state.OnInitialTry,
-        factType: document.currentTarget,
-        factString: state.ViewRepresentationInternal,
-        factEntry: combinedResponse,
-        latencySeconds: secs,
-        dateTimeEnd: timestamp.fromDate(new Date(current)),
-        dateTimeStart: timestamp.fromDate(new Date(holderPreTime)),
-      };
-
-      dispatch({
-        type: InterventionActions.ExplicitTimingBatchIncrement,
-        payload: {
-          uNumberCorrectInitial,
-          uNumberErrors,
-          uTotalDigits: state.TotalDigits + totalDigitsShown,
-          uTotalDigitsCorrect: state.TotalDigitsCorrect + totalDigitsCorrect,
-          uNumberTrials: state.NumbTrials + 1,
-          uInitialTry: state.OnInitialTry,
-          uTrialTime: new Date(),
-        },
-      });
-
-      dispatch({
-        type: InterventionActions.ExplicitTimingModalPreErrorLog,
-        payload: {
-          uFactModel: [...state.FactModelList, currentItem2],
-        },
-      });
-
-      openModal();
-    } else {
-      const totalDigitsShown = CalculateDigitsTotalAnswer(
-        state.ViewRepresentationInternal
-      );
-
-      const totalDigitsCorrect = CalculateDigitsCorrectAnswer(
-        combinedResponse,
-        state.ViewRepresentationInternal
-      );
-
-      const currentItem2: FactDataInterface = {
-        factCorrect: isMatching,
-        initialTry: state.OnInitialTry,
-        factType: document.currentTarget,
-        factString: state.ViewRepresentationInternal,
-        factEntry: combinedResponse,
-        latencySeconds: secs,
-        dateTimeEnd: timestamp.fromDate(new Date(current)),
-        dateTimeStart: timestamp.fromDate(new Date(holderPreTime)),
-      };
-
-      dispatch({
-        type: InterventionActions.ExplicitTimingBatchIncrement,
-        payload: {
-          uNumberCorrectInitial,
-          uNumberErrors,
-          uTotalDigits: state.TotalDigits + totalDigitsShown,
-          uTotalDigitsCorrect: state.TotalDigitsCorrect + totalDigitsCorrect,
-          uNumberTrials: state.NumbTrials + 1,
-          uInitialTry: state.OnInitialTry,
-          uTrialTime: new Date(),
-        },
-      });
-
-      // Note: issue where state change not fast enough to catch latest
-      if (state.WorkingData.length === 0) {
-        submitPerformancesToFirebase({
-          user,
-          id,
-          interventionFormat: InterventionFormat.CoverCopyCompare,
-          finalFactObject: currentItem2,
-          document,
-
-          state,
-          response,
-          addDocument,
-          updateDocument,
-          history,
-        });
-      } else {
-        const listItem = state.WorkingData[0];
-        const updatedList = state.WorkingData.filter(function (item) {
-          return item !== listItem;
-        });
-
-        dispatch({
-          type: InterventionActions.BenchmarkBatchStartIncrementPost,
-          payload: {
-            uFactModel: [...state.FactModelList, currentItem2],
-            uWorkingData: updatedList,
-            uView: listItem.split(":")[0],
-            uEntry: "",
-          },
-        });
-      }
-    }
-  }
-
   return (
     <div className="wrapperET">
       <Modal
@@ -377,7 +204,24 @@ export default function ExplicitTiming() {
       </div>
       <div className="box3ET">
         <section>
-          <button className="global-btn " onClick={() => captureButtonAction()}>
+          <button
+            className="global-btn "
+            onClick={() => {
+              sharedButtonActionSequence(
+                user,
+                id,
+                InterventionFormat.ExplicitTiming,
+                document,
+                state,
+                openModal,
+                addDocument,
+                updateDocument,
+                response,
+                history,
+                dispatch
+              );
+            }}
+          >
             {state.ButtonText}
           </button>
         </section>
