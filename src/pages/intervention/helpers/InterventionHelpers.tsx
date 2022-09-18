@@ -6,12 +6,23 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import firebase from "firebase";
 import { useEffect, useRef } from "react";
-import { ErrorHandling, RelevantKeys } from "../../../maths/Facts";
+import { FirestoreState } from "../../../firebase/interfaces/FirebaseInterfaces";
+import {
+  ErrorHandling,
+  InterventionFormat,
+  RelevantKeys,
+} from "../../../maths/Facts";
 import { FactsOnFire } from "../../../maths/Mind";
 import { GetOperatorFromLabel } from "../../../utilities/LabelHelper";
+import { FactDataInterface } from "../../setcreator/interfaces/SetCreatorInterfaces";
 import { StudentDataInterface } from "../../student/interfaces/StudentInterfaces";
 import { SharedActionSequence } from "../functionality/InterventionBehavior";
+import {
+  InterventionState,
+  PerformanceDataInterface,
+} from "../interfaces/InterventionInterfaces";
 
 /** DetermineErrorCorrection
  *
@@ -215,6 +226,8 @@ export function useEventListener(
   );
 }
 
+// TODO: remove once getting into TP
+
 /** keyHandler
  *
  * Handle keyboard input
@@ -246,5 +259,77 @@ export function keyHandler(
     }
 
     captureKeyClick2(modKey);
+  }
+}
+
+export async function submitPerformancesToFirebase({
+  user,
+  id,
+  interventionFormat,
+  finalFactObject,
+  document,
+  state,
+  response,
+  addDocument,
+  updateDocument,
+  history,
+}: {
+  user: firebase.User | null;
+  id: string | null;
+  interventionFormat: string;
+  finalFactObject: FactDataInterface | null;
+  document: StudentDataInterface | null;
+  state: InterventionState;
+  response: FirestoreState;
+  addDocument: (doc: PerformanceDataInterface) => Promise<void>;
+  updateDocument: (id: string, updates: any) => Promise<void>;
+  history: any;
+}) {
+  const finalEntries = state.FactModelList;
+
+  if (!state.StartTime || !user || !document || !id) {
+    return;
+  }
+
+  if (finalFactObject !== null) {
+    finalEntries?.push(finalFactObject);
+  }
+
+  const end = new Date();
+
+  const uploadObject = {
+    correctDigits: state.TotalDigitsCorrect,
+    errCount: state.NumErrors,
+    nCorrectInitial: state.NumCorrectInitial,
+    nRetries: state.NumRetries,
+    sessionDuration: (end.getTime() - state.StartTime.getTime()) / 1000,
+    setSize: document.factsTargeted.length,
+    totalDigits: state.TotalDigits,
+    entries: finalEntries.map((entry) => Object.assign({}, entry)),
+    id: document.id,
+    creator: user.uid,
+    target: document.currentTarget,
+    method: interventionFormat,
+    dateTimeEnd: end.toString(),
+    dateTimeStart: state.StartTime.toString(),
+    createdAt: firebase.firestore.Timestamp.fromDate(new Date()),
+  };
+
+  await addDocument(uploadObject);
+
+  // If added without issue, update timestamp
+  if (!response.error) {
+    const currentDate = new Date();
+    const studentObject = {
+      lastActivity: firebase.firestore.Timestamp.fromDate(currentDate),
+    };
+
+    // Update field regarding last activity
+    await updateDocument(id, studentObject);
+
+    // Push to home
+    if (!response.error) {
+      history.push(`/practice`);
+    }
   }
 }

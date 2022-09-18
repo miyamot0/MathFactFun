@@ -52,6 +52,7 @@ import {
   commonKeyHandler,
   completeLoadingDispatch,
 } from "./helpers/DispatchingHelpers";
+import { submitPerformancesToFirebase } from "./helpers/InterventionHelpers";
 
 export default function ExplicitTiming() {
   const { id, target } = useParams<RoutedIdTargetParam>();
@@ -138,65 +139,18 @@ export default function ExplicitTiming() {
    *
    */
   function callbackToSubmit() {
-    submitDataToFirebase(null);
-  }
-
-  /** submitDataToFirebase
-   *
-   * Push data to server
-   *
-   * @param {FactDataInterface} finalFactObject final item completed
-   */
-  async function submitDataToFirebase(
-    finalFactObject: FactDataInterface | null
-  ): Promise<void> {
-    const finalEntries = state.FactModelList;
-
-    if (!state.StartTime || !user || !document || !id) {
-      return;
-    }
-
-    if (finalFactObject !== null) {
-      finalEntries.push(finalFactObject);
-    }
-
-    const end = new Date();
-
-    const uploadObject = {
-      correctDigits: state.TotalDigitsCorrect,
-      errCount: state.NumErrors,
-      nCorrectInitial: state.NumCorrectInitial,
-      nRetries: state.NumRetries,
-      sessionDuration: (end.getTime() - state.StartTime.getTime()) / 1000,
-      setSize: document.factsTargeted.length,
-      totalDigits: state.TotalDigits,
-      entries: finalEntries.map((entry) => Object.assign({}, entry)),
-      id: document.id,
-      creator: user.uid,
-      target: document.currentTarget,
-      method: InterventionFormat.ExplicitTiming,
-      dateTimeEnd: end.toString(),
-      dateTimeStart: state.StartTime.toString(),
-      createdAt: timestamp.fromDate(new Date()),
-    };
-
-    await addDocument(uploadObject);
-
-    // If added without issue, update timestamp
-    if (!response.error) {
-      const currentDate = new Date();
-      const studentObject = {
-        lastActivity: timestamp.fromDate(currentDate),
-      };
-
-      // Update field regarding last activity
-      await updateDocument(id, studentObject);
-
-      // Push to home
-      if (!response.error) {
-        history.push(`/practice`);
-      }
-    }
+    submitPerformancesToFirebase({
+      user,
+      id,
+      interventionFormat: InterventionFormat.ExplicitTiming,
+      finalFactObject: null,
+      document,
+      state,
+      response,
+      addDocument,
+      updateDocument,
+      history,
+    });
   }
 
   /** captureButtonAction
@@ -341,8 +295,19 @@ export default function ExplicitTiming() {
 
       // Note: issue where state change not fast enough to catch latest
       if (state.WorkingData.length === 0) {
-        // If finished, upload list w/ latest item
-        submitDataToFirebase(currentItem2);
+        submitPerformancesToFirebase({
+          user,
+          id,
+          interventionFormat: InterventionFormat.CoverCopyCompare,
+          finalFactObject: currentItem2,
+          document,
+
+          state,
+          response,
+          addDocument,
+          updateDocument,
+          history,
+        });
       } else {
         const listItem = state.WorkingData[0];
         const updatedList = state.WorkingData.filter(function (item) {
@@ -361,37 +326,6 @@ export default function ExplicitTiming() {
       }
     }
   }
-
-  /*
-   function captureKeyClick(char: string): void {
-    // Processing add/remove of character
-    if (char === DelCode) {
-      // # Rule #7: Exit out if nothin to delete
-      if (state.EntryRepresentationInternal.length === 0) return;
-
-      dispatch(
-        new DispatchUpdateEntryInternal({
-          type: InterventionActions.UpdateResponseEntry,
-          payload: {
-            EntryRepresentationInternal:
-              state.EntryRepresentationInternal.slice(0, -1),
-          },
-        })
-      );
-    } else {
-      dispatch(
-        new DispatchUpdateEntryInternal({
-          type: InterventionActions.UpdateResponseEntry,
-          payload: {
-            EntryRepresentationInternal:
-              state.EntryRepresentationInternal + char,
-          },
-        })
-      );
-    }
-  }
-
-  */
 
   return (
     <div className="wrapperET">

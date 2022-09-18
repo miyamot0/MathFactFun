@@ -31,7 +31,6 @@ import { RoutedIdTargetParam } from "../../interfaces/RoutingInterfaces";
 import { useAuthorizationContext } from "../../context/hooks/useAuthorizationContext";
 import {
   InterventionActions,
-  DelCode,
   InitialInterventionState,
   InterventionReducer,
   SharedActionSequence,
@@ -42,19 +41,15 @@ import "./styles/ExplicitTiming.css";
 import { StudentDataInterface } from "../student/interfaces/StudentInterfaces";
 import { FactDataInterface } from "../setcreator/interfaces/SetCreatorInterfaces";
 import {
-  keyHandler,
   loadWorkingDataBenchmark,
   useEventListener,
 } from "./helpers/InterventionHelpers";
-import {
-  DispatchUpdateEntryInternal,
-  DispatchUpdatePreLoadContent,
-} from "./interfaces/InterventionInterfaces";
 import {
   commonKeyHandler,
   completeLoadingDispatch,
 } from "./helpers/DispatchingHelpers";
 import { RelevantKeys } from "../../maths/Facts";
+import { submitPerformancesToFirebase } from "./helpers/InterventionHelpers";
 
 export default function Benchmark() {
   const { id, target } = useParams<RoutedIdTargetParam>();
@@ -132,15 +127,22 @@ export default function Benchmark() {
    *
    */
   function callbackToSubmit() {
-    submitDataToFirebase(null);
+    submitPerformancesToFirebase({
+      user,
+      id,
+      interventionFormat: "Benchmark",
+      finalFactObject: null,
+      document,
+      state,
+      response: addResponse,
+      addDocument,
+      updateDocument,
+      history,
+    });
   }
 
   /** submitDataToFirebase
    *
-   * Push data to server
-   *
-   * @param {FactDataInterface} finalFactObject final item completed
-   */
   async function submitDataToFirebase(
     finalFactObject: FactDataInterface | null
   ): Promise<void> {
@@ -200,6 +202,8 @@ export default function Benchmark() {
       }
     }
   }
+
+*/
 
   /** captureButtonAction
    *
@@ -306,7 +310,18 @@ export default function Benchmark() {
     // Potential issue: state change not fast enough to catch latest
     if (state.WorkingData.length === 0) {
       // If finished, upload list w/ latest item
-      submitDataToFirebase(currentItem);
+      submitPerformancesToFirebase({
+        user,
+        id,
+        interventionFormat: "Benchmark",
+        finalFactObject: currentItem,
+        document,
+        state,
+        response: addResponse,
+        addDocument,
+        updateDocument,
+        history,
+      });
     } else {
       // Otherise, add it to the existing list
 
@@ -326,38 +341,6 @@ export default function Benchmark() {
       });
     }
   }
-
-  /*
-  function captureKeyClick(char: string): void {
-    // Processing add/remove of character
-    if (char === DelCode) {
-      // # Rule #7: Exit out if nothin to delete
-      if (state.EntryRepresentationInternal.length === 0) return;
-
-      // Lop off end of string
-      dispatch(
-        new DispatchUpdateEntryInternal({
-          type: InterventionActions.UpdateResponseEntry,
-          payload: {
-            EntryRepresentationInternal:
-              state.EntryRepresentationInternal.slice(0, -1),
-          },
-        })
-      );
-    } else {
-      // Add to end of string
-      dispatch(
-        new DispatchUpdateEntryInternal({
-          type: InterventionActions.UpdateResponseEntry,
-          payload: {
-            EntryRepresentationInternal:
-              state.EntryRepresentationInternal + char,
-          },
-        })
-      );
-    }
-  }
-  */
 
   return (
     <div className="wrapperET">
