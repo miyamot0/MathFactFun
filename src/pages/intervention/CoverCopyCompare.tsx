@@ -52,7 +52,10 @@ import {
   DispatchUpdateEntryInternal,
   DispatchUpdatePreLoadContent,
 } from "./interfaces/InterventionInterfaces";
-import { completeLoadingDispatch } from "./helpers/DispatchingHelpers";
+import {
+  commonKeyHandler,
+  completeLoadingDispatch,
+} from "./helpers/DispatchingHelpers";
 
 export default function CoverCopyCompare() {
   const { id, target } = useParams<RoutedIdTargetParam>();
@@ -106,7 +109,12 @@ export default function CoverCopyCompare() {
       modKey = key.key === "*" ? "x" : modKey;
       modKey = key.key === "Enter" ? "=" : modKey;
 
-      captureKeyClick(modKey);
+      commonKeyHandler(
+        InterventionFormat.CoverCopyCompare,
+        modKey,
+        state,
+        dispatch
+      );
     }
   }
 
@@ -388,12 +396,7 @@ export default function CoverCopyCompare() {
     }
   }
 
-  /** captureKeyClick
-   *
-   * Process incoming key
-   *
-   * @param {string} char
-   */
+  /*
   function captureKeyClick(char: string): void {
     // Rule 1: Exit out if not in Covered/Copying sequence
     if (state.CurrentAction !== SharedActionSequence.CoverCopy) return;
@@ -458,6 +461,7 @@ export default function CoverCopyCompare() {
       );
     }
   }
+  */
 
   /** captureItemClick
    *
@@ -608,7 +612,14 @@ export default function CoverCopyCompare() {
         }}
       >
         <KeyPad
-          callBackFunction={captureKeyClick}
+          callBackFunction={(key: string) => {
+            commonKeyHandler(
+              InterventionFormat.CoverCopyCompare,
+              key,
+              state,
+              dispatch
+            );
+          }}
           operatorSymbol={state.OperatorSymbol}
           showEquals={true}
         />

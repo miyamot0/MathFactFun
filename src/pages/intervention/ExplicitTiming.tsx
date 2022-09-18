@@ -41,19 +41,17 @@ import {
 // styles
 import "./styles/ExplicitTiming.css";
 import { ErrorModalCustomStyle } from "./subcomponents/ModalStyles";
-import { InterventionFormat } from "../../maths/Facts";
+import { InterventionFormat, RelevantKeys } from "../../maths/Facts";
 import { StudentDataInterface } from "../student/interfaces/StudentInterfaces";
 import {
-  keyHandler,
   shouldShowFeedback,
   useEventListener,
 } from "./helpers/InterventionHelpers";
 import { FactDataInterface } from "../setcreator/interfaces/SetCreatorInterfaces";
 import {
-  DispatchUpdateEntryInternal,
-  DispatchUpdatePreLoadContent,
-} from "./interfaces/InterventionInterfaces";
-import { completeLoadingDispatch } from "./helpers/DispatchingHelpers";
+  commonKeyHandler,
+  completeLoadingDispatch,
+} from "./helpers/DispatchingHelpers";
 
 export default function ExplicitTiming() {
   const { id, target } = useParams<RoutedIdTargetParam>();
@@ -84,10 +82,42 @@ export default function ExplicitTiming() {
     setIsOpen(false);
   }
 
+  /** keyHandler
+   *
+   * Handle keyboard input
+   *
+   * @param {React.KeyboardEvent<HTMLElement>} key keyevent
+   */
+  function keyHandler(key: React.KeyboardEvent<HTMLElement>): void {
+    if (key.key === "Enter") return;
+
+    if (RelevantKeys.includes(key.key)) {
+      let modKey = key.key === "Backspace" ? "Del" : key.key;
+      modKey = key.key === "Delete" ? "Del" : modKey;
+
+      if (modKey === " ") {
+        if (
+          state.CurrentAction !== SharedActionSequence.Entry &&
+          state.CurrentAction !== SharedActionSequence.Start
+        ) {
+          () => captureButtonAction();
+          return;
+        }
+
+        return;
+      }
+
+      commonKeyHandler(
+        InterventionFormat.ExplicitTiming,
+        modKey,
+        state,
+        dispatch
+      );
+    }
+  }
+
   // Add event listener to hook
-  useEventListener("keydown", (key: any) =>
-    keyHandler(key, captureKeyClick, captureButtonAction, state.CurrentAction)
-  );
+  useEventListener("keydown", keyHandler);
 
   // Fire once individual data loaded, just once
   useEffect(() => {
@@ -332,13 +362,8 @@ export default function ExplicitTiming() {
     }
   }
 
-  /** captureKeyClick
-   *
-   * Process incoming key
-   *
-   * @param {string} char
-   */
-  function captureKeyClick(char: string): void {
+  /*
+   function captureKeyClick(char: string): void {
     // Processing add/remove of character
     if (char === DelCode) {
       // # Rule #7: Exit out if nothin to delete
@@ -365,6 +390,8 @@ export default function ExplicitTiming() {
       );
     }
   }
+
+  */
 
   return (
     <div className="wrapperET">
@@ -444,7 +471,14 @@ export default function ExplicitTiming() {
         }}
       >
         <KeyPad
-          callBackFunction={captureKeyClick}
+          callBackFunction={(key: string) => {
+            commonKeyHandler(
+              InterventionFormat.ExplicitTiming,
+              key,
+              state,
+              dispatch
+            );
+          }}
           operatorSymbol={state.OperatorSymbol}
           showEquals={false}
         />

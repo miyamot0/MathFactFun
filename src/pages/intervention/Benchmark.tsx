@@ -50,7 +50,11 @@ import {
   DispatchUpdateEntryInternal,
   DispatchUpdatePreLoadContent,
 } from "./interfaces/InterventionInterfaces";
-import { completeLoadingDispatch } from "./helpers/DispatchingHelpers";
+import {
+  commonKeyHandler,
+  completeLoadingDispatch,
+} from "./helpers/DispatchingHelpers";
+import { RelevantKeys } from "../../maths/Facts";
 
 export default function Benchmark() {
   const { id, target } = useParams<RoutedIdTargetParam>();
@@ -76,10 +80,37 @@ export default function Benchmark() {
     InitialInterventionState
   );
 
+  /** keyHandler
+   *
+   * Handle keyboard input
+   *
+   * @param {React.KeyboardEvent<HTMLElement>} key keyevent
+   */
+  function keyHandler(key: React.KeyboardEvent<HTMLElement>): void {
+    if (key.key === "Enter") return;
+
+    if (RelevantKeys.includes(key.key)) {
+      let modKey = key.key === "Backspace" ? "Del" : key.key;
+      modKey = key.key === "Delete" ? "Del" : modKey;
+
+      if (modKey === " ") {
+        if (
+          state.CurrentAction !== SharedActionSequence.Entry &&
+          state.CurrentAction !== SharedActionSequence.Start
+        ) {
+          () => captureButtonAction();
+          return;
+        }
+
+        return;
+      }
+
+      commonKeyHandler("Benchmark", modKey, state, dispatch);
+    }
+  }
+
   // Add event listener to hook
-  useEventListener("keydown", (key: any) =>
-    keyHandler(key, captureKeyClick, captureButtonAction, state.CurrentAction)
-  );
+  useEventListener("keydown", keyHandler);
 
   // Fire once individual data loaded, just once
   useEffect(() => {
@@ -296,12 +327,7 @@ export default function Benchmark() {
     }
   }
 
-  /** captureKeyClick
-   *
-   * Process incoming key
-   *
-   * @param {string} char
-   */
+  /*
   function captureKeyClick(char: string): void {
     // Processing add/remove of character
     if (char === DelCode) {
@@ -309,15 +335,15 @@ export default function Benchmark() {
       if (state.EntryRepresentationInternal.length === 0) return;
 
       // Lop off end of string
-      new DispatchUpdateEntryInternal({
-        type: InterventionActions.UpdateResponseEntry,
-        payload: {
-          EntryRepresentationInternal: state.EntryRepresentationInternal.slice(
-            0,
-            -1
-          ),
-        },
-      });
+      dispatch(
+        new DispatchUpdateEntryInternal({
+          type: InterventionActions.UpdateResponseEntry,
+          payload: {
+            EntryRepresentationInternal:
+              state.EntryRepresentationInternal.slice(0, -1),
+          },
+        })
+      );
     } else {
       // Add to end of string
       dispatch(
@@ -331,6 +357,7 @@ export default function Benchmark() {
       );
     }
   }
+  */
 
   return (
     <div className="wrapperET">
@@ -376,7 +403,9 @@ export default function Benchmark() {
         }}
       >
         <KeyPad
-          callBackFunction={captureKeyClick}
+          callBackFunction={(key: string) => {
+            commonKeyHandler("Benchmark", key, state, dispatch);
+          }}
           operatorSymbol={state.OperatorSymbol}
           showEquals={false}
         />
