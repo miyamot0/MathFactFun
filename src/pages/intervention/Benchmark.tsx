@@ -77,36 +77,6 @@ export default function Benchmark() {
     InitialInterventionState
   );
 
-  /** keyHandler
-   *
-   * Handle keyboard input
-   *
-   * @param {React.KeyboardEvent<HTMLElement>} key keyevent
-  function keyHandler(key: React.KeyboardEvent<HTMLElement>): void {
-    if (key.key === "Enter") return;
-
-    if (RelevantKeys.includes(key.key)) {
-      let modKey = key.key === "Backspace" ? "Del" : key.key;
-      modKey = key.key === "Delete" ? "Del" : modKey;
-
-      if (modKey === " ") {
-        if (
-          state.CurrentAction !== SharedActionSequence.Entry &&
-          state.CurrentAction !== SharedActionSequence.Start
-        ) {
-          () => captureButtonAction();
-          return;
-        }
-
-        return;
-      }
-
-      commonKeyHandler("Benchmark", modKey, state, dispatch);
-    }
-  }
-
-  */
-
   // Add event listener to hook
   useEventListener("keydown", (key: React.KeyboardEvent<HTMLElement>) => {
     commonKeyListener(

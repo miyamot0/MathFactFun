@@ -50,6 +50,7 @@ import {
 import { FactDataInterface } from "../setcreator/interfaces/SetCreatorInterfaces";
 import {
   commonKeyHandler,
+  commonKeyListener,
   completeLoadingDispatch,
 } from "./helpers/DispatchingHelpers";
 import { submitPerformancesToFirebase } from "./helpers/InterventionHelpers";
@@ -83,42 +84,18 @@ export default function ExplicitTiming() {
     setIsOpen(false);
   }
 
-  /** keyHandler
-   *
-   * Handle keyboard input
-   *
-   * @param {React.KeyboardEvent<HTMLElement>} key keyevent
-   */
-  function keyHandler(key: React.KeyboardEvent<HTMLElement>): void {
-    if (key.key === "Enter") return;
-
-    if (RelevantKeys.includes(key.key)) {
-      let modKey = key.key === "Backspace" ? "Del" : key.key;
-      modKey = key.key === "Delete" ? "Del" : modKey;
-
-      if (modKey === " ") {
-        if (
-          state.CurrentAction !== SharedActionSequence.Entry &&
-          state.CurrentAction !== SharedActionSequence.Start
-        ) {
-          () => captureButtonAction();
-          return;
-        }
-
-        return;
-      }
-
-      commonKeyHandler(
-        InterventionFormat.ExplicitTiming,
-        modKey,
-        state,
-        dispatch
-      );
-    }
-  }
-
   // Add event listener to hook
-  useEventListener("keydown", keyHandler);
+  useEventListener("keydown", (key: React.KeyboardEvent<HTMLElement>) => {
+    commonKeyListener(
+      key,
+      state,
+      InterventionFormat.ExplicitTiming,
+      captureButtonAction,
+      null,
+      null,
+      dispatch
+    );
+  });
 
   // Fire once individual data loaded, just once
   useEffect(() => {
