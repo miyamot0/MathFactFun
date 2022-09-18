@@ -16,7 +16,7 @@ import {
   DispatchUpdatePreLoadContent,
   InterventionState,
 } from "../interfaces/InterventionInterfaces";
-import { InterventionFormat } from "./../../../maths/Facts";
+import { InterventionFormat, RelevantKeys } from "./../../../maths/Facts";
 
 export function completeLoadingDispatch({
   intervention,
@@ -161,15 +161,15 @@ export function commonKeyHandler(
       if (state.EntryRepresentationInternal.length === 0) return;
 
       // Lop off end of string
-      new DispatchUpdateEntryInternal({
-        type: InterventionActions.UpdateResponseEntry,
-        payload: {
-          EntryRepresentationInternal: state.EntryRepresentationInternal.slice(
-            0,
-            -1
-          ),
-        },
-      });
+      dispatch(
+        new DispatchUpdateEntryInternal({
+          type: InterventionActions.UpdateResponseEntry,
+          payload: {
+            EntryRepresentationInternal:
+              state.EntryRepresentationInternal.slice(0, -1),
+          },
+        })
+      );
     } else {
       // Add to end of string
       dispatch(
@@ -181,6 +181,74 @@ export function commonKeyHandler(
           },
         })
       );
+    }
+  }
+}
+
+export function commonKeyListener(
+  key: React.KeyboardEvent<HTMLElement>,
+  state: InterventionState,
+  currentApproach: string,
+  captureButtonAction: () => void,
+  checkLiNullUndefinedBlank: any,
+  captureItemClick: any,
+  dispatch: any
+) {
+  if (currentApproach === InterventionFormat.CoverCopyCompare) {
+    if (RelevantKeys.includes(key.key)) {
+      let modKey = key.key === "Backspace" ? "Del" : key.key;
+      modKey = key.key === "Delete" ? "Del" : modKey;
+
+      if (modKey === " ") {
+        if (
+          state.CurrentAction !== SharedActionSequence.Entry &&
+          state.CurrentAction !== SharedActionSequence.Start
+        ) {
+          captureButtonAction();
+          return;
+        }
+
+        if (!checkLiNullUndefinedBlank(state.NextLiItem)) {
+          captureItemClick(state.NextLiItem);
+        }
+
+        return;
+      }
+
+      modKey = key.key === "*" ? "x" : modKey;
+      modKey = key.key === "Enter" ? "=" : modKey;
+
+      commonKeyHandler(currentApproach, modKey, state, dispatch);
+    }
+
+    //return;
+  } else {
+    if (RelevantKeys.includes(key.key)) {
+      let modKey = key.key === "Backspace" ? "Del" : key.key;
+      modKey = key.key === "Delete" ? "Del" : modKey;
+
+      if (modKey === " ") {
+        if (
+          state.CurrentAction !== SharedActionSequence.Entry &&
+          state.CurrentAction !== SharedActionSequence.Start
+        ) {
+          () => captureButtonAction();
+          return;
+        }
+
+        if (currentApproach === InterventionFormat.CoverCopyCompare) {
+          if (!checkLiNullUndefinedBlank(state.NextLiItem)) {
+            captureItemClick(state.NextLiItem);
+          }
+        }
+
+        return;
+      }
+
+      modKey = key.key === "*" ? "x" : modKey;
+      modKey = key.key === "Enter" ? "=" : modKey;
+
+      commonKeyHandler(currentApproach, modKey, state, dispatch);
     }
   }
 }

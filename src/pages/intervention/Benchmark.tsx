@@ -41,14 +41,16 @@ import "./styles/ExplicitTiming.css";
 import { StudentDataInterface } from "../student/interfaces/StudentInterfaces";
 import { FactDataInterface } from "../setcreator/interfaces/SetCreatorInterfaces";
 import {
+  checkLiNullUndefinedBlank,
   loadWorkingDataBenchmark,
   useEventListener,
 } from "./helpers/InterventionHelpers";
 import {
   commonKeyHandler,
+  commonKeyListener,
   completeLoadingDispatch,
 } from "./helpers/DispatchingHelpers";
-import { RelevantKeys } from "../../maths/Facts";
+import { InterventionFormat, RelevantKeys } from "../../maths/Facts";
 import { submitPerformancesToFirebase } from "./helpers/InterventionHelpers";
 
 export default function Benchmark() {
@@ -80,7 +82,6 @@ export default function Benchmark() {
    * Handle keyboard input
    *
    * @param {React.KeyboardEvent<HTMLElement>} key keyevent
-   */
   function keyHandler(key: React.KeyboardEvent<HTMLElement>): void {
     if (key.key === "Enter") return;
 
@@ -104,8 +105,20 @@ export default function Benchmark() {
     }
   }
 
+  */
+
   // Add event listener to hook
-  useEventListener("keydown", keyHandler);
+  useEventListener("keydown", (key: React.KeyboardEvent<HTMLElement>) => {
+    commonKeyListener(
+      key,
+      state,
+      "Benchmark",
+      captureButtonAction,
+      null,
+      null,
+      dispatch
+    );
+  });
 
   // Fire once individual data loaded, just once
   useEffect(() => {
@@ -140,70 +153,6 @@ export default function Benchmark() {
       history,
     });
   }
-
-  /** submitDataToFirebase
-   *
-  async function submitDataToFirebase(
-    finalFactObject: FactDataInterface | null
-  ): Promise<void> {
-    const finalEntries = state.FactModelList;
-
-    if (!state.StartTime || !user || !document || !id) {
-      return;
-    }
-
-    if (finalFactObject !== null) {
-      finalEntries?.push(finalFactObject);
-    }
-
-    const end = new Date();
-    const currentBenchmarkArea = target.split("-")[0];
-
-    const uploadObject = {
-      correctDigits: state.TotalDigitsCorrect,
-      errCount: state.NumErrors,
-      nCorrectInitial: state.NumCorrectInitial,
-      nRetries: 0,
-      sessionDuration: (end.getTime() - state.StartTime.getTime()) / 1000,
-      setSize: document.factsTargeted.length,
-      totalDigits: state.TotalDigits,
-      entries: finalEntries.map((entry) => Object.assign({}, entry)),
-      id: document.id,
-      creator: user.uid,
-      target: currentBenchmarkArea,
-      method: "Benchmark",
-      dateTimeEnd: end.toString(),
-      dateTimeStart: state.StartTime.toString(),
-      createdAt: timestamp.fromDate(new Date()),
-    };
-
-    // Update collection with latest performance
-    await addDocument(uploadObject);
-
-    // If added without issue, update timestamp
-    if (!addResponse.error) {
-      const completedBenchmark = document.completedBenchmark;
-
-      completedBenchmark.push(
-        `${target} ${document.dueDate.toDate().toDateString()}`
-      );
-
-      // Omit time updates
-      const studentObject = {
-        completedBenchmark,
-      };
-
-      // Update field regarding last activity
-      await updateDocument(id, studentObject);
-
-      // Push to home
-      if (!updateResponse.error) {
-        history.push(`/probe/${id}`);
-      }
-    }
-  }
-
-*/
 
   /** captureButtonAction
    *

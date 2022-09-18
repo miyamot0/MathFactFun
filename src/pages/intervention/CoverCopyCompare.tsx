@@ -55,6 +55,7 @@ import {
 } from "./interfaces/InterventionInterfaces";
 import {
   commonKeyHandler,
+  commonKeyListener,
   completeLoadingDispatch,
 } from "./helpers/DispatchingHelpers";
 
@@ -75,52 +76,21 @@ export default function CoverCopyCompare() {
     InitialInterventionState
   );
 
-  // modal stuff
   const [modalIsOpen, setIsOpen] = useState(false);
 
   Modal.setAppElement("#root");
 
-  /** keyHandler
-   *
-   * Handle keyboard input
-   *
-   * @param {React.KeyboardEvent<HTMLElement>} key keyevent
-   */
-  function keyHandler(key: React.KeyboardEvent<HTMLElement>): void {
-    if (RelevantKeys.includes(key.key)) {
-      let modKey = key.key === "Backspace" ? "Del" : key.key;
-      modKey = key.key === "Delete" ? "Del" : modKey;
-
-      if (modKey === " ") {
-        if (
-          state.CurrentAction !== SharedActionSequence.Entry &&
-          state.CurrentAction !== SharedActionSequence.Start
-        ) {
-          captureButtonAction();
-          return;
-        }
-
-        if (!checkLiNullUndefinedBlank(state.NextLiItem)) {
-          captureItemClick(state.NextLiItem);
-        }
-
-        return;
-      }
-
-      modKey = key.key === "*" ? "x" : modKey;
-      modKey = key.key === "Enter" ? "=" : modKey;
-
-      commonKeyHandler(
-        InterventionFormat.CoverCopyCompare,
-        modKey,
-        state,
-        dispatch
-      );
-    }
-  }
-
-  // Add event listener to hook
-  useEventListener("keydown", keyHandler);
+  useEventListener("keydown", (key: React.KeyboardEvent<HTMLElement>) => {
+    commonKeyListener(
+      key,
+      state,
+      InterventionFormat.CoverCopyCompare,
+      captureButtonAction,
+      checkLiNullUndefinedBlank,
+      captureItemClick,
+      dispatch
+    );
+  });
 
   function openModal(): void {
     setIsOpen(true);
