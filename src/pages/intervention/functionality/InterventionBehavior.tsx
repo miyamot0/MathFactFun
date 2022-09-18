@@ -1,13 +1,28 @@
-import { BenchmarkState } from "../interfaces/InterventionInterfaces";
+import {
+  DispatchUpdateEntryInternal,
+  DispatchUpdatePreLoadContent,
+  InterventionState,
+  isEntryInternalDispatch,
+  isPreloadDispatch,
+} from "../interfaces/InterventionInterfaces";
 
 export const DelCode = "Del";
 
-export const InitialBenchmarkState: BenchmarkState = {
+export enum SharedActionSequence {
+  Start = "ActionSequence.Start",
+  Answer = "ActionSequence.Answer",
+  Entry = "ActionSequence.Entry",
+  CoverCopy = "ActionSequence.CoverCopy",
+  Compare = "ActionSequence.Compare",
+  Begin = "ActionSequence.Begin",
+}
+
+export const InitialInterventionState: InterventionState = {
   ViewRepresentationInternal: "",
   EntryRepresentationInternal: "",
   OperatorSymbol: "",
   ButtonText: "Start",
-  CurrentAction: "ActionSequence.Start",
+  CurrentAction: SharedActionSequence.Start,
   WorkingData: [],
   SecondsLeft: 0,
   LoadedData: false,
@@ -31,10 +46,11 @@ export const InitialBenchmarkState: BenchmarkState = {
   ModalIsOpen: false,
 };
 
-export enum BenchmarkActions {
+export enum InterventionActions {
   //GeneralOpenModal = "GeneralOpenModal",
   //GeneralCloseModal = "GeneralCloseModal",
-  GeneralUpdateEntry,
+  UpdateResponseEntry,
+  UpdateWithLoadedData,
 
   BenchmarkBatchStartPreflight,
   BenchmarkBatchStartBegin,
@@ -57,33 +73,57 @@ export enum BenchmarkActions {
   CoverCopyCompareModalPreErrorLog,
   CoverCopyCompareModalRetry,
   CoverCopyCompareItemIncrement,
+
+  SetThrow,
 }
 
-export const SharedActionSequence = {
-  Start: "ActionSequence.Start",
-  Answer: "ActionSequence.Answer",
-  Entry: "ActionSequence.Entry",
-  CoverCopy: "ActionSequence.CoverCopy",
-  Compare: "ActionSequence.Compare",
-  Begin: "ActionSequence.Begin",
-};
+function overwriteOnlyExisting(
+  destination: InterventionState,
+  incoming: DispatchUpdateEntryInternal | DispatchUpdatePreLoadContent
+): InterventionState {
+  if (isEntryInternalDispatch(incoming)) {
+    const local: DispatchUpdateEntryInternal =
+      incoming as DispatchUpdateEntryInternal;
+
+    return {
+      ...destination,
+      ...local.payload,
+    };
+  }
+
+  if (isPreloadDispatch(incoming)) {
+    const local: DispatchUpdatePreLoadContent =
+      incoming as DispatchUpdatePreLoadContent;
+
+    return {
+      ...destination,
+      ...local.payload,
+    };
+  }
+
+  throw Error("Didn't match");
+}
 
 /**
  * Reducer for submission
  *
- * @param {BenchmarkState} state
+ * @param {InterventionState} state
  * @param {any} action
- * @returns {BenchmarkState}
+ * @returns {InterventionState}
  */
 export const InterventionReducer = (
-  state: BenchmarkState,
-  action: any
-): BenchmarkState => {
+  state: InterventionState,
+  action: DispatchUpdateEntryInternal | DispatchUpdatePreLoadContent | any
+): InterventionState => {
   switch (action.type) {
-    case BenchmarkActions.GeneralUpdateEntry:
-      return { ...state, EntryRepresentationInternal: action.payload };
+    case InterventionActions.UpdateResponseEntry:
+      return overwriteOnlyExisting(state, action);
+
+    case InterventionActions.UpdateWithLoadedData:
+      return overwriteOnlyExisting(state, action);
+
     // Benchmarking
-    case BenchmarkActions.BenchmarkBatchStartPreflight:
+    case InterventionActions.BenchmarkBatchStartPreflight:
       return {
         ...state,
         CurrentAction: action.payload.uAction,
@@ -91,7 +131,7 @@ export const InterventionReducer = (
         SecondsLeft: action.payload.uTimer,
         LoadedData: action.payload.uLoadedData,
       };
-    case BenchmarkActions.BenchmarkBatchStartBegin:
+    case InterventionActions.BenchmarkBatchStartBegin:
       return {
         ...state,
         ButtonText: action.payload.ButtonText,
@@ -103,7 +143,7 @@ export const InterventionReducer = (
         PreTrialTime: action.payload.TrialTime,
         CurrentAction: action.payload.CurrentAction,
       };
-    case BenchmarkActions.BenchmarkBatchStartIncrement:
+    case InterventionActions.BenchmarkBatchStartIncrement:
       return {
         ...state,
         NumCorrectInitial: action.payload.uNumberCorrectInitial,
@@ -114,7 +154,7 @@ export const InterventionReducer = (
         OnInitialTry: action.payload.uInitialTry,
         PreTrialTime: action.payload.uTrialTime,
       };
-    case BenchmarkActions.BenchmarkBatchStartIncrementPost:
+    case InterventionActions.BenchmarkBatchStartIncrementPost:
       return {
         ...state,
         FactModelList: action.payload.uFactModel,
@@ -123,7 +163,7 @@ export const InterventionReducer = (
         EntryRepresentationInternal: action.payload.uEntry,
       };
     // Explicit Timing
-    case BenchmarkActions.ExplicitTimingBatchStartPreflight:
+    case InterventionActions.ExplicitTimingBatchStartPreflight:
       return {
         ...state,
         WorkingData: action.payload.uWorkingData,
@@ -132,7 +172,7 @@ export const InterventionReducer = (
         CurrentAction: action.payload.uAction,
       };
 
-    case BenchmarkActions.ExplicitTimingModalRetry:
+    case InterventionActions.ExplicitTimingModalRetry:
       return {
         ...state,
         EntryRepresentationInternal:
@@ -142,7 +182,7 @@ export const InterventionReducer = (
         OnInitialTry: action.payload.uOnInitialTry,
       };
 
-    case BenchmarkActions.ExplicitTimingBatchIncrement:
+    case InterventionActions.ExplicitTimingBatchIncrement:
       return {
         ...state,
         NumCorrectInitial: action.payload.uNumberCorrectInitial,
@@ -154,13 +194,13 @@ export const InterventionReducer = (
         PreTrialTime: action.payload.uTrialTime,
       };
 
-    case BenchmarkActions.ExplicitTimingModalPreErrorLog:
+    case InterventionActions.ExplicitTimingModalPreErrorLog:
       return {
         ...state,
         FactModelList: action.payload.uFactModel,
       };
     // Cover Copy Compare
-    case BenchmarkActions.CoverCopyCompareBatchStartPreflight:
+    case InterventionActions.CoverCopyCompareBatchStartPreflight:
       return {
         ...state,
         CurrentAction: action.payload.uAction,
@@ -169,7 +209,7 @@ export const InterventionReducer = (
         LoadedData: action.payload.uLoadedData,
       };
 
-    case BenchmarkActions.CoverCopyCompareBatchStartBegin:
+    case InterventionActions.CoverCopyCompareBatchStartBegin:
       return {
         ...state,
         ButtonText: action.payload.uButtonText,
@@ -187,7 +227,7 @@ export const InterventionReducer = (
         NextLiItem: action.payload.uNextLiItem,
       };
 
-    case BenchmarkActions.CoverCopyCompareTaskIncrement:
+    case InterventionActions.CoverCopyCompareTaskIncrement:
       return {
         ...state,
         CurrentAction: action.payload.uAction,
@@ -196,13 +236,13 @@ export const InterventionReducer = (
         CoverStimulusItem: action.payload.uCoverStimulusItem,
       };
 
-    case BenchmarkActions.CoverCopyCompareModalPreErrorLog:
+    case InterventionActions.CoverCopyCompareModalPreErrorLog:
       return {
         ...state,
         FactModelList: action.payload.uFactModel,
       };
 
-    case BenchmarkActions.CoverCopyCompareModalRetry:
+    case InterventionActions.CoverCopyCompareModalRetry:
       return {
         ...state,
         EntryRepresentationInternal:
@@ -217,7 +257,7 @@ export const InterventionReducer = (
         NumRetries: action.payload.uNumRetries,
       };
 
-    case BenchmarkActions.CoverCopyCompareBatchIncrement:
+    case InterventionActions.CoverCopyCompareBatchIncrement:
       return {
         ...state,
         NumCorrectInitial: action.payload.uNumberCorrectInitial,
@@ -229,7 +269,7 @@ export const InterventionReducer = (
         PreTrialTime: action.payload.uTrialTime,
       };
 
-    case BenchmarkActions.CoverCopyCompareBatchStartIncrementPost:
+    case InterventionActions.CoverCopyCompareBatchStartIncrementPost:
       return {
         ...state,
         CoverStimulusItem: action.payload.uCoverStimulusItem,
@@ -259,7 +299,7 @@ export const InterventionReducer = (
               uFactModelList: [...state.FactModelList, currentItem2],
 */
 
-    case BenchmarkActions.CoverCopyCompareTaskReset:
+    case InterventionActions.CoverCopyCompareTaskReset:
       return {
         ...state,
         CurrentAction: action.payload.uAction,

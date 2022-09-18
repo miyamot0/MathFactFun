@@ -34,8 +34,8 @@ import {
 } from "../../utilities/LabelHelper";
 
 import {
-  BenchmarkActions,
-  InitialBenchmarkState,
+  InterventionActions,
+  InitialInterventionState,
   InterventionReducer,
   SharedActionSequence,
 } from "./functionality/InterventionBehavior";
@@ -81,7 +81,7 @@ export default function TapedProblems() {
 
   const [state, dispatch] = useReducer(
     InterventionReducer,
-    InitialBenchmarkState
+    InitialInterventionState
   );
 
   const [currentAction, setCurrentAction] = useState(
@@ -138,7 +138,7 @@ export default function TapedProblems() {
   useEffect(() => {
     if (document && !loadedData) {
       dispatch({
-        type: BenchmarkActions.TapedProblemsBatchStartPreflight,
+        type: InterventionActions.TapedProblemsBatchStartPreflight,
         payload: {
           uWorkingData: document.factsTargeted,
           uTimer: document.minForTask! * 60,

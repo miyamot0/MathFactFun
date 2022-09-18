@@ -8,22 +8,23 @@
 
 import firebase from "firebase/app";
 import { FactDataInterface } from "../../setcreator/interfaces/SetCreatorInterfaces";
+import { SharedActionSequence } from "./../functionality/InterventionBehavior";
 
-export interface BenchmarkState {
+export interface InterventionState {
   ViewRepresentationInternal: string;
   EntryRepresentationInternal: string;
   OperatorSymbol: string;
   ButtonText: string;
-  CurrentAction: string;
+  CurrentAction: SharedActionSequence;
   WorkingData: string[];
   SecondsLeft: number;
-  LoadedData: false;
-  CoverProblemItem: false;
-  CoverStimulusItem: false;
-  CoverListViewItems: false;
-  ShowButton: false;
-  IsOngoing: false;
-  ToVerify: false;
+  LoadedData: boolean;
+  CoverProblemItem: boolean;
+  CoverStimulusItem: boolean;
+  CoverListViewItems: boolean;
+  ShowButton: boolean;
+  IsOngoing: boolean;
+  ToVerify: boolean;
   FactModelList: FactDataInterface[];
   NextLiItem: string;
   StartTime: Date | null;
@@ -60,4 +61,78 @@ export interface PerformanceDataInterface {
 
   // Timestamps
   createdAt: firebase.firestore.Timestamp | null;
+}
+
+export class DispatchUpdateEntryInternal {
+  public type: number;
+  public payload: {
+    EntryRepresentationInternal: string;
+  };
+  public DispatchUpdateEntryInternal?: string;
+
+  constructor({
+    type,
+    payload,
+  }: {
+    type: number;
+    payload: { EntryRepresentationInternal: string };
+    DispatchUpdateEntryInternal?: string;
+  }) {
+    this.type = type;
+    this.payload = payload;
+    this.DispatchUpdateEntryInternal = "DispatchUpdateEntryInternal";
+  }
+}
+
+export class DispatchUpdatePreLoadContent {
+  public type: number;
+  public payload: {
+    CurrentAction: SharedActionSequence;
+    WorkingData: string[];
+    LoadedData: boolean;
+    OperatorSymbol: string;
+    SecondsLeft: number;
+  };
+  public DispatchUpdatePreLoadContent?: string;
+
+  constructor({
+    type,
+    payload,
+  }: {
+    type: number;
+    payload: {
+      CurrentAction: SharedActionSequence;
+      WorkingData: string[];
+      LoadedData: boolean;
+      OperatorSymbol: string;
+      SecondsLeft: number;
+    };
+    format?: string;
+  }) {
+    this.type = type;
+    this.payload = payload;
+    this.DispatchUpdatePreLoadContent = "DispatchUpdatePreLoadContent";
+  }
+}
+
+export type InterventionDispatches =
+  | DispatchUpdateEntryInternal
+  | DispatchUpdatePreLoadContent;
+
+export function isEntryInternalDispatch(
+  object: InterventionDispatches
+): object is DispatchUpdateEntryInternal {
+  const res_ =
+    (object as DispatchUpdateEntryInternal).DispatchUpdateEntryInternal !==
+    undefined;
+  return res_;
+}
+
+export function isPreloadDispatch(
+  object: InterventionDispatches
+): object is DispatchUpdatePreLoadContent {
+  const res_ =
+    (object as DispatchUpdatePreLoadContent).DispatchUpdatePreLoadContent !==
+    undefined;
+  return res_;
 }

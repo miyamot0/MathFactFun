@@ -34,9 +34,9 @@ import "./styles/CoverCopyCompare.css";
 
 import { ErrorModalCustomStyle } from "./subcomponents/ModalStyles";
 import {
-  BenchmarkActions,
+  InterventionActions,
   DelCode,
-  InitialBenchmarkState,
+  InitialInterventionState,
   InterventionReducer,
   SharedActionSequence,
 } from "./functionality/InterventionBehavior";
@@ -48,6 +48,11 @@ import {
   useEventListener,
 } from "./helpers/InterventionHelpers";
 import { FactDataInterface } from "../setcreator/interfaces/SetCreatorInterfaces";
+import {
+  DispatchUpdateEntryInternal,
+  DispatchUpdatePreLoadContent,
+} from "./interfaces/InterventionInterfaces";
+import { completeLoadingDispatch } from "./helpers/DispatchingHelpers";
 
 export default function CoverCopyCompare() {
   const { id, target } = useParams<RoutedIdTargetParam>();
@@ -63,7 +68,7 @@ export default function CoverCopyCompare() {
 
   const [state, dispatch] = useReducer(
     InterventionReducer,
-    InitialBenchmarkState
+    InitialInterventionState
   );
 
   // modal stuff
@@ -119,14 +124,11 @@ export default function CoverCopyCompare() {
   // Fire once individual data loaded, just once
   useEffect(() => {
     if (document && !state.LoadedData) {
-      dispatch({
-        type: BenchmarkActions.CoverCopyCompareBatchStartPreflight,
-        payload: {
-          uAction: SharedActionSequence.Start,
-          uWorkingData: document.factsTargeted,
-          uLoadedData: true,
-          uOperator: GetOperatorFromLabel(document.currentTarget.toString()),
-        },
+      completeLoadingDispatch({
+        intervention: InterventionFormat.CoverCopyCompare,
+        workingData: document.factsTargeted,
+        operatorSymbol: GetOperatorFromLabel(document.currentTarget),
+        dispatch,
       });
     }
   }, [document, state.LoadedData, state.OperatorSymbol]);
@@ -207,7 +209,7 @@ export default function CoverCopyCompare() {
       state.CurrentAction === SharedActionSequence.Start
     ) {
       dispatch({
-        type: BenchmarkActions.CoverCopyCompareTaskIncrement,
+        type: InterventionActions.CoverCopyCompareTaskIncrement,
         payload: {
           uAction: SharedActionSequence.Begin,
           uButtonText: "Cover",
@@ -217,7 +219,7 @@ export default function CoverCopyCompare() {
       });
     } else if (state.CurrentAction === SharedActionSequence.Begin) {
       dispatch({
-        type: BenchmarkActions.CoverCopyCompareTaskIncrement,
+        type: InterventionActions.CoverCopyCompareTaskIncrement,
         payload: {
           uAction: SharedActionSequence.CoverCopy,
           uButtonText: "Copied",
@@ -227,7 +229,7 @@ export default function CoverCopyCompare() {
       });
     } else if (state.CurrentAction === SharedActionSequence.CoverCopy) {
       dispatch({
-        type: BenchmarkActions.CoverCopyCompareTaskIncrement,
+        type: InterventionActions.CoverCopyCompareTaskIncrement,
         payload: {
           uAction: SharedActionSequence.Compare,
           uButtonText: "Compared",
@@ -237,7 +239,7 @@ export default function CoverCopyCompare() {
       });
     } else {
       dispatch({
-        type: BenchmarkActions.CoverCopyCompareTaskReset,
+        type: InterventionActions.CoverCopyCompareTaskReset,
         payload: {
           uAction: SharedActionSequence.Entry,
           uVerify: true,
@@ -250,7 +252,7 @@ export default function CoverCopyCompare() {
     // Fire if ready to check response
     if (state.ToVerify || quickCheck) {
       dispatch({
-        type: BenchmarkActions.CoverCopyCompareTaskReset,
+        type: InterventionActions.CoverCopyCompareTaskReset,
         payload: {
           uAction: state.CurrentAction,
           uVerify: false,
@@ -305,7 +307,7 @@ export default function CoverCopyCompare() {
         };
 
         dispatch({
-          type: BenchmarkActions.CoverCopyCompareBatchIncrement,
+          type: InterventionActions.CoverCopyCompareBatchIncrement,
           payload: {
             uNumberCorrectInitial,
             uNumberErrors,
@@ -318,7 +320,7 @@ export default function CoverCopyCompare() {
         });
 
         dispatch({
-          type: BenchmarkActions.CoverCopyCompareModalPreErrorLog,
+          type: InterventionActions.CoverCopyCompareModalPreErrorLog,
           payload: {
             uFactModel: [...state.FactModelList, currentItem2],
           },
@@ -348,7 +350,7 @@ export default function CoverCopyCompare() {
         };
 
         dispatch({
-          type: BenchmarkActions.CoverCopyCompareBatchIncrement,
+          type: InterventionActions.CoverCopyCompareBatchIncrement,
           payload: {
             uNumberCorrectInitial,
             uNumberErrors,
@@ -366,7 +368,7 @@ export default function CoverCopyCompare() {
           submitDataToFirebase(currentItem2);
         } else {
           dispatch({
-            type: BenchmarkActions.CoverCopyCompareBatchStartIncrementPost,
+            type: InterventionActions.CoverCopyCompareBatchStartIncrementPost,
             payload: {
               uCoverStimulusItem: true,
               uCoverProblemItem: true,
@@ -435,15 +437,22 @@ export default function CoverCopyCompare() {
 
       // Lop off end of string
       dispatch({
-        type: BenchmarkActions.GeneralUpdateEntry,
-        payload: state.EntryRepresentationInternal.slice(0, -1),
-      });
+        type: InterventionActions.UpdateResponseEntry,
+        payload: {
+          EntryRepresentationInternal: state.EntryRepresentationInternal.slice(
+            0,
+            -1
+          ),
+        },
+      } as DispatchUpdateEntryInternal);
     } else {
       // Add to end of string
       dispatch({
-        type: BenchmarkActions.GeneralUpdateEntry,
-        payload: state.EntryRepresentationInternal + char,
-      });
+        type: InterventionActions.UpdateResponseEntry,
+        payload: {
+          EntryRepresentationInternal: state.EntryRepresentationInternal + char,
+        },
+      } as DispatchUpdateEntryInternal);
     }
   }
 
@@ -462,7 +471,7 @@ export default function CoverCopyCompare() {
     });
 
     dispatch({
-      type: BenchmarkActions.CoverCopyCompareBatchStartBegin,
+      type: InterventionActions.CoverCopyCompareBatchStartBegin,
       payload: {
         uButtonText: "Cover",
         uTrialTime: new Date(),
@@ -502,7 +511,7 @@ export default function CoverCopyCompare() {
           style={{ float: "right" }}
           onClick={() => {
             dispatch({
-              type: BenchmarkActions.CoverCopyCompareModalRetry,
+              type: InterventionActions.CoverCopyCompareModalRetry,
               payload: {
                 uEntryRepresentationInternal: "",
                 uIsOngoing: true,

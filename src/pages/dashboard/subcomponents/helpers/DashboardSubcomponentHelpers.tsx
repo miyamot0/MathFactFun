@@ -1,6 +1,5 @@
-
-import React from "react"
-import firebase from "firebase"
+import React from "react";
+import firebase from "firebase";
 import { Link } from "react-router-dom";
 import { StudentDataInterface } from "../../../student/interfaces/StudentInterfaces";
 
@@ -14,15 +13,15 @@ import { StudentDataInterface } from "../../../student/interfaces/StudentInterfa
  * @returns {string} path
  */
 export function generateRouteBaseOnStrategy(
-    strategy: string | undefined,
-    target: string | undefined,
-    id: string | undefined | null
+  strategy: string | undefined,
+  target: string | undefined,
+  id: string | undefined | null
 ): string {
-    if (strategy === undefined || target === undefined || id === undefined) {
-        return "#!";
-    }
+  if (strategy === undefined || target === undefined || id === undefined) {
+    return "#!";
+  }
 
-    return `/${strategy}/${target}/${id}`;
+  return `/${strategy}/${target}/${id}`;
 }
 
 /** checkIfDateCurrent
@@ -33,19 +32,19 @@ export function generateRouteBaseOnStrategy(
  * @returns {Bool}
  */
 export function checkIfDateCurrent(
-    date: firebase.firestore.Timestamp | null
+  date: firebase.firestore.Timestamp | null
 ): boolean {
-    if (date === null) {
-        return false;
-    }
+  if (date === null) {
+    return false;
+  }
 
-    const dateObj = date.toDate();
-    dateObj.setHours(0, 0, 0, 0);
+  const dateObj = date.toDate();
+  dateObj.setHours(0, 0, 0, 0);
 
-    const dateNow = new Date();
-    dateNow.setHours(0, 0, 0, 0);
+  const dateNow = new Date();
+  dateNow.setHours(0, 0, 0, 0);
 
-    return dateNow.getTime() <= dateObj.getTime() ? true : false;
+  return dateNow.getTime() <= dateObj.getTime() ? true : false;
 }
 
 /** dynamicallyGenerateLink
@@ -55,35 +54,34 @@ export function checkIfDateCurrent(
  * @param {StudentDataInterface} student student instance
  * @returns {JSX.Element}
  */
-export function dynamicallyGenerateLink(student: StudentDataInterface, callback: any): JSX.Element {
-    if (student.factsTargeted && student.factsTargeted.length === 1) {
-        return (
-            <Link
-                to={generateRouteBaseOnStrategy(
-                    student.currentApproach,
-                    student.currentTarget,
-                    student.id
-                )}
-                key={student.id}
-            >
-                {student.name} ({student.currentGrade})
-            </Link>
-        );
-    } else {
-        return (
-            <Link
-                to={'#!'}
-                key={student.id}
-                onClick={callback}
-            >
-                {student.name} ({student.currentGrade})
-            </Link>
-        );
-    }
+export function dynamicallyGenerateLink(
+  student: StudentDataInterface,
+  callback: any
+): JSX.Element {
+  if (student.factsTargeted && student.factsTargeted.length > 0) {
+    return (
+      <Link
+        to={generateRouteBaseOnStrategy(
+          student.currentApproach,
+          student.currentTarget,
+          student.id
+        )}
+        key={student.id}
+      >
+        {student.name} ({student.currentGrade})
+      </Link>
+    );
+  } else {
+    return (
+      <Link to={"#!"} key={student.id} onClick={callback}>
+        {student.name} ({student.currentGrade})
+      </Link>
+    );
+  }
 }
 
 export function warnNoProblemsAssigned() {
-    alert("No math problems have been added to the targeted list yet.");
+  alert("No math problems have been added to the targeted list yet.");
 }
 
 /** checkIfCompletedBenchmark
@@ -95,22 +93,21 @@ export function warnNoProblemsAssigned() {
  * @returns {boolean}
  */
 export function checkIfCompletedBenchmark(
-    student: StudentDataInterface,
-    benchmark: string
+  student: StudentDataInterface,
+  benchmark: string
 ): boolean {
-    if (student.completedBenchmark.length === 0) {
-        return false;
-    }
+  if (student.completedBenchmark.length === 0) {
+    return false;
+  }
 
-    const tag = `${benchmark} ${student.dueDate.toDate().toDateString()}`;
+  const tag = `${benchmark} ${student.dueDate.toDate().toDateString()}`;
 
-    if (student.completedBenchmark.includes(tag)) {
-        return true;
-    } else {
-        return false;
-    }
+  if (student.completedBenchmark.includes(tag)) {
+    return true;
+  } else {
+    return false;
+  }
 }
-
 
 /** checkIfProgrammingCurrent
  *
@@ -120,25 +117,25 @@ export function checkIfCompletedBenchmark(
  * @returns {boolean}
  */
 export function checkIfProgrammingCurrent(
-    date: firebase.firestore.Timestamp | null
+  date: firebase.firestore.Timestamp | null
 ): boolean {
-    if (date === null) {
-        return false;
-    }
+  if (date === null) {
+    return false;
+  }
 
-    const dateObj = date.toDate();
-    const dateNow = new Date();
-    const difference = dateNow.getTime() - dateObj.getTime();
-    const daysSince = Math.ceil(difference / (1000 * 3600 * 24));
+  const dateObj = date.toDate();
+  const dateNow = new Date();
+  const difference = dateNow.getTime() - dateObj.getTime();
+  const daysSince = Math.ceil(difference / (1000 * 3600 * 24));
 
-    const areOnSameDay = date.toDate().toDateString() === dateNow.toDateString();
+  const areOnSameDay = date.toDate().toDateString() === dateNow.toDateString();
 
-    //const areOnSameDay =
-    //    dateObj.getFullYear() === dateNow.getFullYear() &&
-    //    dateObj.getMonth() === dateNow.getMonth() &&
-    //    dateObj.getDate() === dateNow.getDate();
+  //const areOnSameDay =
+  //    dateObj.getFullYear() === dateNow.getFullYear() &&
+  //    dateObj.getMonth() === dateNow.getMonth() &&
+  //    dateObj.getDate() === dateNow.getDate();
 
-    return areOnSameDay || daysSince < 1 ? false : true;
+  return areOnSameDay || daysSince < 1 ? false : true;
 }
 
 /** checkIfBenchmarksCompleted
@@ -148,20 +145,22 @@ export function checkIfProgrammingCurrent(
  * @param {StudentDataInterface} student student record
  * @returns {Bool}
  */
-export function checkIfBenchmarksCompleted(student: StudentDataInterface): boolean {
-    let confirmedCompleted = true;
+export function checkIfBenchmarksCompleted(
+  student: StudentDataInterface
+): boolean {
+  let confirmedCompleted = true;
 
-    student.currentBenchmarking.forEach((bm) => {
-        if (!confirmedCompleted) return;
+  student.currentBenchmarking.forEach((bm) => {
+    if (!confirmedCompleted) return;
 
-        const tag = `${bm} ${student.dueDate.toDate().toDateString()}`;
+    const tag = `${bm} ${student.dueDate.toDate().toDateString()}`;
 
-        if (!student.completedBenchmark.includes(tag)) {
-            confirmedCompleted = false;
-        }
-    });
+    if (!student.completedBenchmark.includes(tag)) {
+      confirmedCompleted = false;
+    }
+  });
 
-    return confirmedCompleted;
+  return confirmedCompleted;
 }
 
 /** generateWrapper
@@ -171,34 +170,36 @@ export function checkIfBenchmarksCompleted(student: StudentDataInterface): boole
  * @param {StudentDataInterface} student document info
  * @returns {Link}
  */
-export function generateWrapperStudentList(student: StudentDataInterface): JSX.Element {
-    const isBenchmarkingCurrent = checkIfProgrammingCurrent(student.dueDate);
-    const isBenchmarkingCompleted = checkIfBenchmarksCompleted(student);
+export function generateWrapperStudentList(
+  student: StudentDataInterface
+): JSX.Element {
+  const isBenchmarkingCurrent = checkIfProgrammingCurrent(student.dueDate);
+  const isBenchmarkingCompleted = checkIfBenchmarksCompleted(student);
 
-    if (isBenchmarkingCurrent) {
-        return (
-            <p>
-                <span className="on-track"></span>
-                {""}Next Benchmark(s): {student.dueDate.toDate().toDateString()}
-            </p>
-        );
-    }
-
-    if (isBenchmarkingCompleted) {
-        return (
-            <p>
-                <span className="on-track"></span>
-                {""}Current Benchmark(s) Completed
-            </p>
-        );
-    }
-
+  if (isBenchmarkingCurrent) {
     return (
-        <Link to={`/probe/${student.id}`}>
-            <span className="needs-review"></span>
-            {""}Benchmarking Needed
-        </Link>
+      <p>
+        <span className="on-track"></span>
+        {""}Next Benchmark(s): {student.dueDate.toDate().toDateString()}
+      </p>
     );
+  }
+
+  if (isBenchmarkingCompleted) {
+    return (
+      <p>
+        <span className="on-track"></span>
+        {""}Current Benchmark(s) Completed
+      </p>
+    );
+  }
+
+  return (
+    <Link to={`/probe/${student.id}`}>
+      <span className="needs-review"></span>
+      {""}Benchmarking Needed
+    </Link>
+  );
 }
 
 /** generatedStyledFeedback
@@ -209,11 +210,11 @@ export function generateWrapperStudentList(student: StudentDataInterface): JSX.E
  * @returns {JSX.Element}
  */
 export function generatedStyledFeedback(isCompleted: boolean): JSX.Element {
-    return isCompleted ? (
-        <span style={{ color: "green" }}> Completed</span>
-    ) : (
-        <span style={{ color: "red" }}> Incomplete</span>
-    );
+  return isCompleted ? (
+    <span style={{ color: "green" }}> Completed</span>
+  ) : (
+    <span style={{ color: "red" }}> Incomplete</span>
+  );
 }
 
 /** generateWrapper
@@ -226,19 +227,17 @@ export function generatedStyledFeedback(isCompleted: boolean): JSX.Element {
  * @returns {Link}
  */
 export function generateWrapperBenchmarkList(
-    student: StudentDataInterface,
-    benchmark: string,
-    isCompleted: boolean
+  student: StudentDataInterface,
+  benchmark: string,
+  isCompleted: boolean
 ): JSX.Element {
-
-    if (isCompleted) {
-        return <p className="benchmark-list-card-title">{benchmark}</p>;
-    } else {
-        return (
-            <Link to={`/benchmark/${student.id}/${benchmark}`} key={student.id}>
-                {benchmark}
-            </Link>
-        );
-
-    }
+  if (isCompleted) {
+    return <p className="benchmark-list-card-title">{benchmark}</p>;
+  } else {
+    return (
+      <Link to={`/benchmark/${student.id}/${benchmark}`} key={student.id}>
+        {benchmark}
+      </Link>
+    );
+  }
 }

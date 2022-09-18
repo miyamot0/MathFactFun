@@ -26,13 +26,14 @@ import SimpleProblemFrame from "./subcomponents/SimpleProblemFrame";
 import {
   CalculateDigitsTotalAnswer,
   CalculateDigitsCorrectAnswer,
+  GetOperatorFromLabel,
 } from "../../utilities/LabelHelper";
 
 import { RoutedIdTargetParam } from "../../interfaces/RoutingInterfaces";
 import {
-  BenchmarkActions,
+  InterventionActions,
   DelCode,
-  InitialBenchmarkState,
+  InitialInterventionState,
   InterventionReducer,
   SharedActionSequence,
 } from "./functionality/InterventionBehavior";
@@ -48,6 +49,11 @@ import {
   useEventListener,
 } from "./helpers/InterventionHelpers";
 import { FactDataInterface } from "../setcreator/interfaces/SetCreatorInterfaces";
+import {
+  DispatchUpdateEntryInternal,
+  DispatchUpdatePreLoadContent,
+} from "./interfaces/InterventionInterfaces";
+import { completeLoadingDispatch } from "./helpers/DispatchingHelpers";
 
 export default function ExplicitTiming() {
   const { id, target } = useParams<RoutedIdTargetParam>();
@@ -63,7 +69,7 @@ export default function ExplicitTiming() {
 
   const [state, dispatch] = useReducer(
     InterventionReducer,
-    InitialBenchmarkState
+    InitialInterventionState
   );
 
   const [modalIsOpen, setIsOpen] = useState(false);
@@ -86,14 +92,12 @@ export default function ExplicitTiming() {
   // Fire once individual data loaded, just once
   useEffect(() => {
     if (document && !state.LoadedData) {
-      dispatch({
-        type: BenchmarkActions.ExplicitTimingBatchStartPreflight,
-        payload: {
-          uAction: SharedActionSequence.Start,
-          uWorkingData: document.factsTargeted,
-          uTimer: document.minForTask * 60,
-          uLoadedData: true,
-        },
+      completeLoadingDispatch({
+        intervention: InterventionFormat.CoverCopyCompare,
+        workingData: document.factsTargeted,
+        operatorSymbol: GetOperatorFromLabel(document.currentTarget),
+        secondsLeft: document.minForTask * 60,
+        dispatch,
       });
     }
   }, [document, state.LoadedData, state.OperatorSymbol]);
@@ -186,7 +190,7 @@ export default function ExplicitTiming() {
       });
 
       dispatch({
-        type: BenchmarkActions.BenchmarkBatchStartBegin,
+        type: InterventionActions.BenchmarkBatchStartBegin,
         payload: {
           ButtonText: "Check",
           CoverProblem: false,
@@ -251,7 +255,7 @@ export default function ExplicitTiming() {
       };
 
       dispatch({
-        type: BenchmarkActions.ExplicitTimingBatchIncrement,
+        type: InterventionActions.ExplicitTimingBatchIncrement,
         payload: {
           uNumberCorrectInitial,
           uNumberErrors,
@@ -264,7 +268,7 @@ export default function ExplicitTiming() {
       });
 
       dispatch({
-        type: BenchmarkActions.ExplicitTimingModalPreErrorLog,
+        type: InterventionActions.ExplicitTimingModalPreErrorLog,
         payload: {
           uFactModel: [...state.FactModelList, currentItem2],
         },
@@ -293,7 +297,7 @@ export default function ExplicitTiming() {
       };
 
       dispatch({
-        type: BenchmarkActions.ExplicitTimingBatchIncrement,
+        type: InterventionActions.ExplicitTimingBatchIncrement,
         payload: {
           uNumberCorrectInitial,
           uNumberErrors,
@@ -316,7 +320,7 @@ export default function ExplicitTiming() {
         });
 
         dispatch({
-          type: BenchmarkActions.BenchmarkBatchStartIncrementPost,
+          type: InterventionActions.BenchmarkBatchStartIncrementPost,
           payload: {
             uFactModel: [...state.FactModelList, currentItem2],
             uWorkingData: updatedList,
@@ -342,15 +346,22 @@ export default function ExplicitTiming() {
 
       // Lop off end of string
       dispatch({
-        type: BenchmarkActions.GeneralUpdateEntry,
-        payload: state.EntryRepresentationInternal.slice(0, -1),
-      });
+        type: InterventionActions.UpdateResponseEntry,
+        payload: {
+          EntryRepresentationInternal: state.EntryRepresentationInternal.slice(
+            0,
+            -1
+          ),
+        },
+      } as DispatchUpdateEntryInternal);
     } else {
       // Add to end of string
       dispatch({
-        type: BenchmarkActions.GeneralUpdateEntry,
-        payload: state.EntryRepresentationInternal + char,
-      });
+        type: InterventionActions.UpdateResponseEntry,
+        payload: {
+          EntryRepresentationInternal: state.EntryRepresentationInternal + char,
+        },
+      } as DispatchUpdateEntryInternal);
     }
   }
 
@@ -376,7 +387,7 @@ export default function ExplicitTiming() {
           style={{ float: "right" }}
           onClick={() => {
             dispatch({
-              type: BenchmarkActions.ExplicitTimingModalRetry,
+              type: InterventionActions.ExplicitTimingModalRetry,
               payload: {
                 uEntryRepresentationInternal: "",
                 uNumRetries: state.NumRetries + 1,

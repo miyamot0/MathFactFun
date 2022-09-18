@@ -486,6 +486,4 @@ describe("Create Student Form: Reducer", () => {
       );
     });
   });
-
-  // TODO: incomplete!
 });

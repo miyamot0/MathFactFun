@@ -23,15 +23,16 @@ import SimpleProblemFrame from "./subcomponents/SimpleProblemFrame";
 import {
   CalculateDigitsTotalAnswer,
   CalculateDigitsCorrectAnswer,
+  GetOperatorFromLabel,
 } from "../../utilities/LabelHelper";
 
 import { timestamp } from "../../firebase/config";
 import { RoutedIdTargetParam } from "../../interfaces/RoutingInterfaces";
 import { useAuthorizationContext } from "../../context/hooks/useAuthorizationContext";
 import {
-  BenchmarkActions,
+  InterventionActions,
   DelCode,
-  InitialBenchmarkState,
+  InitialInterventionState,
   InterventionReducer,
   SharedActionSequence,
 } from "./functionality/InterventionBehavior";
@@ -45,6 +46,11 @@ import {
   loadWorkingDataBenchmark,
   useEventListener,
 } from "./helpers/InterventionHelpers";
+import {
+  DispatchUpdateEntryInternal,
+  DispatchUpdatePreLoadContent,
+} from "./interfaces/InterventionInterfaces";
+import { completeLoadingDispatch } from "./helpers/DispatchingHelpers";
 
 export default function Benchmark() {
   const { id, target } = useParams<RoutedIdTargetParam>();
@@ -67,7 +73,7 @@ export default function Benchmark() {
 
   const [state, dispatch] = useReducer(
     InterventionReducer,
-    InitialBenchmarkState
+    InitialInterventionState
   );
 
   // Add event listener to hook
@@ -80,13 +86,11 @@ export default function Benchmark() {
     if (document && !state.LoadedData) {
       const coreSetClean = loadWorkingDataBenchmark(document, target);
 
-      dispatch({
-        type: BenchmarkActions.BenchmarkBatchStartPreflight,
-        payload: {
-          uWorkingData: coreSetClean,
-          uTimer: 120,
-          uLoadedData: true,
-        },
+      completeLoadingDispatch({
+        intervention: "Benchmark",
+        workingData: coreSetClean,
+        operatorSymbol: GetOperatorFromLabel(document.currentTarget),
+        dispatch,
       });
     }
   }, [document, state.LoadedData, target]);
@@ -186,7 +190,7 @@ export default function Benchmark() {
       });
 
       dispatch({
-        type: BenchmarkActions.BenchmarkBatchStartBegin,
+        type: InterventionActions.BenchmarkBatchStartBegin,
         payload: {
           ButtonText: "Check",
           CoverProblem: false,
@@ -256,7 +260,7 @@ export default function Benchmark() {
     const uInitialTry = true;
 
     dispatch({
-      type: BenchmarkActions.BenchmarkBatchStartIncrement,
+      type: InterventionActions.BenchmarkBatchStartIncrement,
       payload: {
         uNumberCorrectInitial,
         uNumberErrors,
@@ -281,7 +285,7 @@ export default function Benchmark() {
       });
 
       dispatch({
-        type: BenchmarkActions.BenchmarkBatchStartIncrementPost,
+        type: InterventionActions.BenchmarkBatchStartIncrementPost,
         payload: {
           uFactModel: [...state.FactModelList, currentItem],
           uWorkingData: updatedList,
@@ -306,15 +310,22 @@ export default function Benchmark() {
 
       // Lop off end of string
       dispatch({
-        type: BenchmarkActions.GeneralUpdateEntry,
-        payload: state.EntryRepresentationInternal.slice(0, -1),
-      });
+        type: InterventionActions.UpdateResponseEntry,
+        payload: {
+          EntryRepresentationInternal: state.EntryRepresentationInternal.slice(
+            0,
+            -1
+          ),
+        },
+      } as DispatchUpdateEntryInternal);
     } else {
       // Add to end of string
       dispatch({
-        type: BenchmarkActions.GeneralUpdateEntry,
-        payload: state.EntryRepresentationInternal + char,
-      });
+        type: InterventionActions.UpdateResponseEntry,
+        payload: {
+          EntryRepresentationInternal: state.EntryRepresentationInternal + char,
+        },
+      } as DispatchUpdateEntryInternal);
     }
   }
 
