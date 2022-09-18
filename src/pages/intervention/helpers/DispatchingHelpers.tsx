@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import firebase from "firebase";
+import { StudentDataInterface } from "../../student/interfaces/StudentInterfaces";
 import {
   DelCode,
   InterventionActions,
@@ -17,6 +19,7 @@ import {
   InterventionState,
 } from "../interfaces/InterventionInterfaces";
 import { InterventionFormat, RelevantKeys } from "./../../../maths/Facts";
+import { sharedButtonActionSequence } from "./InterventionHelpers";
 
 export function completeLoadingDispatch({
   intervention,
@@ -92,6 +95,10 @@ export function commonKeyHandler(
   state: InterventionState,
   dispatch: any
 ) {
+  console.log(intervention);
+  console.log(char);
+  console.log(state.CurrentAction);
+
   if (intervention === InterventionFormat.CoverCopyCompare) {
     // Rule 1: Exit out if not in Covered/Copying sequence
     if (state.CurrentAction !== SharedActionSequence.CoverCopy) return;
@@ -128,6 +135,8 @@ export function commonKeyHandler(
       // Rule #6: If first is just whitespace, disregard (i.e., JUST operator)
       if (problemParts[1].trim().length === 0) return;
     }
+
+    console.log(char);
 
     if (char === DelCode) {
       // # Rule #7: Exit out if nothin to delete
@@ -189,9 +198,17 @@ export function commonKeyListener(
   key: React.KeyboardEvent<HTMLElement>,
   state: InterventionState,
   currentApproach: string,
-  captureButtonAction: () => void,
+  captureButtonAction: () => void | null,
   checkLiNullUndefinedBlank: any,
   captureItemClick: any,
+  user: firebase.User | null,
+  id: string,
+  document: StudentDataInterface | null,
+  openModal: any,
+  addDocument: any,
+  updateDocument: any,
+  response: any,
+  history: any,
   dispatch: any
 ) {
   if (currentApproach === InterventionFormat.CoverCopyCompare) {
@@ -204,7 +221,20 @@ export function commonKeyListener(
           state.CurrentAction !== SharedActionSequence.Entry &&
           state.CurrentAction !== SharedActionSequence.Start
         ) {
-          captureButtonAction();
+          sharedButtonActionSequence(
+            user,
+            id,
+            currentApproach,
+            document,
+            state,
+            openModal,
+            addDocument,
+            updateDocument,
+            response,
+            history,
+            dispatch
+          );
+
           return;
         }
 
@@ -220,8 +250,6 @@ export function commonKeyListener(
 
       commonKeyHandler(currentApproach, modKey, state, dispatch);
     }
-
-    //return;
   } else {
     if (RelevantKeys.includes(key.key)) {
       let modKey = key.key === "Backspace" ? "Del" : key.key;

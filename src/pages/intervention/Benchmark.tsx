@@ -25,7 +25,6 @@ import {
   CalculateDigitsCorrectAnswer,
   GetOperatorFromLabel,
 } from "../../utilities/LabelHelper";
-
 import { timestamp } from "../../firebase/config";
 import { RoutedIdTargetParam } from "../../interfaces/RoutingInterfaces";
 import { useAuthorizationContext } from "../../context/hooks/useAuthorizationContext";
@@ -36,12 +35,9 @@ import {
   SharedActionSequence,
 } from "./functionality/InterventionBehavior";
 
-// Styles
-import "./styles/ExplicitTiming.css";
 import { StudentDataInterface } from "../student/interfaces/StudentInterfaces";
 import { FactDataInterface } from "../setcreator/interfaces/SetCreatorInterfaces";
 import {
-  checkLiNullUndefinedBlank,
   loadWorkingDataBenchmark,
   useEventListener,
 } from "./helpers/InterventionHelpers";
@@ -50,8 +46,10 @@ import {
   commonKeyListener,
   completeLoadingDispatch,
 } from "./helpers/DispatchingHelpers";
-import { InterventionFormat, RelevantKeys } from "../../maths/Facts";
 import { submitPerformancesToFirebase } from "./helpers/InterventionHelpers";
+
+// Styles
+import "./styles/ExplicitTiming.css";
 
 export default function Benchmark() {
   const { id, target } = useParams<RoutedIdTargetParam>();
@@ -83,9 +81,17 @@ export default function Benchmark() {
       key,
       state,
       "Benchmark",
-      captureButtonAction,
+      () => null,
       null,
       null,
+      user,
+      id,
+      document,
+      () => null,
+      addDocument,
+      updateDocument,
+      updateResponse,
+      history,
       dispatch
     );
   });

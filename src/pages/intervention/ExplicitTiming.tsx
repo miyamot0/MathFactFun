@@ -90,9 +90,17 @@ export default function ExplicitTiming() {
       key,
       state,
       InterventionFormat.ExplicitTiming,
-      captureButtonAction,
+      () => null,
       null,
       null,
+      user,
+      id,
+      document,
+      () => null,
+      addDocument,
+      updateDocument,
+      response,
+      history,
       dispatch
     );
   });

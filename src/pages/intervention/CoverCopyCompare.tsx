@@ -14,7 +14,6 @@ import Modal from "react-modal";
 import { useFirestore } from "../../firebase/hooks/useFirestore";
 import { useFirebaseDocumentTyped } from "../../firebase/hooks/useFirebaseDocument";
 import { useAuthorizationContext } from "../../context/hooks/useAuthorizationContext";
-import { timestamp } from "../../firebase/config";
 
 // widgets
 import KeyPad from "./subcomponents/KeyPad";
@@ -22,20 +21,12 @@ import ProblemFrame from "./subcomponents/ProblemFrame";
 import StimulusFrame from "./subcomponents/StimulusFrame";
 
 // helpers
-import {
-  CalculateDigitsCorrect,
-  GetOperatorFromLabel,
-  CalculateDigitsTotalAnswer,
-} from "../../utilities/LabelHelper";
-import { InterventionFormat, RelevantKeys } from "../../maths/Facts";
-
-// styles
-import "./styles/CoverCopyCompare.css";
+import { GetOperatorFromLabel } from "../../utilities/LabelHelper";
+import { InterventionFormat } from "../../maths/Facts";
 
 import { ErrorModalCustomStyle } from "./subcomponents/ModalStyles";
 import {
   InterventionActions,
-  DelCode,
   InitialInterventionState,
   InterventionReducer,
   SharedActionSequence,
@@ -44,20 +35,17 @@ import { RoutedIdTargetParam } from "../../interfaces/RoutingInterfaces";
 import { StudentDataInterface } from "../student/interfaces/StudentInterfaces";
 import {
   checkLiNullUndefinedBlank,
-  shouldShowFeedback,
-  submitPerformancesToFirebase,
+  sharedButtonActionSequence,
   useEventListener,
 } from "./helpers/InterventionHelpers";
-import { FactDataInterface } from "../setcreator/interfaces/SetCreatorInterfaces";
-import {
-  DispatchUpdateEntryInternal,
-  DispatchUpdatePreLoadContent,
-} from "./interfaces/InterventionInterfaces";
 import {
   commonKeyHandler,
   commonKeyListener,
   completeLoadingDispatch,
 } from "./helpers/DispatchingHelpers";
+
+// styles
+import "./styles/CoverCopyCompare.css";
 
 export default function CoverCopyCompare() {
   const { id, target } = useParams<RoutedIdTargetParam>();
@@ -80,18 +68,6 @@ export default function CoverCopyCompare() {
 
   Modal.setAppElement("#root");
 
-  useEventListener("keydown", (key: React.KeyboardEvent<HTMLElement>) => {
-    commonKeyListener(
-      key,
-      state,
-      InterventionFormat.CoverCopyCompare,
-      captureButtonAction,
-      checkLiNullUndefinedBlank,
-      captureItemClick,
-      dispatch
-    );
-  });
-
   function openModal(): void {
     setIsOpen(true);
   }
@@ -99,6 +75,27 @@ export default function CoverCopyCompare() {
   function closeModal(): void {
     setIsOpen(false);
   }
+
+  // Add event listener to hook
+  useEventListener("keydown", (key: React.KeyboardEvent<HTMLElement>) => {
+    commonKeyListener(
+      key,
+      state,
+      InterventionFormat.CoverCopyCompare,
+      () => null,
+      checkLiNullUndefinedBlank,
+      captureItemClick,
+      user,
+      id,
+      document,
+      openModal,
+      addDocument,
+      updateDocument,
+      response,
+      history,
+      dispatch
+    );
+  });
 
   // Fire once individual data loaded, just once
   useEffect(() => {
@@ -111,214 +108,6 @@ export default function CoverCopyCompare() {
       });
     }
   }, [document, state.LoadedData, state.OperatorSymbol]);
-
-  /** captureButtonAction
-   *
-   * Button interactions to fire
-   *
-   */
-  function captureButtonAction(): void {
-    if (document === null) {
-      return;
-    }
-
-    // HACK: need a flag for update w/o waiting for state change
-    let quickCheck = false;
-
-    if (
-      state.CurrentAction === SharedActionSequence.Entry ||
-      state.CurrentAction === SharedActionSequence.Start
-    ) {
-      dispatch({
-        type: InterventionActions.CoverCopyCompareTaskIncrement,
-        payload: {
-          uAction: SharedActionSequence.Begin,
-          uButtonText: "Cover",
-          uCoverStimulusItem: false,
-          uCoverProblemItem: true,
-        },
-      });
-    } else if (state.CurrentAction === SharedActionSequence.Begin) {
-      dispatch({
-        type: InterventionActions.CoverCopyCompareTaskIncrement,
-        payload: {
-          uAction: SharedActionSequence.CoverCopy,
-          uButtonText: "Copied",
-          uCoverStimulusItem: true,
-          uCoverProblemItem: false,
-        },
-      });
-    } else if (state.CurrentAction === SharedActionSequence.CoverCopy) {
-      dispatch({
-        type: InterventionActions.CoverCopyCompareTaskIncrement,
-        payload: {
-          uAction: SharedActionSequence.Compare,
-          uButtonText: "Compared",
-          uCoverStimulusItem: false,
-          uCoverProblemItem: false,
-        },
-      });
-    } else {
-      dispatch({
-        type: InterventionActions.CoverCopyCompareTaskReset,
-        payload: {
-          uAction: SharedActionSequence.Entry,
-          uVerify: true,
-        },
-      });
-
-      quickCheck = true;
-    }
-
-    // Fire if ready to check response
-    if (state.ToVerify || quickCheck) {
-      dispatch({
-        type: InterventionActions.CoverCopyCompareTaskReset,
-        payload: {
-          uAction: state.CurrentAction,
-          uVerify: false,
-        },
-      });
-
-      // Compare if internal and inputted string match
-      const isMatching =
-        state.ViewRepresentationInternal.trim() ===
-        state.EntryRepresentationInternal.trim();
-
-      let uNumberCorrectInitial = state.NumCorrectInitial;
-      let uNumberErrors = state.NumErrors;
-
-      // Increment initial attempt, if correct
-      if (state.OnInitialTry && isMatching) {
-        uNumberCorrectInitial = uNumberCorrectInitial + 1;
-      }
-
-      // Increment errors, if incorrect
-      if (!isMatching) {
-        uNumberErrors = state.NumErrors + 1;
-      }
-
-      const current = new Date();
-      const secs = (current.getTime() - state.PreTrialTime.getTime()) / 1000;
-
-      const holderPreTime = state.PreTrialTime;
-
-      if (shouldShowFeedback(!isMatching, document)) {
-        // Error correction prompt
-
-        const totalDigitsShown = CalculateDigitsTotalAnswer(
-          state.ViewRepresentationInternal
-        );
-
-        const totalDigitsCorrect = CalculateDigitsCorrect(
-          state.EntryRepresentationInternal,
-          state.ViewRepresentationInternal,
-          state.OperatorSymbol
-        );
-
-        const currentItem2: FactDataInterface = {
-          factCorrect: isMatching,
-          initialTry: state.OnInitialTry,
-          factType: document.currentTarget,
-          factString: state.ViewRepresentationInternal,
-          factEntry: state.EntryRepresentationInternal,
-          latencySeconds: secs,
-          dateTimeEnd: timestamp.fromDate(new Date(current)),
-          dateTimeStart: timestamp.fromDate(new Date(holderPreTime)),
-        };
-
-        dispatch({
-          type: InterventionActions.CoverCopyCompareBatchIncrement,
-          payload: {
-            uNumberCorrectInitial,
-            uNumberErrors,
-            uTotalDigits: state.TotalDigits + totalDigitsShown,
-            uTotalDigitsCorrect: state.TotalDigitsCorrect + totalDigitsCorrect,
-            uNumberTrials: state.NumbTrials + 1,
-            uInitialTry: state.OnInitialTry,
-            uTrialTime: new Date(),
-          },
-        });
-
-        dispatch({
-          type: InterventionActions.CoverCopyCompareModalPreErrorLog,
-          payload: {
-            uFactModel: [...state.FactModelList, currentItem2],
-          },
-        });
-
-        openModal();
-      } else {
-        const totalDigitsShown = CalculateDigitsTotalAnswer(
-          state.ViewRepresentationInternal
-        );
-
-        const totalDigitsCorrect = CalculateDigitsCorrect(
-          state.EntryRepresentationInternal,
-          state.ViewRepresentationInternal,
-          state.OperatorSymbol
-        );
-
-        const currentItem2: FactDataInterface = {
-          factCorrect: isMatching,
-          initialTry: state.OnInitialTry,
-          factType: document.currentTarget,
-          factString: state.ViewRepresentationInternal,
-          factEntry: state.EntryRepresentationInternal,
-          latencySeconds: secs,
-          dateTimeEnd: timestamp.fromDate(new Date(current)),
-          dateTimeStart: timestamp.fromDate(new Date(holderPreTime)),
-        };
-
-        dispatch({
-          type: InterventionActions.CoverCopyCompareBatchIncrement,
-          payload: {
-            uNumberCorrectInitial,
-            uNumberErrors,
-            uTotalDigits: state.TotalDigits + totalDigitsShown,
-            uTotalDigitsCorrect: state.TotalDigitsCorrect + totalDigitsCorrect,
-            uNumberTrials: state.NumbTrials + 1,
-            uInitialTry: state.OnInitialTry,
-            uTrialTime: new Date(),
-          },
-        });
-
-        // Note: isusue where state change not fast enough to catch latest
-        if (state.WorkingData.length === 0) {
-          submitPerformancesToFirebase({
-            user,
-            id,
-            interventionFormat: InterventionFormat.CoverCopyCompare,
-            finalFactObject: currentItem2,
-            document,
-
-            state,
-            response,
-            addDocument,
-            updateDocument,
-            history,
-          });
-        } else {
-          dispatch({
-            type: InterventionActions.CoverCopyCompareBatchStartIncrementPost,
-            payload: {
-              uCoverStimulusItem: true,
-              uCoverProblemItem: true,
-              uEntryRepresentationInternal: "",
-              uViewRepresentationInternal: "",
-              uButtonText: "Cover",
-              uShowButton: false,
-              uIsOngoing: false,
-              uCoverListViewItems: false,
-              uOnInitialTry: true,
-              uFactModelList: [...state.FactModelList, currentItem2],
-              uCurrentAction: SharedActionSequence.Entry,
-            },
-          });
-        }
-      }
-    }
-  }
 
   /** captureItemClick
    *
@@ -352,7 +141,19 @@ export default function CoverCopyCompare() {
       },
     });
 
-    captureButtonAction();
+    sharedButtonActionSequence(
+      user,
+      id,
+      InterventionFormat.CoverCopyCompare,
+      document,
+      state,
+      openModal,
+      addDocument,
+      updateDocument,
+      response,
+      history,
+      dispatch
+    );
   }
 
   return (
@@ -430,7 +231,21 @@ export default function CoverCopyCompare() {
           <button
             className="global-btn "
             style={{ visibility: state.ShowButton ? "visible" : "hidden" }}
-            onClick={() => captureButtonAction()}
+            onClick={() => {
+              sharedButtonActionSequence(
+                user,
+                id,
+                InterventionFormat.CoverCopyCompare,
+                document,
+                state,
+                openModal,
+                addDocument,
+                updateDocument,
+                response,
+                history,
+                dispatch
+              );
+            }}
           >
             {state.ButtonText}
           </button>
