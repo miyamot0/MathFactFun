@@ -6,18 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { DropResult } from "react-beautiful-dnd";
-import { FactsOnFire } from "../../../maths/Mind";
-import { GetOperatorFromLabel, Sum } from "../../../utilities/LabelHelper";
-import { StudentDataInterface } from "../../student/interfaces/StudentInterfaces";
-import {
-  DragColumnContents,
-  DragColumnsInterface,
-  FactDataInterface,
-  FactStructure,
-  ItemHistory,
-  SetItem,
-} from "../interfaces/SetCreatorInterfaces";
+import { ItemHistory, SetItem } from "../interfaces/SetCreatorInterfaces";
 import {
   ColumnObject,
   ColumnsObject,

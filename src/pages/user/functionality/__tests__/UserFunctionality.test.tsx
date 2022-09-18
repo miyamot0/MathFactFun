@@ -24,26 +24,28 @@ describe("User Functionality: Reducer behavior", () => {
   });
 
   it("Should match original state, DEFAULT", async () => {
-    const { result } = renderHook(() =>
-      useReducer(UserGenerationReducer, UserDataInitialState)
-    );
+    act(() => {
+      const { result } = renderHook(() =>
+        useReducer(UserGenerationReducer, UserDataInitialState)
+      );
 
-    const [, dispatch] = result.current;
+      const [, dispatch] = result.current;
 
-    const priorState = result.current;
+      const priorState = result.current;
 
-    dispatch({
-      type: UserCreatorBehavior.SetThrow,
-      payload: {},
+      dispatch({
+        type: UserCreatorBehavior.SetThrow,
+        payload: {},
+      });
+
+      setTimeout(() => {
+        expect(result.current[0]).toBe(priorState);
+      }, 1000);
     });
-
-    setTimeout(() => {
-      expect(result.current[0]).toBe(priorState);
-    }, 1000);
   });
 
   it("test dispatch: SetName", async () => {
-    act(async () => {
+    await act(async () => {
       const { result, waitForValueToChange } = renderHook(() =>
         useReducer(UserGenerationReducer, UserDataInitialState)
       );
@@ -66,7 +68,7 @@ describe("User Functionality: Reducer behavior", () => {
   });
 
   it("test dispatch: SetEmail", async () => {
-    act(async () => {
+    await act(async () => {
       const { result, waitForValueToChange } = renderHook(() =>
         useReducer(UserGenerationReducer, UserDataInitialState)
       );
@@ -89,7 +91,7 @@ describe("User Functionality: Reducer behavior", () => {
   });
 
   it("test dispatch: SetPassword", async () => {
-    act(async () => {
+    await act(async () => {
       const { result, waitForValueToChange } = renderHook(() =>
         useReducer(UserGenerationReducer, UserDataInitialState)
       );
@@ -112,7 +114,7 @@ describe("User Functionality: Reducer behavior", () => {
   });
 
   it("test dispatch: SetSchool", async () => {
-    act(async () => {
+    await act(async () => {
       const { result, waitForValueToChange } = renderHook(() =>
         useReducer(UserGenerationReducer, UserDataInitialState)
       );
@@ -135,7 +137,7 @@ describe("User Functionality: Reducer behavior", () => {
   });
 
   it("test dispatch: SetLoadedUser", async () => {
-    act(async () => {
+    await act(async () => {
       const { result, waitForValueToChange } = renderHook(() =>
         useReducer(UserGenerationReducer, UserDataInitialState)
       );
@@ -169,7 +171,7 @@ describe("User Functionality: Reducer behavior", () => {
   });
 
   it("test dispatch: SetFormError", async () => {
-    act(async () => {
+    await act(async () => {
       const { result, waitForValueToChange } = renderHook(() =>
         useReducer(UserGenerationReducer, UserDataInitialState)
       );
@@ -190,75 +192,4 @@ describe("User Functionality: Reducer behavior", () => {
       expect(result.current[0].FormError).toBe(newError);
     });
   });
-
-  /*
- 
-   it("test dispatch: LOGOUT", async () => {
-     act(async () => {
-       const { result, waitForValueToChange } = renderHook(() =>
-         useReducer(authorizationReducer, InitialAuthorizationState)
-       );
- 
-       const [, dispatch] = result.current;
- 
-       dispatch({
-         type: AuthorizationStates.LOGOUT,
-         payload: null,
-         payload2: false,
-       });
- 
-       await waitForValueToChange(() => result.current[0].user);
- 
-       expect(result.current[0].user).toBe(null);
-     });
-   });
- 
-   it("test dispatch: READY", async () => {
-     act(async () => {
-       const { result, waitForValueToChange } = renderHook(() =>
-         useReducer(authorizationReducer, InitialAuthorizationState)
-       );
- 
-       const [, dispatch] = result.current;
- 
-       const newAuth = { uid: "123" } as firebase.User;
- 
-       dispatch({
-         type: AuthorizationStates.READY,
-         payload: newAuth,
-         payload2: true,
-       });
- 
-       await waitForValueToChange(() => result.current[0].user);
-       await waitForValueToChange(() => result.current[0].adminFlag);
- 
-       expect(result.current[0].user).toBe(newAuth);
-       expect(result.current[0].adminFlag).toBe(true);
-     });
-   });
- 
-   it("test dispatch: CLAIMS", async () => {
-     act(async () => {
-       const { result, waitForValueToChange } = renderHook(() =>
-         useReducer(authorizationReducer, InitialAuthorizationState)
-       );
- 
-       const [, dispatch] = result.current;
- 
-       const newAuth = { uid: "123" } as firebase.User;
- 
-       dispatch({
-         type: AuthorizationStates.CLAIMS,
-         payload: newAuth,
-         payload2: true,
-       });
- 
-       await waitForValueToChange(() => result.current[0].user);
-       await waitForValueToChange(() => result.current[0].adminFlag);
- 
-       expect(result.current[0].user).toBe(newAuth);
-       expect(result.current[0].adminFlag).toBe(true);
-     });
-   });
-   */
 });

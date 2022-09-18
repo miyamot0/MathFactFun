@@ -7,13 +7,14 @@
  */
 
 import firebase from "firebase";
-import { act, renderHook } from "@testing-library/react-hooks";
+import { act, renderHook, WaitOptions } from "@testing-library/react-hooks";
 import { useReducer } from "react";
 import {
   authorizationReducer,
   AuthorizationStates,
   InitialAuthorizationState,
 } from "../AuthorizationBehavior";
+import { waitFor } from "@testing-library/react";
 
 describe("Authorization Behavior: Reducer behavior", () => {
   it("Should have persisting state", () => {
@@ -26,7 +27,7 @@ describe("Authorization Behavior: Reducer behavior", () => {
   });
 
   it("test dispatch: LOGIN", async () => {
-    act(async () => {
+    await act(async () => {
       const { result, waitForValueToChange } = renderHook(() =>
         useReducer(authorizationReducer, InitialAuthorizationState)
       );
@@ -48,7 +49,7 @@ describe("Authorization Behavior: Reducer behavior", () => {
   });
 
   it("test dispatch: LOGOUT", async () => {
-    act(async () => {
+    await act(async () => {
       const { result, waitForValueToChange } = renderHook(() =>
         useReducer(authorizationReducer, InitialAuthorizationState)
       );
@@ -61,14 +62,14 @@ describe("Authorization Behavior: Reducer behavior", () => {
         payload2: false,
       });
 
-      await waitForValueToChange(() => result.current[0].user);
-
-      expect(result.current[0].user).toBe(null);
+      waitFor(() => {
+        expect(result.current[0].user).toBe(null);
+      });
     });
   });
 
   it("test dispatch: READY", async () => {
-    act(async () => {
+    await act(async () => {
       const { result, waitForValueToChange } = renderHook(() =>
         useReducer(authorizationReducer, InitialAuthorizationState)
       );
@@ -83,16 +84,15 @@ describe("Authorization Behavior: Reducer behavior", () => {
         payload2: true,
       });
 
-      await waitForValueToChange(() => result.current[0].user);
-      await waitForValueToChange(() => result.current[0].adminFlag);
-
-      expect(result.current[0].user).toBe(newAuth);
-      expect(result.current[0].adminFlag).toBe(true);
+      waitFor(() => {
+        expect(result.current[0].user).toBe(newAuth);
+        expect(result.current[0].adminFlag).toBe(true);
+      });
     });
   });
 
   it("test dispatch: CLAIMS", async () => {
-    act(async () => {
+    await act(async () => {
       const { result, waitForValueToChange } = renderHook(() =>
         useReducer(authorizationReducer, InitialAuthorizationState)
       );
@@ -107,16 +107,15 @@ describe("Authorization Behavior: Reducer behavior", () => {
         payload2: true,
       });
 
-      await waitForValueToChange(() => result.current[0].user);
-      await waitForValueToChange(() => result.current[0].adminFlag);
-
-      expect(result.current[0].user).toBe(newAuth);
-      expect(result.current[0].adminFlag).toBe(true);
+      waitFor(() => {
+        expect(result.current[0].user).toBe(newAuth);
+        expect(result.current[0].adminFlag).toBe(true);
+      });
     });
   });
 
   it("test dispatch: THROWERR", async () => {
-    act(async () => {
+    await act(async () => {
       const { result, waitForValueToChange } = renderHook(() =>
         useReducer(authorizationReducer, InitialAuthorizationState)
       );
@@ -131,11 +130,10 @@ describe("Authorization Behavior: Reducer behavior", () => {
         payload2: true,
       });
 
-      await waitForValueToChange(() => result.current[0].user);
-      await waitForValueToChange(() => result.current[0].adminFlag);
-
-      expect(result.current[0].user).toBe(newAuth);
-      expect(result.current[0].adminFlag).toBe(true);
+      waitFor(() => {
+        expect(result.current[0].user).toBe(newAuth);
+        expect(result.current[0].adminFlag).toBe(true);
+      });
     });
   });
 });

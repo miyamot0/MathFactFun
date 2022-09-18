@@ -30,22 +30,24 @@ describe("Intervention Engine: Reducer", () => {
   });
 
   it("Should match original state, DEFAULT", async () => {
-    const { result } = renderHook(() =>
-      useReducer(InterventionReducer, InitialInterventionState)
-    );
+    act(() => {
+      const { result } = renderHook(() =>
+        useReducer(InterventionReducer, InitialInterventionState)
+      );
 
-    const [, dispatch] = result.current;
+      const [, dispatch] = result.current;
 
-    const priorState = result.current;
+      const priorState = result.current;
 
-    dispatch({
-      type: InterventionActions.SetThrow,
-      payload: {},
+      dispatch({
+        type: InterventionActions.SetThrow,
+        payload: {},
+      });
+
+      setTimeout(() => {
+        expect(result.current[0]).toBe(priorState);
+      }, 1000);
     });
-
-    setTimeout(() => {
-      expect(result.current[0]).toBe(priorState);
-    }, 1000);
   });
 
   it("Should adjust to updates in user entry field", async () => {

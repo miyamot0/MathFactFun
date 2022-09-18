@@ -98,7 +98,7 @@ export function getCoreProblemSet(target: string): string[][] {
     case "Multiplication":
       return FactsOnFire.Multiplication;
     default:
-      return FactsOnFire.Addition;
+      throw Error("Target for problem set missing");
   }
 }
 
@@ -130,8 +130,6 @@ export function getSetFromArray(array: string[][], set: string): string[] {
     (accumulator, value) => accumulator.concat(value),
     [] as string[]
   );
-
-  //return [].concat.apply([], array.slice(start, end));
 }
 
 /** getUniqueProblems
@@ -270,6 +268,11 @@ export function keyHandler(
   }
 }
 
+/** submitPerformancesToFirebase
+ *
+ * @param param0
+ * @returns
+ */
 export async function submitPerformancesToFirebase({
   user,
   id,

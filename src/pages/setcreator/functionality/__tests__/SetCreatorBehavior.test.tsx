@@ -18,6 +18,7 @@ import {
   SetCreatorReducer,
 } from "../SetCreatorBehavior";
 import { ItemHistory, SetItem } from "../../interfaces/SetCreatorInterfaces";
+import { waitFor } from "@testing-library/react";
 
 describe("Set Creator: Reducer", () => {
   it("Should match original state", () => {
@@ -30,22 +31,24 @@ describe("Set Creator: Reducer", () => {
   });
 
   it("Should match original state, DEFAULT", async () => {
-    const { result } = renderHook(() =>
-      useReducer(SetCreatorReducer, InitialSetCreatorState)
-    );
+    act(() => {
+      const { result } = renderHook(() =>
+        useReducer(SetCreatorReducer, InitialSetCreatorState)
+      );
 
-    const [, dispatch] = result.current;
+      const [, dispatch] = result.current;
 
-    const priorState = result.current;
+      const priorState = result.current;
 
-    dispatch({
-      type: DragDropActions.SetThrow,
-      payload: {},
+      dispatch({
+        type: DragDropActions.SetThrow,
+        payload: {},
+      });
+
+      setTimeout(() => {
+        expect(result.current[0]).toBe(priorState);
+      }, 1000);
     });
-
-    setTimeout(() => {
-      expect(result.current[0]).toBe(priorState);
-    }, 1000);
   });
 
   it("Should update: Callback", async () => {
@@ -136,7 +139,7 @@ describe("Set Creator: Reducer", () => {
   });
 
   it("Should update: SetColumns", async () => {
-    act(async () => {
+    await act(async () => {
       const { result, waitForValueToChange } = renderHook(() =>
         useReducer(SetCreatorReducer, InitialSetCreatorState)
       );
@@ -182,32 +185,39 @@ describe("Set Creator: Reducer", () => {
         payload: newColumnValues,
       });
 
+      await waitFor(() => {
+        expect(result.current[0].columns).toBe(newColumnValues);
+      });
+    });
+  });
+
+  it("Should update: ToggleLoaded", async () => {
+    await act(async () => {
+      const { result, waitForValueToChange } = renderHook(() =>
+        useReducer(SetCreatorReducer, InitialSetCreatorState)
+      );
+
+      const [state, dispatch] = result.current;
+
+      const newValue = true;
+
+      dispatch({
+        type: DragDropActions.ToggleLoaded,
+        payload: newValue,
+      });
+
       const waitOptions = {
         interval: false,
         timeout: false,
       } as WaitOptions;
 
-      await waitForValueToChange(() => result.current[0].columns, waitOptions);
+      await waitForValueToChange(
+        () => result.current[0].LoadedData,
+        waitOptions
+      );
 
-      expect(result.current[0].columns).toBe(newColumnValues);
+      expect(result.current[0].LoadedData).toBe(newValue);
     });
-  });
-
-  it("Should update: ToggleLoaded", async () => {
-    const { result } = renderHook(() =>
-      useReducer(SetCreatorReducer, InitialSetCreatorState)
-    );
-
-    const [, dispatch] = result.current;
-
-    const newValue = true;
-
-    dispatch({
-      type: DragDropActions.ToggleLoaded,
-      payload: newValue,
-    });
-
-    expect(result.current[0].LoadedData).toBe(newValue);
   });
 
   // TODO: incomplete!
