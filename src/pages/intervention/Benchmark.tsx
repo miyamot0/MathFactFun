@@ -309,7 +309,7 @@ export default function Benchmark() {
       if (state.EntryRepresentationInternal.length === 0) return;
 
       // Lop off end of string
-      dispatch({
+      new DispatchUpdateEntryInternal({
         type: InterventionActions.UpdateResponseEntry,
         payload: {
           EntryRepresentationInternal: state.EntryRepresentationInternal.slice(
@@ -317,15 +317,18 @@ export default function Benchmark() {
             -1
           ),
         },
-      } as DispatchUpdateEntryInternal);
+      });
     } else {
       // Add to end of string
-      dispatch({
-        type: InterventionActions.UpdateResponseEntry,
-        payload: {
-          EntryRepresentationInternal: state.EntryRepresentationInternal + char,
-        },
-      } as DispatchUpdateEntryInternal);
+      dispatch(
+        new DispatchUpdateEntryInternal({
+          type: InterventionActions.UpdateResponseEntry,
+          payload: {
+            EntryRepresentationInternal:
+              state.EntryRepresentationInternal + char,
+          },
+        })
+      );
     }
   }
 

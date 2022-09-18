@@ -344,24 +344,25 @@ export default function ExplicitTiming() {
       // # Rule #7: Exit out if nothin to delete
       if (state.EntryRepresentationInternal.length === 0) return;
 
-      // Lop off end of string
-      dispatch({
-        type: InterventionActions.UpdateResponseEntry,
-        payload: {
-          EntryRepresentationInternal: state.EntryRepresentationInternal.slice(
-            0,
-            -1
-          ),
-        },
-      } as DispatchUpdateEntryInternal);
+      dispatch(
+        new DispatchUpdateEntryInternal({
+          type: InterventionActions.UpdateResponseEntry,
+          payload: {
+            EntryRepresentationInternal:
+              state.EntryRepresentationInternal.slice(0, -1),
+          },
+        })
+      );
     } else {
-      // Add to end of string
-      dispatch({
-        type: InterventionActions.UpdateResponseEntry,
-        payload: {
-          EntryRepresentationInternal: state.EntryRepresentationInternal + char,
-        },
-      } as DispatchUpdateEntryInternal);
+      dispatch(
+        new DispatchUpdateEntryInternal({
+          type: InterventionActions.UpdateResponseEntry,
+          payload: {
+            EntryRepresentationInternal:
+              state.EntryRepresentationInternal + char,
+          },
+        })
+      );
     }
   }
 

@@ -47,24 +47,20 @@ export const InitialInterventionState: InterventionState = {
 };
 
 export enum InterventionActions {
-  //GeneralOpenModal = "GeneralOpenModal",
-  //GeneralCloseModal = "GeneralCloseModal",
   UpdateResponseEntry,
   UpdateWithLoadedData,
+  UpdateFollowingInitialAction,
 
-  BenchmarkBatchStartPreflight,
   BenchmarkBatchStartBegin,
   BenchmarkBatchStartIncrement,
   BenchmarkBatchStartIncrementPost,
 
-  ExplicitTimingBatchStartPreflight,
   ExplicitTimingBatchIncrement,
   ExplicitTimingModalPreErrorLog,
   ExplicitTimingModalRetry,
 
   TapedProblemsBatchStartPreflight,
 
-  CoverCopyCompareBatchStartPreflight,
   CoverCopyCompareBatchStartBegin,
   CoverCopyCompareTaskIncrement,
   CoverCopyCompareTaskReset,
@@ -122,15 +118,6 @@ export const InterventionReducer = (
     case InterventionActions.UpdateWithLoadedData:
       return overwriteOnlyExisting(state, action);
 
-    // Benchmarking
-    case InterventionActions.BenchmarkBatchStartPreflight:
-      return {
-        ...state,
-        CurrentAction: action.payload.uAction,
-        WorkingData: action.payload.uWorkingData,
-        SecondsLeft: action.payload.uTimer,
-        LoadedData: action.payload.uLoadedData,
-      };
     case InterventionActions.BenchmarkBatchStartBegin:
       return {
         ...state,
@@ -162,15 +149,6 @@ export const InterventionReducer = (
         ViewRepresentationInternal: action.payload.uView,
         EntryRepresentationInternal: action.payload.uEntry,
       };
-    // Explicit Timing
-    case InterventionActions.ExplicitTimingBatchStartPreflight:
-      return {
-        ...state,
-        WorkingData: action.payload.uWorkingData,
-        SecondsLeft: action.payload.uTimer,
-        LoadedData: action.payload.uLoadedData,
-        CurrentAction: action.payload.uAction,
-      };
 
     case InterventionActions.ExplicitTimingModalRetry:
       return {
@@ -198,15 +176,6 @@ export const InterventionReducer = (
       return {
         ...state,
         FactModelList: action.payload.uFactModel,
-      };
-    // Cover Copy Compare
-    case InterventionActions.CoverCopyCompareBatchStartPreflight:
-      return {
-        ...state,
-        CurrentAction: action.payload.uAction,
-        WorkingData: action.payload.uWorkingData,
-        OperatorSymbol: action.payload.uOperator,
-        LoadedData: action.payload.uLoadedData,
       };
 
     case InterventionActions.CoverCopyCompareBatchStartBegin:
