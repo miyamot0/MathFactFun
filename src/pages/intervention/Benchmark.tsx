@@ -20,25 +20,18 @@ import Timer from "./subcomponents/Timer";
 import SimpleProblemFrame from "./subcomponents/SimpleProblemFrame";
 
 // Helpers
-import {
-  CalculateDigitsTotalAnswer,
-  CalculateDigitsCorrectAnswer,
-  GetOperatorFromLabel,
-} from "../../utilities/LabelHelper";
-import { timestamp } from "../../firebase/config";
+import { GetOperatorFromLabel } from "../../utilities/LabelHelper";
 import { RoutedIdTargetParam } from "../../interfaces/RoutingInterfaces";
 import { useAuthorizationContext } from "../../context/hooks/useAuthorizationContext";
 import {
-  InterventionActions,
   InitialInterventionState,
   InterventionReducer,
-  SharedActionSequence,
 } from "./functionality/InterventionBehavior";
 
 import { StudentDataInterface } from "../student/interfaces/StudentInterfaces";
-import { FactDataInterface } from "../setcreator/interfaces/SetCreatorInterfaces";
 import {
   loadWorkingDataBenchmark,
+  sharedButtonActionSequence,
   useEventListener,
 } from "./helpers/InterventionHelpers";
 import {
@@ -130,143 +123,6 @@ export default function Benchmark() {
     });
   }
 
-  /** captureButtonAction
-   *
-   * Button interactions to fire
-   *
-   */
-  function captureButtonAction(): void {
-    if (document === null) {
-      return;
-    }
-
-    if (
-      state.CurrentAction === SharedActionSequence.Start ||
-      state.CurrentAction === SharedActionSequence.Begin
-    ) {
-      const listItem = state.WorkingData[0];
-      const updatedList = state.WorkingData.filter(function (item) {
-        return item !== listItem;
-      });
-
-      dispatch({
-        type: InterventionActions.BenchmarkBatchStartBegin,
-        payload: {
-          ButtonText: "Check",
-          CoverProblem: false,
-          UpdateEntry: "",
-          UpdateView: listItem.split(":")[0],
-          WorkingData: updatedList,
-          StartTime: state.StartTime === null ? new Date() : state.StartTime,
-          TrialTime: new Date(),
-          CurrentAction: SharedActionSequence.Answer,
-        },
-      });
-
-      return;
-    }
-
-    const combinedResponse =
-      state.ViewRepresentationInternal.split("=")[0] +
-      "=" +
-      state.EntryRepresentationInternal;
-
-    // Compare if internal and inputted string match
-    const isMatching =
-      state.ViewRepresentationInternal.trim() === combinedResponse.trim();
-
-    let uNumberCorrectInitial = state.NumCorrectInitial;
-    let uNumberErrors = state.NumErrors;
-
-    // Increment initial attempt, if correct
-    if (state.OnInitialTry && isMatching) {
-      uNumberCorrectInitial = uNumberCorrectInitial + 1;
-    }
-
-    // Increment errors, if incorrect
-    if (!isMatching) {
-      uNumberErrors = state.NumErrors + 1;
-    }
-
-    const current = new Date();
-    const secs = (current.getTime() - state.PreTrialTime.getTime()) / 1000;
-
-    const holderPreTime = state.PreTrialTime;
-
-    const uTotalDigits =
-      state.TotalDigits +
-      CalculateDigitsTotalAnswer(state.ViewRepresentationInternal);
-
-    const uTotalDigitsCorrect =
-      state.TotalDigitsCorrect +
-      CalculateDigitsCorrectAnswer(
-        combinedResponse,
-        state.ViewRepresentationInternal
-      );
-
-    const uNumberTrials = state.NumbTrials + 1;
-
-    const currentItem = {
-      factCorrect: isMatching,
-      initialTry: state.OnInitialTry,
-      factType: document.currentTarget,
-      factString: state.ViewRepresentationInternal,
-      factEntry: state.EntryRepresentationInternal,
-      latencySeconds: secs,
-      dateTimeEnd: timestamp.fromDate(new Date(current)),
-      dateTimeStart: timestamp.fromDate(new Date(holderPreTime)),
-    } as FactDataInterface;
-
-    const uInitialTry = true;
-
-    dispatch({
-      type: InterventionActions.BenchmarkBatchStartIncrement,
-      payload: {
-        uNumberCorrectInitial,
-        uNumberErrors,
-        uTotalDigits,
-        uTotalDigitsCorrect,
-        uNumberTrials,
-        uInitialTry,
-        uTrialTime: new Date(),
-      },
-    });
-
-    // Potential issue: state change not fast enough to catch latest
-    if (state.WorkingData.length === 0) {
-      // If finished, upload list w/ latest item
-      submitPerformancesToFirebase({
-        user,
-        id,
-        interventionFormat: "Benchmark",
-        finalFactObject: currentItem,
-        document,
-        state,
-        response: addResponse,
-        addDocument,
-        updateDocument,
-        history,
-      });
-    } else {
-      // Otherise, add it to the existing list
-
-      const listItem = state.WorkingData[0];
-      const updatedList = state.WorkingData.filter(function (item) {
-        return item !== listItem;
-      });
-
-      dispatch({
-        type: InterventionActions.BenchmarkBatchStartIncrementPost,
-        payload: {
-          uFactModel: [...state.FactModelList, currentItem],
-          uWorkingData: updatedList,
-          uView: listItem.split(":")[0],
-          uEntry: "",
-        },
-      });
-    }
-  }
-
   return (
     <div className="wrapperET">
       <div className="topBoxET">
@@ -298,7 +154,24 @@ export default function Benchmark() {
       </div>
       <div className="box3ET">
         <section>
-          <button className="global-btn " onClick={() => captureButtonAction()}>
+          <button
+            className="global-btn "
+            onClick={() => {
+              sharedButtonActionSequence(
+                user,
+                id,
+                "Benchmark",
+                document,
+                state,
+                null,
+                addDocument,
+                updateDocument,
+                addResponse,
+                history,
+                dispatch
+              );
+            }}
+          >
             {state.ButtonText}
           </button>
         </section>
