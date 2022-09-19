@@ -19,6 +19,7 @@ import {
   SharedActionSequence,
 } from "../functionality/InterventionBehavior";
 import {
+  DispatchUpdateIntroduceItem,
   DispatchUpdatePreLoadContent,
   InterventionState,
 } from "../interfaces/InterventionInterfaces";
@@ -154,8 +155,6 @@ export function coverCopyCompareSequence(
 ) {
   // HACK: need a flag for update w/o waiting for state change
   let quickCheck = false;
-
-  console.log(`in seq: ${state.CurrentAction}`);
 
   if (
     state.CurrentAction === SharedActionSequence.Entry ||
@@ -392,6 +391,21 @@ export function explicitTimingSequence(
       return item !== listItem;
     });
 
+    dispatch(new DispatchUpdateIntroduceItem({
+      type: InterventionActions.UpdateIntroduceNewItem,
+      payload: {
+        CurrentAction: SharedActionSequence.Answer,
+        WorkingData: updatedList,
+        ButtonText: "Check",
+        CoverProblemItem: false,
+        PreTrialTime: new Date(),
+        StartTime: state.StartTime === null ? new Date() : state.StartTime,
+        EntryRepresentationInternal: "",
+        ViewRepresentationInternal: listItem.split(":")[0],
+      },
+    }))
+
+    /*
     dispatch({
       type: InterventionActions.BenchmarkBatchStartBegin,
       payload: {
@@ -405,6 +419,7 @@ export function explicitTimingSequence(
         CurrentAction: SharedActionSequence.Answer,
       },
     });
+    */
 
     return;
   }
@@ -502,6 +517,202 @@ export function explicitTimingSequence(
         new Date(holderPreTime)
       ),
     };
+
+    dispatch({
+      type: InterventionActions.ExplicitTimingBatchIncrement,
+      payload: {
+        uNumberCorrectInitial,
+        uNumberErrors,
+        uTotalDigits: state.TotalDigits + totalDigitsShown,
+        uTotalDigitsCorrect: state.TotalDigitsCorrect + totalDigitsCorrect,
+        uNumberTrials: state.NumbTrials + 1,
+        uInitialTry: state.OnInitialTry,
+        uTrialTime: new Date(),
+      },
+    });
+
+    // Note: issue where state change not fast enough to catch latest
+    if (state.WorkingData.length === 0) {
+      submitPerformancesToFirebase({
+        user,
+        id,
+        interventionFormat: InterventionFormat.CoverCopyCompare,
+        finalFactObject: currentItem2,
+        document,
+
+        state,
+        response,
+        addDocument,
+        updateDocument,
+        history,
+      });
+    } else {
+      const listItem = state.WorkingData[0];
+      const updatedList = state.WorkingData.filter(function (item) {
+        return item !== listItem;
+      });
+
+      dispatch({
+        type: InterventionActions.BenchmarkBatchStartIncrementPost,
+        payload: {
+          uFactModel: [...state.FactModelList, currentItem2],
+          uWorkingData: updatedList,
+          uView: listItem.split(":")[0],
+          uEntry: "",
+        },
+      });
+    }
+  }
+}
+
+/** benchmarkSequence
+ * 
+ * @param user 
+ * @param id 
+ * @param document 
+ * @param state 
+ * @param openModal 
+ * @param addDocument 
+ * @param updateDocument 
+ * @param response 
+ * @param history 
+ * @param dispatch 
+ * @returns 
+ */
+export function benchmarkSequence(
+  user: firebase.User,
+  id: string,
+  document: StudentDataInterface,
+  state: InterventionState,
+  openModal: any,
+  addDocument: any,
+  updateDocument: any,
+  response: any,
+  history: any,
+  dispatch: any
+) {
+  if (
+    state.CurrentAction === SharedActionSequence.Start ||
+    state.CurrentAction === SharedActionSequence.Begin
+  ) {
+    const listItem = state.WorkingData[0];
+
+    const updatedList = state.WorkingData.filter(function (item) {
+      return item !== listItem;
+    });
+
+    dispatch(new DispatchUpdateIntroduceItem({
+      type: InterventionActions.UpdateIntroduceNewItem,
+      payload: {
+        CurrentAction: SharedActionSequence.Answer,
+        WorkingData: updatedList,
+        ButtonText: "Check",
+        CoverProblemItem: false,
+        PreTrialTime: new Date(),
+        StartTime: state.StartTime === null ? new Date() : state.StartTime,
+        EntryRepresentationInternal: "",
+        ViewRepresentationInternal: listItem.split(":")[0],
+      },
+    }))
+
+    return;
+  }
+
+  const combinedResponse =
+    state.ViewRepresentationInternal.split("=")[0] +
+    "=" +
+    state.EntryRepresentationInternal;
+
+  // Compare if internal and inputted string match
+  const isMatching =
+    state.ViewRepresentationInternal.trim() === combinedResponse.trim();
+
+  let uNumberCorrectInitial = state.NumCorrectInitial;
+  let uNumberErrors = state.NumErrors;
+
+  // Increment initial attempt, if correct
+  if (state.OnInitialTry && isMatching) {
+    uNumberCorrectInitial = uNumberCorrectInitial + 1;
+  }
+
+  // Increment errors, if incorrect
+  if (!isMatching) {
+    uNumberErrors = state.NumErrors + 1;
+  }
+
+  const current = new Date();
+  const secs = (current.getTime() - state.PreTrialTime.getTime()) / 1000;
+
+  const holderPreTime = state.PreTrialTime;
+
+  if (shouldShowFeedback(!isMatching, document)) {
+    const totalDigitsShown = CalculateDigitsTotalAnswer(
+      state.ViewRepresentationInternal
+    );
+
+    const totalDigitsCorrect = CalculateDigitsCorrectAnswer(
+      combinedResponse,
+      state.ViewRepresentationInternal
+    );
+
+    const currentItem2: FactDataInterface = {
+      factCorrect: isMatching,
+      initialTry: state.OnInitialTry,
+      factType: document.currentTarget,
+      factString: state.ViewRepresentationInternal,
+      factEntry: combinedResponse,
+      latencySeconds: secs,
+      dateTimeEnd: firebase.firestore.Timestamp.fromDate(new Date(current)),
+      dateTimeStart: firebase.firestore.Timestamp.fromDate(
+        new Date(holderPreTime)
+      ),
+    };
+
+    dispatch({
+      type: InterventionActions.ExplicitTimingBatchIncrement,
+      payload: {
+        uNumberCorrectInitial,
+        uNumberErrors,
+        uTotalDigits: state.TotalDigits + totalDigitsShown,
+        uTotalDigitsCorrect: state.TotalDigitsCorrect + totalDigitsCorrect,
+        uNumberTrials: state.NumbTrials + 1,
+        uInitialTry: state.OnInitialTry,
+        uTrialTime: new Date(),
+      },
+    });
+
+    dispatch({
+      type: InterventionActions.ExplicitTimingModalPreErrorLog,
+      payload: {
+        uFactModel: [...state.FactModelList, currentItem2],
+      },
+    });
+
+    openModal();
+  } else {
+    const totalDigitsShown = CalculateDigitsTotalAnswer(
+      state.ViewRepresentationInternal
+    );
+
+    const totalDigitsCorrect = CalculateDigitsCorrectAnswer(
+      combinedResponse,
+      state.ViewRepresentationInternal
+    );
+
+    const currentItem2: FactDataInterface = {
+      factCorrect: isMatching,
+      initialTry: state.OnInitialTry,
+      factType: document.currentTarget,
+      factString: state.ViewRepresentationInternal,
+      factEntry: combinedResponse,
+      latencySeconds: secs,
+      dateTimeEnd: firebase.firestore.Timestamp.fromDate(new Date(current)),
+      dateTimeStart: firebase.firestore.Timestamp.fromDate(
+        new Date(holderPreTime)
+      ),
+    };
+
+    // TODO: benchmark logic here
 
     dispatch({
       type: InterventionActions.ExplicitTimingBatchIncrement,

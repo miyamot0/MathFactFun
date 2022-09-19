@@ -46,6 +46,7 @@ import {
 // styles
 import "./styles/CoverCopyCompare.css";
 import { commonKeyListener } from "./helpers/KeyHandlingHelper";
+import { DispatchUpdateIntroduceItem } from "./interfaces/InterventionInterfaces";
 
 export default function CoverCopyCompare() {
   const { id, target } = useParams<RoutedIdTargetParam>();
@@ -123,6 +124,25 @@ export default function CoverCopyCompare() {
       return item !== listItem;
     });
 
+    dispatch(new DispatchUpdateIntroduceItem({
+      type: InterventionActions.UpdateIntroduceNewItem,
+      payload: {
+        ButtonText: "Cover",
+        PreTrialTime: new Date(),
+        StartTime: state.StartTime === null ? new Date() : state.StartTime,
+        ViewRepresentationInternal: listItem.split(":")[0],
+        CoverProblemItem: false,
+        CoverListViewItems: true,
+        WorkingData: updatedList,
+        IsOngoing: true,
+        ShowButton: true,
+        NextLiItem: updatedList[0],
+        EntryRepresentationInternal: "",
+        CurrentAction: SharedActionSequence.Answer,
+      },
+    }))
+
+    /*
     dispatch({
       type: InterventionActions.CoverCopyCompareBatchStartBegin,
       payload: {
@@ -140,6 +160,7 @@ export default function CoverCopyCompare() {
         uCurrentAction: SharedActionSequence.Answer,
       },
     });
+    */
 
     sharedButtonActionSequence(
       user,

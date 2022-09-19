@@ -1,8 +1,10 @@
 import {
   DispatchUpdateEntryInternal,
+  DispatchUpdateIntroduceItem,
   DispatchUpdatePreLoadContent,
   InterventionState,
   isEntryInternalDispatch,
+  isItemLoadDispatch,
   isPreloadDispatch,
 } from "../interfaces/InterventionInterfaces";
 
@@ -49,9 +51,12 @@ export const InitialInterventionState: InterventionState = {
 export enum InterventionActions {
   UpdateResponseEntry,
   UpdateWithLoadedData,
+  UpdateIntroduceNewItem,
+
+
   UpdateFollowingInitialAction,
 
-  BenchmarkBatchStartBegin,
+  //BenchmarkBatchStartBegin,
   BenchmarkBatchStartIncrement,
   BenchmarkBatchStartIncrementPost,
 
@@ -61,7 +66,7 @@ export enum InterventionActions {
 
   TapedProblemsBatchStartPreflight,
 
-  CoverCopyCompareBatchStartBegin,
+  //CoverCopyCompareBatchStartBegin,
   CoverCopyCompareTaskIncrement,
   CoverCopyCompareTaskReset,
   CoverCopyCompareBatchIncrement,
@@ -103,6 +108,21 @@ export function overwriteOnlyExisting(
     };
   }
 
+  if (isItemLoadDispatch(incoming)) {
+    const local: DispatchUpdateIntroduceItem =
+      incoming as DispatchUpdateIntroduceItem;
+
+    local.payload.ShowButton = !local.payload.ShowButton ? destination.ShowButton : local.payload.ShowButton;
+    local.payload.IsOngoing = !local.payload.IsOngoing ? destination.IsOngoing : local.payload.IsOngoing;
+    local.payload.CoverListViewItems = !local.payload.CoverListViewItems ? destination.CoverListViewItems : local.payload.CoverListViewItems;
+    local.payload.NextLiItem = !local.payload.NextLiItem ? destination.NextLiItem : local.payload.NextLiItem;
+
+    return {
+      ...destination,
+      ...local.payload,
+    };
+  }
+
   throw Error("Didn't match");
 }
 
@@ -124,18 +144,45 @@ export const InterventionReducer = (
     case InterventionActions.UpdateWithLoadedData:
       return overwriteOnlyExisting(state, action);
 
-    case InterventionActions.BenchmarkBatchStartBegin:
-      return {
-        ...state,
-        ButtonText: action.payload.ButtonText,
-        CoverProblemItem: action.payload.CoverProblem,
-        EntryRepresentationInternal: action.payload.UpdateEntry,
-        ViewRepresentationInternal: action.payload.UpdateView,
-        WorkingData: action.payload.WorkingData,
-        StartTime: action.payload.StartTime,
-        PreTrialTime: action.payload.TrialTime,
-        CurrentAction: action.payload.CurrentAction,
-      };
+    case InterventionActions.UpdateIntroduceNewItem:
+      return overwriteOnlyExisting(state, action);
+
+    /*
+
+  case InterventionActions.BenchmarkBatchStartBegin:
+    return {
+      ...state,
+      ButtonText: action.payload.ButtonText,
+      CoverProblemItem: action.payload.CoverProblem,
+      EntryRepresentationInternal: action.payload.UpdateEntry,
+      ViewRepresentationInternal: action.payload.UpdateView,
+      WorkingData: action.payload.WorkingData,
+      StartTime: action.payload.StartTime,
+      PreTrialTime: action.payload.TrialTime,
+      CurrentAction: action.payload.CurrentAction,
+    };
+
+
+
+  case InterventionActions.CoverCopyCompareBatchStartBegin:
+    return {
+      ...state,
+      ButtonText: action.payload.uButtonText,
+      CoverProblemItem: action.payload.uCoverProblemItem,
+      PreTrialTime: action.payload.uTrialTime,
+      EntryRepresentationInternal:
+        action.payload.uEntryRepresentationInternal,
+      ShowButton: action.payload.uShowButton,
+      IsOngoing: action.payload.uIsOngoing,
+      StartTime: action.payload.uStartTime,
+      ViewRepresentationInternal: action.payload.uViewRepresentationInternal,
+      CoverListViewItems: action.payload.uCoverListViewItems,
+      WorkingData: action.payload.uWorkingData,
+      CurrentAction: action.payload.uCurrentAction,
+      NextLiItem: action.payload.uNextLiItem,
+    };
+
+    */
     case InterventionActions.BenchmarkBatchStartIncrement:
       return {
         ...state,
@@ -182,24 +229,6 @@ export const InterventionReducer = (
       return {
         ...state,
         FactModelList: action.payload.uFactModel,
-      };
-
-    case InterventionActions.CoverCopyCompareBatchStartBegin:
-      return {
-        ...state,
-        ButtonText: action.payload.uButtonText,
-        CoverProblemItem: action.payload.uCoverProblemItem,
-        PreTrialTime: action.payload.uTrialTime,
-        EntryRepresentationInternal:
-          action.payload.uEntryRepresentationInternal,
-        ShowButton: action.payload.uShowButton,
-        IsOngoing: action.payload.uIsOngoing,
-        StartTime: action.payload.uStartTime,
-        ViewRepresentationInternal: action.payload.uViewRepresentationInternal,
-        CoverListViewItems: action.payload.uCoverListViewItems,
-        WorkingData: action.payload.uWorkingData,
-        CurrentAction: action.payload.uCurrentAction,
-        NextLiItem: action.payload.uNextLiItem,
       };
 
     case InterventionActions.CoverCopyCompareTaskIncrement:

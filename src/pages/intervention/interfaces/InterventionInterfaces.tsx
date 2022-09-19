@@ -63,6 +63,11 @@ export interface PerformanceDataInterface {
   createdAt: firebase.firestore.Timestamp | null;
 }
 
+/** DispatchUpdateEntryInternal
+ * 
+ * Class for updating string entry
+ * 
+ */
 export class DispatchUpdateEntryInternal {
   public type: number;
   public payload: {
@@ -84,6 +89,11 @@ export class DispatchUpdateEntryInternal {
   }
 }
 
+/** DispatchUpdatePreLoadContent
+ * 
+ * Class for loading intervention information
+ * 
+ */
 export class DispatchUpdatePreLoadContent {
   public type: number;
   public payload: {
@@ -114,9 +124,64 @@ export class DispatchUpdatePreLoadContent {
   }
 }
 
+/** DispatchUpdateIntroduceItem
+ * 
+ * Class for loading intervention information
+ * 
+ */
+export class DispatchUpdateIntroduceItem {
+  public type: number;
+  public payload: {
+    CurrentAction: SharedActionSequence;
+    WorkingData: string[];
+    ButtonText: string,
+    CoverProblemItem: boolean,
+    PreTrialTime: Date,
+    EntryRepresentationInternal: string,
+    ShowButton?: boolean,
+    IsOngoing?: boolean,
+    StartTime: Date,
+    ViewRepresentationInternal: string,
+    CoverListViewItems?: boolean,
+    NextLiItem?: string | undefined,
+  };
+  public DispatchUpdateIntroduceItem?: string;
+
+  constructor({
+    type,
+    payload,
+  }: {
+    type: number;
+    payload: {
+      CurrentAction: SharedActionSequence;
+      WorkingData: string[];
+      ButtonText: string,
+
+      CoverProblemItem: boolean,
+      PreTrialTime: Date,
+      EntryRepresentationInternal: string,
+      StartTime: Date,
+      ViewRepresentationInternal: string,
+
+      // Items specific to CCC
+      ShowButton?: boolean | undefined,
+      IsOngoing?: boolean | undefined,
+      CoverListViewItems?: boolean | undefined,
+      NextLiItem?: string | undefined,
+    };
+  }) {
+    this.type = type;
+    this.payload = payload;
+    this.DispatchUpdateIntroduceItem = "DispatchUpdateIntroduceItem";
+  }
+}
+
+// Type guards
+
 export type InterventionDispatches =
   | DispatchUpdateEntryInternal
-  | DispatchUpdatePreLoadContent;
+  | DispatchUpdatePreLoadContent
+  | DispatchUpdateIntroduceItem;
 
 export function isEntryInternalDispatch(
   object: InterventionDispatches
@@ -135,3 +200,14 @@ export function isPreloadDispatch(
     undefined;
   return res_;
 }
+
+export function isItemLoadDispatch(
+  object: InterventionDispatches
+): object is DispatchUpdateIntroduceItem {
+  const res_ =
+    (object as DispatchUpdateIntroduceItem).DispatchUpdateIntroduceItem !==
+    undefined;
+  return res_;
+}
+
+
