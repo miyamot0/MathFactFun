@@ -106,12 +106,6 @@ export function commonKeyListener(
                         return;
                     }
 
-                    if (currentApproach === InterventionFormat.CoverCopyCompare) {
-                        if (!checkLiNullUndefinedBlank(state.NextLiItem)) {
-                            captureItemClick(state.NextLiItem);
-                        }
-                    }
-
                     return;
                 }
 
