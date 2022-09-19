@@ -92,6 +92,8 @@ export function commonKeyHandlerET(
     state: InterventionState,
     dispatch: any
 ) {
+    if (char.trim() === "=") return;
+
     if (char === DelCode) {
         // # Rule #7: Exit out if nothin to delete
         if (state.EntryRepresentationInternal.length === 0) return;

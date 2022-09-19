@@ -123,6 +123,9 @@ export function commonKeyHandler(
     case InterventionFormat.ExplicitTiming:
       commonKeyHandlerET(char, state, dispatch);
       return;
+    case "Benchmark":
+      commonKeyHandlerET(char, state, dispatch);
+      return;
     default:
       throw Error("No intervention type specified")
   }

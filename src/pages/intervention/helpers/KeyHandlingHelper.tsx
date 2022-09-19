@@ -115,6 +115,29 @@ export function commonKeyListener(
                 commonKeyHandler(currentApproach, modKey, state, dispatch);
             }
             return;
+        case "Benchmark":
+            if (RelevantKeys.includes(key.key)) {
+                let modKey = key.key === "Backspace" ? "Del" : key.key;
+                modKey = key.key === "Delete" ? "Del" : modKey;
+
+                if (modKey === " ") {
+                    if (
+                        state.CurrentAction !== SharedActionSequence.Entry &&
+                        state.CurrentAction !== SharedActionSequence.Start
+                    ) {
+                        () => captureButtonAction();
+                        return;
+                    }
+
+                    return;
+                }
+
+                modKey = key.key === "*" ? "x" : modKey;
+                modKey = key.key === "Enter" ? "=" : modKey;
+
+                commonKeyHandler(currentApproach, modKey, state, dispatch);
+            }
+            return;
         default:
             throw Error("No intervention type specified")
     }

@@ -366,34 +366,50 @@ export function sharedButtonActionSequence(
     throw Error("Document or user is null");
   }
 
-  if (approach === InterventionFormat.CoverCopyCompare) {
-    coverCopyCompareSequence(
-      user,
-      id,
-      document,
-      state,
-      openModal,
-      addDocument,
-      updateDocument,
-      response,
-      history,
-      dispatch
-    );
-  } else if (approach === InterventionFormat.ExplicitTiming ||
-    approach === "Benchmark") {
-    explicitTimingSequence(
-      user,
-      id,
-      document,
-      state,
-      openModal,
-      addDocument,
-      updateDocument,
-      response,
-      history,
-      dispatch
-    );
-  } else {
-    throw Error("No routing information supplied");
+  switch (approach) {
+    case InterventionFormat.CoverCopyCompare:
+      coverCopyCompareSequence(
+        user,
+        id,
+        document,
+        state,
+        openModal,
+        addDocument,
+        updateDocument,
+        response,
+        history,
+        dispatch
+      );
+      return;
+    case InterventionFormat.ExplicitTiming:
+      explicitTimingSequence(
+        user,
+        id,
+        document,
+        state,
+        openModal,
+        addDocument,
+        updateDocument,
+        response,
+        history,
+        dispatch
+      );
+      return;
+    case "Benchmark":
+      explicitTimingSequence(
+        user,
+        id,
+        document,
+        state,
+        openModal,
+        addDocument,
+        updateDocument,
+        response,
+        history,
+        dispatch
+      );
+      return;
+    default:
+      throw Error("No routing information supplied");
   }
 }
