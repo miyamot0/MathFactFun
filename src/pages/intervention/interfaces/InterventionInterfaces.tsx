@@ -176,12 +176,58 @@ export class DispatchUpdateIntroduceItem {
   }
 }
 
+/** DispatchUpdateRetryItem
+ * 
+ * Class for re-trying an existing item
+ * 
+ */
+export class DispatchUpdateRetryItem {
+  public type: number;
+  public payload: {
+    EntryRepresentationInternal: string,
+    NumRetries: number;
+    OnInitialTry: boolean;
+
+    CoverStimulusItem?: boolean;
+    ToVerify?: boolean;
+    CurrentAction?: SharedActionSequence;
+    ButtonText?: string;
+    IsOngoing?: boolean,
+    CoverProblemItem?: boolean,
+  };
+  public DispatchUpdateRetryItem?: string;
+
+  constructor({
+    type,
+    payload,
+  }: {
+    type: number;
+    payload: {
+      EntryRepresentationInternal: string,
+      NumRetries: number;
+      OnInitialTry: boolean;
+
+      CoverStimulusItem?: boolean;
+      ToVerify?: boolean;
+      CurrentAction?: SharedActionSequence;
+      ButtonText?: string;
+      IsOngoing?: boolean,
+      CoverProblemItem?: boolean,
+    };
+  }) {
+    this.type = type;
+    this.payload = payload;
+    this.DispatchUpdateRetryItem = "DispatchUpdateRetryItem";
+  }
+}
+
 // Type guards
 
 export type InterventionDispatches =
   | DispatchUpdateEntryInternal
   | DispatchUpdatePreLoadContent
-  | DispatchUpdateIntroduceItem;
+  | DispatchUpdateIntroduceItem
+  | DispatchUpdateRetryItem;
 
 export function isEntryInternalDispatch(
   object: InterventionDispatches
@@ -210,4 +256,11 @@ export function isItemLoadDispatch(
   return res_;
 }
 
-
+export function isItemRetryDispatch(
+  object: InterventionDispatches
+): object is DispatchUpdateRetryItem {
+  const res_ =
+    (object as DispatchUpdateRetryItem).DispatchUpdateRetryItem !==
+    undefined;
+  return res_;
+}

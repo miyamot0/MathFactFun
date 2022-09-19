@@ -31,6 +31,7 @@ import {
   InterventionActions,
   InitialInterventionState,
   InterventionReducer,
+  SharedActionSequence,
 } from "./functionality/InterventionBehavior";
 
 // styles
@@ -48,6 +49,7 @@ import {
 } from "./helpers/DispatchingHelpers";
 import { submitPerformancesToFirebase } from "./helpers/InterventionHelpers";
 import { commonKeyListener } from "./helpers/KeyHandlingHelper";
+import { DispatchUpdateRetryItem } from "./interfaces/InterventionInterfaces";
 
 export default function ExplicitTiming() {
   const { id, target } = useParams<RoutedIdTargetParam>();
@@ -153,14 +155,15 @@ export default function ExplicitTiming() {
           className="global-btn "
           style={{ float: "right" }}
           onClick={() => {
-            dispatch({
-              type: InterventionActions.ExplicitTimingModalRetry,
+
+            dispatch(new DispatchUpdateRetryItem({
+              type: 0,
               payload: {
-                uEntryRepresentationInternal: "",
-                uNumRetries: state.NumRetries + 1,
-                uOnInitialTry: false,
-              },
-            });
+                EntryRepresentationInternal: "",
+                NumRetries: state.NumRetries + 1,
+                OnInitialTry: false,
+              }
+            }));
 
             closeModal();
           }}

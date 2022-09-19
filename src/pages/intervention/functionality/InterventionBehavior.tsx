@@ -2,9 +2,11 @@ import {
   DispatchUpdateEntryInternal,
   DispatchUpdateIntroduceItem,
   DispatchUpdatePreLoadContent,
+  DispatchUpdateRetryItem,
   InterventionState,
   isEntryInternalDispatch,
   isItemLoadDispatch,
+  isItemRetryDispatch,
   isPreloadDispatch,
 } from "../interfaces/InterventionInterfaces";
 
@@ -52,6 +54,7 @@ export enum InterventionActions {
   UpdateResponseEntry,
   UpdateWithLoadedData,
   UpdateIntroduceNewItem,
+  UpdateRetryCurrentItem,
 
 
   UpdateFollowingInitialAction,
@@ -62,7 +65,7 @@ export enum InterventionActions {
 
   ExplicitTimingBatchIncrement,
   ExplicitTimingModalPreErrorLog,
-  ExplicitTimingModalRetry,
+  //ExplicitTimingModalRetry,
 
   TapedProblemsBatchStartPreflight,
 
@@ -72,7 +75,7 @@ export enum InterventionActions {
   CoverCopyCompareBatchIncrement,
   CoverCopyCompareBatchStartIncrementPost,
   CoverCopyCompareModalPreErrorLog,
-  CoverCopyCompareModalRetry,
+  //CoverCopyCompareModalRetry,
   CoverCopyCompareItemIncrement,
 
   SetThrow,
@@ -123,6 +126,23 @@ export function overwriteOnlyExisting(
     };
   }
 
+  if (isItemRetryDispatch(incoming)) {
+    const local: DispatchUpdateRetryItem =
+      incoming as DispatchUpdateRetryItem;
+
+    local.payload.CoverStimulusItem = !local.payload.CoverStimulusItem ? destination.CoverStimulusItem : local.payload.CoverStimulusItem;
+    local.payload.ToVerify = !local.payload.ToVerify ? destination.ToVerify : local.payload.ToVerify;
+    local.payload.CurrentAction = !local.payload.CurrentAction ? destination.CurrentAction : local.payload.CurrentAction;
+    local.payload.ButtonText = !local.payload.ButtonText ? destination.ButtonText : local.payload.ButtonText;
+    local.payload.IsOngoing = !local.payload.IsOngoing ? destination.IsOngoing : local.payload.IsOngoing;
+    local.payload.CoverProblemItem = !local.payload.CoverProblemItem ? destination.CoverProblemItem : local.payload.CoverProblemItem;
+
+    return {
+      ...destination,
+      ...local.payload,
+    };
+  }
+
   throw Error("Didn't match");
 }
 
@@ -147,42 +167,9 @@ export const InterventionReducer = (
     case InterventionActions.UpdateIntroduceNewItem:
       return overwriteOnlyExisting(state, action);
 
-    /*
+    case InterventionActions.UpdateRetryCurrentItem:
+      return overwriteOnlyExisting(state, action);
 
-  case InterventionActions.BenchmarkBatchStartBegin:
-    return {
-      ...state,
-      ButtonText: action.payload.ButtonText,
-      CoverProblemItem: action.payload.CoverProblem,
-      EntryRepresentationInternal: action.payload.UpdateEntry,
-      ViewRepresentationInternal: action.payload.UpdateView,
-      WorkingData: action.payload.WorkingData,
-      StartTime: action.payload.StartTime,
-      PreTrialTime: action.payload.TrialTime,
-      CurrentAction: action.payload.CurrentAction,
-    };
-
-
-
-  case InterventionActions.CoverCopyCompareBatchStartBegin:
-    return {
-      ...state,
-      ButtonText: action.payload.uButtonText,
-      CoverProblemItem: action.payload.uCoverProblemItem,
-      PreTrialTime: action.payload.uTrialTime,
-      EntryRepresentationInternal:
-        action.payload.uEntryRepresentationInternal,
-      ShowButton: action.payload.uShowButton,
-      IsOngoing: action.payload.uIsOngoing,
-      StartTime: action.payload.uStartTime,
-      ViewRepresentationInternal: action.payload.uViewRepresentationInternal,
-      CoverListViewItems: action.payload.uCoverListViewItems,
-      WorkingData: action.payload.uWorkingData,
-      CurrentAction: action.payload.uCurrentAction,
-      NextLiItem: action.payload.uNextLiItem,
-    };
-
-    */
     case InterventionActions.BenchmarkBatchStartIncrement:
       return {
         ...state,
@@ -201,16 +188,6 @@ export const InterventionReducer = (
         WorkingData: action.payload.uWorkingData,
         ViewRepresentationInternal: action.payload.uView,
         EntryRepresentationInternal: action.payload.uEntry,
-      };
-
-    case InterventionActions.ExplicitTimingModalRetry:
-      return {
-        ...state,
-        EntryRepresentationInternal:
-          action.payload.uEntryRepresentationInternal,
-        NumRetries: action.payload.uNumRetries,
-        ModalIsOpen: false,
-        OnInitialTry: action.payload.uOnInitialTry,
       };
 
     case InterventionActions.ExplicitTimingBatchIncrement:
@@ -246,21 +223,6 @@ export const InterventionReducer = (
         FactModelList: action.payload.uFactModel,
       };
 
-    case InterventionActions.CoverCopyCompareModalRetry:
-      return {
-        ...state,
-        EntryRepresentationInternal:
-          action.payload.uEntryRepresentationInternal,
-        IsOngoing: action.payload.uIsOngoing,
-        ToVerify: action.payload.uToVerify,
-        OnInitialTry: action.payload.uOnInitialTry,
-        CurrentAction: action.payload.uCurrentAction,
-        ButtonText: action.payload.uButtonText,
-        CoverProblemItem: action.payload.uCoverProblemItem,
-        CoverStimulusItem: action.payload.uCoverStimulusItem,
-        NumRetries: action.payload.uNumRetries,
-      };
-
     case InterventionActions.CoverCopyCompareBatchIncrement:
       return {
         ...state,
@@ -289,19 +251,6 @@ export const InterventionReducer = (
         FactModelList: action.payload.uFactModelList,
         CurrentAction: action.payload.uCurrentAction,
       };
-
-    /*
-              uCoverStimulusItem: true,
-              uCoverProblemItem: true,
-              uEntryRepresentationInternal: "",
-              uViewRepresentationInternal: "",
-              uButtonText: "Cover",
-              uShowButton: false,
-              uIsOngoing: true,
-              uCoverListViewItems: false,
-              uOnInitialTry: true,
-              uFactModelList: [...state.FactModelList, currentItem2],
-*/
 
     case InterventionActions.CoverCopyCompareTaskReset:
       return {

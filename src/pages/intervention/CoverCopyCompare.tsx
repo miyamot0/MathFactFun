@@ -46,7 +46,7 @@ import {
 // styles
 import "./styles/CoverCopyCompare.css";
 import { commonKeyListener } from "./helpers/KeyHandlingHelper";
-import { DispatchUpdateIntroduceItem } from "./interfaces/InterventionInterfaces";
+import { DispatchUpdateIntroduceItem, DispatchUpdateRetryItem } from "./interfaces/InterventionInterfaces";
 
 export default function CoverCopyCompare() {
   const { id, target } = useParams<RoutedIdTargetParam>();
@@ -142,26 +142,6 @@ export default function CoverCopyCompare() {
       },
     }))
 
-    /*
-    dispatch({
-      type: InterventionActions.CoverCopyCompareBatchStartBegin,
-      payload: {
-        uButtonText: "Cover",
-        uTrialTime: new Date(),
-        uStartTime: state.StartTime === null ? new Date() : state.StartTime,
-        uViewRepresentationInternal: listItem.split(":")[0],
-        uCoverProblemItem: false,
-        uCoverListViewItems: true,
-        uWorkingData: updatedList,
-        uIsOngoing: true,
-        uShowButton: true,
-        uNextLiItem: updatedList[0],
-        uEntryRepresentationInternal: "",
-        uCurrentAction: SharedActionSequence.Answer,
-      },
-    });
-    */
-
     sharedButtonActionSequence(
       user,
       id,
@@ -196,20 +176,21 @@ export default function CoverCopyCompare() {
           className="global-btn "
           style={{ float: "right" }}
           onClick={() => {
-            dispatch({
-              type: InterventionActions.CoverCopyCompareModalRetry,
+
+            dispatch(new DispatchUpdateRetryItem({
+              type: 0,
               payload: {
-                uEntryRepresentationInternal: "",
-                uIsOngoing: true,
-                uToVerify: false,
-                uOnInitialTry: false,
-                uCurrentAction: SharedActionSequence.Begin,
-                uButtonText: "Cover",
-                uCoverProblemItem: true,
-                uCoverStimulusItem: false,
-                uNumRetries: state.NumRetries + 1,
-              },
-            });
+                CurrentAction: SharedActionSequence.Begin,
+                EntryRepresentationInternal: "",
+                NumRetries: state.NumRetries + 1,
+                OnInitialTry: false,
+                CoverStimulusItem: false,
+                ToVerify: false,
+                ButtonText: "Cover",
+                IsOngoing: true,
+                CoverProblemItem: true,
+              }
+            }));
 
             closeModal();
           }}
