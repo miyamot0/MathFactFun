@@ -13,12 +13,10 @@ import { FactsOnFire } from "../../../../maths/Mind";
 import { FactDataInterface } from "../../../setcreator/interfaces/SetCreatorInterfaces";
 import { StudentDataInterface } from "../../../student/interfaces/StudentInterfaces";
 import {
-  InitialInterventionState,
-  SharedActionSequence,
+  InitialInterventionState, SharedActionSequence,
 } from "../../functionality/InterventionBehavior";
 import {
   InterventionState,
-  PerformanceDataInterface,
 } from "../../interfaces/InterventionInterfaces";
 import {
   checkLiNullUndefinedBlank,

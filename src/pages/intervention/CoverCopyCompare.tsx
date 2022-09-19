@@ -40,12 +40,12 @@ import {
 } from "./helpers/InterventionHelpers";
 import {
   commonKeyHandler,
-  commonKeyListener,
   completeLoadingDispatch,
 } from "./helpers/DispatchingHelpers";
 
 // styles
 import "./styles/CoverCopyCompare.css";
+import { commonKeyListener } from "./helpers/KeyHandlingHelper";
 
 export default function CoverCopyCompare() {
   const { id, target } = useParams<RoutedIdTargetParam>();

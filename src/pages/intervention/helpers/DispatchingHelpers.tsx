@@ -25,12 +25,18 @@ import {
   InterventionState,
 } from "../interfaces/InterventionInterfaces";
 import { InterventionFormat, RelevantKeys } from "./../../../maths/Facts";
+import { commonKeyHandlerCCC, commonKeyHandlerET } from "./InteractionHelpers";
 import {
   sharedButtonActionSequence,
   shouldShowFeedback,
 } from "./InterventionHelpers";
 import { submitPerformancesToFirebase } from "./InterventionHelpers";
 
+/** completeLoadingDispatch
+ * 
+ * @param param0 
+ * @returns 
+ */
 export function completeLoadingDispatch({
   intervention,
   currentAction = SharedActionSequence.Start,
@@ -99,211 +105,31 @@ export function completeLoadingDispatch({
   }
 }
 
+/** commonKeyHandler
+ *  
+ * @param intervention 
+ * @param char 
+ * @param state 
+ * @param dispatch 
+ */
 export function commonKeyHandler(
   intervention: string,
   char: string,
   state: InterventionState,
   dispatch: any
 ) {
-  if (intervention === InterventionFormat.CoverCopyCompare) {
-    commonKeyHandlerCCC(intervention, char, state, dispatch);
-  } else {
-    commonKeyHandlerET(intervention, char, state, dispatch);
+  switch (intervention) {
+    case InterventionFormat.CoverCopyCompare:
+      commonKeyHandlerCCC(intervention, char, state, dispatch);
+      return;
+    case InterventionFormat.ExplicitTiming:
+      commonKeyHandlerET(intervention, char, state, dispatch);
+      return;
+    default:
+      throw Error("No intervention type specified")
   }
 }
 
-function commonKeyHandlerCCC(
-  intervention: string,
-  char: string,
-  state: InterventionState,
-  dispatch: any
-) {
-  // Rule 1: Exit out if not in Covered/Copying sequence
-  if (state.CurrentAction !== SharedActionSequence.CoverCopy) return;
-
-  // Rule 2: Exit out if multiple operators
-  if (
-    char === state.OperatorSymbol &&
-    state.EntryRepresentationInternal.includes(state.OperatorSymbol)
-  )
-    return;
-
-  // Rule 3: Like #2, but no multiple equals sign
-  if (char === "=" && state.EntryRepresentationInternal.includes("=")) return;
-
-  // Rule #4: No '=' before an operator
-  if (
-    char === "=" &&
-    !state.EntryRepresentationInternal.includes(state.OperatorSymbol)
-  )
-    return;
-
-  // Rule #5/#6: No '=', before an digit AFTER operator
-  if (
-    char === "=" &&
-    state.EntryRepresentationInternal.includes(state.OperatorSymbol)
-  ) {
-    const problemParts = state.EntryRepresentationInternal.split(
-      state.OperatorSymbol
-    );
-
-    // Rule #5: If just 1 part, disregard (i.e., no operator)
-    if (problemParts.length <= 1) return;
-
-    // Rule #6: If first is just whitespace, disregard (i.e., JUST operator)
-    if (problemParts[1].trim().length === 0) return;
-  }
-
-  if (char === DelCode) {
-    // # Rule #7: Exit out if nothin to delete
-    if (state.EntryRepresentationInternal.length === 0) return;
-
-    // Lop off end of string
-    dispatch(
-      new DispatchUpdateEntryInternal({
-        type: InterventionActions.UpdateResponseEntry,
-        payload: {
-          EntryRepresentationInternal: state.EntryRepresentationInternal.slice(
-            0,
-            -1
-          ),
-        },
-      })
-    );
-  } else {
-    // Add to end of string
-    dispatch(
-      new DispatchUpdateEntryInternal({
-        type: InterventionActions.UpdateResponseEntry,
-        payload: {
-          EntryRepresentationInternal: state.EntryRepresentationInternal + char,
-        },
-      })
-    );
-  }
-}
-
-function commonKeyHandlerET(
-  intervention: string,
-  char: string,
-  state: InterventionState,
-  dispatch: any
-) {
-  if (char === DelCode) {
-    // # Rule #7: Exit out if nothin to delete
-    if (state.EntryRepresentationInternal.length === 0) return;
-
-    // Lop off end of string
-    dispatch(
-      new DispatchUpdateEntryInternal({
-        type: InterventionActions.UpdateResponseEntry,
-        payload: {
-          EntryRepresentationInternal: state.EntryRepresentationInternal.slice(
-            0,
-            -1
-          ),
-        },
-      })
-    );
-  } else {
-    // Add to end of string
-    dispatch(
-      new DispatchUpdateEntryInternal({
-        type: InterventionActions.UpdateResponseEntry,
-        payload: {
-          EntryRepresentationInternal: state.EntryRepresentationInternal + char,
-        },
-      })
-    );
-  }
-}
-
-export function commonKeyListener(
-  key: React.KeyboardEvent<HTMLElement>,
-  state: InterventionState,
-  currentApproach: string,
-  captureButtonAction: () => void | null,
-  checkLiNullUndefinedBlank: any,
-  captureItemClick: any,
-  user: firebase.User | null,
-  id: string,
-  document: StudentDataInterface | null,
-  openModal: any,
-  addDocument: any,
-  updateDocument: any,
-  response: any,
-  history: any,
-  dispatch: any
-) {
-  if (currentApproach === InterventionFormat.CoverCopyCompare) {
-    if (RelevantKeys.includes(key.key)) {
-      let modKey = key.key === "Backspace" ? "Del" : key.key;
-      modKey = key.key === "Delete" ? "Del" : modKey;
-
-      if (modKey === " ") {
-        if (
-          state.CurrentAction !== SharedActionSequence.Entry &&
-          state.CurrentAction !== SharedActionSequence.Start
-        ) {
-          sharedButtonActionSequence(
-            user,
-            id,
-            currentApproach,
-            document,
-            state,
-            openModal,
-            addDocument,
-            updateDocument,
-            response,
-            history,
-            dispatch
-          );
-
-          return;
-        }
-
-        if (!checkLiNullUndefinedBlank(state.NextLiItem)) {
-          captureItemClick(state.NextLiItem);
-        }
-
-        return;
-      }
-
-      modKey = key.key === "*" ? "x" : modKey;
-      modKey = key.key === "Enter" ? "=" : modKey;
-
-      commonKeyHandler(currentApproach, modKey, state, dispatch);
-    }
-  } else {
-    if (RelevantKeys.includes(key.key)) {
-      let modKey = key.key === "Backspace" ? "Del" : key.key;
-      modKey = key.key === "Delete" ? "Del" : modKey;
-
-      if (modKey === " ") {
-        if (
-          state.CurrentAction !== SharedActionSequence.Entry &&
-          state.CurrentAction !== SharedActionSequence.Start
-        ) {
-          () => captureButtonAction();
-          return;
-        }
-
-        if (currentApproach === InterventionFormat.CoverCopyCompare) {
-          if (!checkLiNullUndefinedBlank(state.NextLiItem)) {
-            captureItemClick(state.NextLiItem);
-          }
-        }
-
-        return;
-      }
-
-      modKey = key.key === "*" ? "x" : modKey;
-      modKey = key.key === "Enter" ? "=" : modKey;
-
-      commonKeyHandler(currentApproach, modKey, state, dispatch);
-    }
-  }
-}
 
 export function coverCopyCompareSequence(
   user: firebase.User,

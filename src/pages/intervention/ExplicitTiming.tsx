@@ -9,7 +9,6 @@
 import React, { useReducer, useState, useEffect } from "react";
 
 import { useParams, useHistory } from "react-router-dom";
-import { timestamp } from "../../firebase/config";
 import Modal from "react-modal";
 
 // hooks
@@ -24,37 +23,31 @@ import SimpleProblemFrame from "./subcomponents/SimpleProblemFrame";
 
 // helpers
 import {
-  CalculateDigitsTotalAnswer,
-  CalculateDigitsCorrectAnswer,
   GetOperatorFromLabel,
 } from "../../utilities/LabelHelper";
 
 import { RoutedIdTargetParam } from "../../interfaces/RoutingInterfaces";
 import {
   InterventionActions,
-  DelCode,
   InitialInterventionState,
   InterventionReducer,
-  SharedActionSequence,
 } from "./functionality/InterventionBehavior";
 
 // styles
 import "./styles/ExplicitTiming.css";
 import { ErrorModalCustomStyle } from "./subcomponents/ModalStyles";
-import { InterventionFormat, RelevantKeys } from "../../maths/Facts";
+import { InterventionFormat } from "../../maths/Facts";
 import { StudentDataInterface } from "../student/interfaces/StudentInterfaces";
 import {
   sharedButtonActionSequence,
-  shouldShowFeedback,
   useEventListener,
 } from "./helpers/InterventionHelpers";
-import { FactDataInterface } from "../setcreator/interfaces/SetCreatorInterfaces";
 import {
   commonKeyHandler,
-  commonKeyListener,
   completeLoadingDispatch,
 } from "./helpers/DispatchingHelpers";
 import { submitPerformancesToFirebase } from "./helpers/InterventionHelpers";
+import { commonKeyListener } from "./helpers/KeyHandlingHelper";
 
 export default function ExplicitTiming() {
   const { id, target } = useParams<RoutedIdTargetParam>();

@@ -26,7 +26,7 @@ export interface InterventionState {
   IsOngoing: boolean;
   ToVerify: boolean;
   FactModelList: FactDataInterface[];
-  NextLiItem: string;
+  NextLiItem: string | undefined;
   StartTime: Date | null;
   PreTrialTime: Date;
   OnInitialTry: boolean;

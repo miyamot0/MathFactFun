@@ -36,13 +36,13 @@ import {
 } from "./helpers/InterventionHelpers";
 import {
   commonKeyHandler,
-  commonKeyListener,
   completeLoadingDispatch,
 } from "./helpers/DispatchingHelpers";
 import { submitPerformancesToFirebase } from "./helpers/InterventionHelpers";
 
 // Styles
 import "./styles/ExplicitTiming.css";
+import { commonKeyListener } from "./helpers/KeyHandlingHelper";
 
 export default function Benchmark() {
   const { id, target } = useParams<RoutedIdTargetParam>();
