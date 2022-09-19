@@ -41,7 +41,6 @@ import {
 } from "./functionality/InterventionBehavior";
 import { StudentDataInterface } from "../student/interfaces/StudentInterfaces";
 import {
-  keyHandler,
   shouldShowFeedback,
   useEventListener,
 } from "./helpers/InterventionHelpers"; // styles
@@ -122,8 +121,13 @@ export default function TapedProblems() {
   const [secondsLeft, setSecondsLeft] = useState(0);
 
   // Add event listener to hook
-  useEventListener("keydown", (key: any) =>
-    keyHandler(key, captureKeyClick, captureButtonAction, state.CurrentAction)
+  useEventListener(
+    "keydown",
+    (key: any) => {
+      true;
+    }
+    // TODO: replace this
+    //keyHandler(key, captureKeyClick, captureButtonAction, state.CurrentAction)
   );
 
   function openModal(): void {

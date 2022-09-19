@@ -6,20 +6,32 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { ErrorHandling } from "../../../../maths/Facts";
+import firebase from "firebase";
+import { FirestoreState } from "../../../../firebase/interfaces/FirebaseInterfaces";
+import { ErrorHandling, InterventionFormat } from "../../../../maths/Facts";
 import { FactsOnFire } from "../../../../maths/Mind";
+import { FactDataInterface } from "../../../setcreator/interfaces/SetCreatorInterfaces";
 import { StudentDataInterface } from "../../../student/interfaces/StudentInterfaces";
-import { SharedActionSequence } from "../../functionality/InterventionBehavior";
+import {
+  InitialInterventionState,
+  SharedActionSequence,
+} from "../../functionality/InterventionBehavior";
+import {
+  InterventionState,
+  PerformanceDataInterface,
+} from "../../interfaces/InterventionInterfaces";
 import {
   checkLiNullUndefinedBlank,
   DetermineErrorCorrection,
   getCoreProblemSet,
   getSetFromArray,
   getUniqueProblems,
-  keyHandler,
   loadWorkingDataBenchmark,
+  sharedButtonActionSequence,
   shouldShowFeedback,
+  submitPerformancesToFirebase,
 } from "../InterventionHelpers";
+import * as DispatchHelpers from "./../DispatchingHelpers";
 
 describe("DetermineErrorCorrection", () => {
   it("ErrorHandling.Never should return false", () => {
@@ -286,3 +298,420 @@ describe("keyHandler", () => {
   });
 });
 */
+
+describe("sharedButtonActionSequence", () => {
+  const user = { uid: "456" } as firebase.User;
+  const id = "123";
+  const document = { id: "123" } as StudentDataInterface;
+  const state: InterventionState = {
+    ...InitialInterventionState,
+    //WorkingData: ["1+1=2:123123123"],
+  };
+  const response = {} as FirestoreState;
+
+  it("Should route correctly based on approach identified: CCC", () => {
+    const openModal = jest.fn();
+    const addDocument = jest.fn();
+    const updateDocument = jest.fn();
+    const history = jest.fn();
+    const dispatch = jest.fn();
+
+    const result = sharedButtonActionSequence(
+      user,
+      id,
+      InterventionFormat.CoverCopyCompare,
+      document,
+      state,
+      openModal,
+      addDocument,
+      updateDocument,
+      response,
+      history,
+      dispatch
+    );
+
+    const docMock1 = jest.spyOn(DispatchHelpers, "coverCopyCompareSequence");
+    const mockedFunctionCC = jest.fn(
+      (
+        user,
+        id,
+        InterventionFormat,
+        document,
+        state,
+        openModal,
+        addDocument,
+        updateDocument,
+        response,
+        history,
+        dispatch
+      ) => true
+    );
+    docMock1.mockImplementation(() =>
+      mockedFunctionCC(
+        user,
+        id,
+        InterventionFormat.CoverCopyCompare,
+        document,
+        state,
+        openModal,
+        addDocument,
+        updateDocument,
+        response,
+        history,
+        dispatch
+      )
+    );
+
+    const docMock2 = jest.spyOn(DispatchHelpers, "explicitTimingSequence");
+    const mockedFunctionET = jest.fn(
+      (
+        user,
+        id,
+        InterventionFormat,
+        document,
+        state,
+        openModal,
+        addDocument,
+        updateDocument,
+        response,
+        history,
+        dispatch
+      ) => true
+    );
+    docMock2.mockImplementation(() =>
+      mockedFunctionET(
+        user,
+        id,
+        InterventionFormat.ExplicitTiming,
+        document,
+        state,
+        openModal,
+        addDocument,
+        updateDocument,
+        response,
+        history,
+        dispatch
+      )
+    );
+
+    sharedButtonActionSequence(
+      user,
+      id,
+      InterventionFormat.CoverCopyCompare,
+      document,
+      state,
+      openModal,
+      addDocument,
+      updateDocument,
+      response,
+      history,
+      dispatch
+    );
+
+    expect(mockedFunctionCC).toBeCalled();
+    expect(mockedFunctionET).not.toBeCalled();
+  });
+
+  it("Should route correctly based on approach identified: ET", () => {
+    const openModal = jest.fn();
+    const addDocument = jest.fn();
+    const updateDocument = jest.fn();
+    const history = jest.fn();
+    const dispatch = jest.fn();
+
+    const docMock1 = jest.spyOn(DispatchHelpers, "coverCopyCompareSequence");
+    const mockedFunctionCC = jest.fn(
+      (
+        user,
+        id,
+        InterventionFormat,
+        document,
+        state,
+        openModal,
+        addDocument,
+        updateDocument,
+        response,
+        history,
+        dispatch
+      ) => true
+    );
+    docMock1.mockImplementation(() =>
+      mockedFunctionCC(
+        user,
+        id,
+        InterventionFormat.CoverCopyCompare,
+        document,
+        state,
+        openModal,
+        addDocument,
+        updateDocument,
+        response,
+        history,
+        dispatch
+      )
+    );
+
+    const docMock2 = jest.spyOn(DispatchHelpers, "explicitTimingSequence");
+    const mockedFunctionET = jest.fn(
+      (
+        user,
+        id,
+        InterventionFormat,
+        document,
+        state,
+        openModal,
+        addDocument,
+        updateDocument,
+        response,
+        history,
+        dispatch
+      ) => true
+    );
+    docMock2.mockImplementation(() =>
+      mockedFunctionET(
+        user,
+        id,
+        InterventionFormat.ExplicitTiming,
+        document,
+        state,
+        openModal,
+        addDocument,
+        updateDocument,
+        response,
+        history,
+        dispatch
+      )
+    );
+
+    sharedButtonActionSequence(
+      user,
+      id,
+      InterventionFormat.ExplicitTiming,
+      document,
+      state,
+      openModal,
+      addDocument,
+      updateDocument,
+      response,
+      history,
+      dispatch
+    );
+
+    expect(mockedFunctionCC).not.toBeCalled();
+    expect(mockedFunctionET).toBeCalled();
+  });
+
+  it("Should throw if no user", () => {
+    const openModal = jest.fn();
+    const addDocument = jest.fn();
+    const updateDocument = jest.fn();
+    const history = jest.fn();
+    const dispatch = jest.fn();
+
+    expect(() =>
+      sharedButtonActionSequence(
+        null as unknown as firebase.User,
+        id,
+        InterventionFormat.ExplicitTiming,
+        document,
+        state,
+        openModal,
+        addDocument,
+        updateDocument,
+        response,
+        history,
+        dispatch
+      )
+    ).toThrowError(Error("Document or user is null"));
+  });
+
+  it("Should throw if no user", () => {
+    const openModal = jest.fn();
+    const addDocument = jest.fn();
+    const updateDocument = jest.fn();
+    const history = jest.fn();
+    const dispatch = jest.fn();
+
+    expect(() =>
+      sharedButtonActionSequence(
+        user,
+        id,
+        InterventionFormat.ExplicitTiming,
+        null as unknown as StudentDataInterface,
+        state,
+        openModal,
+        addDocument,
+        updateDocument,
+        response,
+        history,
+        dispatch
+      )
+    ).toThrowError(Error("Document or user is null"));
+  });
+
+  it("Should throw if invalid route", () => {
+    const openModal = jest.fn();
+    const addDocument = jest.fn();
+    const updateDocument = jest.fn();
+    const history = jest.fn();
+    const dispatch = jest.fn();
+
+    expect(() =>
+      sharedButtonActionSequence(
+        user,
+        id,
+        "asdf",
+        document,
+        state,
+        openModal,
+        addDocument,
+        updateDocument,
+        response,
+        history,
+        dispatch
+      )
+    ).toThrowError(Error("No routing information supplied"));
+  });
+
+  // TODO: add for other intervention
+});
+
+describe("submitPerformancesToFirebase", () => {
+  const user = { uid: "456" } as firebase.User;
+  const id = "123";
+  const document = {
+    id: "123",
+    currentTarget: "Addition",
+    factsTargeted: ["1+1=2"],
+  } as StudentDataInterface;
+
+  const state: InterventionState = {
+    ...InitialInterventionState,
+    TotalDigitsCorrect: 1,
+    NumErrors: 0,
+    NumRetries: 0,
+    TotalDigits: 1,
+    FactModelList: [
+      {
+        // Bools
+        factCorrect: true,
+        initialTry: true,
+
+        // Strings
+        factType: "Addition",
+        factString: "1+1=2",
+        factEntry: "1+1=2",
+
+        // Numerics
+        latencySeconds: 1,
+
+        // Timestamps
+        dateTimeEnd: firebase.firestore.Timestamp.fromDate(new Date()),
+        dateTimeStart: firebase.firestore.Timestamp.fromDate(new Date()),
+      },
+    ] as FactDataInterface[],
+    StartTime: new Date(),
+    //WorkingData: ["1+1=2:123123123"],
+  };
+
+  it("Should error out if missing user, doc, or id", () => {
+    const addDocument = jest
+      .fn()
+      .mockImplementationOnce(() => Promise.resolve());
+    const updateDocument = jest
+      .fn()
+      .mockImplementationOnce(() => Promise.resolve());
+    const history = { push: jest.fn() };
+    const response = { error: null } as FirestoreState;
+
+    submitPerformancesToFirebase({
+      user: null as unknown as firebase.User,
+      id: null as unknown as string,
+      interventionFormat: InterventionFormat.CoverCopyCompare,
+      finalFactObject: null,
+      document,
+      state,
+      response,
+      addDocument,
+      updateDocument,
+      history,
+    });
+
+    expect(addDocument).not.toBeCalled();
+    expect(updateDocument).not.toBeCalled();
+    expect(history.push).not.toBeCalled();
+    expect(addDocument).not.toBeCalled();
+  });
+
+  it("Should pass if fields are defined, no added item at end", async () => {
+    const addDocument = jest
+      .fn()
+      .mockImplementationOnce(() => Promise.resolve());
+    const updateDocument = jest
+      .fn()
+      .mockImplementationOnce(() => Promise.resolve());
+    const history = { push: jest.fn() };
+    const response = { error: null } as FirestoreState;
+
+    const result = await submitPerformancesToFirebase({
+      user,
+      id,
+      interventionFormat: InterventionFormat.CoverCopyCompare,
+      finalFactObject: null,
+      document,
+      state,
+      response,
+      addDocument,
+      updateDocument,
+      history,
+    });
+
+    expect(addDocument).toBeCalled();
+    expect(updateDocument).toBeCalled();
+    expect(history.push).toBeCalled();
+  });
+
+  it("Should pass if fields are defined, added item at end", async () => {
+    const addDocument = jest
+      .fn()
+      .mockImplementationOnce(() => Promise.resolve());
+    const updateDocument = jest
+      .fn()
+      .mockImplementationOnce(() => Promise.resolve());
+    const history = { push: jest.fn() };
+    const response = { error: null } as FirestoreState;
+
+    const result = await submitPerformancesToFirebase({
+      user,
+      id,
+      interventionFormat: InterventionFormat.CoverCopyCompare,
+      finalFactObject: {
+        // Bools
+        factCorrect: true,
+        initialTry: true,
+
+        // Strings
+        factType: "Addition",
+        factString: "1+1=2",
+        factEntry: "1+1=2",
+
+        // Numerics
+        latencySeconds: 1,
+
+        // Timestamps
+        dateTimeEnd: firebase.firestore.Timestamp.fromDate(new Date()),
+        dateTimeStart: firebase.firestore.Timestamp.fromDate(new Date()),
+      } as FactDataInterface,
+      document,
+      state,
+      response,
+      addDocument,
+      updateDocument,
+      history,
+    });
+
+    expect(addDocument).toBeCalled();
+    expect(updateDocument).toBeCalled();
+    expect(history.push).toBeCalled();
+  });
+});

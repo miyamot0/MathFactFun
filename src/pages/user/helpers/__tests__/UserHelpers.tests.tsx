@@ -6,15 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import firebase from "firebase";
 import Adapter from "enzyme-adapter-react-16";
 import Enzyme from "enzyme";
 
 import { FirestoreState } from "../../../../firebase/interfaces/FirebaseInterfaces";
 
-import { SingleOptionType } from "../../../../types/SharedComponentTypes";
-import { ErrorHandling } from "../../../../maths/Facts";
-import { MultiValue } from "react-select";
 import { UserDataInterface } from "../../types/UserTypes";
 import { UserDataInitialState } from "../../functionality/UserFunctionality";
 import { verifyUserCreate, verifyUserEdit } from "../UserHelpers";

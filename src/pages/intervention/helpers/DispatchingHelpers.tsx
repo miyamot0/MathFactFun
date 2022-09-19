@@ -7,6 +7,12 @@
  */
 
 import firebase from "firebase";
+import {
+  CalculateDigitsCorrect,
+  CalculateDigitsCorrectAnswer,
+  CalculateDigitsTotalAnswer,
+} from "../../../utilities/LabelHelper";
+import { FactDataInterface } from "../../setcreator/interfaces/SetCreatorInterfaces";
 import { StudentDataInterface } from "../../student/interfaces/StudentInterfaces";
 import {
   DelCode,
@@ -19,7 +25,11 @@ import {
   InterventionState,
 } from "../interfaces/InterventionInterfaces";
 import { InterventionFormat, RelevantKeys } from "./../../../maths/Facts";
-import { sharedButtonActionSequence } from "./InterventionHelpers";
+import {
+  sharedButtonActionSequence,
+  shouldShowFeedback,
+} from "./InterventionHelpers";
+import { submitPerformancesToFirebase } from "./InterventionHelpers";
 
 export function completeLoadingDispatch({
   intervention,
@@ -291,6 +301,406 @@ export function commonKeyListener(
       modKey = key.key === "Enter" ? "=" : modKey;
 
       commonKeyHandler(currentApproach, modKey, state, dispatch);
+    }
+  }
+}
+
+export function coverCopyCompareSequence(
+  user: firebase.User,
+  id: string,
+  document: StudentDataInterface,
+  state: InterventionState,
+  openModal: any,
+  addDocument: any,
+  updateDocument: any,
+  response: any,
+  history: any,
+  dispatch: any
+) {
+  // HACK: need a flag for update w/o waiting for state change
+  let quickCheck = false;
+
+  console.log(`in seq: ${state.CurrentAction}`);
+
+  if (
+    state.CurrentAction === SharedActionSequence.Entry ||
+    state.CurrentAction === SharedActionSequence.Start
+  ) {
+    dispatch({
+      type: InterventionActions.CoverCopyCompareTaskIncrement,
+      payload: {
+        uAction: SharedActionSequence.Begin,
+        uButtonText: "Cover",
+        uCoverStimulusItem: false,
+        uCoverProblemItem: true,
+      },
+    });
+  } else if (state.CurrentAction === SharedActionSequence.Begin) {
+    dispatch({
+      type: InterventionActions.CoverCopyCompareTaskIncrement,
+      payload: {
+        uAction: SharedActionSequence.CoverCopy,
+        uButtonText: "Copied",
+        uCoverStimulusItem: true,
+        uCoverProblemItem: false,
+      },
+    });
+  } else if (state.CurrentAction === SharedActionSequence.CoverCopy) {
+    dispatch({
+      type: InterventionActions.CoverCopyCompareTaskIncrement,
+      payload: {
+        uAction: SharedActionSequence.Compare,
+        uButtonText: "Compared",
+        uCoverStimulusItem: false,
+        uCoverProblemItem: false,
+      },
+    });
+  } else {
+    dispatch({
+      type: InterventionActions.CoverCopyCompareTaskReset,
+      payload: {
+        uAction: SharedActionSequence.Entry,
+        uVerify: true,
+      },
+    });
+
+    quickCheck = true;
+  }
+
+  // Fire if ready to check response
+  if (state.ToVerify || quickCheck) {
+    dispatch({
+      type: InterventionActions.CoverCopyCompareTaskReset,
+      payload: {
+        uAction: state.CurrentAction,
+        uVerify: false,
+      },
+    });
+
+    // Compare if internal and inputted string match
+    const isMatching =
+      state.ViewRepresentationInternal.trim() ===
+      state.EntryRepresentationInternal.trim();
+
+    let uNumberCorrectInitial = state.NumCorrectInitial;
+    let uNumberErrors = state.NumErrors;
+
+    // Increment initial attempt, if correct
+    if (state.OnInitialTry && isMatching) {
+      uNumberCorrectInitial = uNumberCorrectInitial + 1;
+    }
+
+    // Increment errors, if incorrect
+    if (!isMatching) {
+      uNumberErrors = state.NumErrors + 1;
+    }
+
+    const current = new Date();
+    const secs = (current.getTime() - state.PreTrialTime.getTime()) / 1000;
+
+    const holderPreTime = state.PreTrialTime;
+
+    if (shouldShowFeedback(!isMatching, document)) {
+      // Error correction prompt
+
+      const totalDigitsShown = CalculateDigitsTotalAnswer(
+        state.ViewRepresentationInternal
+      );
+
+      const totalDigitsCorrect = CalculateDigitsCorrect(
+        state.EntryRepresentationInternal,
+        state.ViewRepresentationInternal,
+        state.OperatorSymbol
+      );
+
+      const currentItem2: FactDataInterface = {
+        factCorrect: isMatching,
+        initialTry: state.OnInitialTry,
+        factType: document.currentTarget,
+        factString: state.ViewRepresentationInternal,
+        factEntry: state.EntryRepresentationInternal,
+        latencySeconds: secs,
+        dateTimeEnd: firebase.firestore.Timestamp.fromDate(new Date(current)),
+        dateTimeStart: firebase.firestore.Timestamp.fromDate(
+          new Date(holderPreTime)
+        ),
+      };
+
+      dispatch({
+        type: InterventionActions.CoverCopyCompareBatchIncrement,
+        payload: {
+          uNumberCorrectInitial,
+          uNumberErrors,
+          uTotalDigits: state.TotalDigits + totalDigitsShown,
+          uTotalDigitsCorrect: state.TotalDigitsCorrect + totalDigitsCorrect,
+          uNumberTrials: state.NumbTrials + 1,
+          uInitialTry: state.OnInitialTry,
+          uTrialTime: new Date(),
+        },
+      });
+
+      dispatch({
+        type: InterventionActions.CoverCopyCompareModalPreErrorLog,
+        payload: {
+          uFactModel: [...state.FactModelList, currentItem2],
+        },
+      });
+
+      openModal();
+    } else {
+      const totalDigitsShown = CalculateDigitsTotalAnswer(
+        state.ViewRepresentationInternal
+      );
+
+      const totalDigitsCorrect = CalculateDigitsCorrect(
+        state.EntryRepresentationInternal,
+        state.ViewRepresentationInternal,
+        state.OperatorSymbol
+      );
+
+      const currentItem2: FactDataInterface = {
+        factCorrect: isMatching,
+        initialTry: state.OnInitialTry,
+        factType: document.currentTarget,
+        factString: state.ViewRepresentationInternal,
+        factEntry: state.EntryRepresentationInternal,
+        latencySeconds: secs,
+        dateTimeEnd: firebase.firestore.Timestamp.fromDate(new Date(current)),
+        dateTimeStart: firebase.firestore.Timestamp.fromDate(
+          new Date(holderPreTime)
+        ),
+      };
+
+      dispatch({
+        type: InterventionActions.CoverCopyCompareBatchIncrement,
+        payload: {
+          uNumberCorrectInitial,
+          uNumberErrors,
+          uTotalDigits: state.TotalDigits + totalDigitsShown,
+          uTotalDigitsCorrect: state.TotalDigitsCorrect + totalDigitsCorrect,
+          uNumberTrials: state.NumbTrials + 1,
+          uInitialTry: state.OnInitialTry,
+          uTrialTime: new Date(),
+        },
+      });
+
+      // Note: isusue where state change not fast enough to catch latest
+      if (state.WorkingData.length === 0) {
+        submitPerformancesToFirebase({
+          user,
+          id,
+          interventionFormat: InterventionFormat.CoverCopyCompare,
+          finalFactObject: currentItem2,
+          document,
+
+          state,
+          response,
+          addDocument,
+          updateDocument,
+          history,
+        });
+      } else {
+        dispatch({
+          type: InterventionActions.CoverCopyCompareBatchStartIncrementPost,
+          payload: {
+            uCoverStimulusItem: true,
+            uCoverProblemItem: true,
+            uEntryRepresentationInternal: "",
+            uViewRepresentationInternal: "",
+            uButtonText: "Cover",
+            uShowButton: false,
+            uIsOngoing: false,
+            uCoverListViewItems: false,
+            uOnInitialTry: true,
+            uFactModelList: [...state.FactModelList, currentItem2],
+            uCurrentAction: SharedActionSequence.Entry,
+          },
+        });
+      }
+    }
+  }
+}
+
+export function explicitTimingSequence(
+  user: firebase.User,
+  id: string,
+  document: StudentDataInterface,
+  state: InterventionState,
+  openModal: any,
+  addDocument: any,
+  updateDocument: any,
+  response: any,
+  history: any,
+  dispatch: any
+) {
+  if (document === null || user === null) {
+    throw Error("Document or user is null");
+  }
+
+  if (
+    state.CurrentAction === SharedActionSequence.Start ||
+    state.CurrentAction === SharedActionSequence.Begin
+  ) {
+    const listItem = state.WorkingData[0];
+
+    const updatedList = state.WorkingData.filter(function (item) {
+      return item !== listItem;
+    });
+
+    dispatch({
+      type: InterventionActions.BenchmarkBatchStartBegin,
+      payload: {
+        ButtonText: "Check",
+        CoverProblem: false,
+        UpdateEntry: "",
+        UpdateView: listItem.split(":")[0],
+        WorkingData: updatedList,
+        StartTime: state.StartTime === null ? new Date() : state.StartTime,
+        TrialTime: new Date(),
+        CurrentAction: SharedActionSequence.Answer,
+      },
+    });
+
+    return;
+  }
+
+  const combinedResponse =
+    state.ViewRepresentationInternal.split("=")[0] +
+    "=" +
+    state.EntryRepresentationInternal;
+
+  // Compare if internal and inputted string match
+  const isMatching =
+    state.ViewRepresentationInternal.trim() === combinedResponse.trim();
+
+  let uNumberCorrectInitial = state.NumCorrectInitial;
+  let uNumberErrors = state.NumErrors;
+
+  // Increment initial attempt, if correct
+  if (state.OnInitialTry && isMatching) {
+    uNumberCorrectInitial = uNumberCorrectInitial + 1;
+  }
+
+  // Increment errors, if incorrect
+  if (!isMatching) {
+    uNumberErrors = state.NumErrors + 1;
+  }
+
+  const current = new Date();
+  const secs = (current.getTime() - state.PreTrialTime.getTime()) / 1000;
+
+  const holderPreTime = state.PreTrialTime;
+
+  if (shouldShowFeedback(!isMatching, document)) {
+    const totalDigitsShown = CalculateDigitsTotalAnswer(
+      state.ViewRepresentationInternal
+    );
+
+    const totalDigitsCorrect = CalculateDigitsCorrectAnswer(
+      combinedResponse,
+      state.ViewRepresentationInternal
+    );
+
+    const currentItem2: FactDataInterface = {
+      factCorrect: isMatching,
+      initialTry: state.OnInitialTry,
+      factType: document.currentTarget,
+      factString: state.ViewRepresentationInternal,
+      factEntry: combinedResponse,
+      latencySeconds: secs,
+      dateTimeEnd: firebase.firestore.Timestamp.fromDate(new Date(current)),
+      dateTimeStart: firebase.firestore.Timestamp.fromDate(
+        new Date(holderPreTime)
+      ),
+    };
+
+    dispatch({
+      type: InterventionActions.ExplicitTimingBatchIncrement,
+      payload: {
+        uNumberCorrectInitial,
+        uNumberErrors,
+        uTotalDigits: state.TotalDigits + totalDigitsShown,
+        uTotalDigitsCorrect: state.TotalDigitsCorrect + totalDigitsCorrect,
+        uNumberTrials: state.NumbTrials + 1,
+        uInitialTry: state.OnInitialTry,
+        uTrialTime: new Date(),
+      },
+    });
+
+    dispatch({
+      type: InterventionActions.ExplicitTimingModalPreErrorLog,
+      payload: {
+        uFactModel: [...state.FactModelList, currentItem2],
+      },
+    });
+
+    openModal();
+  } else {
+    const totalDigitsShown = CalculateDigitsTotalAnswer(
+      state.ViewRepresentationInternal
+    );
+
+    const totalDigitsCorrect = CalculateDigitsCorrectAnswer(
+      combinedResponse,
+      state.ViewRepresentationInternal
+    );
+
+    const currentItem2: FactDataInterface = {
+      factCorrect: isMatching,
+      initialTry: state.OnInitialTry,
+      factType: document.currentTarget,
+      factString: state.ViewRepresentationInternal,
+      factEntry: combinedResponse,
+      latencySeconds: secs,
+      dateTimeEnd: firebase.firestore.Timestamp.fromDate(new Date(current)),
+      dateTimeStart: firebase.firestore.Timestamp.fromDate(
+        new Date(holderPreTime)
+      ),
+    };
+
+    dispatch({
+      type: InterventionActions.ExplicitTimingBatchIncrement,
+      payload: {
+        uNumberCorrectInitial,
+        uNumberErrors,
+        uTotalDigits: state.TotalDigits + totalDigitsShown,
+        uTotalDigitsCorrect: state.TotalDigitsCorrect + totalDigitsCorrect,
+        uNumberTrials: state.NumbTrials + 1,
+        uInitialTry: state.OnInitialTry,
+        uTrialTime: new Date(),
+      },
+    });
+
+    // Note: issue where state change not fast enough to catch latest
+    if (state.WorkingData.length === 0) {
+      submitPerformancesToFirebase({
+        user,
+        id,
+        interventionFormat: InterventionFormat.CoverCopyCompare,
+        finalFactObject: currentItem2,
+        document,
+
+        state,
+        response,
+        addDocument,
+        updateDocument,
+        history,
+      });
+    } else {
+      const listItem = state.WorkingData[0];
+      const updatedList = state.WorkingData.filter(function (item) {
+        return item !== listItem;
+      });
+
+      dispatch({
+        type: InterventionActions.BenchmarkBatchStartIncrementPost,
+        payload: {
+          uFactModel: [...state.FactModelList, currentItem2],
+          uWorkingData: updatedList,
+          uView: listItem.split(":")[0],
+          uEntry: "",
+        },
+      });
     }
   }
 }
