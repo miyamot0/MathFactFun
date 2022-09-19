@@ -9,8 +9,14 @@
 import { DelCode, InterventionActions, SharedActionSequence } from "../functionality/InterventionBehavior";
 import { DispatchUpdateEntryInternal, InterventionState } from "../interfaces/InterventionInterfaces";
 
+/** commonKeyHandlerCCC
+ * 
+ * @param char 
+ * @param state 
+ * @param dispatch 
+ * @returns 
+ */
 export function commonKeyHandlerCCC(
-    intervention: string,
     char: string,
     state: InterventionState,
     dispatch: any
@@ -45,7 +51,7 @@ export function commonKeyHandlerCCC(
         );
 
         // Rule #5: If just 1 part, disregard (i.e., no operator)
-        if (problemParts.length <= 1) return;
+        //if (problemParts.length <= 1) return;
 
         // Rule #6: If first is just whitespace, disregard (i.e., JUST operator)
         if (problemParts[1].trim().length === 0) return;
@@ -80,8 +86,14 @@ export function commonKeyHandlerCCC(
     }
 }
 
+/** commonKeyHandlerET
+ * 
+ * @param char 
+ * @param state 
+ * @param dispatch 
+ * @returns 
+ */
 export function commonKeyHandlerET(
-    intervention: string,
     char: string,
     state: InterventionState,
     dispatch: any

@@ -15,19 +15,16 @@ import {
 import { FactDataInterface } from "../../setcreator/interfaces/SetCreatorInterfaces";
 import { StudentDataInterface } from "../../student/interfaces/StudentInterfaces";
 import {
-  DelCode,
   InterventionActions,
   SharedActionSequence,
 } from "../functionality/InterventionBehavior";
 import {
-  DispatchUpdateEntryInternal,
   DispatchUpdatePreLoadContent,
   InterventionState,
 } from "../interfaces/InterventionInterfaces";
-import { InterventionFormat, RelevantKeys } from "./../../../maths/Facts";
+import { InterventionFormat } from "./../../../maths/Facts";
 import { commonKeyHandlerCCC, commonKeyHandlerET } from "./InteractionHelpers";
 import {
-  sharedButtonActionSequence,
   shouldShowFeedback,
 } from "./InterventionHelpers";
 import { submitPerformancesToFirebase } from "./InterventionHelpers";
@@ -120,17 +117,29 @@ export function commonKeyHandler(
 ) {
   switch (intervention) {
     case InterventionFormat.CoverCopyCompare:
-      commonKeyHandlerCCC(intervention, char, state, dispatch);
+      commonKeyHandlerCCC(char, state, dispatch);
       return;
     case InterventionFormat.ExplicitTiming:
-      commonKeyHandlerET(intervention, char, state, dispatch);
+      commonKeyHandlerET(char, state, dispatch);
       return;
     default:
       throw Error("No intervention type specified")
   }
 }
 
-
+/** coverCopyCompareSequence
+ * 
+ * @param user 
+ * @param id 
+ * @param document 
+ * @param state 
+ * @param openModal 
+ * @param addDocument 
+ * @param updateDocument 
+ * @param response 
+ * @param history 
+ * @param dispatch 
+ */
 export function coverCopyCompareSequence(
   user: firebase.User,
   id: string,
@@ -359,10 +368,6 @@ export function explicitTimingSequence(
   history: any,
   dispatch: any
 ) {
-  if (document === null || user === null) {
-    throw Error("Document or user is null");
-  }
-
   if (
     state.CurrentAction === SharedActionSequence.Start ||
     state.CurrentAction === SharedActionSequence.Begin

@@ -14,7 +14,6 @@ import { InitialInterventionState, SharedActionSequence } from "../../functional
 import { commonKeyListener } from "../KeyHandlingHelper";
 import * as InteractionHelpers from "./../InteractionHelpers";
 import * as DispatchHelpers from "./../DispatchingHelpers";
-import * as InterventionHelpers from "./../InterventionHelpers";
 import { InterventionState } from "../../interfaces/InterventionInterfaces";
 
 describe('commonKeyListener', () => {

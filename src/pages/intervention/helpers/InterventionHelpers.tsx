@@ -9,18 +9,16 @@
 import firebase from "firebase";
 import { useEffect, useRef } from "react";
 import { FirestoreState } from "../../../firebase/interfaces/FirebaseInterfaces";
-import { ErrorHandling, InterventionFormat, RelevantKeys } from "../../../maths/Facts";
+import { ErrorHandling, InterventionFormat } from "../../../maths/Facts";
 import { FactsOnFire } from "../../../maths/Mind";
 import { GetOperatorFromLabel } from "../../../utilities/LabelHelper";
 import { FactDataInterface } from "../../setcreator/interfaces/SetCreatorInterfaces";
 import { StudentDataInterface } from "../../student/interfaces/StudentInterfaces";
-import { SharedActionSequence } from "../functionality/InterventionBehavior";
 import {
   InterventionState,
   PerformanceDataInterface,
 } from "../interfaces/InterventionInterfaces";
 import {
-  commonKeyHandler,
   coverCopyCompareSequence,
   explicitTimingSequence,
 } from "./DispatchingHelpers";
@@ -337,6 +335,20 @@ export async function submitPerformancesToFirebase({
   }
 }
 
+/** sharedButtonActionSequence
+ * 
+ * @param user 
+ * @param id 
+ * @param approach 
+ * @param document 
+ * @param state 
+ * @param openModal 
+ * @param addDocument 
+ * @param updateDocument 
+ * @param response 
+ * @param history 
+ * @param dispatch 
+ */
 export function sharedButtonActionSequence(
   user: firebase.User | null,
   id: string,
