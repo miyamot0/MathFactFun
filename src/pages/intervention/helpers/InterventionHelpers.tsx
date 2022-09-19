@@ -19,7 +19,6 @@ import {
   PerformanceDataInterface,
 } from "../interfaces/InterventionInterfaces";
 import {
-  benchmarkSequence,
   coverCopyCompareSequence,
   explicitTimingSequence,
 } from "./DispatchingHelpers";
@@ -380,21 +379,9 @@ export function sharedButtonActionSequence(
       history,
       dispatch
     );
-  } else if (approach === InterventionFormat.ExplicitTiming) {
+  } else if (approach === InterventionFormat.ExplicitTiming ||
+    approach === "Benchmark") {
     explicitTimingSequence(
-      user,
-      id,
-      document,
-      state,
-      openModal,
-      addDocument,
-      updateDocument,
-      response,
-      history,
-      dispatch
-    );
-  } else if (approach === "Benchmark") {
-    benchmarkSequence(
       user,
       id,
       document,
