@@ -356,6 +356,20 @@ export function coverCopyCompareSequence(
   }
 }
 
+/** explicitTimingSequence
+ * 
+ * @param user 
+ * @param id 
+ * @param document 
+ * @param state 
+ * @param openModal 
+ * @param addDocument 
+ * @param updateDocument 
+ * @param response 
+ * @param history 
+ * @param dispatch 
+ * @returns 
+ */
 export function explicitTimingSequence(
   user: firebase.User,
   id: string,

@@ -107,7 +107,6 @@ export class DispatchUpdatePreLoadContent {
       OperatorSymbol: string;
       SecondsLeft: number;
     };
-    format?: string;
   }) {
     this.type = type;
     this.payload = payload;

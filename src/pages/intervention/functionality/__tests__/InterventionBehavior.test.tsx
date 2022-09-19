@@ -6,7 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { act, renderHook, WaitOptions } from "@testing-library/react-hooks";
+import { waitFor } from "@testing-library/react";
+import { act, renderHook } from "@testing-library/react-hooks";
 import { useReducer } from "react";
 import {
   DispatchUpdateEntryInternal,
@@ -16,8 +17,70 @@ import {
   InitialInterventionState,
   InterventionActions,
   InterventionReducer,
+  overwriteOnlyExisting,
   SharedActionSequence,
 } from "../InterventionBehavior";
+
+describe('overwriteOnlyExisting', () => {
+  it('Should Fail if not an authorized type ', () => {
+    const state = InitialInterventionState;
+    const value = {};
+
+    waitFor(() => {
+      expect(() => overwriteOnlyExisting(state, value as unknown as DispatchUpdateEntryInternal)).toThrowError(Error("Didn't match"))
+    })
+  })
+
+  it('DispatchUpdatePreLoadContent', () => {
+    const state = InitialInterventionState;
+
+    const newAction = SharedActionSequence.Start;
+    const newWorkingData: string[] = [];
+    const newLoadedData = true;
+    const newOperator = "+";
+    const newSecondsLeft = 120;
+
+    const value = new DispatchUpdatePreLoadContent({
+      type: InterventionActions.UpdateWithLoadedData,
+      payload: {
+        CurrentAction: newAction,
+        WorkingData: newWorkingData,
+        LoadedData: newLoadedData,
+        OperatorSymbol: newOperator,
+        SecondsLeft: newSecondsLeft,
+      }
+    })
+
+    const result = overwriteOnlyExisting(state, value);
+
+    waitFor(() => {
+      expect(result.CurrentAction).toBe(newAction);
+      expect(result.WorkingData).toBe(newWorkingData);
+      expect(result.LoadedData).toBe(newLoadedData);
+      expect(result.OperatorSymbol).toBe(newOperator);
+      expect(result.SecondsLeft).toBe(newSecondsLeft);
+    })
+  })
+
+  it('DispatchUpdateEntryInternal ', () => {
+    const state = InitialInterventionState;
+
+    const newString = "1";
+
+    const value = new DispatchUpdateEntryInternal({
+      type: InterventionActions.UpdateWithLoadedData,
+      payload: {
+        EntryRepresentationInternal: newString,
+      },
+    })
+
+    const result = overwriteOnlyExisting(state, value);
+
+    waitFor(() => {
+      expect(result.EntryRepresentationInternal).toBe(newString);
+    })
+  })
+})
 
 describe("Intervention Engine: Reducer", () => {
   it("Should match original state", () => {

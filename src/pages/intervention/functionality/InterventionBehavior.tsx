@@ -73,7 +73,13 @@ export enum InterventionActions {
   SetThrow,
 }
 
-function overwriteOnlyExisting(
+/** overwriteOnlyExisting
+ * 
+ * @param destination 
+ * @param incoming 
+ * @returns 
+ */
+export function overwriteOnlyExisting(
   destination: InterventionState,
   incoming: DispatchUpdateEntryInternal | DispatchUpdatePreLoadContent
 ): InterventionState {
