@@ -94,6 +94,7 @@ export function createVerticalStringProblemFrame(str: string): string[][] {
     return newText;
   }
 
+  /*
   // Just lines
   if (str.includes("=") && str.includes(operator)) {
     const preAnswer = str.split("=")[0];
@@ -128,6 +129,7 @@ export function createVerticalStringProblemFrame(str: string): string[][] {
 
     return newText;
   }
+  */
 
   return newText;
 }

@@ -26,7 +26,7 @@ describe("first", () => {
   const nProblems = 1;
   const setTrial = jest.fn();
   const callBackFunction = jest.fn();
-  const speech = new window.SpeechSynthesisUtterance();
+  //const speech = new window.SpeechSynthesisUtterance();
 
   it("should run", () => {
     /*
