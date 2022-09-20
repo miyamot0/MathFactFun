@@ -7,44 +7,11 @@
  */
 
 import React from "react";
+import { setCharAt } from "./helpers/ProblemHelpers";
 
 // styles
 import "./styles/StimulusFrame.css";
-
-interface StimulusFrameInterface {
-  itemString: string;
-  operator: string;
-  coverStimulusItem: boolean;
-}
-
-/** setCharAt
- *
- * Update character in string
- *
- * @param {string} str Current string
- * @param {number} index Index in string
- * @param {string} chr Replacement character
- * @returns {string}
- */
-function setCharAt(str: string, index: number, chr: string): string {
-  if (index > str.length - 1) return str;
-  return str.substring(0, index) + chr + str.substring(index + 1);
-}
-
-/** PanelItem
- *
- * Create a panel for entry
- *
- * @param {string} char Character for panel
- * @returns {JSX.Element}
- */
-function PanelItem(char: string): JSX.Element {
-  return (
-    <div className="stimulus-button-section">
-      <p className="stimulus-btn">{char}</p>
-    </div>
-  );
-}
+import { PanelItem } from "./views/PanelItem";
 
 export default function StimulusFrame({
   itemString,

@@ -242,13 +242,14 @@ export class DispatchUpdateRetryItem {
 export class DispatchUpdateCompleteItem {
   public type?: number;
   public payload: {
-    NumRetries?: number;
+    NumRetries: number;
     NumCorrectInitial: number;
     NumErrors: number;
     TotalDigits: number;
     TotalDigitsCorrect: number;
     NumbTrials: number;
     PreTrialTime: Date;
+    OnInitialTry: boolean;
 
     CoverStimulusItem?: boolean;
     CoverProblemItem?: boolean;
@@ -257,7 +258,6 @@ export class DispatchUpdateCompleteItem {
     FactModelList?: FactDataInterface[];
     WorkingData?: string[];
     CurrentAction?: SharedActionSequence;
-    OnInitialTry?: boolean;
     CoverListViewItems?: boolean;
     IsOngoing?: boolean;
     ShowButton?: boolean;
@@ -272,22 +272,21 @@ export class DispatchUpdateCompleteItem {
   }: {
     type?: number;
     payload: {
-      NumRetries?: number;
+      NumRetries: number;
       NumCorrectInitial: number;
       NumErrors: number;
       TotalDigits: number;
       TotalDigitsCorrect: number;
       NumbTrials: number;
       PreTrialTime: Date;
+      OnInitialTry: boolean;
 
       CoverStimulusItem?: boolean;
       CoverProblemItem?: boolean;
       ToVerify?: boolean;
-
       FactModelList?: FactDataInterface[];
       WorkingData?: string[];
       CurrentAction?: SharedActionSequence;
-      OnInitialTry?: boolean;
       CoverListViewItems?: boolean;
       IsOngoing?: boolean;
       ShowButton?: boolean;
@@ -308,7 +307,7 @@ export class DispatchUpdateCompleteItem {
  *
  */
 export class DispatchUpdateField {
-  public type: number;
+  public type?: number;
   public payload: {
     CurrentAction: SharedActionSequence;
 
@@ -321,10 +320,9 @@ export class DispatchUpdateField {
   public DispatchUpdateField?: string;
 
   constructor({
-    type,
     payload,
   }: {
-    type: number;
+    type?: number;
     payload: {
       CurrentAction: SharedActionSequence;
 
@@ -335,7 +333,7 @@ export class DispatchUpdateField {
       IsOngoing?: boolean;
     };
   }) {
-    this.type = type;
+    this.type = InterventionActions.UpdateFieldPresenation;
     this.payload = payload;
     this.DispatchUpdateField = "DispatchUpdateField";
   }

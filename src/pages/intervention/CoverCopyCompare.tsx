@@ -24,7 +24,7 @@ import StimulusFrame from "./subcomponents/StimulusFrame";
 import { GetOperatorFromLabel } from "../../utilities/LabelHelper";
 import { InterventionFormat } from "../../maths/Facts";
 
-import { ErrorModalCustomStyle } from "./subcomponents/ModalStyles";
+import { ErrorModalCustomStyle } from "./subcomponents/styles/ModalStyles";
 import {
   InterventionActions,
   InitialInterventionState,
@@ -124,23 +124,25 @@ export default function CoverCopyCompare() {
       return item !== listItem;
     });
 
-    dispatch(new DispatchUpdateIntroduceItem({
-      type: InterventionActions.UpdateIntroduceNewItem,
-      payload: {
-        ButtonText: "Cover",
-        PreTrialTime: new Date(),
-        StartTime: state.StartTime === null ? new Date() : state.StartTime,
-        ViewRepresentationInternal: listItem.split(":")[0],
-        CoverProblemItem: false,
-        CoverListViewItems: true,
-        WorkingData: updatedList,
-        IsOngoing: true,
-        ShowButton: true,
-        NextLiItem: updatedList[0],
-        EntryRepresentationInternal: "",
-        CurrentAction: SharedActionSequence.Start,
-      },
-    }));
+    dispatch(
+      new DispatchUpdateIntroduceItem({
+        type: InterventionActions.UpdateIntroduceNewItem,
+        payload: {
+          ButtonText: "Cover",
+          PreTrialTime: new Date(),
+          StartTime: state.StartTime === null ? new Date() : state.StartTime,
+          ViewRepresentationInternal: listItem.split(":")[0],
+          CoverProblemItem: false,
+          CoverListViewItems: true,
+          WorkingData: updatedList,
+          IsOngoing: true,
+          ShowButton: true,
+          NextLiItem: updatedList[0],
+          EntryRepresentationInternal: "",
+          CurrentAction: SharedActionSequence.Start,
+        },
+      })
+    );
 
     sharedButtonActionSequence(
       user,
@@ -218,7 +220,6 @@ export default function CoverCopyCompare() {
             className="global-btn "
             style={{ visibility: state.ShowButton ? "visible" : "hidden" }}
             onClick={() => {
-
               sharedButtonActionSequence(
                 user,
                 id,

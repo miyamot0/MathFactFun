@@ -6,22 +6,17 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from "react";
-import { useState, useEffect } from "react";
-
-interface TimerInterface {
-  secondsTotal: number;
-  startTimerTime: Date | null;
-  callbackFunction: () => void;
-}
+import React, { useState, useEffect } from "react";
+import { padTimeDigits } from "./helpers/ProblemHelpers";
+import { TimerInterface } from "./interfaces/TimerInterfaces";
 
 export default function Timer({
   secondsTotal,
   startTimerTime,
   callbackFunction,
 }: TimerInterface): JSX.Element {
-  const [secondCounter, setSecondCounter] = useState<number>(0);
-  const [intervalId, setIntervalId] = useState<NodeJS.Timer>();
+  const [secondCounter, setSecondCounter] = useState(0);
+  const [intervalId, setIntervalId] = useState({} as NodeJS.Timer);
   const [fireCallback, setFireCallback] = useState(false);
 
   useEffect(() => {
@@ -46,10 +41,6 @@ export default function Timer({
   }, [fireCallback]);
 
   const relevantSeconds = secondsTotal - secondCounter;
-
-  function padTimeDigits(num: number) {
-    return String(num).padStart(2, "0");
-  }
 
   const secondsToDisplay = relevantSeconds % 60;
   const minutesRemaining = (relevantSeconds - secondsToDisplay) / 60;

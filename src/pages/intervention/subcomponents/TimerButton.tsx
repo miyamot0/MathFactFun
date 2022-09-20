@@ -7,24 +7,15 @@
  */
 
 import React, { useState, useEffect } from "react";
+import { TimerButtonInterface } from "./interfaces/TimerButtonInterfaces";
 
-const timeIntervalTick = 1000;
-
-interface CallbackInterface {
-  (arg0: string): void;
-}
-
-interface TimerButtonInterface {
-  callBackFunction: CallbackInterface;
-  nProblems: number;
-  delta: number;
-}
-
-function Timer({
+function TimerButton({
   callBackFunction,
   nProblems = 5,
   delta = 5,
 }: TimerButtonInterface): JSX.Element {
+  const timeIntervalTick = 1000;
+
   const [seconds, setSeconds] = useState(0);
   const [trial, setTrial] = useState(0);
   const [isActive, setIsActive] = useState(false);
@@ -90,7 +81,4 @@ function Timer({
   );
 }
 
-export default Timer;
-function speak(msg: string) {
-  throw new Error("Function not implemented.");
-}
+export default TimerButton;

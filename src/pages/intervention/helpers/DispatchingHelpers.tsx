@@ -163,7 +163,6 @@ export function coverCopyCompareSequence(
   ) {
     dispatch(
       new DispatchUpdateField({
-        type: InterventionActions.UpdateFieldPresenation,
         payload: {
           CurrentAction: SharedActionSequence.Begin,
           ButtonText: "Cover",
@@ -177,7 +176,6 @@ export function coverCopyCompareSequence(
   } else if (state.CurrentAction === SharedActionSequence.Begin) {
     dispatch(
       new DispatchUpdateField({
-        type: InterventionActions.UpdateFieldPresenation,
         payload: {
           CurrentAction: SharedActionSequence.CoverCopy,
           ButtonText: "Copied",
@@ -191,7 +189,6 @@ export function coverCopyCompareSequence(
   } else if (state.CurrentAction === SharedActionSequence.CoverCopy) {
     dispatch(
       new DispatchUpdateField({
-        type: InterventionActions.UpdateFieldPresenation,
         payload: {
           CurrentAction: SharedActionSequence.Compare,
           ButtonText: "Compared",
@@ -205,7 +202,6 @@ export function coverCopyCompareSequence(
   } else {
     dispatch(
       new DispatchUpdateField({
-        type: InterventionActions.UpdateFieldPresenation,
         payload: {
           CurrentAction: SharedActionSequence.Entry,
           ToVerify: true,
@@ -324,9 +320,11 @@ export function coverCopyCompareSequence(
               NumCorrectInitial: uNumberCorrectInitial,
               NumErrors: uNumberErrors,
               NumbTrials: state.NumbTrials + 1,
+              NumRetries: state.NumRetries,
               TotalDigits: state.TotalDigits + totalDigitsShown,
               TotalDigitsCorrect: state.TotalDigitsCorrect + totalDigitsCorrect,
               PreTrialTime: new Date(),
+              OnInitialTry: true,
             },
           })
         );
@@ -364,6 +362,7 @@ export function coverCopyCompareSequence(
               NumbTrials: state.NumbTrials + 1,
               TotalDigits: state.TotalDigits + totalDigitsShown,
               TotalDigitsCorrect: state.TotalDigitsCorrect + totalDigitsCorrect,
+              NumRetries: state.NumRetries,
               PreTrialTime: new Date(),
             },
           })
@@ -519,21 +518,6 @@ export function explicitTimingSequence(
       ),
     };
 
-    /*
-    dispatch({
-      type: InterventionActions.ExplicitTimingBatchIncrement,
-      payload: {
-        uNumberCorrectInitial,
-        uNumberErrors,
-        uTotalDigits: state.TotalDigits + totalDigitsShown,
-        uTotalDigitsCorrect: state.TotalDigitsCorrect + totalDigitsCorrect,
-        uNumberTrials: state.NumbTrials + 1,
-        uInitialTry: state.OnInitialTry,
-        uTrialTime: new Date(),
-      },
-    });
-    */
-
     // Note: issue where state change not fast enough to catch latest
     if (state.WorkingData.length === 0) {
       dispatch(
@@ -543,8 +527,10 @@ export function explicitTimingSequence(
             NumErrors: uNumberErrors,
             NumbTrials: state.NumbTrials + 1,
             TotalDigits: state.TotalDigits + totalDigitsShown,
+            NumRetries: state.NumRetries,
             TotalDigitsCorrect: state.TotalDigitsCorrect + totalDigitsCorrect,
             PreTrialTime: new Date(),
+            OnInitialTry: true,
           },
         })
       );
@@ -571,14 +557,8 @@ export function explicitTimingSequence(
       dispatch(
         new DispatchUpdateCompleteItem({
           payload: {
-            //CoverStimulusItem: true,
-            //CoverProblemItem: true,
             EntryRepresentationInternal: "",
             ViewRepresentationInternal: listItem.split(":")[0],
-            //ButtonText: "Cover",
-            //ShowButton: false,
-            //IsOngoing: false,
-            //CoverListViewItems: false,
             OnInitialTry: true,
             FactModelList: [...state.FactModelList, currentItem2],
             WorkingData: updatedList,
@@ -589,21 +569,10 @@ export function explicitTimingSequence(
             TotalDigits: state.TotalDigits + totalDigitsShown,
             TotalDigitsCorrect: state.TotalDigitsCorrect + totalDigitsCorrect,
             PreTrialTime: new Date(),
+            NumRetries: state.NumRetries,
           },
         })
       );
-
-      /*
-      dispatch({
-        type: InterventionActions.BenchmarkBatchStartIncrementPost,
-        payload: {
-          uFactModel: [...state.FactModelList, currentItem2],
-          uWorkingData: updatedList,
-          uView: listItem.split(":")[0],
-          uEntry: "",
-        },
-      });
-      */
     }
   }
 }

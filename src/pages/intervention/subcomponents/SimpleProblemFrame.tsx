@@ -7,86 +7,14 @@
  */
 
 import React from "react";
+import {
+  createVerticalStringSimpleProblemFrame,
+  getColorForEqualsLine,
+} from "./helpers/ProblemHelpers";
+import { SimpleProblemFrameInterface } from "./interfaces/SimpleProblemFrameInterface";
 
 // styles
 import "./styles/SimpleProblemFrame.css";
-
-interface SimpleProblemFrameInterface {
-  problemStem: string;
-  coverProblemSpace: boolean;
-  entryString: string;
-}
-
-/** createVerticalString
- *
- * Creates a verticalized array for the widget
- *
- * @param {string} str Entered string
- * @param {string} ans Entered answer
- * @returns {string[][]} Array of Arrays, 3x3 gride
- */
-function createVerticalString(str: string, ans: string): string[][] {
-  str = str.split("=")[0] + "=";
-
-  let operator = "";
-  let toIter = 0;
-
-  const newText = [];
-  newText[0] = ["", "", ""];
-  newText[1] = ["", "", ""];
-  newText[2] = ["", "", ""];
-
-  if (str.includes("+")) {
-    operator = "+";
-  } else if (str.includes("-")) {
-    operator = "-";
-  } else if (str.includes("x")) {
-    operator = "x";
-  } else if (str.includes("/")) {
-    operator = "/";
-  }
-
-  const preAnswer = str.split("=")[0];
-  const frontProb = preAnswer.split(operator)[0];
-
-  let shuf = 0;
-
-  for (toIter = frontProb.length - 1; toIter >= 0; toIter--) {
-    newText[0][2 - shuf] = frontProb[toIter];
-    shuf++;
-  }
-
-  const backProb = preAnswer.split(operator)[1];
-
-  shuf = 0;
-
-  newText[1][0] = operator === "/" ? "\u00F7" : operator;
-
-  for (toIter = backProb.length - 1; toIter >= 0; toIter--) {
-    newText[1][2 - shuf] = backProb[toIter];
-    shuf++;
-  }
-
-  const answerProb = str.split("=")[1];
-
-  shuf = 0;
-
-  for (toIter = answerProb.length - 1; toIter >= 0; toIter--) {
-    newText[2][2 - shuf] = answerProb[toIter];
-    shuf++;
-  }
-
-  if (ans.trim().length > 0) {
-    const ans2 = ans.trim();
-
-    for (toIter = ans2.length - 1; toIter >= 0; toIter--) {
-      newText[2][2 - shuf] = ans2[toIter];
-      shuf++;
-    }
-  }
-
-  return newText;
-}
 
 export default function SimpleProblemFrame({
   problemStem,
@@ -97,11 +25,10 @@ export default function SimpleProblemFrame({
     backgroundColor: coverProblemSpace ? "gray" : "transparent",
   };
 
-  const colorOfEqualsLine = problemStem.includes("=")
-    ? "black"
-    : coverProblemSpace
-    ? "gray"
-    : "transparent";
+  const colorOfEqualsLine = getColorForEqualsLine(
+    problemStem,
+    coverProblemSpace
+  );
 
   if (!problemStem || problemStem.length <= 0) {
     return (
@@ -125,7 +52,10 @@ export default function SimpleProblemFrame({
     );
   }
 
-  const displayMatrix = createVerticalString(problemStem, entryString);
+  const displayMatrix = createVerticalStringSimpleProblemFrame(
+    problemStem,
+    entryString
+  );
 
   return (
     <div className="block-wrapper">

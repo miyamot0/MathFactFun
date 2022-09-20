@@ -83,7 +83,7 @@ export enum InterventionActions {
  */
 export function overwriteOnlyExisting(
   destination: InterventionState,
-  incoming: DispatchUpdateEntryInternal | DispatchUpdatePreLoadContent
+  incoming: InterventionDispatches
 ): InterventionState {
   if (isEntryInternalDispatch(incoming)) {
     const local: DispatchUpdateEntryInternal =
@@ -202,19 +202,10 @@ export function overwriteOnlyExisting(
         ? destination.IsOngoing
         : local.payload.IsOngoing;
 
-    local.payload.NumRetries =
-      local.payload.NumRetries === undefined
-        ? destination.NumRetries
-        : local.payload.NumRetries;
-
     local.payload.FactModelList =
       local.payload.FactModelList === undefined
         ? destination.FactModelList
         : local.payload.FactModelList;
-    local.payload.OnInitialTry =
-      local.payload.OnInitialTry === undefined
-        ? destination.OnInitialTry
-        : local.payload.OnInitialTry;
     local.payload.CoverListViewItems =
       local.payload.CoverListViewItems === undefined
         ? destination.CoverListViewItems

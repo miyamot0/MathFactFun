@@ -32,7 +32,7 @@ import {
 
 // styles
 import "./styles/ExplicitTiming.css";
-import { ErrorModalCustomStyle } from "./subcomponents/ModalStyles";
+import { ErrorModalCustomStyle } from "./subcomponents/styles/ModalStyles";
 import { InterventionFormat } from "../../maths/Facts";
 import { StudentDataInterface } from "../student/interfaces/StudentInterfaces";
 import {

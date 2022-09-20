@@ -8,138 +8,14 @@
 
 import React from "react";
 import { checkInputNullOrUndefined } from "../../../utilities/FormHelpers";
+import {
+  createVerticalStringProblemFrame,
+  getColorForEqualsLine,
+} from "./helpers/ProblemHelpers";
+import { ProblemFrameInterface } from "./interfaces/ProblemFrameInterfaces";
 
 // styles
 import "./styles/ProblemFrame.css";
-
-interface ProblemFrameInterface {
-  entryString: string;
-  coverProblemSpace: boolean;
-}
-
-/** createVerticalString
- *
- * Creates a verticalized array for the widget
- *
- * @param {string} str Entered string
- * @returns {string[][]} Array of Arrays, 3x3 gride
- */
-function createVerticalString(str: string): string[][] {
-  let operator = "";
-  let toIter = 0;
-
-  const newText = [];
-  newText[0] = ["", "", ""];
-  newText[1] = ["", "", ""];
-  newText[2] = ["", "", ""];
-
-  if (str.includes("+")) {
-    operator = "+";
-  } else if (str.includes("-")) {
-    operator = "-";
-  } else if (str.includes("x")) {
-    operator = "x";
-  } else if (str.includes("/")) {
-    operator = "/";
-  }
-
-  // Just one row
-  if (operator === "" && str.length > 0 && str.length <= 2) {
-    let shuf = 0;
-
-    for (toIter = str.length - 1; toIter >= 0; toIter--) {
-      newText[0][2 - shuf] = str[toIter];
-      shuf++;
-    }
-
-    return newText;
-  }
-
-  // Just lines
-  if (!str.includes("=") && str.includes(operator)) {
-    const frontProb = str.split(operator)[0];
-
-    let shuf = 0;
-
-    for (toIter = frontProb.length - 1; toIter >= 0; toIter--) {
-      newText[0][2 - shuf] = frontProb[toIter];
-      shuf++;
-    }
-
-    const backProb = str.split(operator)[1];
-
-    shuf = 0;
-
-    newText[1][0] = operator === "/" ? "\u00F7" : operator;
-
-    for (toIter = backProb.length - 1; toIter >= 0; toIter--) {
-      newText[1][2 - shuf] = backProb[toIter];
-      shuf++;
-    }
-  }
-
-  // Just lines
-  if (!str.includes("=") && str.includes(operator)) {
-    const frontProb = str.split(operator)[0];
-
-    let shuf = 0;
-
-    for (toIter = frontProb.length - 1; toIter >= 0; toIter--) {
-      newText[0][2 - shuf] = frontProb[toIter];
-      shuf++;
-    }
-
-    const backProb = str.split(operator)[1];
-
-    shuf = 0;
-
-    newText[1][0] = operator === "/" ? "\u00F7" : operator;
-
-    for (toIter = backProb.length - 1; toIter >= 0; toIter--) {
-      newText[1][2 - shuf] = backProb[toIter];
-      shuf++;
-    }
-
-    return newText;
-  }
-
-  // Just lines
-  if (str.includes("=") && str.includes(operator)) {
-    const preAnswer = str.split("=")[0];
-    const frontProb = preAnswer.split(operator)[0];
-
-    let shuf = 0;
-
-    for (toIter = frontProb.length - 1; toIter >= 0; toIter--) {
-      newText[0][2 - shuf] = frontProb[toIter];
-      shuf++;
-    }
-
-    const backProb = preAnswer.split(operator)[1];
-
-    shuf = 0;
-
-    newText[1][0] = operator === "/" ? "\u00F7" : operator;
-
-    for (toIter = backProb.length - 1; toIter >= 0; toIter--) {
-      newText[1][2 - shuf] = backProb[toIter];
-      shuf++;
-    }
-
-    const answerProb = str.split("=")[1];
-
-    shuf = 0;
-
-    for (toIter = answerProb.length - 1; toIter >= 0; toIter--) {
-      newText[2][2 - shuf] = answerProb[toIter];
-      shuf++;
-    }
-
-    return newText;
-  }
-
-  return newText;
-}
 
 export default function ProblemFrame({
   entryString,
@@ -153,11 +29,10 @@ export default function ProblemFrame({
     ? ""
     : entryString;
 
-  const colorOfEqualsLine = entryStringHolder.includes("=")
-    ? "black"
-    : coverProblemSpace
-    ? "gray"
-    : "transparent";
+  const colorOfEqualsLine = getColorForEqualsLine(
+    entryStringHolder,
+    coverProblemSpace
+  );
 
   if (!entryStringHolder || entryStringHolder.length <= 0) {
     return (
@@ -181,7 +56,7 @@ export default function ProblemFrame({
     );
   }
 
-  const displayMatrix = createVerticalString(entryStringHolder);
+  const displayMatrix = createVerticalStringProblemFrame(entryStringHolder);
 
   return (
     <div className="block-wrapper">
