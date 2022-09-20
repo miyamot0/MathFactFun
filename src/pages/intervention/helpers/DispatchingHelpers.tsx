@@ -483,28 +483,6 @@ export function explicitTimingSequence(
       ),
     };
 
-    /*
-    dispatch({
-      type: InterventionActions.ExplicitTimingBatchIncrement,
-      payload: {
-        uNumberCorrectInitial,
-        uNumberErrors,
-        uTotalDigits: state.TotalDigits + totalDigitsShown,
-        uTotalDigitsCorrect: state.TotalDigitsCorrect + totalDigitsCorrect,
-        uNumberTrials: state.NumbTrials + 1,
-        uInitialTry: state.OnInitialTry,
-        uTrialTime: new Date(),
-      },
-    });
-
-    dispatch({
-      type: InterventionActions.ExplicitTimingModalPreErrorLog,
-      payload: {
-        uFactModel: [...state.FactModelList, currentItem2],
-      },
-    });
-    */
-
     dispatch(
       new DispatchUpdateRetryItem({
         type: InterventionActions.UpdateAttemptErrorRecords,
@@ -524,17 +502,6 @@ export function explicitTimingSequence(
     );
 
     openModal();
-
-    /*
-            dispatch(new DispatchUpdateRetryItem({
-              type: 0,
-              payload: {
-                EntryRepresentationInternal: "",
-                NumRetries: state.NumRetries + 1,
-                OnInitialTry: false,
-              }
-            }));
-            */
   } else {
     const totalDigitsShown = CalculateDigitsTotalAnswer(
       state.ViewRepresentationInternal

@@ -344,55 +344,6 @@ export const InterventionReducer = (
     case InterventionActions.UpdateAttemptSuccessRecords:
       return overwriteOnlyExisting(state, action);
 
-    ///
-
-    /*
-    case InterventionActions.BenchmarkBatchStartIncrement:
-      return {
-        ...state,
-        NumCorrectInitial: action.payload.uNumberCorrectInitial,
-        NumErrors: action.payload.uNumberErrors,
-        TotalDigits: action.payload.uTotalDigits,
-        TotalDigitsCorrect: action.payload.uTotalDigitsCorrect,
-        NumbTrials: action.payload.uNumberTrials,
-        OnInitialTry: action.payload.uInitialTry,
-        PreTrialTime: action.payload.uTrialTime,
-      };
-    case InterventionActions.BenchmarkBatchStartIncrementPost:
-      return {
-        ...state,
-        FactModelList: action.payload.uFactModel,
-        WorkingData: action.payload.uWorkingData,
-        ViewRepresentationInternal: action.payload.uView,
-        EntryRepresentationInternal: action.payload.uEntry,
-      };
-    */
-
-    /*
-
-    case InterventionActions.ExplicitTimingBatchIncrement:
-      return {
-        ...state,
-        NumCorrectInitial: action.payload.uNumberCorrectInitial,
-        NumErrors: action.payload.uNumberErrors,
-        TotalDigits: action.payload.uTotalDigits,
-        TotalDigitsCorrect: action.payload.uTotalDigitsCorrect,
-        NumbTrials: action.payload.uNumberTrials,
-        OnInitialTry: action.payload.uInitialTry,
-        PreTrialTime: action.payload.uTrialTime,
-      };
-
-      */
-
-    /*
-    case InterventionActions.ExplicitTimingModalPreErrorLog:
-      return {
-        ...state,
-        FactModelList: action.payload.uFactModel,
-      };
-
-    */
-
     default:
       throw new Error(action.type);
   }

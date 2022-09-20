@@ -225,6 +225,7 @@ export function standardSelectField(
             payload: option,
           });
         }}
+        value={currentValue}
       />
     </>
   );

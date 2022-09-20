@@ -26,10 +26,8 @@ import { GetOperatorFromLabel } from "../../utilities/LabelHelper";
 
 import { RoutedIdTargetParam } from "../../interfaces/RoutingInterfaces";
 import {
-  InterventionActions,
   InitialInterventionState,
   InterventionReducer,
-  SharedActionSequence,
 } from "./functionality/InterventionBehavior";
 
 // styles
@@ -47,7 +45,6 @@ import {
 } from "./helpers/DispatchingHelpers";
 import { submitPerformancesToFirebase } from "./helpers/InterventionHelpers";
 import { commonKeyListener } from "./helpers/KeyHandlingHelper";
-import { DispatchUpdateRetryItem } from "./interfaces/InterventionInterfaces";
 
 export default function ExplicitTiming() {
   const { id, target } = useParams<RoutedIdTargetParam>();
