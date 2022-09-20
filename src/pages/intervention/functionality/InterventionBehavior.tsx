@@ -72,23 +72,6 @@ export enum InterventionActions {
   UpdateAttemptErrorRecords,
   UpdateAttemptSuccessRecords,
 
-  //UpdateFollowingInitialAction,
-
-  //BenchmarkBatchStartIncrement,
-  //BenchmarkBatchStartIncrementPost,
-
-  //ExplicitTimingBatchIncrement,
-  //ExplicitTimingModalPreErrorLog,
-
-  //TapedProblemsBatchStartPreflight,
-
-  //CoverCopyCompareTaskIncrement,
-  //CoverCopyCompareTaskReset,
-  //CoverCopyCompareBatchIncrement,
-  //CoverCopyCompareBatchStartIncrementPost,
-  //CoverCopyCompareModalPreErrorLog,
-  //CoverCopyCompareItemIncrement,
-
   SetThrow,
 }
 
@@ -121,26 +104,7 @@ export function overwriteOnlyExisting(
     const local: DispatchUpdatePreLoadContent =
       incoming as DispatchUpdatePreLoadContent;
 
-    local.payload.CurrentAction =
-      local.payload.CurrentAction === undefined
-        ? destination.CurrentAction
-        : local.payload.CurrentAction;
-    local.payload.LoadedData =
-      local.payload.LoadedData === undefined
-        ? destination.LoadedData
-        : local.payload.LoadedData;
-    local.payload.OperatorSymbol =
-      local.payload.OperatorSymbol === undefined
-        ? destination.OperatorSymbol
-        : local.payload.OperatorSymbol;
-    local.payload.SecondsLeft =
-      local.payload.SecondsLeft === undefined
-        ? destination.SecondsLeft
-        : local.payload.SecondsLeft;
-    local.payload.WorkingData =
-      local.payload.WorkingData === undefined
-        ? destination.WorkingData
-        : local.payload.WorkingData;
+    // Note: these are always to be true and valid
 
     return {
       ...destination,
@@ -324,23 +288,11 @@ export const InterventionReducer = (
 ): InterventionState => {
   switch (action.type) {
     case InterventionActions.UpdateResponseEntry:
-      return overwriteOnlyExisting(state, action);
-
     case InterventionActions.UpdateWithLoadedData:
-      return overwriteOnlyExisting(state, action);
-
     case InterventionActions.UpdateIntroduceNewItem:
-      return overwriteOnlyExisting(state, action);
-
     case InterventionActions.UpdateRetryCurrentItem:
-      return overwriteOnlyExisting(state, action);
-
     case InterventionActions.UpdateFieldPresenation:
-      return overwriteOnlyExisting(state, action);
-
     case InterventionActions.UpdateAttemptErrorRecords:
-      return overwriteOnlyExisting(state, action);
-
     case InterventionActions.UpdateAttemptSuccessRecords:
       return overwriteOnlyExisting(state, action);
 

@@ -8,7 +8,10 @@
 
 import firebase from "firebase/app";
 import { FactDataInterface } from "../../setcreator/interfaces/SetCreatorInterfaces";
-import { SharedActionSequence } from "./../functionality/InterventionBehavior";
+import {
+  InterventionActions,
+  SharedActionSequence,
+} from "./../functionality/InterventionBehavior";
 
 export interface InterventionState {
   ViewRepresentationInternal: string;
@@ -69,21 +72,20 @@ export interface PerformanceDataInterface {
  *
  */
 export class DispatchUpdateEntryInternal {
-  public type: number;
+  public type?: number;
   public payload: {
     EntryRepresentationInternal: string;
   };
   public DispatchUpdateEntryInternal?: string;
 
   constructor({
-    type,
     payload,
   }: {
-    type: number;
+    type?: number;
     payload: { EntryRepresentationInternal: string };
     DispatchUpdateEntryInternal?: string;
   }) {
-    this.type = type;
+    this.type = InterventionActions.UpdateResponseEntry;
     this.payload = payload;
     this.DispatchUpdateEntryInternal = "DispatchUpdateEntryInternal";
   }
@@ -95,7 +97,7 @@ export class DispatchUpdateEntryInternal {
  *
  */
 export class DispatchUpdatePreLoadContent {
-  public type: number;
+  public type?: number;
   public payload: {
     CurrentAction: SharedActionSequence;
     WorkingData: string[];
@@ -106,10 +108,9 @@ export class DispatchUpdatePreLoadContent {
   public DispatchUpdatePreLoadContent?: string;
 
   constructor({
-    type,
     payload,
   }: {
-    type: number;
+    type?: number;
     payload: {
       CurrentAction: SharedActionSequence;
       WorkingData: string[];
@@ -118,7 +119,7 @@ export class DispatchUpdatePreLoadContent {
       SecondsLeft: number;
     };
   }) {
-    this.type = type;
+    this.type = InterventionActions.UpdateWithLoadedData;
     this.payload = payload;
     this.DispatchUpdatePreLoadContent = "DispatchUpdatePreLoadContent";
   }
@@ -130,7 +131,7 @@ export class DispatchUpdatePreLoadContent {
  *
  */
 export class DispatchUpdateIntroduceItem {
-  public type: number;
+  public type?: number;
   public payload: {
     CurrentAction: SharedActionSequence;
     WorkingData: string[];
@@ -148,10 +149,9 @@ export class DispatchUpdateIntroduceItem {
   public DispatchUpdateIntroduceItem?: string;
 
   constructor({
-    type,
     payload,
   }: {
-    type: number;
+    type?: number;
     payload: {
       CurrentAction: SharedActionSequence;
       WorkingData: string[];
@@ -170,7 +170,7 @@ export class DispatchUpdateIntroduceItem {
       NextLiItem?: string | undefined;
     };
   }) {
-    this.type = type;
+    this.type = InterventionActions.UpdateIntroduceNewItem;
     this.payload = payload;
     this.DispatchUpdateIntroduceItem = "DispatchUpdateIntroduceItem";
   }
@@ -182,7 +182,7 @@ export class DispatchUpdateIntroduceItem {
  *
  */
 export class DispatchUpdateRetryItem {
-  public type: number;
+  public type?: number;
   public payload: {
     EntryRepresentationInternal: string;
     NumRetries: number;
@@ -205,10 +205,9 @@ export class DispatchUpdateRetryItem {
   public DispatchUpdateRetryItem?: string;
 
   constructor({
-    type,
     payload,
   }: {
-    type: number;
+    type?: number;
     payload: {
       EntryRepresentationInternal: string;
       NumRetries: number;
@@ -229,7 +228,7 @@ export class DispatchUpdateRetryItem {
       IsOngoing?: boolean;
     };
   }) {
-    this.type = type;
+    this.type = InterventionActions.UpdateRetryCurrentItem;
     this.payload = payload;
     this.DispatchUpdateRetryItem = "DispatchUpdateRetryItem";
   }
@@ -241,7 +240,7 @@ export class DispatchUpdateRetryItem {
  *
  */
 export class DispatchUpdateCompleteItem {
-  public type: number;
+  public type?: number;
   public payload: {
     NumRetries?: number;
     NumCorrectInitial: number;
@@ -269,10 +268,9 @@ export class DispatchUpdateCompleteItem {
   public DispatchUpdateCompleteItem?: string;
 
   constructor({
-    type,
     payload,
   }: {
-    type: number;
+    type?: number;
     payload: {
       NumRetries?: number;
       NumCorrectInitial: number;
@@ -298,7 +296,7 @@ export class DispatchUpdateCompleteItem {
       ViewRepresentationInternal?: string;
     };
   }) {
-    this.type = type;
+    this.type = InterventionActions.UpdateAttemptSuccessRecords;
     this.payload = payload;
     this.DispatchUpdateCompleteItem = "DispatchUpdateCompleteItem";
   }

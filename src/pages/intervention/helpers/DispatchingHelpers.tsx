@@ -56,7 +56,6 @@ export function completeLoadingDispatch({
   switch (intervention) {
     case "Benchmark":
       dispatchObject = new DispatchUpdatePreLoadContent({
-        type: InterventionActions.UpdateWithLoadedData,
         payload: {
           CurrentAction: currentAction,
           WorkingData: workingData,
@@ -72,7 +71,6 @@ export function completeLoadingDispatch({
     case InterventionFormat.CoverCopyCompare:
       dispatch(
         new DispatchUpdatePreLoadContent({
-          type: InterventionActions.UpdateWithLoadedData,
           payload: {
             CurrentAction: currentAction,
             WorkingData: workingData,
@@ -86,7 +84,6 @@ export function completeLoadingDispatch({
 
     case InterventionFormat.ExplicitTiming:
       dispatchObject = new DispatchUpdatePreLoadContent({
-        type: InterventionActions.UpdateWithLoadedData,
         payload: {
           CurrentAction: currentAction,
           WorkingData: workingData,
@@ -323,7 +320,6 @@ export function coverCopyCompareSequence(
       if (state.WorkingData.length === 0) {
         dispatch(
           new DispatchUpdateCompleteItem({
-            type: InterventionActions.UpdateAttemptSuccessRecords,
             payload: {
               NumCorrectInitial: uNumberCorrectInitial,
               NumErrors: uNumberErrors,
@@ -351,7 +347,6 @@ export function coverCopyCompareSequence(
       } else {
         dispatch(
           new DispatchUpdateCompleteItem({
-            type: InterventionActions.UpdateAttemptSuccessRecords,
             payload: {
               CoverStimulusItem: true,
               CoverProblemItem: true,
@@ -485,7 +480,6 @@ export function explicitTimingSequence(
 
     dispatch(
       new DispatchUpdateRetryItem({
-        type: InterventionActions.UpdateAttemptErrorRecords,
         payload: {
           NumCorrectInitial: uNumberCorrectInitial,
           NumErrors: uNumberErrors,
@@ -544,7 +538,6 @@ export function explicitTimingSequence(
     if (state.WorkingData.length === 0) {
       dispatch(
         new DispatchUpdateCompleteItem({
-          type: InterventionActions.UpdateAttemptSuccessRecords,
           payload: {
             NumCorrectInitial: uNumberCorrectInitial,
             NumErrors: uNumberErrors,
@@ -577,7 +570,6 @@ export function explicitTimingSequence(
 
       dispatch(
         new DispatchUpdateCompleteItem({
-          type: InterventionActions.UpdateAttemptSuccessRecords,
           payload: {
             //CoverStimulusItem: true,
             //CoverProblemItem: true,
