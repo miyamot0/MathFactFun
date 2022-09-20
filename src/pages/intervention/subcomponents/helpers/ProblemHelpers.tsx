@@ -7,7 +7,6 @@
  */
 
 import { checkInputNullOrUndefined } from "../../../../utilities/FormHelpers";
-import { checkIfNullUndefinedOrEmpty } from "../../../setcreator/helpers/SetCreatorHelpers";
 
 /** createVerticalString
  *

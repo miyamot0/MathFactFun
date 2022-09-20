@@ -6,11 +6,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import React from "react";
+
 /**
  * TODO: Cloze intervention
  */
 
-export default function Cloze() {
+export default function Cloze(): JSX.Element {
   return (
     <div>
       <h2>...</h2>

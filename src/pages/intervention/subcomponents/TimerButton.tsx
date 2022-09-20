@@ -7,9 +7,10 @@
  */
 
 import React, { useState, useEffect } from "react";
+import { scheduleProblemOutput, speakProblem } from "./helpers/SpeechHelpers";
 import { TimerButtonInterface } from "./interfaces/TimerButtonInterfaces";
 
-function TimerButton({
+export default function TimerButton({
   callBackFunction,
   nProblems = 5,
   delta = 5,
@@ -23,26 +24,9 @@ function TimerButton({
   const [intervalId, setIntervalId] = useState<NodeJS.Timer>();
 
   if (!("speechSynthesis" in window)) {
-    alert("TTS functionality not available");
+    throw Error("TTS functionality not available");
   }
-
   const synthesis = new SpeechSynthesisUtterance();
-
-  function speak(msg: string): void {
-    const plusser = parseInt(msg) + 1;
-
-    synthesis.text = msg + "+ 1 =";
-
-    window.speechSynthesis.speak(synthesis);
-
-    const speakAnswer = () => {
-      synthesis.text = plusser.toString();
-      window.speechSynthesis.speak(synthesis);
-      return;
-    };
-
-    setTimeout(speakAnswer, 1000);
-  }
 
   function toggle() {
     if (!isActive) {
@@ -50,19 +34,18 @@ function TimerButton({
     }
   }
 
-  function fire() {
-    if (seconds % delta === 0 && trial < nProblems) {
-      setTrial((trial) => trial + 1);
-      callBackFunction(`fire ${seconds} ${trial}`);
-
-      speak(trial.toString());
-    }
-  }
-
   useEffect(() => {
     if (isActive && seconds <= nProblems * delta) {
       const interval: NodeJS.Timer = setInterval(() => {
-        fire();
+        scheduleProblemOutput(
+          seconds,
+          delta,
+          trial,
+          nProblems,
+          setTrial,
+          callBackFunction,
+          synthesis
+        );
 
         setSeconds((seconds) => seconds + 1);
       }, timeIntervalTick);
@@ -80,5 +63,3 @@ function TimerButton({
     </button>
   );
 }
-
-export default TimerButton;

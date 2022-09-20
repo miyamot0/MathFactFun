@@ -10,6 +10,8 @@ import Adapter from "enzyme-adapter-react-16";
 import Enzyme, { mount } from "enzyme";
 import { waitFor } from "@testing-library/react";
 import Timer from "../Timer";
+import TimerButton from "../TimerButton";
+import { TimerButtonCallback } from "../types/KeyPadTypes";
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -19,13 +21,14 @@ describe("Timer", () => {
   it("should render, valid seconds and callback", () => {
     const secondsTotal = 120;
     const startTimerTime = new Date();
-    const callbackFunction = jest.fn();
+    const callBackFunction = jest.fn();
 
     expect(1).toBe(1);
+
     /*
 
     const wrapper = mount(
-      Timer({ secondsTotal, startTimerTime, callbackFunction })
+      TimerButton({ callBackFunction, nProblems: 5, delta: 5 })
     );
 
     waitFor(() => {

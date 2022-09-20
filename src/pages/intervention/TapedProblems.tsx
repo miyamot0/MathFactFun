@@ -83,35 +83,6 @@ export default function TapedProblems() {
     InitialInterventionState
   );
 
-  const [currentAction, setCurrentAction] = useState(
-    SharedActionSequence.Start
-  );
-  const [buttonText, setButtonText] = useState("Start");
-  const [isOnInitialTry, setIsOnInitialTry] = useState(true);
-
-  // quants
-  const [numberCorrectInitial, setNumberCorrectInitial] = useState(0);
-  const [numberErrors, setNumberErrors] = useState(0);
-  const [totalDigits, setTotalDigits] = useState(0);
-  const [totalCorrectDigits, setCorrectTotalDigits] = useState(0);
-  const [numberTrials, setNumberTrials] = useState(0);
-  const [nRetries, setNRetries] = useState(0);
-
-  const [loadedData, setLoadedData] = useState(false);
-  const [workingData, setWorkingData] = useState<string[]>();
-  const [operatorSymbol, setOperatorSymbol] = useState("");
-
-  const [coverProblemItem, setCoverProblemItem] = useState(true);
-
-  const [preTrialTime, setPreTrialTime] = useState<Date>();
-  const [startTime, setStartTime] = useState<Date>();
-  const [factModelList, setModelList] = useState<FactDataInterface[]>();
-
-  const [viewRepresentationInternal, setViewRepresentationInternal] =
-    useState("");
-  const [entryRepresentationInternal, setEntryRepresentationInternal] =
-    useState("");
-
   /// modal stuff
   const [modalIsOpen, setIsOpen] = useState(false);
 
@@ -120,15 +91,10 @@ export default function TapedProblems() {
   // Timer Stuff
   const [secondsLeft, setSecondsLeft] = useState(0);
 
-  // Add event listener to hook
-  useEventListener(
-    "keydown",
-    (key: any) => {
-      true;
-    }
-    // TODO: replace this
-    //keyHandler(key, captureKeyClick, captureButtonAction, state.CurrentAction)
-  );
+  /*
+  TODO: add in common listener
+  useEventListener("keydown", (key: any) => { true; } );
+  */
 
   function openModal(): void {
     setIsOpen(true);
@@ -140,8 +106,9 @@ export default function TapedProblems() {
 
   // Fire once individual data loaded, just once
   useEffect(() => {
-    if (document && !loadedData) {
+    if (document && !state.LoadedData) {
       /*
+      TODO: add in common loader
       dispatch({
         type: InterventionActions.TapedProblemsBatchStartPreflight,
         payload: {
@@ -152,7 +119,7 @@ export default function TapedProblems() {
       });
       */
     }
-  }, [document, loadedData]);
+  }, [document]);
 
   /** callbackToSubmit
    *
@@ -162,6 +129,10 @@ export default function TapedProblems() {
   function callbackToSubmit() {
     submitDataToFirebase(null);
   }
+
+  const fakeCallback = (arg0: string) => {
+    return;
+  };
 
   // TODO: got down to here
 
@@ -174,235 +145,7 @@ export default function TapedProblems() {
   async function submitDataToFirebase(
     finalFactObject: FactDataInterface | null
   ): Promise<void> {
-    const finalEntries = factModelList;
-
-    if (finalFactObject !== null) {
-      finalEntries?.push(finalFactObject);
-    }
-
-    const end = new Date();
-
-    //let performanceInformation: PerformanceModelInterface = PerformanceModel();
-
-    /*
-    HACK
-    // Strings
-    performanceInformation.data.id = document!.id;
-    performanceInformation.data.creator = user!.uid;
-    performanceInformation.data.target = (
-      document as StudentDataInterface
-    ).currentTarget;
-    performanceInformation.data.method = InterventionFormat.ExplicitTiming;
-
-    // Numerics
-    performanceInformation.data.correctDigits = totalCorrectDigits;
-    performanceInformation.data.errCount = numberErrors;
-    performanceInformation.data.nCorrectInitial = numberCorrectInitial;
-    performanceInformation.data.nRetries = nRetries;
-    performanceInformation.data.sessionDuration =
-      (end.getTime() - startTime!.getTime()) / 1000;
-    performanceInformation.data.setSize = (
-      document as StudentDataInterface
-    ).factsTargeted.length;
-    performanceInformation.data.totalDigits = totalDigits;
-
-    // Timestamps
-    performanceInformation.data.createdAt = timestamp.fromDate(new Date());
-    performanceInformation.data.dateTimeEnd = end.toString();
-    performanceInformation.data.dateTimeStart = startTime!.toString();
-
-    // Arrays
-    performanceInformation.data.entries = finalEntries!;
-    */
-
-    // Sanity check for all required components
-
-    //if (!performanceInformation.CheckObject()) {
-    //  alert("Firebase data was not well-formed");
-    //  return;
-    //}
-
-    //const objectToSend: PerformanceDataInterface =
-    //  performanceInformation.SubmitObject();
-
-    // Update collection with latest performance
-    //await addDocument(objectToSend);
-
-    // If added without issue, update timestamp
-    if (!response.error) {
-      const currentDate = new Date();
-      const studentObject = {
-        lastActivity: timestamp.fromDate(currentDate),
-      };
-
-      // Update field regarding last activity
-      await updateDocument(id!, studentObject);
-
-      // Push to home
-      if (!response.error) {
-        history.push(`/practice`);
-      }
-    }
-  }
-
-  /** captureButtonAction
-   *
-   * Button interactions to fire
-   *
-   */
-  function captureButtonAction(): void {
-    if (document === null) {
-      return;
-    }
-
-    if (
-      currentAction === SharedActionSequence.Start ||
-      currentAction === SharedActionSequence.Begin
-    ) {
-      // Establish start of math fact
-      setPreTrialTime(new Date());
-
-      if (startTime === null) {
-        // Establish start of session
-        setStartTime(new Date());
-      }
-
-      const listItem = workingData![0];
-
-      const updatedList = workingData!.filter(function (item) {
-        return item !== listItem;
-      });
-
-      // Update the collection--remove current item from list
-      setWorkingData(updatedList);
-
-      // Set the 'true' item, less set-level coding component
-      setViewRepresentationInternal(listItem.split(":")[0]);
-
-      // Set the 'true' item, less set-level coding component
-      setEntryRepresentationInternal("");
-
-      setCoverProblemItem(false);
-
-      setCurrentAction(SharedActionSequence.Answer);
-
-      setButtonText("Check");
-
-      return;
-    }
-
-    const combinedResponse =
-      viewRepresentationInternal.split("=")[0] +
-      "=" +
-      entryRepresentationInternal;
-
-    // Compare if internal and inputted string match
-    const isMatching =
-      viewRepresentationInternal.trim() === combinedResponse.trim();
-
-    // Increment initial attempt, if correct
-    if (isOnInitialTry && isMatching) {
-      setNumberCorrectInitial(numberCorrectInitial + 1);
-    }
-
-    // Increment errors, if incorrect
-    if (!isMatching) {
-      setNumberErrors(numberErrors + 1);
-    }
-
-    const current = new Date();
-    const secs = (current.getTime() - preTrialTime!.getTime()) / 1000;
-
-    const holderPreTime = preTrialTime;
-
-    // Update time for trial
-    setPreTrialTime(new Date());
-
-    if (shouldShowFeedback(!isMatching, document)) {
-      // Error correction prompt
-      openModal();
-    } else {
-      const totalDigitsShown = CalculateDigitsTotalAnswer(
-        viewRepresentationInternal
-      );
-
-      setTotalDigits(totalDigits + totalDigitsShown);
-
-      const totalDigitsCorrect = CalculateDigitsCorrectAnswer(
-        combinedResponse,
-        viewRepresentationInternal
-      );
-
-      setCorrectTotalDigits(totalCorrectDigits + totalDigitsCorrect);
-
-      setNumberTrials(numberTrials + 1);
-
-      const currentItem = {} as FactDataInterface;
-      /*
-      HACK
-      currentItem.data.factCorrect = isMatching;
-      currentItem.data.initialTry = isOnInitialTry;
-
-      currentItem.data.factType = (
-        document as StudentDataInterface
-      ).currentTarget;
-      currentItem.data.factString = viewRepresentationInternal;
-      currentItem.data.factEntry = combinedResponse;
-
-      currentItem.data.latencySeconds = secs;
-
-      currentItem.data.dateTimeEnd = timestamp.fromDate(new Date(current));
-      currentItem.data.dateTimeStart = timestamp.fromDate(
-        new Date(holderPreTime!)
-      );
-      */
-
-      setIsOnInitialTry(true);
-
-      // Note: issue where state change not fast enough to catch latest
-      if (workingData!.length === 0) {
-        // If finished, upload list w/ latest item
-        submitDataToFirebase(currentItem);
-      } else {
-        // Otherise, add it to the existing list
-        setModelList([...factModelList!, currentItem]);
-
-        const listItem = workingData![0];
-
-        const updatedList = workingData!.filter(function (item) {
-          return item !== listItem;
-        });
-
-        // Update the collection--remove current item from list
-        setWorkingData(updatedList);
-
-        // Set the 'true' item, less set-level coding component
-        setViewRepresentationInternal(listItem.split(":")[0]);
-
-        // Set the 'true' item, less set-level coding component
-        setEntryRepresentationInternal("");
-      }
-    }
-  }
-
-  /** captureKeyClick
-   *
-   * Process incoming key
-   *
-   * @param {string} char
-   */
-  function captureKeyClick(char: string): void {
-    // Processing add/remove of character
-    if (char === DelCode) {
-      // # Rule #7: Exit out if nothin to delete
-      if (entryRepresentationInternal.length === 0) return;
-
-      // Lop off end of string
-      setEntryRepresentationInternal(entryRepresentationInternal.slice(0, -1));
-    } else {
-      // Add to end of string
-      setEntryRepresentationInternal(entryRepresentationInternal + char);
-    }
+    // TODO: bring in common methods
   }
 
   function timerCallback(message: string): void {
@@ -430,9 +173,7 @@ export default function TapedProblems() {
           className="global-btn "
           style={{ float: "right" }}
           onClick={() => {
-            setEntryRepresentationInternal("");
-            setNRetries(nRetries + 1);
-            closeModal();
+            // TODO: common methods
           }}
         >
           Close Window
@@ -447,14 +188,14 @@ export default function TapedProblems() {
       <div
         className="box2TP"
         style={{
-          opacity: coverProblemItem ? 0.5 : 1,
-          backgroundColor: coverProblemItem ? "gray" : "transparent",
+          opacity: state.CoverProblemItem ? 0.5 : 1,
+          backgroundColor: state.CoverProblemItem ? "gray" : "transparent",
         }}
       >
         <SimpleProblemFrame
-          problemStem={viewRepresentationInternal}
-          coverProblemSpace={coverProblemItem}
-          entryString={entryRepresentationInternal}
+          problemStem={state.ViewRepresentationInternal}
+          coverProblemSpace={state.CoverProblemItem}
+          entryString={state.EntryRepresentationInternal}
         />
       </div>
       <div className="box1TP">
@@ -463,8 +204,8 @@ export default function TapedProblems() {
 
       <div className="box3TP">
         <section>
-          <button className="global-btn" onClick={() => captureButtonAction()}>
-            {buttonText}
+          <button className="global-btn" onClick={() => null}>
+            {state.ButtonText}
           </button>
         </section>
       </div>
@@ -472,12 +213,12 @@ export default function TapedProblems() {
       <div
         className="box5TP"
         style={{
-          opacity: coverProblemItem ? 0.5 : 1,
+          opacity: state.CoverProblemItem ? 0.5 : 1,
         }}
       >
         <KeyPad
-          callBackFunction={captureKeyClick}
-          operatorSymbol={operatorSymbol}
+          callBackFunction={fakeCallback}
+          operatorSymbol={state.OperatorSymbol}
           showEquals={false}
         />
       </div>
