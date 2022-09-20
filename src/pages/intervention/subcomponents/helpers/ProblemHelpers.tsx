@@ -25,17 +25,19 @@ export function createVerticalStringProblemFrame(str: string): string[][] {
   newText[2] = ["", "", ""];
 
   if (str.includes("+")) {
+    // Has +, skip to operator logic
     operator = "+";
   } else if (str.includes("-")) {
+    // Has -, skip to operator logic
     operator = "-";
   } else if (str.includes("x")) {
+    // Has x, skip to operator logic
     operator = "x";
   } else if (str.includes("/")) {
+    // Has /, skip to operator logic
     operator = "/";
-  }
-
-  // Just one row
-  if (operator === "" && str.length > 0 && str.length <= 2) {
+  } else if (str.includes("=") === false && str.length > 0 && str.length <= 3) {
+    // No operator AND no equality, but string alone
     let shuf = 0;
 
     for (toIter = str.length - 1; toIter >= 0; toIter--) {
@@ -46,31 +48,9 @@ export function createVerticalStringProblemFrame(str: string): string[][] {
     return newText;
   }
 
-  // Just lines
-  if (!str.includes("=") && str.includes(operator)) {
-    const frontProb = str.split(operator)[0];
+  if (str.includes("=") === false && str.includes(operator)) {
+    // Just lines
 
-    let shuf = 0;
-
-    for (toIter = frontProb.length - 1; toIter >= 0; toIter--) {
-      newText[0][2 - shuf] = frontProb[toIter];
-      shuf++;
-    }
-
-    const backProb = str.split(operator)[1];
-
-    shuf = 0;
-
-    newText[1][0] = operator === "/" ? "\u00F7" : operator;
-
-    for (toIter = backProb.length - 1; toIter >= 0; toIter--) {
-      newText[1][2 - shuf] = backProb[toIter];
-      shuf++;
-    }
-  }
-
-  // Just lines
-  if (!str.includes("=") && str.includes(operator)) {
     const frontProb = str.split(operator)[0];
 
     let shuf = 0;
@@ -92,11 +72,7 @@ export function createVerticalStringProblemFrame(str: string): string[][] {
     }
 
     return newText;
-  }
-
-  /*
-  // Just lines
-  if (str.includes("=") && str.includes(operator)) {
+  } else {
     const preAnswer = str.split("=")[0];
     const frontProb = preAnswer.split(operator)[0];
 
@@ -129,12 +105,9 @@ export function createVerticalStringProblemFrame(str: string): string[][] {
 
     return newText;
   }
-  */
-
-  return newText;
 }
 
-/** createVerticalString
+/** createVerticalStringSimpleProblemFrame
  *
  * Creates a verticalized array for the widget
  *
@@ -146,6 +119,7 @@ export function createVerticalStringSimpleProblemFrame(
   str: string,
   ans: string
 ): string[][] {
+
   str = str.split("=")[0] + "=";
 
   let operator = "";
@@ -187,14 +161,16 @@ export function createVerticalStringSimpleProblemFrame(
     shuf++;
   }
 
+  /*
   const answerProb = str.split("=")[1];
-
-  shuf = 0;
 
   for (toIter = answerProb.length - 1; toIter >= 0; toIter--) {
     newText[2][2 - shuf] = answerProb[toIter];
     shuf++;
   }
+  */
+
+  shuf = 0;
 
   if (ans.trim().length > 0) {
     const ans2 = ans.trim();
