@@ -7,20 +7,16 @@
  */
 
 import { mount, shallow } from "enzyme";
-import { FirestoreState } from "../../../firebase/interfaces/FirebaseInterfaces";
 import React from "react";
 import firebase from "firebase";
 import Adapter from "enzyme-adapter-react-16";
 import Enzyme from "enzyme";
-import { PerformanceDataInterface } from "./../../intervention/types/InterventionTypes";
 import { FactDataInterface } from "../../setcreator/interfaces/SetCreatorInterfaces";
 import ProgressMonitor from "../ProgressMonitor";
 import * as useFirebaseCollectionTypedReference from "../../../firebase/hooks/useFirebaseCollection";
 import * as reactRouterDom from "react-router-dom";
 import * as progressHelpers from "./../helpers/ProgressHelpers";
-import { ChartInformation } from "../interfaces/ProgressInterfaces";
-import { render } from "@testing-library/react";
-// import * as UserHelpers from "./../helpers/UserHelpers";
+import { PerformanceDataInterface } from "../../intervention/interfaces/InterventionInterfaces";
 
 Enzyme.configure({ adapter: new Adapter() });
 
