@@ -1,4 +1,11 @@
-import { checkIfNullUndefinedOrEmpty } from "../../setcreator/helpers/SetCreatorHelpers";
+/** @license
+ *
+ * Copyright (c) Shawn P. Gilroy, Louisiana State University.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
 import {
   DispatchUpdateCompleteItem,
   DispatchUpdateEntryInternal,
@@ -311,60 +318,6 @@ export const InterventionReducer = (
         ...state,
         FactModelList: action.payload.uFactModel,
       };
-
-    /*
-  case InterventionActions.CoverCopyCompareTaskIncrement:
-    return {
-      ...state,
-      CurrentAction: action.payload.uAction,
-      ButtonText: action.payload.uButtonText,
-      CoverProblemItem: action.payload.uCoverProblemItem,
-      CoverStimulusItem: action.payload.uCoverStimulusItem,
-    };
-
-  case InterventionActions.CoverCopyCompareModalPreErrorLog:
-    return {
-      ...state,
-      FactModelList: action.payload.uFactModel,
-    };
-
-  case InterventionActions.CoverCopyCompareBatchIncrement:
-    return {
-      ...state,
-      NumCorrectInitial: action.payload.uNumberCorrectInitial,
-      NumErrors: action.payload.uNumberErrors,
-      TotalDigits: action.payload.uTotalDigits,
-      TotalDigitsCorrect: action.payload.uTotalDigitsCorrect,
-      NumbTrials: action.payload.uNumberTrials,
-      OnInitialTry: action.payload.uInitialTry,
-      PreTrialTime: action.payload.uTrialTime,
-    };
-
-  case InterventionActions.CoverCopyCompareBatchStartIncrementPost:
-    return {
-      ...state,
-      CoverStimulusItem: action.payload.uCoverStimulusItem,
-      CoverProblemItem: action.payload.uCoverProblemItem,
-      EntryRepresentationInternal:
-        action.payload.uEntryRepresentationInternal,
-      ViewRepresentationInternal: action.payload.uViewRepresentationInternal,
-      ButtonText: action.payload.uButtonText,
-      ShowButton: action.payload.uShowButton,
-      IsOngoing: action.payload.uIsOngoing,
-      CoverListViewItems: action.payload.uCoverListViewItems,
-      OnInitialTry: action.payload.uOnInitialTry,
-      FactModelList: action.payload.uFactModelList,
-      CurrentAction: action.payload.uCurrentAction,
-    };
-
-  case InterventionActions.CoverCopyCompareTaskReset:
-    return {
-      ...state,
-      CurrentAction: action.payload.uAction,
-      ToVerify: action.payload.uVerify,
-    };
-
-    */
 
     default:
       throw new Error(action.type);
