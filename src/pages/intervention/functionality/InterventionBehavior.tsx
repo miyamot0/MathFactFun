@@ -74,8 +74,8 @@ export enum InterventionActions {
 
   //UpdateFollowingInitialAction,
 
-  BenchmarkBatchStartIncrement,
-  BenchmarkBatchStartIncrementPost,
+  //BenchmarkBatchStartIncrement,
+  //BenchmarkBatchStartIncrementPost,
 
   //ExplicitTimingBatchIncrement,
   //ExplicitTimingModalPreErrorLog,
@@ -346,6 +346,7 @@ export const InterventionReducer = (
 
     ///
 
+    /*
     case InterventionActions.BenchmarkBatchStartIncrement:
       return {
         ...state,
@@ -365,6 +366,7 @@ export const InterventionReducer = (
         ViewRepresentationInternal: action.payload.uView,
         EntryRepresentationInternal: action.payload.uEntry,
       };
+    */
 
     /*
 
