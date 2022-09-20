@@ -72,14 +72,13 @@ export enum InterventionActions {
   UpdateAttemptErrorRecords,
   UpdateAttemptSuccessRecords,
 
-
   //UpdateFollowingInitialAction,
 
   BenchmarkBatchStartIncrement,
   BenchmarkBatchStartIncrementPost,
 
-  ExplicitTimingBatchIncrement,
-  ExplicitTimingModalPreErrorLog,
+  //ExplicitTimingBatchIncrement,
+  //ExplicitTimingModalPreErrorLog,
 
   //TapedProblemsBatchStartPreflight,
 
@@ -94,10 +93,10 @@ export enum InterventionActions {
 }
 
 /** overwriteOnlyExisting
- * 
- * @param destination 
- * @param incoming 
- * @returns 
+ *
+ * @param destination
+ * @param incoming
+ * @returns
  */
 export function overwriteOnlyExisting(
   destination: InterventionState,
@@ -107,8 +106,10 @@ export function overwriteOnlyExisting(
     const local: DispatchUpdateEntryInternal =
       incoming as DispatchUpdateEntryInternal;
 
-    local.payload.EntryRepresentationInternal = local.payload.EntryRepresentationInternal === undefined ?
-      destination.EntryRepresentationInternal : local.payload.EntryRepresentationInternal
+    local.payload.EntryRepresentationInternal =
+      local.payload.EntryRepresentationInternal === undefined
+        ? destination.EntryRepresentationInternal
+        : local.payload.EntryRepresentationInternal;
 
     return {
       ...destination,
@@ -120,16 +121,26 @@ export function overwriteOnlyExisting(
     const local: DispatchUpdatePreLoadContent =
       incoming as DispatchUpdatePreLoadContent;
 
-    local.payload.CurrentAction = local.payload.CurrentAction === undefined ?
-      destination.CurrentAction : local.payload.CurrentAction
-    local.payload.LoadedData = local.payload.LoadedData === undefined ?
-      destination.LoadedData : local.payload.LoadedData
-    local.payload.OperatorSymbol = local.payload.OperatorSymbol === undefined ?
-      destination.OperatorSymbol : local.payload.OperatorSymbol
-    local.payload.SecondsLeft = local.payload.SecondsLeft === undefined ?
-      destination.SecondsLeft : local.payload.SecondsLeft
-    local.payload.WorkingData = local.payload.WorkingData === undefined ?
-      destination.WorkingData : local.payload.WorkingData
+    local.payload.CurrentAction =
+      local.payload.CurrentAction === undefined
+        ? destination.CurrentAction
+        : local.payload.CurrentAction;
+    local.payload.LoadedData =
+      local.payload.LoadedData === undefined
+        ? destination.LoadedData
+        : local.payload.LoadedData;
+    local.payload.OperatorSymbol =
+      local.payload.OperatorSymbol === undefined
+        ? destination.OperatorSymbol
+        : local.payload.OperatorSymbol;
+    local.payload.SecondsLeft =
+      local.payload.SecondsLeft === undefined
+        ? destination.SecondsLeft
+        : local.payload.SecondsLeft;
+    local.payload.WorkingData =
+      local.payload.WorkingData === undefined
+        ? destination.WorkingData
+        : local.payload.WorkingData;
 
     return {
       ...destination,
@@ -141,14 +152,22 @@ export function overwriteOnlyExisting(
     const local: DispatchUpdateIntroduceItem =
       incoming as DispatchUpdateIntroduceItem;
 
-    local.payload.ShowButton = local.payload.ShowButton === undefined ?
-      destination.ShowButton : local.payload.ShowButton;
-    local.payload.IsOngoing = local.payload.IsOngoing === undefined ?
-      destination.IsOngoing : local.payload.IsOngoing;
-    local.payload.CoverListViewItems = local.payload.CoverListViewItems === undefined ?
-      destination.CoverListViewItems : local.payload.CoverListViewItems;
-    local.payload.NextLiItem = local.payload.NextLiItem === undefined ?
-      destination.NextLiItem : local.payload.NextLiItem;
+    local.payload.ShowButton =
+      local.payload.ShowButton === undefined
+        ? destination.ShowButton
+        : local.payload.ShowButton;
+    local.payload.IsOngoing =
+      local.payload.IsOngoing === undefined
+        ? destination.IsOngoing
+        : local.payload.IsOngoing;
+    local.payload.CoverListViewItems =
+      local.payload.CoverListViewItems === undefined
+        ? destination.CoverListViewItems
+        : local.payload.CoverListViewItems;
+    local.payload.NextLiItem =
+      local.payload.NextLiItem === undefined
+        ? destination.NextLiItem
+        : local.payload.NextLiItem;
 
     return {
       ...destination,
@@ -157,21 +176,32 @@ export function overwriteOnlyExisting(
   }
 
   if (isItemRetryDispatch(incoming)) {
-    const local: DispatchUpdateRetryItem =
-      incoming as DispatchUpdateRetryItem;
+    const local: DispatchUpdateRetryItem = incoming as DispatchUpdateRetryItem;
 
-    local.payload.CoverProblemItem = local.payload.CoverProblemItem === undefined ?
-      destination.CoverProblemItem : local.payload.CoverProblemItem;
-    local.payload.CoverStimulusItem = local.payload.CoverStimulusItem === undefined ?
-      destination.CoverStimulusItem : local.payload.CoverStimulusItem;
-    local.payload.ToVerify = local.payload.ToVerify === undefined ?
-      destination.ToVerify : local.payload.ToVerify;
-    local.payload.CurrentAction = local.payload.CurrentAction === undefined ?
-      destination.CurrentAction : local.payload.CurrentAction;
-    local.payload.ButtonText = local.payload.ButtonText === undefined ?
-      destination.ButtonText : local.payload.ButtonText;
-    local.payload.IsOngoing = local.payload.IsOngoing === undefined ?
-      destination.IsOngoing : local.payload.IsOngoing;
+    local.payload.CoverProblemItem =
+      local.payload.CoverProblemItem === undefined
+        ? destination.CoverProblemItem
+        : local.payload.CoverProblemItem;
+    local.payload.CoverStimulusItem =
+      local.payload.CoverStimulusItem === undefined
+        ? destination.CoverStimulusItem
+        : local.payload.CoverStimulusItem;
+    local.payload.ToVerify =
+      local.payload.ToVerify === undefined
+        ? destination.ToVerify
+        : local.payload.ToVerify;
+    local.payload.CurrentAction =
+      local.payload.CurrentAction === undefined
+        ? destination.CurrentAction
+        : local.payload.CurrentAction;
+    local.payload.ButtonText =
+      local.payload.ButtonText === undefined
+        ? destination.ButtonText
+        : local.payload.ButtonText;
+    local.payload.IsOngoing =
+      local.payload.IsOngoing === undefined
+        ? destination.IsOngoing
+        : local.payload.IsOngoing;
 
     return {
       ...destination,
@@ -183,56 +213,94 @@ export function overwriteOnlyExisting(
     const local: DispatchUpdateCompleteItem =
       incoming as DispatchUpdateCompleteItem;
 
-    local.payload.CoverProblemItem = local.payload.CoverProblemItem === undefined ?
-      destination.CoverProblemItem : local.payload.CoverProblemItem;
-    local.payload.CoverStimulusItem = local.payload.CoverStimulusItem === undefined ?
-      destination.CoverStimulusItem : local.payload.CoverStimulusItem;
-    local.payload.ToVerify = local.payload.ToVerify === undefined ?
-      destination.ToVerify : local.payload.ToVerify;
-    local.payload.CurrentAction = local.payload.CurrentAction === undefined ?
-      destination.CurrentAction : local.payload.CurrentAction;
-    local.payload.ButtonText = local.payload.ButtonText === undefined ?
-      destination.ButtonText : local.payload.ButtonText;
-    local.payload.IsOngoing = local.payload.IsOngoing === undefined ?
-      destination.IsOngoing : local.payload.IsOngoing;
+    local.payload.CoverProblemItem =
+      local.payload.CoverProblemItem === undefined
+        ? destination.CoverProblemItem
+        : local.payload.CoverProblemItem;
+    local.payload.CoverStimulusItem =
+      local.payload.CoverStimulusItem === undefined
+        ? destination.CoverStimulusItem
+        : local.payload.CoverStimulusItem;
+    local.payload.ToVerify =
+      local.payload.ToVerify === undefined
+        ? destination.ToVerify
+        : local.payload.ToVerify;
+    local.payload.CurrentAction =
+      local.payload.CurrentAction === undefined
+        ? destination.CurrentAction
+        : local.payload.CurrentAction;
+    local.payload.ButtonText =
+      local.payload.ButtonText === undefined
+        ? destination.ButtonText
+        : local.payload.ButtonText;
+    local.payload.IsOngoing =
+      local.payload.IsOngoing === undefined
+        ? destination.IsOngoing
+        : local.payload.IsOngoing;
 
-    local.payload.NumRetries = local.payload.NumRetries === undefined ?
-      destination.NumRetries : local.payload.NumRetries;
+    local.payload.NumRetries =
+      local.payload.NumRetries === undefined
+        ? destination.NumRetries
+        : local.payload.NumRetries;
 
-    local.payload.FactModelList = local.payload.FactModelList === undefined ?
-      destination.FactModelList : local.payload.FactModelList;
-    local.payload.OnInitialTry = local.payload.OnInitialTry === undefined ?
-      destination.OnInitialTry : local.payload.OnInitialTry;
-    local.payload.CoverListViewItems = local.payload.CoverListViewItems === undefined ?
-      destination.CoverListViewItems : local.payload.CoverListViewItems;
-    local.payload.ShowButton = local.payload.ShowButton === undefined ?
-      destination.ShowButton : local.payload.ShowButton;
-    local.payload.EntryRepresentationInternal = local.payload.EntryRepresentationInternal === undefined ?
-      destination.EntryRepresentationInternal : local.payload.EntryRepresentationInternal;
-    local.payload.ViewRepresentationInternal = local.payload.ViewRepresentationInternal === undefined ?
-      destination.ViewRepresentationInternal : local.payload.ViewRepresentationInternal;
+    local.payload.FactModelList =
+      local.payload.FactModelList === undefined
+        ? destination.FactModelList
+        : local.payload.FactModelList;
+    local.payload.OnInitialTry =
+      local.payload.OnInitialTry === undefined
+        ? destination.OnInitialTry
+        : local.payload.OnInitialTry;
+    local.payload.CoverListViewItems =
+      local.payload.CoverListViewItems === undefined
+        ? destination.CoverListViewItems
+        : local.payload.CoverListViewItems;
+    local.payload.ShowButton =
+      local.payload.ShowButton === undefined
+        ? destination.ShowButton
+        : local.payload.ShowButton;
+    local.payload.EntryRepresentationInternal =
+      local.payload.EntryRepresentationInternal === undefined
+        ? destination.EntryRepresentationInternal
+        : local.payload.EntryRepresentationInternal;
+    local.payload.ViewRepresentationInternal =
+      local.payload.ViewRepresentationInternal === undefined
+        ? destination.ViewRepresentationInternal
+        : local.payload.ViewRepresentationInternal;
+    local.payload.WorkingData =
+      local.payload.WorkingData === undefined
+        ? destination.WorkingData
+        : local.payload.WorkingData;
 
     return {
       ...destination,
       ...local.payload,
     };
-
   }
 
   if (isItemInterfaceUpdateDispatch(incoming)) {
-    const local: DispatchUpdateField =
-      incoming as DispatchUpdateField;
+    const local: DispatchUpdateField = incoming as DispatchUpdateField;
 
-    local.payload.ButtonText = local.payload.ButtonText === undefined ?
-      destination.ButtonText : local.payload.ButtonText;
-    local.payload.CoverProblemItem = local.payload.CoverProblemItem === undefined ?
-      destination.CoverProblemItem : local.payload.CoverProblemItem;
-    local.payload.CoverStimulusItem = !local.payload.CoverStimulusItem === undefined ?
-      destination.CoverStimulusItem : local.payload.CoverStimulusItem;
-    local.payload.ToVerify = !local.payload.ToVerify === undefined ?
-      destination.ToVerify : local.payload.ToVerify;
-    local.payload.IsOngoing = !local.payload.IsOngoing === undefined ?
-      destination.IsOngoing : local.payload.IsOngoing;
+    local.payload.ButtonText =
+      local.payload.ButtonText === undefined
+        ? destination.ButtonText
+        : local.payload.ButtonText;
+    local.payload.CoverProblemItem =
+      local.payload.CoverProblemItem === undefined
+        ? destination.CoverProblemItem
+        : local.payload.CoverProblemItem;
+    local.payload.CoverStimulusItem =
+      local.payload.CoverStimulusItem === undefined
+        ? destination.CoverStimulusItem
+        : local.payload.CoverStimulusItem;
+    local.payload.ToVerify =
+      local.payload.ToVerify === undefined
+        ? destination.ToVerify
+        : local.payload.ToVerify;
+    local.payload.IsOngoing =
+      local.payload.IsOngoing === undefined
+        ? destination.IsOngoing
+        : local.payload.IsOngoing;
 
     return {
       ...destination,
@@ -254,7 +322,6 @@ export const InterventionReducer = (
   state: InterventionState,
   action: InterventionDispatches | any
 ): InterventionState => {
-
   switch (action.type) {
     case InterventionActions.UpdateResponseEntry:
       return overwriteOnlyExisting(state, action);
@@ -276,8 +343,6 @@ export const InterventionReducer = (
 
     case InterventionActions.UpdateAttemptSuccessRecords:
       return overwriteOnlyExisting(state, action);
-
-
 
     ///
 
@@ -301,6 +366,8 @@ export const InterventionReducer = (
         EntryRepresentationInternal: action.payload.uEntry,
       };
 
+    /*
+
     case InterventionActions.ExplicitTimingBatchIncrement:
       return {
         ...state,
@@ -313,11 +380,16 @@ export const InterventionReducer = (
         PreTrialTime: action.payload.uTrialTime,
       };
 
+      */
+
+    /*
     case InterventionActions.ExplicitTimingModalPreErrorLog:
       return {
         ...state,
         FactModelList: action.payload.uFactModel,
       };
+
+    */
 
     default:
       throw new Error(action.type);

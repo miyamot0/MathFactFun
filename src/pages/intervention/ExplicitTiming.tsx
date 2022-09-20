@@ -22,9 +22,7 @@ import Timer from "./subcomponents/Timer";
 import SimpleProblemFrame from "./subcomponents/SimpleProblemFrame";
 
 // helpers
-import {
-  GetOperatorFromLabel,
-} from "../../utilities/LabelHelper";
+import { GetOperatorFromLabel } from "../../utilities/LabelHelper";
 
 import { RoutedIdTargetParam } from "../../interfaces/RoutingInterfaces";
 import {
@@ -155,18 +153,6 @@ export default function ExplicitTiming() {
           className="global-btn "
           style={{ float: "right" }}
           onClick={() => {
-
-            /*
-            dispatch(new DispatchUpdateRetryItem({
-              type: 0,
-              payload: {
-                EntryRepresentationInternal: "",
-                NumRetries: state.NumRetries + 1,
-                OnInitialTry: false,
-              }
-            }));
-            */
-
             closeModal();
           }}
         >

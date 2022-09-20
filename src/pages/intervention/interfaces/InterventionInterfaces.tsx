@@ -64,9 +64,9 @@ export interface PerformanceDataInterface {
 }
 
 /** DispatchUpdateEntryInternal
- * 
+ *
  * Class for updating string entry
- * 
+ *
  */
 export class DispatchUpdateEntryInternal {
   public type: number;
@@ -90,9 +90,9 @@ export class DispatchUpdateEntryInternal {
 }
 
 /** DispatchUpdatePreLoadContent
- * 
+ *
  * Class for loading intervention information
- * 
+ *
  */
 export class DispatchUpdatePreLoadContent {
   public type: number;
@@ -125,25 +125,25 @@ export class DispatchUpdatePreLoadContent {
 }
 
 /** DispatchUpdateIntroduceItem
- * 
+ *
  * Class for loading intervention information
- * 
+ *
  */
 export class DispatchUpdateIntroduceItem {
   public type: number;
   public payload: {
     CurrentAction: SharedActionSequence;
     WorkingData: string[];
-    ButtonText: string,
-    CoverProblemItem: boolean,
-    PreTrialTime: Date,
-    EntryRepresentationInternal: string,
-    ShowButton?: boolean,
-    IsOngoing?: boolean,
-    StartTime: Date,
-    ViewRepresentationInternal: string,
-    CoverListViewItems?: boolean,
-    NextLiItem?: string | undefined,
+    ButtonText: string;
+    CoverProblemItem: boolean;
+    PreTrialTime: Date;
+    EntryRepresentationInternal: string;
+    ShowButton?: boolean;
+    IsOngoing?: boolean;
+    StartTime: Date;
+    ViewRepresentationInternal: string;
+    CoverListViewItems?: boolean;
+    NextLiItem?: string | undefined;
   };
   public DispatchUpdateIntroduceItem?: string;
 
@@ -155,19 +155,19 @@ export class DispatchUpdateIntroduceItem {
     payload: {
       CurrentAction: SharedActionSequence;
       WorkingData: string[];
-      ButtonText: string,
+      ButtonText: string;
 
-      CoverProblemItem: boolean,
-      PreTrialTime: Date,
-      EntryRepresentationInternal: string,
-      StartTime: Date,
-      ViewRepresentationInternal: string,
+      CoverProblemItem: boolean;
+      PreTrialTime: Date;
+      EntryRepresentationInternal: string;
+      StartTime: Date;
+      ViewRepresentationInternal: string;
 
       // Items specific to CCC
-      ShowButton?: boolean | undefined,
-      IsOngoing?: boolean | undefined,
-      CoverListViewItems?: boolean | undefined,
-      NextLiItem?: string | undefined,
+      ShowButton?: boolean | undefined;
+      IsOngoing?: boolean | undefined;
+      CoverListViewItems?: boolean | undefined;
+      NextLiItem?: string | undefined;
     };
   }) {
     this.type = type;
@@ -177,14 +177,14 @@ export class DispatchUpdateIntroduceItem {
 }
 
 /** DispatchUpdateRetryItem
- * 
+ *
  * Class for re-trying an existing item
- * 
+ *
  */
 export class DispatchUpdateRetryItem {
   public type: number;
   public payload: {
-    EntryRepresentationInternal: string,
+    EntryRepresentationInternal: string;
     NumRetries: number;
     OnInitialTry: boolean;
     NumCorrectInitial: number;
@@ -195,7 +195,7 @@ export class DispatchUpdateRetryItem {
     PreTrialTime: Date;
     FactModelList: FactDataInterface[];
 
-    CoverProblemItem?: boolean,
+    CoverProblemItem?: boolean;
     CoverStimulusItem?: boolean;
     ToVerify?: boolean;
     CurrentAction?: SharedActionSequence;
@@ -210,7 +210,7 @@ export class DispatchUpdateRetryItem {
   }: {
     type: number;
     payload: {
-      EntryRepresentationInternal: string,
+      EntryRepresentationInternal: string;
       NumRetries: number;
       OnInitialTry: boolean;
       NumCorrectInitial: number;
@@ -221,7 +221,7 @@ export class DispatchUpdateRetryItem {
       PreTrialTime: Date;
       FactModelList: FactDataInterface[];
 
-      CoverProblemItem?: boolean,
+      CoverProblemItem?: boolean;
       CoverStimulusItem?: boolean;
       ToVerify?: boolean;
       CurrentAction?: SharedActionSequence;
@@ -235,12 +235,10 @@ export class DispatchUpdateRetryItem {
   }
 }
 
-
-
 /** DispatchUpdateCompleteItem
- * 
+ *
  * Class for re-trying an existing item
- * 
+ *
  */
 export class DispatchUpdateCompleteItem {
   public type: number;
@@ -253,11 +251,12 @@ export class DispatchUpdateCompleteItem {
     NumbTrials: number;
     PreTrialTime: Date;
 
-    CoverStimulusItem?: boolean,
-    CoverProblemItem?: boolean,
+    CoverStimulusItem?: boolean;
+    CoverProblemItem?: boolean;
     ToVerify?: boolean;
 
     FactModelList?: FactDataInterface[];
+    WorkingData?: string[];
     CurrentAction?: SharedActionSequence;
     OnInitialTry?: boolean;
     CoverListViewItems?: boolean;
@@ -283,11 +282,12 @@ export class DispatchUpdateCompleteItem {
       NumbTrials: number;
       PreTrialTime: Date;
 
-      CoverStimulusItem?: boolean,
-      CoverProblemItem?: boolean,
+      CoverStimulusItem?: boolean;
+      CoverProblemItem?: boolean;
       ToVerify?: boolean;
 
       FactModelList?: FactDataInterface[];
+      WorkingData?: string[];
       CurrentAction?: SharedActionSequence;
       OnInitialTry?: boolean;
       CoverListViewItems?: boolean;
@@ -304,12 +304,10 @@ export class DispatchUpdateCompleteItem {
   }
 }
 
-
-
 /** DispatchUpdateField
- * 
+ *
  * Class for triggering field updates
- * 
+ *
  */
 export class DispatchUpdateField {
   public type: number;
@@ -317,10 +315,10 @@ export class DispatchUpdateField {
     CurrentAction: SharedActionSequence;
 
     ButtonText?: string;
-    CoverProblemItem?: boolean,
+    CoverProblemItem?: boolean;
     CoverStimulusItem?: boolean;
     ToVerify?: boolean;
-    IsOngoing?: boolean,
+    IsOngoing?: boolean;
   };
   public DispatchUpdateField?: string;
 
@@ -333,10 +331,10 @@ export class DispatchUpdateField {
       CurrentAction: SharedActionSequence;
 
       ButtonText?: string;
-      CoverProblemItem?: boolean,
+      CoverProblemItem?: boolean;
       CoverStimulusItem?: boolean;
       ToVerify?: boolean;
-      IsOngoing?: boolean,
+      IsOngoing?: boolean;
     };
   }) {
     this.type = type;
@@ -386,8 +384,7 @@ export function isItemRetryDispatch(
   object: InterventionDispatches
 ): object is DispatchUpdateRetryItem {
   const res_ =
-    (object as DispatchUpdateRetryItem).DispatchUpdateRetryItem !==
-    undefined;
+    (object as DispatchUpdateRetryItem).DispatchUpdateRetryItem !== undefined;
   return res_;
 }
 
@@ -404,7 +401,6 @@ export function isItemInterfaceUpdateDispatch(
   object: InterventionDispatches
 ): object is DispatchUpdateField {
   const res_ =
-    (object as DispatchUpdateField).DispatchUpdateField !==
-    undefined;
+    (object as DispatchUpdateField).DispatchUpdateField !== undefined;
   return res_;
 }

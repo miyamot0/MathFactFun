@@ -28,15 +28,13 @@ import {
 } from "../interfaces/InterventionInterfaces";
 import { InterventionFormat } from "./../../../maths/Facts";
 import { commonKeyHandlerCCC, commonKeyHandlerET } from "./InteractionHelpers";
-import {
-  shouldShowFeedback,
-} from "./InterventionHelpers";
+import { shouldShowFeedback } from "./InterventionHelpers";
 import { submitPerformancesToFirebase } from "./InterventionHelpers";
 
 /** completeLoadingDispatch
- * 
- * @param param0 
- * @returns 
+ *
+ * @param param0
+ * @returns
  */
 export function completeLoadingDispatch({
   intervention,
@@ -72,16 +70,18 @@ export function completeLoadingDispatch({
       return;
 
     case InterventionFormat.CoverCopyCompare:
-      dispatch(new DispatchUpdatePreLoadContent({
-        type: InterventionActions.UpdateWithLoadedData,
-        payload: {
-          CurrentAction: currentAction,
-          WorkingData: workingData,
-          LoadedData: true,
-          OperatorSymbol: operatorSymbol,
-          SecondsLeft: secondsLeft,
-        },
-      }));
+      dispatch(
+        new DispatchUpdatePreLoadContent({
+          type: InterventionActions.UpdateWithLoadedData,
+          payload: {
+            CurrentAction: currentAction,
+            WorkingData: workingData,
+            LoadedData: true,
+            OperatorSymbol: operatorSymbol,
+            SecondsLeft: secondsLeft,
+          },
+        })
+      );
       return;
 
     case InterventionFormat.ExplicitTiming:
@@ -105,11 +105,11 @@ export function completeLoadingDispatch({
 }
 
 /** commonKeyHandler
- *  
- * @param intervention 
- * @param char 
- * @param state 
- * @param dispatch 
+ *
+ * @param intervention
+ * @param char
+ * @param state
+ * @param dispatch
  */
 export function commonKeyHandler(
   intervention: string,
@@ -128,22 +128,22 @@ export function commonKeyHandler(
       commonKeyHandlerET(char, state, dispatch);
       return;
     default:
-      throw Error("No intervention type specified")
+      throw Error("No intervention type specified");
   }
 }
 
 /** coverCopyCompareSequence
- * 
- * @param user 
- * @param id 
- * @param document 
- * @param state 
- * @param openModal 
- * @param addDocument 
- * @param updateDocument 
- * @param response 
- * @param history 
- * @param dispatch 
+ *
+ * @param user
+ * @param id
+ * @param document
+ * @param state
+ * @param openModal
+ * @param addDocument
+ * @param updateDocument
+ * @param response
+ * @param history
+ * @param dispatch
  */
 export function coverCopyCompareSequence(
   user: firebase.User,
@@ -164,63 +164,63 @@ export function coverCopyCompareSequence(
     state.CurrentAction === SharedActionSequence.Entry ||
     state.CurrentAction === SharedActionSequence.Start
   ) {
-    dispatch(new DispatchUpdateField({
-      type: InterventionActions.UpdateFieldPresenation,
-      payload: {
-        CurrentAction: SharedActionSequence.Begin,
-        ButtonText: "Cover",
-        CoverStimulusItem: false,
-        CoverProblemItem: true
-      }
-    }))
+    dispatch(
+      new DispatchUpdateField({
+        type: InterventionActions.UpdateFieldPresenation,
+        payload: {
+          CurrentAction: SharedActionSequence.Begin,
+          ButtonText: "Cover",
+          CoverStimulusItem: false,
+          CoverProblemItem: true,
+        },
+      })
+    );
 
     return;
-
   } else if (state.CurrentAction === SharedActionSequence.Begin) {
-
-    dispatch(new DispatchUpdateField({
-      type: InterventionActions.UpdateFieldPresenation,
-      payload: {
-        CurrentAction: SharedActionSequence.CoverCopy,
-        ButtonText: "Copied",
-        CoverStimulusItem: true,
-        CoverProblemItem: false
-      }
-    }))
+    dispatch(
+      new DispatchUpdateField({
+        type: InterventionActions.UpdateFieldPresenation,
+        payload: {
+          CurrentAction: SharedActionSequence.CoverCopy,
+          ButtonText: "Copied",
+          CoverStimulusItem: true,
+          CoverProblemItem: false,
+        },
+      })
+    );
 
     return;
-
   } else if (state.CurrentAction === SharedActionSequence.CoverCopy) {
-
-    dispatch(new DispatchUpdateField({
-      type: InterventionActions.UpdateFieldPresenation,
-      payload: {
-        CurrentAction: SharedActionSequence.Compare,
-        ButtonText: "Compared",
-        CoverStimulusItem: false,
-        CoverProblemItem: false
-      }
-    }))
+    dispatch(
+      new DispatchUpdateField({
+        type: InterventionActions.UpdateFieldPresenation,
+        payload: {
+          CurrentAction: SharedActionSequence.Compare,
+          ButtonText: "Compared",
+          CoverStimulusItem: false,
+          CoverProblemItem: false,
+        },
+      })
+    );
 
     return;
-
   } else {
-    console.log("Branch 4")
-
-    dispatch(new DispatchUpdateField({
-      type: InterventionActions.UpdateFieldPresenation,
-      payload: {
-        CurrentAction: SharedActionSequence.Entry,
-        ToVerify: true,
-      }
-    }))
+    dispatch(
+      new DispatchUpdateField({
+        type: InterventionActions.UpdateFieldPresenation,
+        payload: {
+          CurrentAction: SharedActionSequence.Entry,
+          ToVerify: true,
+        },
+      })
+    );
 
     quickCheck = true;
   }
 
   // Fire if ready to check response
   if (state.ToVerify || quickCheck) {
-
     // Compare if internal and inputted string match
     const isMatching =
       state.ViewRepresentationInternal.trim() ===
@@ -272,30 +272,30 @@ export function coverCopyCompareSequence(
 
       openModal();
 
-      dispatch(new DispatchUpdateRetryItem({
-        type: InterventionActions.UpdateAttemptErrorRecords,
-        payload: {
-          CurrentAction: SharedActionSequence.Begin,
-          EntryRepresentationInternal: "",
-          NumRetries: state.NumRetries + 1,
-          NumCorrectInitial: uNumberCorrectInitial,
-          NumErrors: uNumberErrors,
-          TotalDigits: state.TotalDigits + totalDigitsShown,
-          TotalDigitsCorrect: state.TotalDigitsCorrect + totalDigitsCorrect,
-          NumbTrials: state.NumbTrials + 1,
-          PreTrialTime: new Date(),
-          OnInitialTry: false,
-          CoverStimulusItem: false,
-          ToVerify: false,
-          ButtonText: "Cover",
-          IsOngoing: true,
-          CoverProblemItem: true,
-          FactModelList: [...state.FactModelList, currentItem2],
-        }
-      }));
-
+      dispatch(
+        new DispatchUpdateRetryItem({
+          type: InterventionActions.UpdateAttemptErrorRecords,
+          payload: {
+            CurrentAction: SharedActionSequence.Begin,
+            EntryRepresentationInternal: "",
+            NumRetries: state.NumRetries + 1,
+            NumCorrectInitial: uNumberCorrectInitial,
+            NumErrors: uNumberErrors,
+            TotalDigits: state.TotalDigits + totalDigitsShown,
+            TotalDigitsCorrect: state.TotalDigitsCorrect + totalDigitsCorrect,
+            NumbTrials: state.NumbTrials + 1,
+            PreTrialTime: new Date(),
+            OnInitialTry: false,
+            CoverStimulusItem: false,
+            ToVerify: false,
+            ButtonText: "Cover",
+            IsOngoing: true,
+            CoverProblemItem: true,
+            FactModelList: [...state.FactModelList, currentItem2],
+          },
+        })
+      );
     } else {
-
       const totalDigitsShown = CalculateDigitsTotalAnswer(
         state.ViewRepresentationInternal
       );
@@ -321,18 +321,19 @@ export function coverCopyCompareSequence(
 
       // Note: isusue where state change not fast enough to catch latest
       if (state.WorkingData.length === 0) {
-
-        dispatch(new DispatchUpdateCompleteItem({
-          type: InterventionActions.UpdateAttemptSuccessRecords,
-          payload: {
-            NumCorrectInitial: uNumberCorrectInitial,
-            NumErrors: uNumberErrors,
-            NumbTrials: state.NumbTrials + 1,
-            TotalDigits: state.TotalDigits + totalDigitsShown,
-            TotalDigitsCorrect: state.TotalDigitsCorrect + totalDigitsCorrect,
-            PreTrialTime: new Date()
-          }
-        }))
+        dispatch(
+          new DispatchUpdateCompleteItem({
+            type: InterventionActions.UpdateAttemptSuccessRecords,
+            payload: {
+              NumCorrectInitial: uNumberCorrectInitial,
+              NumErrors: uNumberErrors,
+              NumbTrials: state.NumbTrials + 1,
+              TotalDigits: state.TotalDigits + totalDigitsShown,
+              TotalDigitsCorrect: state.TotalDigitsCorrect + totalDigitsCorrect,
+              PreTrialTime: new Date(),
+            },
+          })
+        );
 
         submitPerformancesToFirebase({
           user,
@@ -348,47 +349,48 @@ export function coverCopyCompareSequence(
           history,
         });
       } else {
-
-        dispatch(new DispatchUpdateCompleteItem({
-          type: InterventionActions.UpdateAttemptSuccessRecords,
-          payload: {
-            CoverStimulusItem: true,
-            CoverProblemItem: true,
-            EntryRepresentationInternal: "",
-            ViewRepresentationInternal: "",
-            ButtonText: "Cover",
-            ShowButton: false,
-            IsOngoing: false,
-            CoverListViewItems: false,
-            OnInitialTry: true,
-            FactModelList: [...state.FactModelList, currentItem2],
-            CurrentAction: SharedActionSequence.Entry,
-            NumCorrectInitial: uNumberCorrectInitial,
-            NumErrors: uNumberErrors,
-            NumbTrials: state.NumbTrials + 1,
-            TotalDigits: state.TotalDigits + totalDigitsShown,
-            TotalDigitsCorrect: state.TotalDigitsCorrect + totalDigitsCorrect,
-            PreTrialTime: new Date()
-          }
-        }))
+        dispatch(
+          new DispatchUpdateCompleteItem({
+            type: InterventionActions.UpdateAttemptSuccessRecords,
+            payload: {
+              CoverStimulusItem: true,
+              CoverProblemItem: true,
+              EntryRepresentationInternal: "",
+              ViewRepresentationInternal: "",
+              ButtonText: "Cover",
+              ShowButton: false,
+              IsOngoing: false,
+              CoverListViewItems: false,
+              OnInitialTry: true,
+              FactModelList: [...state.FactModelList, currentItem2],
+              CurrentAction: SharedActionSequence.Entry,
+              NumCorrectInitial: uNumberCorrectInitial,
+              NumErrors: uNumberErrors,
+              NumbTrials: state.NumbTrials + 1,
+              TotalDigits: state.TotalDigits + totalDigitsShown,
+              TotalDigitsCorrect: state.TotalDigitsCorrect + totalDigitsCorrect,
+              PreTrialTime: new Date(),
+            },
+          })
+        );
       }
     }
   }
 }
 
 /** explicitTimingSequence
- * 
- * @param user 
- * @param id 
- * @param document 
- * @param state 
- * @param openModal 
- * @param addDocument 
- * @param updateDocument 
- * @param response 
- * @param history 
- * @param dispatch 
- * @returns 
+ *
+ * @param user
+ * @param id
+ * @param document
+ * @param state
+ * @param openModal
+ * @param addDocument
+ * @param updateDocument
+ * @param response
+ * @param history
+ * @param dispatch
+ * @returns
  */
 export function explicitTimingSequence(
   user: firebase.User,
@@ -412,19 +414,21 @@ export function explicitTimingSequence(
       return item !== listItem;
     });
 
-    dispatch(new DispatchUpdateIntroduceItem({
-      type: InterventionActions.UpdateIntroduceNewItem,
-      payload: {
-        CurrentAction: SharedActionSequence.Answer,
-        WorkingData: updatedList,
-        ButtonText: "Check",
-        CoverProblemItem: false,
-        PreTrialTime: new Date(),
-        StartTime: state.StartTime === null ? new Date() : state.StartTime,
-        EntryRepresentationInternal: "",
-        ViewRepresentationInternal: listItem.split(":")[0],
-      },
-    }))
+    dispatch(
+      new DispatchUpdateIntroduceItem({
+        type: InterventionActions.UpdateIntroduceNewItem,
+        payload: {
+          CurrentAction: SharedActionSequence.Answer,
+          WorkingData: updatedList,
+          ButtonText: "Check",
+          CoverProblemItem: false,
+          PreTrialTime: new Date(),
+          StartTime: state.StartTime === null ? new Date() : state.StartTime,
+          EntryRepresentationInternal: "",
+          ViewRepresentationInternal: listItem.split(":")[0],
+        },
+      })
+    );
 
     return;
   }
@@ -479,6 +483,7 @@ export function explicitTimingSequence(
       ),
     };
 
+    /*
     dispatch({
       type: InterventionActions.ExplicitTimingBatchIncrement,
       payload: {
@@ -498,8 +503,38 @@ export function explicitTimingSequence(
         uFactModel: [...state.FactModelList, currentItem2],
       },
     });
+    */
+
+    dispatch(
+      new DispatchUpdateRetryItem({
+        type: InterventionActions.UpdateAttemptErrorRecords,
+        payload: {
+          NumCorrectInitial: uNumberCorrectInitial,
+          NumErrors: uNumberErrors,
+          TotalDigits: state.TotalDigits + totalDigitsShown,
+          TotalDigitsCorrect: state.TotalDigitsCorrect + totalDigitsCorrect,
+          NumbTrials: state.NumbTrials + 1,
+          PreTrialTime: new Date(),
+          FactModelList: [...state.FactModelList, currentItem2],
+          EntryRepresentationInternal: "",
+          NumRetries: state.NumRetries + 1,
+          OnInitialTry: false,
+        },
+      })
+    );
 
     openModal();
+
+    /*
+            dispatch(new DispatchUpdateRetryItem({
+              type: 0,
+              payload: {
+                EntryRepresentationInternal: "",
+                NumRetries: state.NumRetries + 1,
+                OnInitialTry: false,
+              }
+            }));
+            */
   } else {
     const totalDigitsShown = CalculateDigitsTotalAnswer(
       state.ViewRepresentationInternal
@@ -523,6 +558,7 @@ export function explicitTimingSequence(
       ),
     };
 
+    /*
     dispatch({
       type: InterventionActions.ExplicitTimingBatchIncrement,
       payload: {
@@ -535,9 +571,24 @@ export function explicitTimingSequence(
         uTrialTime: new Date(),
       },
     });
+    */
 
     // Note: issue where state change not fast enough to catch latest
     if (state.WorkingData.length === 0) {
+      dispatch(
+        new DispatchUpdateCompleteItem({
+          type: InterventionActions.UpdateAttemptSuccessRecords,
+          payload: {
+            NumCorrectInitial: uNumberCorrectInitial,
+            NumErrors: uNumberErrors,
+            NumbTrials: state.NumbTrials + 1,
+            TotalDigits: state.TotalDigits + totalDigitsShown,
+            TotalDigitsCorrect: state.TotalDigitsCorrect + totalDigitsCorrect,
+            PreTrialTime: new Date(),
+          },
+        })
+      );
+
       submitPerformancesToFirebase({
         user,
         id,
@@ -557,6 +608,33 @@ export function explicitTimingSequence(
         return item !== listItem;
       });
 
+      dispatch(
+        new DispatchUpdateCompleteItem({
+          type: InterventionActions.UpdateAttemptSuccessRecords,
+          payload: {
+            //CoverStimulusItem: true,
+            //CoverProblemItem: true,
+            EntryRepresentationInternal: "",
+            ViewRepresentationInternal: listItem.split(":")[0],
+            //ButtonText: "Cover",
+            //ShowButton: false,
+            //IsOngoing: false,
+            //CoverListViewItems: false,
+            OnInitialTry: true,
+            FactModelList: [...state.FactModelList, currentItem2],
+            WorkingData: updatedList,
+            CurrentAction: SharedActionSequence.Entry,
+            NumCorrectInitial: uNumberCorrectInitial,
+            NumErrors: uNumberErrors,
+            NumbTrials: state.NumbTrials + 1,
+            TotalDigits: state.TotalDigits + totalDigitsShown,
+            TotalDigitsCorrect: state.TotalDigitsCorrect + totalDigitsCorrect,
+            PreTrialTime: new Date(),
+          },
+        })
+      );
+
+      /*
       dispatch({
         type: InterventionActions.BenchmarkBatchStartIncrementPost,
         payload: {
@@ -566,6 +644,7 @@ export function explicitTimingSequence(
           uEntry: "",
         },
       });
+      */
     }
   }
 }
