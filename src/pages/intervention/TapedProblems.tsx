@@ -141,6 +141,7 @@ export default function TapedProblems() {
   // Fire once individual data loaded, just once
   useEffect(() => {
     if (document && !loadedData) {
+      /*
       dispatch({
         type: InterventionActions.TapedProblemsBatchStartPreflight,
         payload: {
@@ -149,6 +150,7 @@ export default function TapedProblems() {
           uLoadedData: true,
         },
       });
+      */
     }
   }, [document, loadedData]);
 

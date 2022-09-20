@@ -187,13 +187,20 @@ export class DispatchUpdateRetryItem {
     EntryRepresentationInternal: string,
     NumRetries: number;
     OnInitialTry: boolean;
+    NumCorrectInitial: number;
+    NumErrors: number;
+    TotalDigits: number;
+    TotalDigitsCorrect: number;
+    NumbTrials: number;
+    PreTrialTime: Date;
+    FactModelList: FactDataInterface[];
 
+    CoverProblemItem?: boolean,
     CoverStimulusItem?: boolean;
     ToVerify?: boolean;
     CurrentAction?: SharedActionSequence;
     ButtonText?: string;
-    IsOngoing?: boolean,
-    CoverProblemItem?: boolean,
+    IsOngoing?: boolean;
   };
   public DispatchUpdateRetryItem?: string;
 
@@ -206,18 +213,135 @@ export class DispatchUpdateRetryItem {
       EntryRepresentationInternal: string,
       NumRetries: number;
       OnInitialTry: boolean;
+      NumCorrectInitial: number;
+      NumErrors: number;
+      TotalDigits: number;
+      TotalDigitsCorrect: number;
+      NumbTrials: number;
+      PreTrialTime: Date;
+      FactModelList: FactDataInterface[];
 
+      CoverProblemItem?: boolean,
       CoverStimulusItem?: boolean;
       ToVerify?: boolean;
       CurrentAction?: SharedActionSequence;
       ButtonText?: string;
-      IsOngoing?: boolean,
-      CoverProblemItem?: boolean,
+      IsOngoing?: boolean;
     };
   }) {
     this.type = type;
     this.payload = payload;
     this.DispatchUpdateRetryItem = "DispatchUpdateRetryItem";
+  }
+}
+
+
+
+/** DispatchUpdateCompleteItem
+ * 
+ * Class for re-trying an existing item
+ * 
+ */
+export class DispatchUpdateCompleteItem {
+  public type: number;
+  public payload: {
+    NumRetries?: number;
+    NumCorrectInitial: number;
+    NumErrors: number;
+    TotalDigits: number;
+    TotalDigitsCorrect: number;
+    NumbTrials: number;
+    PreTrialTime: Date;
+
+    CoverStimulusItem?: boolean,
+    CoverProblemItem?: boolean,
+    ToVerify?: boolean;
+
+    FactModelList?: FactDataInterface[];
+    CurrentAction?: SharedActionSequence;
+    OnInitialTry?: boolean;
+    CoverListViewItems?: boolean;
+    IsOngoing?: boolean;
+    ShowButton?: boolean;
+    ButtonText?: string;
+    EntryRepresentationInternal?: string;
+    ViewRepresentationInternal?: string;
+  };
+  public DispatchUpdateCompleteItem?: string;
+
+  constructor({
+    type,
+    payload,
+  }: {
+    type: number;
+    payload: {
+      NumRetries?: number;
+      NumCorrectInitial: number;
+      NumErrors: number;
+      TotalDigits: number;
+      TotalDigitsCorrect: number;
+      NumbTrials: number;
+      PreTrialTime: Date;
+
+      CoverStimulusItem?: boolean,
+      CoverProblemItem?: boolean,
+      ToVerify?: boolean;
+
+      FactModelList?: FactDataInterface[];
+      CurrentAction?: SharedActionSequence;
+      OnInitialTry?: boolean;
+      CoverListViewItems?: boolean;
+      IsOngoing?: boolean;
+      ShowButton?: boolean;
+      ButtonText?: string;
+      EntryRepresentationInternal?: string;
+      ViewRepresentationInternal?: string;
+    };
+  }) {
+    this.type = type;
+    this.payload = payload;
+    this.DispatchUpdateCompleteItem = "DispatchUpdateCompleteItem";
+  }
+}
+
+
+
+/** DispatchUpdateField
+ * 
+ * Class for triggering field updates
+ * 
+ */
+export class DispatchUpdateField {
+  public type: number;
+  public payload: {
+    CurrentAction: SharedActionSequence;
+
+    ButtonText?: string;
+    CoverProblemItem?: boolean,
+    CoverStimulusItem?: boolean;
+    ToVerify?: boolean;
+    IsOngoing?: boolean,
+  };
+  public DispatchUpdateField?: string;
+
+  constructor({
+    type,
+    payload,
+  }: {
+    type: number;
+    payload: {
+      CurrentAction: SharedActionSequence;
+
+      ButtonText?: string;
+      CoverProblemItem?: boolean,
+      CoverStimulusItem?: boolean;
+      ToVerify?: boolean;
+      IsOngoing?: boolean,
+    };
+  }) {
+    this.type = type;
+    this.payload = payload;
+    this.DispatchUpdateField = "DispatchUpdateField";
   }
 }
 
@@ -227,7 +351,9 @@ export type InterventionDispatches =
   | DispatchUpdateEntryInternal
   | DispatchUpdatePreLoadContent
   | DispatchUpdateIntroduceItem
-  | DispatchUpdateRetryItem;
+  | DispatchUpdateRetryItem
+  | DispatchUpdateCompleteItem
+  | DispatchUpdateField;
 
 export function isEntryInternalDispatch(
   object: InterventionDispatches
@@ -261,6 +387,24 @@ export function isItemRetryDispatch(
 ): object is DispatchUpdateRetryItem {
   const res_ =
     (object as DispatchUpdateRetryItem).DispatchUpdateRetryItem !==
+    undefined;
+  return res_;
+}
+
+export function isItemCompleteDispatch(
+  object: InterventionDispatches
+): object is DispatchUpdateCompleteItem {
+  const res_ =
+    (object as DispatchUpdateCompleteItem).DispatchUpdateCompleteItem !==
+    undefined;
+  return res_;
+}
+
+export function isItemInterfaceUpdateDispatch(
+  object: InterventionDispatches
+): object is DispatchUpdateField {
+  const res_ =
+    (object as DispatchUpdateField).DispatchUpdateField !==
     undefined;
   return res_;
 }

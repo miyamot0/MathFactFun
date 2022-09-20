@@ -13,10 +13,8 @@ import App from "./App";
 import { AuthorizationContextProvider } from "./context/AuthorizationContext";
 
 ReactDOM.render(
-  <React.StrictMode>
-    <AuthorizationContextProvider>
-      <App />
-    </AuthorizationContextProvider>
-  </React.StrictMode>,
+  <AuthorizationContextProvider>
+    <App />
+  </AuthorizationContextProvider>,
   document.getElementById("root")
 );

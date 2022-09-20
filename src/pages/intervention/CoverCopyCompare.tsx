@@ -46,7 +46,7 @@ import {
 // styles
 import "./styles/CoverCopyCompare.css";
 import { commonKeyListener } from "./helpers/KeyHandlingHelper";
-import { DispatchUpdateIntroduceItem, DispatchUpdateRetryItem } from "./interfaces/InterventionInterfaces";
+import { DispatchUpdateIntroduceItem } from "./interfaces/InterventionInterfaces";
 
 export default function CoverCopyCompare() {
   const { id, target } = useParams<RoutedIdTargetParam>();
@@ -100,7 +100,7 @@ export default function CoverCopyCompare() {
 
   // Fire once individual data loaded, just once
   useEffect(() => {
-    if (document && !state.LoadedData) {
+    if (document && state.LoadedData === false) {
       completeLoadingDispatch({
         intervention: InterventionFormat.CoverCopyCompare,
         workingData: document.factsTargeted,
@@ -108,7 +108,7 @@ export default function CoverCopyCompare() {
         dispatch,
       });
     }
-  }, [document, state.LoadedData, state.OperatorSymbol]);
+  }, [document]);
 
   /** captureItemClick
    *
@@ -138,9 +138,9 @@ export default function CoverCopyCompare() {
         ShowButton: true,
         NextLiItem: updatedList[0],
         EntryRepresentationInternal: "",
-        CurrentAction: SharedActionSequence.Answer,
+        CurrentAction: SharedActionSequence.Start,
       },
-    }))
+    }));
 
     sharedButtonActionSequence(
       user,
@@ -176,22 +176,6 @@ export default function CoverCopyCompare() {
           className="global-btn "
           style={{ float: "right" }}
           onClick={() => {
-
-            dispatch(new DispatchUpdateRetryItem({
-              type: 0,
-              payload: {
-                CurrentAction: SharedActionSequence.Begin,
-                EntryRepresentationInternal: "",
-                NumRetries: state.NumRetries + 1,
-                OnInitialTry: false,
-                CoverStimulusItem: false,
-                ToVerify: false,
-                ButtonText: "Cover",
-                IsOngoing: true,
-                CoverProblemItem: true,
-              }
-            }));
-
             closeModal();
           }}
         >
@@ -234,6 +218,7 @@ export default function CoverCopyCompare() {
             className="global-btn "
             style={{ visibility: state.ShowButton ? "visible" : "hidden" }}
             onClick={() => {
+
               sharedButtonActionSequence(
                 user,
                 id,

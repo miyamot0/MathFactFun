@@ -223,39 +223,6 @@ export function useEventListener(
   );
 }
 
-/*
-// TODO: remove once getting into TP
-
-export function keyHandler(
-  key: React.KeyboardEvent<HTMLElement>,
-  captureKeyClick2: (char: string) => void,
-  captureButtonAction2: () => void,
-  currentAction: string
-): void {
-  if (key.key === "Enter") return;
-
-  if (RelevantKeys.includes(key.key)) {
-    let modKey = key.key === "Backspace" ? "Del" : key.key;
-    modKey = key.key === "Delete" ? "Del" : modKey;
-
-    if (modKey === " ") {
-      if (
-        currentAction !== SharedActionSequence.Entry &&
-        currentAction !== SharedActionSequence.Start
-      ) {
-        () => captureButtonAction2();
-        return;
-      }
-
-      return;
-    }
-
-    captureKeyClick2(modKey);
-  }
-}
-
-*/
-
 /** submitPerformancesToFirebase
  *
  * @param param0

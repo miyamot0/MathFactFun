@@ -19,8 +19,11 @@ import {
   SharedActionSequence,
 } from "../functionality/InterventionBehavior";
 import {
+  DispatchUpdateCompleteItem,
+  DispatchUpdateField,
   DispatchUpdateIntroduceItem,
   DispatchUpdatePreLoadContent,
+  DispatchUpdateRetryItem,
   InterventionState,
 } from "../interfaces/InterventionInterfaces";
 import { InterventionFormat } from "./../../../maths/Facts";
@@ -69,7 +72,7 @@ export function completeLoadingDispatch({
       return;
 
     case InterventionFormat.CoverCopyCompare:
-      dispatchObject = new DispatchUpdatePreLoadContent({
+      dispatch(new DispatchUpdatePreLoadContent({
         type: InterventionActions.UpdateWithLoadedData,
         payload: {
           CurrentAction: currentAction,
@@ -78,9 +81,7 @@ export function completeLoadingDispatch({
           OperatorSymbol: operatorSymbol,
           SecondsLeft: secondsLeft,
         },
-      });
-
-      dispatch(dispatchObject);
+      }));
       return;
 
     case InterventionFormat.ExplicitTiming:
@@ -163,56 +164,62 @@ export function coverCopyCompareSequence(
     state.CurrentAction === SharedActionSequence.Entry ||
     state.CurrentAction === SharedActionSequence.Start
   ) {
-    dispatch({
-      type: InterventionActions.CoverCopyCompareTaskIncrement,
+    dispatch(new DispatchUpdateField({
+      type: InterventionActions.UpdateFieldPresenation,
       payload: {
-        uAction: SharedActionSequence.Begin,
-        uButtonText: "Cover",
-        uCoverStimulusItem: false,
-        uCoverProblemItem: true,
-      },
-    });
+        CurrentAction: SharedActionSequence.Begin,
+        ButtonText: "Cover",
+        CoverStimulusItem: false,
+        CoverProblemItem: true
+      }
+    }))
+
+    return;
+
   } else if (state.CurrentAction === SharedActionSequence.Begin) {
-    dispatch({
-      type: InterventionActions.CoverCopyCompareTaskIncrement,
+
+    dispatch(new DispatchUpdateField({
+      type: InterventionActions.UpdateFieldPresenation,
       payload: {
-        uAction: SharedActionSequence.CoverCopy,
-        uButtonText: "Copied",
-        uCoverStimulusItem: true,
-        uCoverProblemItem: false,
-      },
-    });
+        CurrentAction: SharedActionSequence.CoverCopy,
+        ButtonText: "Copied",
+        CoverStimulusItem: true,
+        CoverProblemItem: false
+      }
+    }))
+
+    return;
+
   } else if (state.CurrentAction === SharedActionSequence.CoverCopy) {
-    dispatch({
-      type: InterventionActions.CoverCopyCompareTaskIncrement,
+
+    dispatch(new DispatchUpdateField({
+      type: InterventionActions.UpdateFieldPresenation,
       payload: {
-        uAction: SharedActionSequence.Compare,
-        uButtonText: "Compared",
-        uCoverStimulusItem: false,
-        uCoverProblemItem: false,
-      },
-    });
+        CurrentAction: SharedActionSequence.Compare,
+        ButtonText: "Compared",
+        CoverStimulusItem: false,
+        CoverProblemItem: false
+      }
+    }))
+
+    return;
+
   } else {
-    dispatch({
-      type: InterventionActions.CoverCopyCompareTaskReset,
+    console.log("Branch 4")
+
+    dispatch(new DispatchUpdateField({
+      type: InterventionActions.UpdateFieldPresenation,
       payload: {
-        uAction: SharedActionSequence.Entry,
-        uVerify: true,
-      },
-    });
+        CurrentAction: SharedActionSequence.Entry,
+        ToVerify: true,
+      }
+    }))
 
     quickCheck = true;
   }
 
   // Fire if ready to check response
   if (state.ToVerify || quickCheck) {
-    dispatch({
-      type: InterventionActions.CoverCopyCompareTaskReset,
-      payload: {
-        uAction: state.CurrentAction,
-        uVerify: false,
-      },
-    });
 
     // Compare if internal and inputted string match
     const isMatching =
@@ -263,28 +270,32 @@ export function coverCopyCompareSequence(
         ),
       };
 
-      dispatch({
-        type: InterventionActions.CoverCopyCompareBatchIncrement,
-        payload: {
-          uNumberCorrectInitial,
-          uNumberErrors,
-          uTotalDigits: state.TotalDigits + totalDigitsShown,
-          uTotalDigitsCorrect: state.TotalDigitsCorrect + totalDigitsCorrect,
-          uNumberTrials: state.NumbTrials + 1,
-          uInitialTry: state.OnInitialTry,
-          uTrialTime: new Date(),
-        },
-      });
-
-      dispatch({
-        type: InterventionActions.CoverCopyCompareModalPreErrorLog,
-        payload: {
-          uFactModel: [...state.FactModelList, currentItem2],
-        },
-      });
-
       openModal();
+
+      dispatch(new DispatchUpdateRetryItem({
+        type: InterventionActions.UpdateAttemptErrorRecords,
+        payload: {
+          CurrentAction: SharedActionSequence.Begin,
+          EntryRepresentationInternal: "",
+          NumRetries: state.NumRetries + 1,
+          NumCorrectInitial: uNumberCorrectInitial,
+          NumErrors: uNumberErrors,
+          TotalDigits: state.TotalDigits + totalDigitsShown,
+          TotalDigitsCorrect: state.TotalDigitsCorrect + totalDigitsCorrect,
+          NumbTrials: state.NumbTrials + 1,
+          PreTrialTime: new Date(),
+          OnInitialTry: false,
+          CoverStimulusItem: false,
+          ToVerify: false,
+          ButtonText: "Cover",
+          IsOngoing: true,
+          CoverProblemItem: true,
+          FactModelList: [...state.FactModelList, currentItem2],
+        }
+      }));
+
     } else {
+
       const totalDigitsShown = CalculateDigitsTotalAnswer(
         state.ViewRepresentationInternal
       );
@@ -308,21 +319,21 @@ export function coverCopyCompareSequence(
         ),
       };
 
-      dispatch({
-        type: InterventionActions.CoverCopyCompareBatchIncrement,
-        payload: {
-          uNumberCorrectInitial,
-          uNumberErrors,
-          uTotalDigits: state.TotalDigits + totalDigitsShown,
-          uTotalDigitsCorrect: state.TotalDigitsCorrect + totalDigitsCorrect,
-          uNumberTrials: state.NumbTrials + 1,
-          uInitialTry: state.OnInitialTry,
-          uTrialTime: new Date(),
-        },
-      });
-
       // Note: isusue where state change not fast enough to catch latest
       if (state.WorkingData.length === 0) {
+
+        dispatch(new DispatchUpdateCompleteItem({
+          type: InterventionActions.UpdateAttemptSuccessRecords,
+          payload: {
+            NumCorrectInitial: uNumberCorrectInitial,
+            NumErrors: uNumberErrors,
+            NumbTrials: state.NumbTrials + 1,
+            TotalDigits: state.TotalDigits + totalDigitsShown,
+            TotalDigitsCorrect: state.TotalDigitsCorrect + totalDigitsCorrect,
+            PreTrialTime: new Date()
+          }
+        }))
+
         submitPerformancesToFirebase({
           user,
           id,
@@ -337,22 +348,29 @@ export function coverCopyCompareSequence(
           history,
         });
       } else {
-        dispatch({
-          type: InterventionActions.CoverCopyCompareBatchStartIncrementPost,
+
+        dispatch(new DispatchUpdateCompleteItem({
+          type: InterventionActions.UpdateAttemptSuccessRecords,
           payload: {
-            uCoverStimulusItem: true,
-            uCoverProblemItem: true,
-            uEntryRepresentationInternal: "",
-            uViewRepresentationInternal: "",
-            uButtonText: "Cover",
-            uShowButton: false,
-            uIsOngoing: false,
-            uCoverListViewItems: false,
-            uOnInitialTry: true,
-            uFactModelList: [...state.FactModelList, currentItem2],
-            uCurrentAction: SharedActionSequence.Entry,
-          },
-        });
+            CoverStimulusItem: true,
+            CoverProblemItem: true,
+            EntryRepresentationInternal: "",
+            ViewRepresentationInternal: "",
+            ButtonText: "Cover",
+            ShowButton: false,
+            IsOngoing: false,
+            CoverListViewItems: false,
+            OnInitialTry: true,
+            FactModelList: [...state.FactModelList, currentItem2],
+            CurrentAction: SharedActionSequence.Entry,
+            NumCorrectInitial: uNumberCorrectInitial,
+            NumErrors: uNumberErrors,
+            NumbTrials: state.NumbTrials + 1,
+            TotalDigits: state.TotalDigits + totalDigitsShown,
+            TotalDigitsCorrect: state.TotalDigitsCorrect + totalDigitsCorrect,
+            PreTrialTime: new Date()
+          }
+        }))
       }
     }
   }

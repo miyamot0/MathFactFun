@@ -156,6 +156,7 @@ export default function ExplicitTiming() {
           style={{ float: "right" }}
           onClick={() => {
 
+            /*
             dispatch(new DispatchUpdateRetryItem({
               type: 0,
               payload: {
@@ -164,6 +165,7 @@ export default function ExplicitTiming() {
                 OnInitialTry: false,
               }
             }));
+            */
 
             closeModal();
           }}
