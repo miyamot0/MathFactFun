@@ -79,11 +79,11 @@ export default function CoverCopyCompare() {
 
   // Add event listener to hook
   useEventListener("keydown", (key: React.KeyboardEvent<HTMLElement>) => {
-    commonKeyListener(
+    commonKeyListener({
       key,
       state,
-      InterventionFormat.CoverCopyCompare,
-      () => null,
+      currentApproach: InterventionFormat.CoverCopyCompare,
+      captureButtonAction: () => null,
       checkLiNullUndefinedBlank,
       captureItemClick,
       user,
@@ -94,8 +94,8 @@ export default function CoverCopyCompare() {
       updateDocument,
       response,
       history,
-      dispatch
-    );
+      dispatch,
+    });
   });
 
   // Fire once individual data loaded, just once

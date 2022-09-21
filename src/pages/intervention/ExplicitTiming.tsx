@@ -45,6 +45,10 @@ import {
 } from "./helpers/DispatchingHelpers";
 import { submitPerformancesToFirebase } from "./helpers/InterventionHelpers";
 import { commonKeyListener } from "./helpers/KeyHandlingHelper";
+import KeyPadLayout from "./subcomponents/layouts/KeyPadLayout";
+import ButtonLayout from "./subcomponents/layouts/ButtonLayout";
+import ProblemItemLayout from "./subcomponents/layouts/ProblemItemLayout";
+import TopHeaderTimed from "./subcomponents/layouts/TopHeaderTimed";
 
 export default function ExplicitTiming() {
   const { id, target } = useParams<RoutedIdTargetParam>();
@@ -55,7 +59,7 @@ export default function ExplicitTiming() {
     collectionString: "students",
     idString: id,
   });
-  const { addDocument, response } = useFirestore("", target, id);
+  const { addDocument, response: addResponse } = useFirestore("", target, id);
   const { updateDocument } = useFirestore("students", undefined, undefined);
 
   const [state, dispatch] = useReducer(
@@ -77,23 +81,23 @@ export default function ExplicitTiming() {
 
   // Add event listener to hook
   useEventListener("keydown", (key: React.KeyboardEvent<HTMLElement>) => {
-    commonKeyListener(
+    commonKeyListener({
       key,
       state,
-      InterventionFormat.ExplicitTiming,
-      () => null,
-      null,
-      null,
+      currentApproach: InterventionFormat.ExplicitTiming,
+      captureButtonAction: () => null,
+      checkLiNullUndefinedBlank: null,
+      captureItemClick: null,
       user,
       id,
       document,
-      () => null,
+      openModal: () => null,
       addDocument,
       updateDocument,
-      response,
+      response: addResponse,
       history,
-      dispatch
-    );
+      dispatch,
+    });
   });
 
   // Fire once individual data loaded, just once
@@ -122,7 +126,7 @@ export default function ExplicitTiming() {
       finalFactObject: null,
       document,
       state,
-      response,
+      response: addResponse,
       addDocument,
       updateDocument,
       history,
@@ -156,77 +160,38 @@ export default function ExplicitTiming() {
           Close Window
         </button>
       </Modal>
-      <div className="topBoxET">
-        <h2 style={{ display: "inline-block" }}>
-          Explicit Timing: ({document ? document.name : <></>}), Time:{" "}
-          {document ? (
-            <Timer
-              secondsTotal={state.SecondsLeft}
-              startTimerTime={state.StartTime}
-              callbackFunction={callbackToSubmit}
-            />
-          ) : (
-            <></>
-          )}
-        </h2>
-      </div>
-      <div
-        className="box2ET"
-        style={{
-          opacity: state.CoverProblemItem ? 0.5 : 1,
-          backgroundColor: state.CoverProblemItem ? "gray" : "transparent",
-        }}
-      >
-        <SimpleProblemFrame
-          problemStem={state.ViewRepresentationInternal}
-          coverProblemSpace={state.CoverProblemItem}
-          entryString={state.EntryRepresentationInternal}
-        />
-      </div>
-      <div className="box3ET">
-        <section>
-          <button
-            className="global-btn "
-            onClick={() => {
-              sharedButtonActionSequence(
-                user,
-                id,
-                InterventionFormat.ExplicitTiming,
-                document,
-                state,
-                openModal,
-                addDocument,
-                updateDocument,
-                response,
-                history,
-                dispatch
-              );
-            }}
-          >
-            {state.ButtonText}
-          </button>
-        </section>
-      </div>
 
-      <div
+      <TopHeaderTimed
+        approach={"Explicit Timing"}
+        document={document}
+        state={state}
+        callbackToSubmit={callbackToSubmit}
+      />
+
+      <ProblemItemLayout state={state} />
+
+      <ButtonLayout
+        className="box3ET"
+        user={user}
+        id={id}
+        approach={"Benchmark"}
+        document={document}
+        state={state}
+        openModal={null}
+        addDocument={addDocument}
+        updateDocument={updateDocument}
+        addResponse={addResponse}
+        history={history}
+        dispatch={dispatch}
+      />
+
+      <KeyPadLayout
         className="box5ET"
-        style={{
-          opacity: state.CoverProblemItem ? 0.5 : 1,
-        }}
-      >
-        <KeyPad
-          callBackFunction={(key: string) => {
-            commonKeyHandler(
-              InterventionFormat.ExplicitTiming,
-              key,
-              state,
-              dispatch
-            );
-          }}
-          operatorSymbol={state.OperatorSymbol}
-          showEquals={false}
-        />
-      </div>
+        state={state}
+        intervention={InterventionFormat.ExplicitTiming}
+        dispatch={dispatch}
+        showEquals={false}
+      />
     </div>
   );
 }

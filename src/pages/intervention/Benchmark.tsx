@@ -74,23 +74,22 @@ export default function Benchmark() {
 
   // Add event listener to hook
   useEventListener("keydown", (key: React.KeyboardEvent<HTMLElement>) => {
-    commonKeyListener(
+    commonKeyListener({
       key,
       state,
-      "Benchmark",
-      () => null,
-      null,
-      null,
+      currentApproach: "Benchmark",
+      checkLiNullUndefinedBlank: null,
+      captureItemClick: null,
       user,
       id,
       document,
-      () => null,
+      openModal: null,
       addDocument,
       updateDocument,
-      updateResponse,
+      response: updateResponse,
       history,
-      dispatch
-    );
+      dispatch,
+    });
   });
 
   // Fire once individual data loaded, just once
@@ -105,78 +104,7 @@ export default function Benchmark() {
         dispatch,
       });
     }
-  }, [document, state.LoadedData, target]);
-
-  /**
-      <div
-        className="box5ET"
-        style={{
-          opacity: state.CoverProblemItem ? 0.5 : 1,
-        }}
-      >
-        <KeyPad
-          callBackFunction={(key: string) => {
-            commonKeyHandler("Benchmark", key, state, dispatch);
-          }}
-          operatorSymbol={state.OperatorSymbol}
-          showEquals={false}
-        />
-      </div>
-
-      <div className="box3ET">
-        <section>
-          <button
-            className="global-btn "
-            onClick={() => {
-              sharedButtonActionSequence(
-                user,
-                id,
-                "Benchmark",
-                document,
-                state,
-                null,
-                addDocument,
-                updateDocument,
-                addResponse,
-                history,
-                dispatch
-              );
-            }}
-          >
-            {state.ButtonText}
-          </button>
-        </section>
-      </div>
-
-      <div
-        className="box2ET"
-        style={{
-          opacity: state.CoverProblemItem ? 0.5 : 1,
-          backgroundColor: state.CoverProblemItem ? "gray" : "transparent",
-        }}
-      >
-        <SimpleProblemFrame
-          problemStem={state.ViewRepresentationInternal}
-          coverProblemSpace={state.CoverProblemItem}
-          entryString={state.EntryRepresentationInternal}
-        />
-      </div>
-
-      <div className="topBoxET">
-        <h2 style={{ display: "inline-block" }}>
-          Benchmark: ({document ? document.name : <></>}), Time:{" "}
-          {document ? (
-            <Timer
-              secondsTotal={state.SecondsLeft}
-              startTimerTime={state.StartTime}
-              callbackFunction={callbackToSubmit}
-            />
-          ) : (
-            <></>
-          )}
-        </h2>
-      </div>
- */
+  }, [document]);
 
   /** callbackToSubmit
    *
@@ -201,6 +129,7 @@ export default function Benchmark() {
   return (
     <div className="wrapperET">
       <TopHeaderTimed
+        approach={"Benchmarking"}
         document={document}
         state={state}
         callbackToSubmit={callbackToSubmit}

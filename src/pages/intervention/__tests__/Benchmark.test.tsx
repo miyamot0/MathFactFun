@@ -122,12 +122,6 @@ describe("Benchmark", () => {
       </MemoryRouter>
     );
 
-    /**
-import * as KeyHandling from "./../helpers/KeyHandlingHelper";
-import * as InterventionHelper from "./../helpers/InterventionHelpers";
-import * as DispatchingHelper from "./../helpers/DispatchingHelpers";
- */
-
     const docMock1 = jest.spyOn(KeyHandling, "commonKeyListener");
     const mockedCommonKeyListener = jest.fn();
     docMock1.mockImplementation(() => mockedCommonKeyListener());
@@ -138,6 +132,17 @@ import * as DispatchingHelper from "./../helpers/DispatchingHelpers";
     );
     const mockedSharedButtonActionSequence = jest.fn();
     docMock2.mockImplementation(() => mockedSharedButtonActionSequence());
+
+    const docMock3 = jest.spyOn(
+      InterventionHelper,
+      "submitPerformancesToFirebase"
+    );
+    const mockedSubmitPerformancesToFirebase = jest.fn();
+    docMock3.mockImplementation(() => mockedSubmitPerformancesToFirebase());
+
+    jest.spyOn(React, "useEffect").mockImplementation((f) => f());
+
+    wrapper.update();
 
     expect(mockedSharedButtonActionSequence).not.toBeCalled();
 
@@ -150,7 +155,7 @@ import * as DispatchingHelper from "./../helpers/DispatchingHelpers";
     expect(mockedCommonKeyListener).not.toBeCalled();
 
     const event = new KeyboardEvent("keydown", { keyCode: 37 });
-    document.dispatchEvent(event);
+    window.dispatchEvent(event);
     wrapper.simulate("keydown", { keyCode: 37 });
 
     waitFor(() => {

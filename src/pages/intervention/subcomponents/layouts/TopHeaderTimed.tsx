@@ -12,10 +12,12 @@ import { InterventionState } from "../../interfaces/InterventionInterfaces";
 import Timer from "../Timer";
 
 export default function TopHeaderTimed({
+  approach,
   document,
   state,
   callbackToSubmit,
 }: {
+  approach: string;
   document: StudentDataInterface | null;
   state: InterventionState;
   callbackToSubmit: any;
@@ -23,7 +25,7 @@ export default function TopHeaderTimed({
   return (
     <div className="topBoxET">
       <h2 style={{ display: "inline-block" }}>
-        Benchmark: ({document ? document.name : <></>}), Time:{" "}
+        {approach}: ({document ? document.name : <></>}), Time:{" "}
         {document ? (
           <Timer
             secondsTotal={state.SecondsLeft}
