@@ -8,15 +8,12 @@
 
 import React from "react";
 import { StudentDataInterface } from "../../../student/interfaces/StudentInterfaces";
-import { InterventionState } from "../../interfaces/InterventionInterfaces";
 
-export default function TopHeaderTimed({
+export default function TopHeader({
   document,
 }: {
   approach: string;
   document: StudentDataInterface | null;
-  state: InterventionState;
-  callbackToSubmit: any;
 }): JSX.Element {
   return (
     <div className="topBox">

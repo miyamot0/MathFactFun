@@ -19,7 +19,6 @@ import { useAuthorizationContext } from "../../context/hooks/useAuthorizationCon
 import { GetOperatorFromLabel } from "../../utilities/LabelHelper";
 import { InterventionFormat } from "../../maths/Facts";
 
-import { ErrorModalCustomStyle } from "./subcomponents/styles/ModalStyles";
 import {
   InterventionActions,
   InitialInterventionState,
@@ -34,7 +33,6 @@ import {
   useEventListener,
 } from "./helpers/InterventionHelpers";
 import {
-  commonKeyHandler,
   completeLoadingDispatch,
 } from "./helpers/DispatchingHelpers";
 
@@ -48,6 +46,7 @@ import ProblemItemLayout from "./subcomponents/layouts/ProblemItemLayout";
 import StimulusItemLayout from "./subcomponents/layouts/StimulusItemLayout";
 import ListViewLayout from "./subcomponents/layouts/ListViewLayout";
 import ModalErrorCorrection from "./subcomponents/layouts/ModalErrorCorrectionLayout";
+import TopHeader from "./subcomponents/layouts/TopHeader";
 
 export default function CoverCopyCompare() {
   const { id, target } = useParams<RoutedIdTargetParam>();
@@ -163,6 +162,11 @@ export default function CoverCopyCompare() {
   return (
     <div className="wrapper">
       <ModalErrorCorrection modalIsOpen={modalIsOpen} closeModal={closeModal} />
+
+      <TopHeader
+        approach={InterventionFormat.CoverCopyCompare}
+        document={document}
+      />
 
       <StimulusItemLayout state={state} />
 
