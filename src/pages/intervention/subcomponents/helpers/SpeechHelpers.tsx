@@ -6,25 +6,23 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-export function speakProblem(
-  msg: string,
-  synthesis: SpeechSynthesisUtterance
-): void {
-  const plusser = parseInt(msg) + 1;
-
-  synthesis.text = msg + "+ 1 =";
-
-  window.speechSynthesis.speak(synthesis);
-
-  const speakAnswer = () => {
-    synthesis.text = plusser.toString();
-    window.speechSynthesis.speak(synthesis);
-    return;
-  };
-
-  setTimeout(speakAnswer, 1000);
+/** speakProblem
+ *
+ */
+export function speakProblem(utterance: SpeechSynthesisUtterance): void {
+  global.window.speechSynthesis.speak(utterance);
 }
 
+/** scheduleProblemOutput
+ *
+ * @param seconds
+ * @param delta
+ * @param trial
+ * @param nProblems
+ * @param setTrial
+ * @param callBackFunction
+ * @param synthesis
+ */
 export function scheduleProblemOutput(
   seconds: number,
   delta: number,
@@ -38,6 +36,6 @@ export function scheduleProblemOutput(
     setTrial((trial: number) => trial + 1);
     callBackFunction(`fire ${seconds} ${trial}`);
 
-    speakProblem(trial.toString(), synthesis);
+    speakProblem(synthesis);
   }
 }

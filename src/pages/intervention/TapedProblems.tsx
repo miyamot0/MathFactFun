@@ -83,6 +83,8 @@ export default function TapedProblems() {
     InitialInterventionState
   );
 
+  const speechSynth = window.speechSynthesis;
+
   /// modal stuff
   const [modalIsOpen, setIsOpen] = useState(false);
 

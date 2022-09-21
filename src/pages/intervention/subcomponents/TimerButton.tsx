@@ -23,10 +23,10 @@ export default function TimerButton({
 
   const [intervalId, setIntervalId] = useState<NodeJS.Timer>();
 
-  if (!("speechSynthesis" in window)) {
-    throw Error("TTS functionality not available");
-  }
-  const synthesis = new SpeechSynthesisUtterance();
+  //if (!("speechSynthesis" in window)) {
+  //  throw Error("TTS functionality not available");
+  // }
+  //const synthesis = new SpeechSynthesisUtterance();
 
   function toggle() {
     if (!isActive) {
@@ -44,7 +44,7 @@ export default function TimerButton({
           nProblems,
           setTrial,
           callBackFunction,
-          synthesis
+          {} as SpeechSynthesisUtterance
         );
 
         setSeconds((seconds) => seconds + 1);

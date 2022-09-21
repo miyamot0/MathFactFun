@@ -6,30 +6,49 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from "react";
-import { scheduleProblemOutput, speakProblem } from "../SpeechHelpers";
+import { speakProblem } from "../SpeechHelpers";
 
-//Corti.patch();
+describe("speakProblem", () => {
+  beforeAll(() => {
+    global.window.speechSynthesis = {
+      speak: jest.fn(),
+    } as unknown as SpeechSynthesis;
+  });
 
-describe("first", () => {
+  afterAll(() => {
+    global.window.speechSynthesis = {} as unknown as SpeechSynthesis;
+  });
+
   it("should run", () => {
-    const msg = "";
-    //const speech = new window.SpeechSynthesisUtterance();
-    //speakProblem(msg, speech);
+    speakProblem({} as SpeechSynthesisUtterance);
+
+    setTimeout(() => {
+      expect(1).toBe(1);
+    }, 2000);
   });
 });
 
+/*
 describe("first", () => {
-  const seconds = 5;
-  const delta = 5;
-  const trial = 0;
-  const nProblems = 1;
-  const setTrial = jest.fn();
-  const callBackFunction = jest.fn();
-  //const speech = new window.SpeechSynthesisUtterance();
+  beforeAll(() => {
+    global.window.speechSynthesis = {
+      speak: jest.fn(),
+    } as unknown as SpeechSynthesis;
+  });
+
+  afterAll(() => {
+    global.window.speechSynthesis = {} as unknown as SpeechSynthesis;
+  });
 
   it("should run", () => {
-    /*
+    const seconds = 5;
+    const delta = 5;
+    const trial = 0;
+    const nProblems = 1;
+    const setTrial = jest.fn();
+    const callBackFunction = jest.fn();
+    const speech = {} as SpeechSynthesisUtterance;
+
     scheduleProblemOutput(
       seconds,
       delta,
@@ -39,6 +58,6 @@ describe("first", () => {
       callBackFunction,
       speech
     );
-    */
   });
 });
+*/

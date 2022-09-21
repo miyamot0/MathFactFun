@@ -15,9 +15,9 @@ export default function Timer({
   startTimerTime,
   callbackFunction,
 }: TimerInterface): JSX.Element {
-  const [secondCounter, setSecondCounter] = useState(0);
-  const [intervalId, setIntervalId] = useState({} as NodeJS.Timer);
+  const [intervalId, setIntervalId] = useState<NodeJS.Timer | null>(null);
   const [fireCallback, setFireCallback] = useState(false);
+  const [secondCounter, setSecondCounter] = useState<number>(0);
 
   useEffect(() => {
     if (startTimerTime) {
@@ -26,7 +26,7 @@ export default function Timer({
       }, 1000);
 
       setIntervalId(intervalIdValue);
-      return () => clearInterval(intervalId);
+      return () => clearInterval(intervalId ? intervalId : undefined);
     }
 
     // TODO: Dependency issue to explore
@@ -46,7 +46,12 @@ export default function Timer({
   const minutesRemaining = (relevantSeconds - secondsToDisplay) / 60;
   const minutesToDisplay = minutesRemaining % 60;
 
-  if (startTimerTime && relevantSeconds <= 0 && !fireCallback) {
+  if (
+    startTimerTime &&
+    relevantSeconds <= 0 &&
+    !fireCallback &&
+    intervalId !== null
+  ) {
     clearInterval(intervalId);
     setFireCallback(true);
   }

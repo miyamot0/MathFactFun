@@ -10,6 +10,7 @@ import Adapter from "enzyme-adapter-react-16";
 import Enzyme, { mount } from "enzyme";
 import { waitFor } from "@testing-library/react";
 import Timer from "../Timer";
+import React from "react";
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -17,20 +18,24 @@ describe("Timer", () => {
   beforeEach(() => jest.resetModules());
 
   it("should render, valid seconds and callback", () => {
-    const secondsTotal = 120;
+    const secondsTotal = 0;
     const startTimerTime = new Date();
     const callbackFunction = jest.fn();
 
-    expect(1).toBe(1);
-    /*
-
     const wrapper = mount(
-      Timer({ secondsTotal, startTimerTime, callbackFunction })
+      <Timer
+        secondsTotal={secondsTotal}
+        startTimerTime={startTimerTime}
+        callbackFunction={callbackFunction}
+      />
     );
 
-    waitFor(() => {
-      expect(wrapper.find("span").length).toBe(1);
-    });
-    */
+    setTimeout(() => {
+      expect(1).toBe(1);
+    }, 5000);
+
+    setTimeout(() => {
+      expect(callbackFunction).toBeCalled();
+    }, 9000);
   });
 });
