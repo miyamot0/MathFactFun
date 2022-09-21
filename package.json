@@ -26,7 +26,9 @@
       "\\.(css|less)$": "identity-obj-proxy"
     },
     "coveragePathIgnorePatterns": [
-      "index.tsx"
+      "index.tsx",
+      "TapedProblems.tsx",
+      "Cloze.tsx"
     ]
   },
   "scripts": {
