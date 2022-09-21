@@ -494,7 +494,9 @@ export function explicitTimingSequence(
       })
     );
 
-    openModal();
+    if (typeof openModal === "function") {
+      openModal();
+    }
   } else {
     const totalDigitsShown = CalculateDigitsTotalAnswer(
       state.ViewRepresentationInternal

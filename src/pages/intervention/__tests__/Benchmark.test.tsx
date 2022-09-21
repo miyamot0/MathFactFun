@@ -16,6 +16,11 @@ import { StudentDataInterface } from "../../student/interfaces/StudentInterfaces
 import { MemoryRouter } from "react-router-dom";
 import Benchmark from "./../Benchmark";
 
+import * as KeyHandling from "./../helpers/KeyHandlingHelper";
+import * as InterventionHelper from "./../helpers/InterventionHelpers";
+import * as DispatchingHelper from "./../helpers/DispatchingHelpers";
+import { waitFor } from "@testing-library/react";
+
 Enzyme.configure({ adapter: new Adapter() });
 
 const mockId = "123";
@@ -117,15 +122,40 @@ describe("Benchmark", () => {
       </MemoryRouter>
     );
 
+    /**
+import * as KeyHandling from "./../helpers/KeyHandlingHelper";
+import * as InterventionHelper from "./../helpers/InterventionHelpers";
+import * as DispatchingHelper from "./../helpers/DispatchingHelpers";
+ */
+
+    const docMock1 = jest.spyOn(KeyHandling, "commonKeyListener");
+    const mockedCommonKeyListener = jest.fn();
+    docMock1.mockImplementation(() => mockedCommonKeyListener());
+
+    const docMock2 = jest.spyOn(
+      InterventionHelper,
+      "sharedButtonActionSequence"
+    );
+    const mockedSharedButtonActionSequence = jest.fn();
+    docMock2.mockImplementation(() => mockedSharedButtonActionSequence());
+
+    expect(mockedSharedButtonActionSequence).not.toBeCalled();
+
+    wrapper.find("button").first().simulate("click");
+
+    waitFor(() => {
+      expect(mockedSharedButtonActionSequence).toBeCalled();
+    });
+
+    expect(mockedCommonKeyListener).not.toBeCalled();
+
     const event = new KeyboardEvent("keydown", { keyCode: 37 });
+    document.dispatchEvent(event);
+    wrapper.simulate("keydown", { keyCode: 37 });
 
-    //setTimeout(() => {
-    //document.dispatchEvent(event);
-    //}, 1000);
-
-    //document.dispatchEvent(event);
-    //document.dispatchEvent(event);
-    //wrapper.find("button").first().simulate("click");
+    waitFor(() => {
+      expect(mockedCommonKeyListener).toBeCalled();
+    });
 
     expect(1).toBe(1);
   });

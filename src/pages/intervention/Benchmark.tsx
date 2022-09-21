@@ -39,10 +39,14 @@ import {
   completeLoadingDispatch,
 } from "./helpers/DispatchingHelpers";
 import { submitPerformancesToFirebase } from "./helpers/InterventionHelpers";
+import { commonKeyListener } from "./helpers/KeyHandlingHelper";
 
 // Styles
 import "./styles/ExplicitTiming.css";
-import { commonKeyListener } from "./helpers/KeyHandlingHelper";
+import KeyPadLayout from "./subcomponents/layouts/KeyPadLayout";
+import ButtonLayout from "./subcomponents/layouts/ButtonLayout";
+import ProblemItemLayout from "./subcomponents/layouts/ProblemItemLayout";
+import TopHeaderTimed from "./subcomponents/layouts/TopHeaderTimed";
 
 export default function Benchmark() {
   const { id, target } = useParams<RoutedIdTargetParam>();
@@ -103,55 +107,22 @@ export default function Benchmark() {
     }
   }, [document, state.LoadedData, target]);
 
-  /** callbackToSubmit
-   *
-   * Caller, linked to submission to firebase
-   *
-   */
-  function callbackToSubmit() {
-    submitPerformancesToFirebase({
-      user,
-      id,
-      interventionFormat: "Benchmark",
-      finalFactObject: null,
-      document,
-      state,
-      response: addResponse,
-      addDocument,
-      updateDocument,
-      history,
-    });
-  }
-
-  return (
-    <div className="wrapperET">
-      <div className="topBoxET">
-        <h2 style={{ display: "inline-block" }}>
-          Benchmark: ({document ? document.name : <></>}), Time:{" "}
-          {document ? (
-            <Timer
-              secondsTotal={state.SecondsLeft}
-              startTimerTime={state.StartTime}
-              callbackFunction={callbackToSubmit}
-            />
-          ) : (
-            <></>
-          )}
-        </h2>
-      </div>
+  /**
       <div
-        className="box2ET"
+        className="box5ET"
         style={{
           opacity: state.CoverProblemItem ? 0.5 : 1,
-          backgroundColor: state.CoverProblemItem ? "gray" : "transparent",
         }}
       >
-        <SimpleProblemFrame
-          problemStem={state.ViewRepresentationInternal}
-          coverProblemSpace={state.CoverProblemItem}
-          entryString={state.EntryRepresentationInternal}
+        <KeyPad
+          callBackFunction={(key: string) => {
+            commonKeyHandler("Benchmark", key, state, dispatch);
+          }}
+          operatorSymbol={state.OperatorSymbol}
+          showEquals={false}
         />
       </div>
+
       <div className="box3ET">
         <section>
           <button
@@ -178,19 +149,87 @@ export default function Benchmark() {
       </div>
 
       <div
-        className="box5ET"
+        className="box2ET"
         style={{
           opacity: state.CoverProblemItem ? 0.5 : 1,
+          backgroundColor: state.CoverProblemItem ? "gray" : "transparent",
         }}
       >
-        <KeyPad
-          callBackFunction={(key: string) => {
-            commonKeyHandler("Benchmark", key, state, dispatch);
-          }}
-          operatorSymbol={state.OperatorSymbol}
-          showEquals={false}
+        <SimpleProblemFrame
+          problemStem={state.ViewRepresentationInternal}
+          coverProblemSpace={state.CoverProblemItem}
+          entryString={state.EntryRepresentationInternal}
         />
       </div>
+
+      <div className="topBoxET">
+        <h2 style={{ display: "inline-block" }}>
+          Benchmark: ({document ? document.name : <></>}), Time:{" "}
+          {document ? (
+            <Timer
+              secondsTotal={state.SecondsLeft}
+              startTimerTime={state.StartTime}
+              callbackFunction={callbackToSubmit}
+            />
+          ) : (
+            <></>
+          )}
+        </h2>
+      </div>
+ */
+
+  /** callbackToSubmit
+   *
+   * Caller, linked to submission to firebase
+   *
+   */
+  function callbackToSubmit() {
+    submitPerformancesToFirebase({
+      user,
+      id,
+      interventionFormat: "Benchmark",
+      finalFactObject: null,
+      document,
+      state,
+      response: addResponse,
+      addDocument,
+      updateDocument,
+      history,
+    });
+  }
+
+  return (
+    <div className="wrapperET">
+      <TopHeaderTimed
+        document={document}
+        state={state}
+        callbackToSubmit={callbackToSubmit}
+      />
+
+      <ProblemItemLayout state={state} />
+
+      <ButtonLayout
+        className="box3ET"
+        user={user}
+        id={id}
+        approach={"Benchmark"}
+        document={document}
+        state={state}
+        openModal={null}
+        addDocument={addDocument}
+        updateDocument={updateDocument}
+        addResponse={addResponse}
+        history={history}
+        dispatch={dispatch}
+      />
+
+      <KeyPadLayout
+        className="box5ET"
+        state={state}
+        intervention={"Benchmark"}
+        dispatch={dispatch}
+        showEquals={false}
+      />
     </div>
   );
 }
