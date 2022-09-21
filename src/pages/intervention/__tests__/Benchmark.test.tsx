@@ -9,7 +9,7 @@
 import React from "react";
 import firebase from "firebase";
 import Adapter from "enzyme-adapter-react-16";
-import Enzyme, { mount, shallow } from "enzyme";
+import Enzyme, { mount } from "enzyme";
 import { FirestoreState } from "../../../firebase/interfaces/FirebaseInterfaces";
 import { CommentInterface } from "../../student/subcomponents/types/CommentTypes";
 import { StudentDataInterface } from "../../student/interfaces/StudentInterfaces";
@@ -18,7 +18,6 @@ import Benchmark from "./../Benchmark";
 
 import * as KeyHandling from "./../helpers/KeyHandlingHelper";
 import * as InterventionHelper from "./../helpers/InterventionHelpers";
-import * as DispatchingHelper from "./../helpers/DispatchingHelpers";
 import { waitFor } from "@testing-library/react";
 
 Enzyme.configure({ adapter: new Adapter() });

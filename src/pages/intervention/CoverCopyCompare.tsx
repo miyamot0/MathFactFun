@@ -16,7 +16,6 @@ import { useFirebaseDocumentTyped } from "../../firebase/hooks/useFirebaseDocume
 import { useAuthorizationContext } from "../../context/hooks/useAuthorizationContext";
 
 // helpers
-import { GetOperatorFromLabel } from "../../utilities/LabelHelper";
 import { InterventionFormat } from "../../maths/Facts";
 
 import {
@@ -32,9 +31,6 @@ import {
   sharedButtonActionSequence,
   useEventListener,
 } from "./helpers/InterventionHelpers";
-import {
-  completeLoadingDispatch,
-} from "./helpers/DispatchingHelpers";
 
 // styles
 import "./styles/CoverCopyCompare.css";
@@ -47,6 +43,7 @@ import StimulusItemLayout from "./subcomponents/layouts/StimulusItemLayout";
 import ListViewLayout from "./subcomponents/layouts/ListViewLayout";
 import ModalErrorCorrection from "./subcomponents/layouts/ModalErrorCorrectionLayout";
 import TopHeader from "./subcomponents/layouts/TopHeader";
+import { GeneralDataLoader } from "./helpers/LoadingHelpers";
 
 export default function CoverCopyCompare() {
   const { id, target } = useParams<RoutedIdTargetParam>();
@@ -57,7 +54,7 @@ export default function CoverCopyCompare() {
     collectionString: "students",
     idString: id,
   });
-  const { addDocument, response: addResponse } = useFirestore("", target, id);
+  const { addDocument, response } = useFirestore("", target, id);
   const { updateDocument } = useFirestore("students", undefined, undefined);
 
   const [state, dispatch] = useReducer(
@@ -78,37 +75,30 @@ export default function CoverCopyCompare() {
   }
 
   // Add event listener to hook
-  useEventListener("keydown", (key: React.KeyboardEvent<HTMLElement>) => {
-    commonKeyListener({
-      key,
-      state,
-      currentApproach: InterventionFormat.CoverCopyCompare,
-      captureButtonAction: () => null,
-      checkLiNullUndefinedBlank,
-      captureItemClick,
-      user,
-      id,
-      document,
-      openModal,
-      addDocument,
-      updateDocument,
-      response: addResponse,
-      history,
-      dispatch,
-    });
-  });
+  useEventListener("keydown", (key) => commonKeyListener({
+    key,
+    state,
+    currentApproach: InterventionFormat.CoverCopyCompare,
+    captureButtonAction: () => null,
+    checkLiNullUndefinedBlank,
+    captureItemClick,
+    user,
+    id,
+    document,
+    openModal,
+    addDocument,
+    updateDocument,
+    response,
+    history,
+    dispatch,
+  })
+  );
 
   // Fire once individual data loaded, just once
-  useEffect(() => {
-    if (document && state.LoadedData === false) {
-      completeLoadingDispatch({
-        intervention: InterventionFormat.CoverCopyCompare,
-        workingData: document.factsTargeted,
-        operatorSymbol: GetOperatorFromLabel(document.currentTarget),
-        dispatch,
-      });
-    }
-  }, [document]);
+  useEffect(() => GeneralDataLoader({
+    intervention: InterventionFormat.CoverCopyCompare,
+    state, document, dispatch
+  }), [document]);
 
   /** captureItemClick
    *
@@ -153,7 +143,7 @@ export default function CoverCopyCompare() {
       openModal,
       addDocument,
       updateDocument,
-      addResponse,
+      response,
       history,
       dispatch
     );
@@ -179,10 +169,10 @@ export default function CoverCopyCompare() {
         approach={InterventionFormat.CoverCopyCompare}
         document={document}
         state={state}
-        openModal={null}
+        openModal={openModal}
         addDocument={addDocument}
         updateDocument={updateDocument}
-        addResponse={addResponse}
+        addResponse={response}
         history={history}
         dispatch={dispatch}
       />

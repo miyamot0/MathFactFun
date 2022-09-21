@@ -18,6 +18,7 @@ import {
   UseFirestore,
 } from "../interfaces/FirebaseInterfaces";
 import { PerformanceDataInterface } from "../../pages/intervention/interfaces/InterventionInterfaces";
+import { complexCollectionGetter, dispatchIfNotCancelledHelper } from "./helpers/FirebaseDispatchHelpers";
 
 export enum FirestoreCollections {
   Students = "students",
@@ -31,6 +32,7 @@ export enum FirestoreStates {
   DELETED = "DELETED",
   UPDATED = "UPDATED",
   ERROR = "ERROR",
+  THROW = "THROW",
 }
 
 /** firestoreReducer
@@ -108,13 +110,7 @@ export function useFirestore(
   });
   const [isCancelled, setIsCancelled] = useState(false);
 
-  const ref =
-    collection === "" && studentId !== undefined
-      ? projectFirestore
-          .collection("performances")
-          .doc(targetSkill)
-          .collection(studentId)
-      : projectFirestore.collection(collection);
+  const ref = complexCollectionGetter(collection, studentId, projectFirestore, targetSkill);
 
   // only dispatch is not cancelled
   function dispatchIfNotCancelled(action: FirestoreAction): void {
@@ -142,25 +138,40 @@ export function useFirestore(
     try {
       const addedDocument = await ref.add({ ...doc });
 
+      dispatchIfNotCancelledHelper({
+        action: {
+          type: FirestoreStates.ADDED,
+          payload: addedDocument,
+          error: null,
+        },
+        isCancelled,
+        dispatch
+      })
+      /*
       dispatchIfNotCancelled({
         type: FirestoreStates.ADDED,
         payload: addedDocument,
         error: null,
       });
+      */
     } catch (err: unknown) {
-      if (err instanceof FirebaseError) {
-        dispatchIfNotCancelled({
-          type: FirestoreStates.ERROR,
-          payload: null,
-          error: err.message,
-        });
-      } else {
-        dispatchIfNotCancelled({
+      dispatchIfNotCancelledHelper({
+        action: {
           type: FirestoreStates.ERROR,
           payload: null,
           error: "error",
-        });
-      }
+        },
+        isCancelled,
+        dispatch
+      })
+
+      /*
+      dispatchIfNotCancelled({
+        type: FirestoreStates.ERROR,
+        payload: null,
+        error: "error",
+      });
+      */
     }
   }
 
@@ -185,20 +196,28 @@ export function useFirestore(
         payload: null,
         error: null,
       });
+
+      /*
+      dispatchIfNotCancelled({
+        type: FirestoreStates.DELETED,
+        payload: null,
+        error: null,
+      });
+      */
     } catch (err: unknown) {
-      if (err instanceof FirebaseError) {
-        dispatchIfNotCancelled({
-          type: FirestoreStates.ERROR,
-          payload: null,
-          error: err.message,
-        });
-      } else {
-        dispatchIfNotCancelled({
-          type: FirestoreStates.ERROR,
-          payload: null,
-          error: "error",
-        });
-      }
+      dispatchIfNotCancelled({
+        type: FirestoreStates.ERROR,
+        payload: null,
+        error: "error",
+      });
+
+      /*
+      dispatchIfNotCancelled({
+        type: FirestoreStates.ERROR,
+        payload: null,
+        error: "error",
+      });
+      */
     }
   }
 
@@ -219,26 +238,45 @@ export function useFirestore(
 
     try {
       const updatedDocument = await ref.doc(id).update(updates);
+
+      dispatchIfNotCancelledHelper({
+        action: {
+          type: FirestoreStates.UPDATED,
+          payload: null,
+          error: null,
+        },
+        isCancelled,
+        dispatch
+      })
+
+      /*
       dispatchIfNotCancelled({
         type: FirestoreStates.UPDATED,
         payload: null,
         error: null,
       });
+      */
+
       return updatedDocument;
     } catch (err: unknown) {
-      if (err instanceof FirebaseError) {
-        dispatchIfNotCancelled({
-          type: FirestoreStates.ERROR,
-          payload: null,
-          error: err.message,
-        });
-      } else {
-        dispatchIfNotCancelled({
+
+      dispatchIfNotCancelledHelper({
+        action: {
           type: FirestoreStates.ERROR,
           payload: null,
           error: "error",
-        });
-      }
+        },
+        isCancelled,
+        dispatch
+      })
+
+      /*
+      dispatchIfNotCancelled({
+        type: FirestoreStates.ERROR,
+        payload: null,
+        error: "error",
+      });
+      */
 
       return;
     }

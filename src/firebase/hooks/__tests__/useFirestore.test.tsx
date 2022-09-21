@@ -1,8 +1,15 @@
+import { waitFor } from "@testing-library/react";
 import { renderHook } from "@testing-library/react-hooks";
+import { mount } from "enzyme";
 import { useReducer } from "react";
 import { act } from "react-dom/test-utils";
+import { StudentDataInterface } from "../../../pages/student/interfaces/StudentInterfaces";
+import { UserDataInterface } from "../../../pages/user/types/UserTypes";
 import { FirestoreAction } from "../../interfaces/FirebaseInterfaces";
-import { firestoreReducer, FirestoreStates } from "../useFirestore";
+import { firestoreReducer, FirestoreStates, useFirestore } from "../useFirestore";
+import { FirebaseError } from "@firebase/util";
+import * as Configs from './../../config'
+import * as FirebaseHelpers from './../helpers/FirebaseDispatchHelpers';
 
 const mockInitialState = {
   document: null,
@@ -21,8 +28,27 @@ describe("useFirestore", () => {
     expect(mockInitialState).toBe(state);
   });
 
-  it("Response: PENDING", () => {
-    act(async () => {
+  it("Should have persisting state if thrown", async () => {
+    act(() => {
+      const { result } = renderHook(() =>
+        useReducer(firestoreReducer, mockInitialState)
+      );
+      const [, dispatch] = result.current;
+
+      dispatch({
+        type: FirestoreStates.THROW,
+        payload: {} as FirestoreAction,
+        error: null,
+      });
+
+      waitFor(() => {
+        expect(result.current[0]).toStrictEqual(mockInitialState);
+      })
+    });
+  });
+
+  it("Response: PENDING", async () => {
+    await act(async () => {
       const { result, waitForValueToChange } = renderHook(() =>
         useReducer(firestoreReducer, mockInitialState)
       );
@@ -45,8 +71,8 @@ describe("useFirestore", () => {
     });
   });
 
-  it("Response: ADDED", () => {
-    act(async () => {
+  it("Response: ADDED", async () => {
+    await act(async () => {
       const { result, waitForValueToChange } = renderHook(() =>
         useReducer(firestoreReducer, mockInitialState)
       );
@@ -69,8 +95,8 @@ describe("useFirestore", () => {
     });
   });
 
-  it("Response: DELETED", () => {
-    act(async () => {
+  it("Response: DELETED", async () => {
+    await act(async () => {
       const { result, waitForValueToChange } = renderHook(() =>
         useReducer(firestoreReducer, mockInitialState)
       );
@@ -93,8 +119,8 @@ describe("useFirestore", () => {
     });
   });
 
-  it("Response: UPDATED", () => {
-    act(async () => {
+  it("Response: UPDATED", async () => {
+    await act(async () => {
       const { result, waitForValueToChange } = renderHook(() =>
         useReducer(firestoreReducer, mockInitialState)
       );
@@ -117,8 +143,8 @@ describe("useFirestore", () => {
     });
   });
 
-  it("Response: ERROR", () => {
-    act(async () => {
+  it("Response: ERROR", async () => {
+    await act(async () => {
       const { result, waitForValueToChange } = renderHook(() =>
         useReducer(firestoreReducer, mockInitialState)
       );
@@ -140,66 +166,158 @@ describe("useFirestore", () => {
       });
     });
   });
-
-  /*
-  
-    it("Should update email", async () => {
-      await act(async () => {
-        const { result, waitForValueToChange } = renderHook(() =>
-          useReducer(UserLoginReducer, InitialLoginState)
-        );
-  
-        const [, dispatch] = result.current;
-        const newEmail = "newEmail";
-  
-        dispatch({
-          type: LoginDataBehavior.SetEmail,
-          payload: newEmail,
-        });
-  
-        await waitForValueToChange(() => result.current[0].Email);
-        expect(result.current[0].Email).toBe(newEmail);
-      });
-    });
-  
-    it("Should update password", async () => {
-      await act(async () => {
-        const { result, waitForValueToChange } = renderHook(() =>
-          useReducer(UserLoginReducer, InitialLoginState)
-        );
-  
-        const [, dispatch] = result.current;
-        const newPassword = "newPassword";
-  
-        dispatch({
-          type: LoginDataBehavior.SetPassword,
-          payload: newPassword,
-        });
-  
-        await waitForValueToChange(() => result.current[0].Password);
-  
-        expect(result.current[0].Password).toBe(newPassword);
-      });
-    });
-  
-    it("Off-type should return state unchanged", async () => {
-      await act(async () => {
-        const { result, waitForValueToChange } = renderHook(() =>
-          useReducer(UserLoginReducer, InitialLoginState)
-        );
-  
-        const [state, dispatch] = result.current;
-        const newPassword = "newPassword";
-  
-        dispatch({
-          type: "asdf" as unknown as LoginDataBehavior,
-          payload: newPassword,
-        });
-  
-        await waitForValueToChange(() => result.current[0]);
-  
-        expect(result.current[0]).toStrictEqual(state);
-      });
-    });
-    */
 });
+
+describe('useFirestore: Add document', () => {
+  const mockCollection = jest.fn();
+  beforeAll(() => {
+    const docMock1 = jest.spyOn(Configs.projectFirestore, "collection");
+    docMock1.mockImplementation(mockCollection);
+  })
+
+  afterAll(() => {
+    jest.clearAllMocks();
+  })
+
+  it('should pass with approximate call', async () => {
+    await act(async () => {
+
+      const docMock1 = jest.spyOn(FirebaseHelpers, "complexCollectionGetter");
+      docMock1.mockImplementation(mockCollection);
+      mockCollection.mockImplementation(() => ({
+        add: () => Promise.resolve(() => true)
+      }))
+
+      const { result } = renderHook(() => useFirestore('users', undefined, undefined));
+
+      const { addDocument } = result.current;
+
+      await addDocument({} as UserDataInterface)
+
+      expect(1).toBe(1)
+    })
+  })
+
+  it('should fail with strange call', async () => {
+    await act(async () => {
+
+      const docMock1 = jest.spyOn(FirebaseHelpers, "complexCollectionGetter");
+      docMock1.mockImplementation(mockCollection);
+      mockCollection.mockImplementation(() => ({
+        add: null
+      }))
+
+      const { result } = renderHook(() => useFirestore('users', undefined, undefined));
+
+      const { addDocument } = result.current;
+
+      await addDocument({} as UserDataInterface)
+
+      expect(1).toBe(1)
+    })
+  })
+})
+
+describe('useFirestore: Delete document', () => {
+  const mockCollection = jest.fn();
+  beforeAll(() => {
+    const docMock1 = jest.spyOn(Configs.projectFirestore, "collection");
+    docMock1.mockImplementation(mockCollection);
+  })
+
+  afterAll(() => {
+    jest.clearAllMocks();
+  })
+
+  it('should pass with approximate call', async () => {
+    await act(async () => {
+
+      const docMock1 = jest.spyOn(FirebaseHelpers, "complexCollectionGetter");
+      docMock1.mockImplementation(mockCollection);
+      mockCollection.mockImplementation(() => ({
+        doc: (id: string) => ({
+          delete: () => true
+        })
+      }))
+
+      const { result } = renderHook(() => useFirestore('users', undefined, undefined));
+
+      const { deleteDocument } = result.current;
+
+      await deleteDocument("123")
+
+      expect(1).toBe(1)
+    })
+  })
+
+  it('should fail with strange call', async () => {
+    await act(async () => {
+
+      const docMock1 = jest.spyOn(FirebaseHelpers, "complexCollectionGetter");
+      docMock1.mockImplementation(mockCollection);
+      mockCollection.mockImplementation(() => ({
+        doc: null
+      }))
+
+      const { result } = renderHook(() => useFirestore('users', undefined, undefined));
+
+      const { deleteDocument } = result.current;
+
+      await deleteDocument("123")
+
+      expect(1).toBe(1)
+    })
+  })
+})
+
+describe('useFirestore: Update document', () => {
+  const mockCollection = jest.fn();
+  beforeAll(() => {
+    const docMock1 = jest.spyOn(Configs.projectFirestore, "collection");
+    docMock1.mockImplementation(mockCollection);
+  })
+
+  afterAll(() => {
+    jest.clearAllMocks();
+  })
+
+  it('should pass with approximate call', async () => {
+    await act(async () => {
+
+      const docMock1 = jest.spyOn(FirebaseHelpers, "complexCollectionGetter");
+      docMock1.mockImplementation(mockCollection);
+      mockCollection.mockImplementation(() => ({
+        doc: (id: string) => ({
+          update: (obj: any) => true
+        })
+      }))
+
+      const { result } = renderHook(() => useFirestore('users', undefined, undefined));
+
+      const { updateDocument } = result.current;
+
+      await updateDocument("123", {})
+
+      expect(1).toBe(1)
+    })
+  })
+
+  it('should fail with strange call', async () => {
+    await act(async () => {
+
+      const docMock1 = jest.spyOn(FirebaseHelpers, "complexCollectionGetter");
+      docMock1.mockImplementation(mockCollection);
+      mockCollection.mockImplementation(() => ({
+        doc: null
+      }))
+
+      const { result } = renderHook(() => useFirestore('users', undefined, undefined));
+
+      const { updateDocument } = result.current;
+
+      await updateDocument("123", {})
+
+      expect(1).toBe(1)
+    })
+  })
+})
