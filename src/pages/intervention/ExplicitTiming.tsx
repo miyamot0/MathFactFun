@@ -16,11 +16,6 @@ import { useFirestore } from "../../firebase/hooks/useFirestore";
 import { useFirebaseDocumentTyped } from "../../firebase/hooks/useFirebaseDocument";
 import { useAuthorizationContext } from "../../context/hooks/useAuthorizationContext";
 
-// widgets
-import KeyPad from "./subcomponents/KeyPad";
-import Timer from "./subcomponents/Timer";
-import SimpleProblemFrame from "./subcomponents/SimpleProblemFrame";
-
 // helpers
 import { GetOperatorFromLabel } from "../../utilities/LabelHelper";
 
@@ -35,19 +30,13 @@ import "./styles/ExplicitTiming.css";
 import { ErrorModalCustomStyle } from "./subcomponents/styles/ModalStyles";
 import { InterventionFormat } from "../../maths/Facts";
 import { StudentDataInterface } from "../student/interfaces/StudentInterfaces";
-import {
-  sharedButtonActionSequence,
-  useEventListener,
-} from "./helpers/InterventionHelpers";
-import {
-  commonKeyHandler,
-  completeLoadingDispatch,
-} from "./helpers/DispatchingHelpers";
+import { useEventListener } from "./helpers/InterventionHelpers";
+import { completeLoadingDispatch } from "./helpers/DispatchingHelpers";
 import { submitPerformancesToFirebase } from "./helpers/InterventionHelpers";
 import { commonKeyListener } from "./helpers/KeyHandlingHelper";
 import KeyPadLayout from "./subcomponents/layouts/KeyPadLayout";
 import ButtonLayout from "./subcomponents/layouts/ButtonLayout";
-import ProblemItemLayout from "./subcomponents/layouts/ProblemItemLayout";
+import SimpleProblemItemLayout from "./subcomponents/layouts/SimpleProblemItemLayout";
 import TopHeaderTimed from "./subcomponents/layouts/TopHeaderTimed";
 
 export default function ExplicitTiming() {
@@ -111,7 +100,7 @@ export default function ExplicitTiming() {
         dispatch,
       });
     }
-  }, [document, state.LoadedData, state.OperatorSymbol]);
+  }, [document]);
 
   /** callbackToSubmit
    *
@@ -168,7 +157,7 @@ export default function ExplicitTiming() {
         callbackToSubmit={callbackToSubmit}
       />
 
-      <ProblemItemLayout state={state} />
+      <SimpleProblemItemLayout state={state} />
 
       <ButtonLayout
         className="box3ET"

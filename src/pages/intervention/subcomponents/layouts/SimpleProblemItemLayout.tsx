@@ -8,12 +8,16 @@
 
 import React from "react";
 import { InterventionState } from "../../interfaces/InterventionInterfaces";
-import ProblemFrame from "../ProblemFrame";
 import SimpleProblemFrame from "../SimpleProblemFrame";
 
-/**
+export default function SimpleProblemItemLayout({
+  state,
+}: {
+  state: InterventionState;
+}): JSX.Element {
+  return (
     <div
-      className="box2"
+      className="box2ET"
       style={{
         opacity: state.CoverProblemItem ? 0.5 : 1,
         backgroundColor: state.CoverProblemItem ? "gray" : "transparent",
@@ -23,27 +27,6 @@ import SimpleProblemFrame from "../SimpleProblemFrame";
         problemStem={state.ViewRepresentationInternal}
         coverProblemSpace={state.CoverProblemItem}
         entryString={state.EntryRepresentationInternal}
-      />
-    </div>
- */
-
-export default function ProblemItemLayout({
-  state,
-}: {
-  state: InterventionState;
-}): JSX.Element {
-  return (
-    <div
-      className="box2"
-      style={{
-        opacity: state.CoverProblemItem ? 0.5 : 1,
-        backgroundColor: state.CoverProblemItem ? "gray" : "transparent",
-      }}
-    >
-      <h2>My Answer</h2>
-      <ProblemFrame
-        entryString={state.EntryRepresentationInternal}
-        coverProblemSpace={state.CoverProblemItem}
       />
     </div>
   );

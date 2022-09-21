@@ -303,18 +303,18 @@ export async function submitPerformancesToFirebase({
 }
 
 /** sharedButtonActionSequence
- * 
- * @param user 
- * @param id 
- * @param approach 
- * @param document 
- * @param state 
- * @param openModal 
- * @param addDocument 
- * @param updateDocument 
- * @param response 
- * @param history 
- * @param dispatch 
+ *
+ * @param user
+ * @param id
+ * @param approach
+ * @param document
+ * @param state
+ * @param openModal
+ * @param addDocument
+ * @param updateDocument
+ * @param response
+ * @param history
+ * @param dispatch
  */
 export function sharedButtonActionSequence(
   user: firebase.User | null,

@@ -47,6 +47,10 @@ import {
 import "./styles/CoverCopyCompare.css";
 import { commonKeyListener } from "./helpers/KeyHandlingHelper";
 import { DispatchUpdateIntroduceItem } from "./interfaces/InterventionInterfaces";
+import KeyPadLayout from "./subcomponents/layouts/KeyPadLayout";
+import ButtonLayout from "./subcomponents/layouts/ButtonLayout";
+import ProblemItemLayout from "./subcomponents/layouts/ProblemItemLayout";
+import StimulusItemLayout from "./subcomponents/layouts/StimulusItemLayout";
 
 export default function CoverCopyCompare() {
   const { id, target } = useParams<RoutedIdTargetParam>();
@@ -57,7 +61,7 @@ export default function CoverCopyCompare() {
     collectionString: "students",
     idString: id,
   });
-  const { addDocument, response } = useFirestore("", target, id);
+  const { addDocument, response: addResponse } = useFirestore("", target, id);
   const { updateDocument } = useFirestore("students", undefined, undefined);
 
   const [state, dispatch] = useReducer(
@@ -92,7 +96,7 @@ export default function CoverCopyCompare() {
       openModal,
       addDocument,
       updateDocument,
-      response,
+      response: addResponse,
       history,
       dispatch,
     });
@@ -153,7 +157,7 @@ export default function CoverCopyCompare() {
       openModal,
       addDocument,
       updateDocument,
-      response,
+      addResponse,
       history,
       dispatch
     );
@@ -184,61 +188,26 @@ export default function CoverCopyCompare() {
           Close
         </button>
       </Modal>
-      <div className="topBox">
-        <h2>Cover Copy Compare: ({document ? document.name : <></>})</h2>
-      </div>
-      <div
-        className="box1"
-        style={{
-          opacity: state.CoverStimulusItem ? 0.5 : 1,
-          backgroundColor: state.CoverStimulusItem ? "gray" : "transparent",
-        }}
-      >
-        <h2>Problem to Copy</h2>
-        <StimulusFrame
-          itemString={state.ViewRepresentationInternal}
-          operator={state.OperatorSymbol}
-          coverStimulusItem={state.CoverStimulusItem}
-        />
-      </div>
-      <div
-        className="box2"
-        style={{
-          opacity: state.CoverProblemItem ? 0.5 : 1,
-          backgroundColor: state.CoverProblemItem ? "gray" : "transparent",
-        }}
-      >
-        <h2>My Answer</h2>
-        <ProblemFrame
-          entryString={state.EntryRepresentationInternal}
-          coverProblemSpace={state.CoverProblemItem}
-        />
-      </div>
-      <div className="box3">
-        <section>
-          <button
-            className="global-btn "
-            style={{ visibility: state.ShowButton ? "visible" : "hidden" }}
-            onClick={() => {
-              sharedButtonActionSequence(
-                user,
-                id,
-                InterventionFormat.CoverCopyCompare,
-                document,
-                state,
-                openModal,
-                addDocument,
-                updateDocument,
-                response,
-                history,
-                dispatch
-              );
-            }}
-          >
-            {state.ButtonText}
-          </button>
-        </section>
-      </div>
+
+      <StimulusItemLayout state={state} />
+
+      <ProblemItemLayout state={state} />
+
+      <ButtonLayout
+        className="box3"
+        user={user}
+        id={id}
+        approach={InterventionFormat.CoverCopyCompare}
+        document={document}
+        state={state}
+        openModal={null}
+        addDocument={addDocument}
+        updateDocument={updateDocument}
+        addResponse={addResponse}
+        history={history}
+        dispatch={dispatch}
+      />
+
       <div
         className="box4"
         style={{
@@ -265,25 +234,14 @@ export default function CoverCopyCompare() {
           )}
         </ul>
       </div>
-      <div
+
+      <KeyPadLayout
         className="box5"
-        style={{
-          opacity: state.CoverProblemItem ? 0.5 : 1,
-        }}
-      >
-        <KeyPad
-          callBackFunction={(key: string) => {
-            commonKeyHandler(
-              InterventionFormat.CoverCopyCompare,
-              key,
-              state,
-              dispatch
-            );
-          }}
-          operatorSymbol={state.OperatorSymbol}
-          showEquals={true}
-        />
-      </div>
+        state={state}
+        intervention={InterventionFormat.CoverCopyCompare}
+        dispatch={dispatch}
+        showEquals={true}
+      />
     </div>
   );
 }
