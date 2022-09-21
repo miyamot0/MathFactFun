@@ -38,6 +38,7 @@ import KeyPadLayout from "./subcomponents/layouts/KeyPadLayout";
 import ButtonLayout from "./subcomponents/layouts/ButtonLayout";
 import SimpleProblemItemLayout from "./subcomponents/layouts/SimpleProblemItemLayout";
 import TopHeaderTimed from "./subcomponents/layouts/TopHeaderTimed";
+import ModalErrorCorrection from "./subcomponents/layouts/ModalErrorCorrectionLayout";
 
 export default function ExplicitTiming() {
   const { id, target } = useParams<RoutedIdTargetParam>();
@@ -124,31 +125,7 @@ export default function ExplicitTiming() {
 
   return (
     <div className="wrapperET">
-      <Modal
-        isOpen={modalIsOpen}
-        onRequestClose={closeModal}
-        shouldCloseOnOverlayClick={false}
-        preventScroll={true}
-        style={ErrorModalCustomStyle}
-        ariaHideApp={!(process.env.NODE_ENV === "test")}
-        contentLabel="Example Modal"
-      >
-        <h2 style={{ color: "#5F686D" }}>Double-check your math!</h2>
-        <div
-          style={{ marginTop: "25px", marginBottom: "25px", color: "#939391" }}
-        >
-          Close this window, and then try again.
-        </div>
-        <button
-          className="global-btn "
-          style={{ float: "right" }}
-          onClick={() => {
-            closeModal();
-          }}
-        >
-          Close Window
-        </button>
-      </Modal>
+      <ModalErrorCorrection modalIsOpen={modalIsOpen} closeModal={closeModal} />
 
       <TopHeaderTimed
         approach={"Explicit Timing"}
@@ -163,7 +140,7 @@ export default function ExplicitTiming() {
         className="box3ET"
         user={user}
         id={id}
-        approach={"Benchmark"}
+        approach={InterventionFormat.ExplicitTiming}
         document={document}
         state={state}
         openModal={null}

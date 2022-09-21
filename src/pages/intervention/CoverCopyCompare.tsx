@@ -15,11 +15,6 @@ import { useFirestore } from "../../firebase/hooks/useFirestore";
 import { useFirebaseDocumentTyped } from "../../firebase/hooks/useFirebaseDocument";
 import { useAuthorizationContext } from "../../context/hooks/useAuthorizationContext";
 
-// widgets
-import KeyPad from "./subcomponents/KeyPad";
-import ProblemFrame from "./subcomponents/ProblemFrame";
-import StimulusFrame from "./subcomponents/StimulusFrame";
-
 // helpers
 import { GetOperatorFromLabel } from "../../utilities/LabelHelper";
 import { InterventionFormat } from "../../maths/Facts";
@@ -51,6 +46,8 @@ import KeyPadLayout from "./subcomponents/layouts/KeyPadLayout";
 import ButtonLayout from "./subcomponents/layouts/ButtonLayout";
 import ProblemItemLayout from "./subcomponents/layouts/ProblemItemLayout";
 import StimulusItemLayout from "./subcomponents/layouts/StimulusItemLayout";
+import ListViewLayout from "./subcomponents/layouts/ListViewLayout";
+import ModalErrorCorrection from "./subcomponents/layouts/ModalErrorCorrectionLayout";
 
 export default function CoverCopyCompare() {
   const { id, target } = useParams<RoutedIdTargetParam>();
@@ -165,29 +162,7 @@ export default function CoverCopyCompare() {
 
   return (
     <div className="wrapper">
-      <Modal
-        isOpen={modalIsOpen}
-        onRequestClose={closeModal}
-        shouldCloseOnOverlayClick={false}
-        preventScroll={true}
-        style={ErrorModalCustomStyle}
-        ariaHideApp={!(process.env.NODE_ENV === "test")}
-        contentLabel="Example Modal"
-      >
-        <h2>Double-check your math!</h2>
-        <div style={{ marginTop: "5px", marginBottom: "10px" }}>
-          Close this window, and then try again.
-        </div>
-        <button
-          className="global-btn "
-          style={{ float: "right" }}
-          onClick={() => {
-            closeModal();
-          }}
-        >
-          Close
-        </button>
-      </Modal>
+      <ModalErrorCorrection modalIsOpen={modalIsOpen} closeModal={closeModal} />
 
       <StimulusItemLayout state={state} />
 
@@ -208,32 +183,11 @@ export default function CoverCopyCompare() {
         dispatch={dispatch}
       />
 
-      <div
-        className="box4"
-        style={{
-          opacity: state.CoverListViewItems ? 0.5 : 1,
-          backgroundColor: state.CoverListViewItems ? "gray" : "transparent",
-        }}
-      >
-        <h2>Items in Stimulus Set</h2>
-        <ul className="list-styling">
-          {state.WorkingData ? (
-            state.WorkingData.map((fact) => {
-              return (
-                <li
-                  className="list-styling"
-                  key={fact}
-                  onClick={() => captureItemClick(fact)}
-                >
-                  {fact.split(":")[0]}
-                </li>
-              );
-            })
-          ) : (
-            <></>
-          )}
-        </ul>
-      </div>
+      <ListViewLayout
+        className={"box4"}
+        state={state}
+        captureItemClick={captureItemClick}
+      />
 
       <KeyPadLayout
         className="box5"
