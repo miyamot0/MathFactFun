@@ -10,7 +10,6 @@ import React from "react";
 import firebase from "firebase";
 import Adapter from "enzyme-adapter-react-16";
 import Enzyme, { mount, shallow } from "enzyme";
-import { waitFor } from "@testing-library/react";
 import { FirestoreState } from "../../../firebase/interfaces/FirebaseInterfaces";
 import { CommentInterface } from "../../student/subcomponents/types/CommentTypes";
 import { StudentDataInterface } from "../../student/interfaces/StudentInterfaces";
@@ -49,7 +48,7 @@ const mockData = {
   currentSRApproach: "",
   currentTarget: mockTarget,
   details: "",
-  name: "",
+  name: "Name",
   problemSet: "",
 
   minForTask: 2,
@@ -88,20 +87,6 @@ jest.mock("./../../../firebase/hooks/useFirestore", () => {
     __esModule: true,
     ...originalModule,
     default: () => ({
-      addDocument: jest.fn(),
-      response: {} as FirestoreState,
-    }),
-  };
-});
-
-jest.mock("./../../../firebase/hooks/useFirestore", () => {
-  const originalModule = jest.requireActual(
-    "./../../../firebase/hooks/useFirestore"
-  );
-  return {
-    __esModule: true,
-    ...originalModule,
-    default: () => ({
       updateDocument: jest.fn(),
       response: {} as FirestoreState,
     }),
@@ -124,24 +109,24 @@ jest.mock("./../../../firebase/hooks/useFirebaseDocument", () => {
   };
 });
 
-jest.mock("react-router-dom", () => ({
-  ...jest.requireActual("react-router-dom"),
-  useParams: () => ({
-    id: mockId,
-  }),
-  useHistory: () => ({
-    push: jest.fn(),
-  }),
-  useRouteMatch: () => ({ url: `/benchmark/${mockId}/${mockTarget}` }),
-}));
-
 describe("Benchmark", () => {
   it("should render", () => {
-    const wrapper = shallow(
+    const wrapper = mount(
       <MemoryRouter>
         <Benchmark></Benchmark>
       </MemoryRouter>
     );
+
+    const event = new KeyboardEvent("keydown", { keyCode: 37 });
+
+    //setTimeout(() => {
+    //document.dispatchEvent(event);
+    //}, 1000);
+
+    //document.dispatchEvent(event);
+    //document.dispatchEvent(event);
+    //wrapper.find("button").first().simulate("click");
+
     expect(1).toBe(1);
   });
 });

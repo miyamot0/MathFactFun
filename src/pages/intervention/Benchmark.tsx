@@ -91,7 +91,7 @@ export default function Benchmark() {
 
   // Fire once individual data loaded, just once
   useEffect(() => {
-    if (document && !state.LoadedData) {
+    if (document && state.LoadedData === false) {
       const coreSetClean = loadWorkingDataBenchmark(document, target);
 
       completeLoadingDispatch({
