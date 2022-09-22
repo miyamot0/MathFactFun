@@ -12,6 +12,7 @@ import { useFirebaseCollectionTyped } from "../useFirebaseCollection";
 import { FirestoreCollections } from "../useFirestore";
 import * as Configs from "./../../config";
 import { mockFirebase } from "firestore-jest-mock";
+
 import {
   mockCollection,
   mockAdd,
@@ -21,6 +22,7 @@ import {
   mockWhere,
   mockDoc,
   mockOnSnapShot,
+  mockOrderBy,
 } from "firestore-jest-mock/mocks/firestore";
 
 //import { FirestoreMock } from "../../../__mocks__";
@@ -57,15 +59,8 @@ describe("useFirebaseCollectionTyped", () => {
     },
   });
 
-  beforeAll(() => {
-    jest.mock("React", () => ({
-      ...jest.requireActual("React"),
-      useEffect: jest.fn(),
-    }));
-  });
-
   beforeEach(() => {
-    jest.clearAllMocks();
+    //jest.clearAllMocks();
   });
 
   it("Should query against firestore, users", async () => {
@@ -81,6 +76,54 @@ describe("useFirebaseCollectionTyped", () => {
 
     waitFor(() => {
       expect(mockWhere).toBeCalledWith(mockInput);
+    });
+  });
+
+  it("Should orderby against firestore, users", async () => {
+    const mockInput = ["id", "asc"];
+
+    const { result, waitFor } = renderHook(() =>
+      useFirebaseCollectionTyped({
+        collectionString: FirestoreCollections.Users,
+        queryString: undefined,
+        orderString: mockInput,
+      })
+    );
+
+    waitFor(() => {
+      expect(mockOrderBy).toBeCalledWith(mockInput);
+    });
+  });
+
+  it("Should query against firestore, performances", async () => {
+    const mockInput = ["uid", "=", "123"];
+
+    const { result, waitFor } = renderHook(() =>
+      useFirebaseCollectionTyped({
+        collectionString: `${FirestoreCollections.Performances}/Addition/123`,
+        queryString: mockInput,
+        orderString: undefined,
+      })
+    );
+
+    waitFor(() => {
+      expect(mockWhere).toBeCalledWith(mockInput);
+    });
+  });
+
+  it("Should orderby against firestore, performances", async () => {
+    const mockInput = ["id", "asc"];
+
+    const { result, waitFor } = renderHook(() =>
+      useFirebaseCollectionTyped({
+        collectionString: `${FirestoreCollections.Performances}/Addition/123`,
+        queryString: undefined,
+        orderString: mockInput,
+      })
+    );
+
+    waitFor(() => {
+      expect(mockOrderBy).toBeCalledWith(mockInput);
     });
   });
 
