@@ -6,10 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-/**
- * Firebase collection
- */
-
 import { useEffect, useState, useRef } from "react";
 import { projectFirestore } from "../config";
 

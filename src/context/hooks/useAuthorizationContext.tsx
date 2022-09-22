@@ -24,9 +24,9 @@ export function useAuthorizationContext(): AuthorizationContextInterface {
   const getContext: AuthorizationContextInterface =
     useContext(AuthorizationContext);
 
-  if (!getContext) {
-    throw Error("No Provider detected");
-  }
+  //if (!getContext) {
+  //  throw Error("No Provider detected");
+  //}
 
   return getContext;
 }

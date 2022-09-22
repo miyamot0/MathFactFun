@@ -1,15 +1,24 @@
+/** @license
+ *
+ * Copyright (c) Shawn P. Gilroy, Louisiana State University.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
 import { waitFor } from "@testing-library/react";
 import { renderHook } from "@testing-library/react-hooks";
-import { mount } from "enzyme";
 import { useReducer } from "react";
 import { act } from "react-dom/test-utils";
-import { StudentDataInterface } from "../../../pages/student/interfaces/StudentInterfaces";
 import { UserDataInterface } from "../../../pages/user/types/UserTypes";
 import { FirestoreAction } from "../../interfaces/FirebaseInterfaces";
-import { firestoreReducer, FirestoreStates, useFirestore } from "../useFirestore";
-import { FirebaseError } from "@firebase/util";
-import * as Configs from './../../config'
-import * as FirebaseHelpers from './../helpers/FirebaseDispatchHelpers';
+import {
+  firestoreReducer,
+  FirestoreStates,
+  useFirestore,
+} from "../useFirestore";
+import * as Configs from "./../../config";
+import * as FirebaseHelpers from "./../helpers/FirebaseDispatchHelpers";
 
 const mockInitialState = {
   document: null,
@@ -43,7 +52,7 @@ describe("useFirestore", () => {
 
       waitFor(() => {
         expect(result.current[0]).toStrictEqual(mockInitialState);
-      })
+      });
     });
   });
 
@@ -168,156 +177,162 @@ describe("useFirestore", () => {
   });
 });
 
-describe('useFirestore: Add document', () => {
+describe("useFirestore: Add document", () => {
   const mockCollection = jest.fn();
   beforeAll(() => {
     const docMock1 = jest.spyOn(Configs.projectFirestore, "collection");
     docMock1.mockImplementation(mockCollection);
-  })
+  });
 
   afterAll(() => {
     jest.clearAllMocks();
-  })
+  });
 
-  it('should pass with approximate call', async () => {
+  it("should pass with approximate call", async () => {
     await act(async () => {
-
       const docMock1 = jest.spyOn(FirebaseHelpers, "complexCollectionGetter");
       docMock1.mockImplementation(mockCollection);
       mockCollection.mockImplementation(() => ({
-        add: () => Promise.resolve(() => true)
-      }))
+        add: () => Promise.resolve(() => true),
+      }));
 
-      const { result } = renderHook(() => useFirestore('users', undefined, undefined));
+      const { result } = renderHook(() =>
+        useFirestore("users", undefined, undefined)
+      );
 
       const { addDocument } = result.current;
 
-      await addDocument({} as UserDataInterface)
+      await addDocument({} as UserDataInterface);
 
-      expect(1).toBe(1)
-    })
-  })
+      expect(1).toBe(1);
+    });
+  });
 
-  it('should fail with strange call', async () => {
+  it("should fail with strange call", async () => {
     await act(async () => {
-
       const docMock1 = jest.spyOn(FirebaseHelpers, "complexCollectionGetter");
       docMock1.mockImplementation(mockCollection);
       mockCollection.mockImplementation(() => ({
-        add: null
-      }))
+        add: null,
+      }));
 
-      const { result } = renderHook(() => useFirestore('users', undefined, undefined));
+      const { result } = renderHook(() =>
+        useFirestore("users", undefined, undefined)
+      );
 
       const { addDocument } = result.current;
 
-      await addDocument({} as UserDataInterface)
+      await addDocument({} as UserDataInterface);
 
-      expect(1).toBe(1)
-    })
-  })
-})
+      expect(1).toBe(1);
+    });
+  });
+});
 
-describe('useFirestore: Delete document', () => {
+describe("useFirestore: Delete document", () => {
   const mockCollection = jest.fn();
   beforeAll(() => {
     const docMock1 = jest.spyOn(Configs.projectFirestore, "collection");
     docMock1.mockImplementation(mockCollection);
-  })
+  });
 
   afterAll(() => {
     jest.clearAllMocks();
-  })
+  });
 
-  it('should pass with approximate call', async () => {
+  it("should pass with approximate call", async () => {
     await act(async () => {
-
       const docMock1 = jest.spyOn(FirebaseHelpers, "complexCollectionGetter");
       docMock1.mockImplementation(mockCollection);
       mockCollection.mockImplementation(() => ({
         doc: (id: string) => ({
-          delete: () => true
-        })
-      }))
+          delete: () => true,
+        }),
+      }));
 
-      const { result } = renderHook(() => useFirestore('users', undefined, undefined));
+      const { result } = renderHook(() =>
+        useFirestore("users", undefined, undefined)
+      );
 
       const { deleteDocument } = result.current;
 
-      await deleteDocument("123")
+      await deleteDocument("123");
 
-      expect(1).toBe(1)
-    })
-  })
+      expect(1).toBe(1);
+    });
+  });
 
-  it('should fail with strange call', async () => {
+  it("should fail with strange call", async () => {
     await act(async () => {
-
       const docMock1 = jest.spyOn(FirebaseHelpers, "complexCollectionGetter");
       docMock1.mockImplementation(mockCollection);
       mockCollection.mockImplementation(() => ({
-        doc: null
-      }))
+        doc: null,
+      }));
 
-      const { result } = renderHook(() => useFirestore('users', undefined, undefined));
+      const { result } = renderHook(() =>
+        useFirestore("users", undefined, undefined)
+      );
 
       const { deleteDocument } = result.current;
 
-      await deleteDocument("123")
+      await deleteDocument("123");
 
-      expect(1).toBe(1)
-    })
-  })
-})
+      expect(1).toBe(1);
+    });
+  });
+});
 
-describe('useFirestore: Update document', () => {
+describe("useFirestore: Update document", () => {
   const mockCollection = jest.fn();
   beforeAll(() => {
     const docMock1 = jest.spyOn(Configs.projectFirestore, "collection");
     docMock1.mockImplementation(mockCollection);
-  })
+  });
 
   afterAll(() => {
     jest.clearAllMocks();
-  })
+  });
 
-  it('should pass with approximate call', async () => {
+  it("should pass with approximate call", async () => {
     await act(async () => {
-
       const docMock1 = jest.spyOn(FirebaseHelpers, "complexCollectionGetter");
       docMock1.mockImplementation(mockCollection);
       mockCollection.mockImplementation(() => ({
         doc: (id: string) => ({
-          update: (obj: any) => true
-        })
-      }))
+          update: (obj: any) => true,
+        }),
+      }));
 
-      const { result } = renderHook(() => useFirestore('users', undefined, undefined));
+      const { result } = renderHook(() =>
+        useFirestore("users", undefined, undefined)
+      );
 
       const { updateDocument } = result.current;
 
-      await updateDocument("123", {})
+      await updateDocument("123", {});
 
-      expect(1).toBe(1)
-    })
-  })
+      expect(1).toBe(1);
+    });
+  });
 
-  it('should fail with strange call', async () => {
+  it("should fail with strange call", async () => {
     await act(async () => {
-
       const docMock1 = jest.spyOn(FirebaseHelpers, "complexCollectionGetter");
       docMock1.mockImplementation(mockCollection);
       mockCollection.mockImplementation(() => ({
-        doc: null
-      }))
+        doc: null,
+      }));
 
-      const { result } = renderHook(() => useFirestore('users', undefined, undefined));
+      const { result } = renderHook(() =>
+        useFirestore("users", undefined, undefined)
+      );
 
       const { updateDocument } = result.current;
 
-      await updateDocument("123", {})
+      await updateDocument("123", {});
 
-      expect(1).toBe(1)
-    })
-  })
-})
+      expect(1).toBe(1);
+    });
+  });
+});
