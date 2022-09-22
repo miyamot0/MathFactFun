@@ -31,9 +31,7 @@ export default function DashboardBenchmark() {
 
   if (documentError) {
     return dashboardGenerateError(documentError);
-  } else if (document === null && !documentError) {
-    return dashboardLoadingError(documentError);
-  } else if (document) {
+  } else if (document !== null && documentError === undefined) {
     return (
       <div>
         <h2 className="global-page-title">
@@ -42,7 +40,8 @@ export default function DashboardBenchmark() {
         <BenchmarkList student={document} />
       </div>
     );
-  } else {
-    throw Error("Error loading benchmark");
+  }
+  else {
+    return dashboardLoadingError(documentError);
   }
 }

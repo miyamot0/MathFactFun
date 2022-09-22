@@ -7,7 +7,7 @@
  */
 
 import React from "react";
-import StudentFilter, { GradeFilterList } from "./functionality/StudentFilter";
+import StudentFilter from "./functionality/StudentFilter";
 import StudentList from "./subcomponents/StudentList";
 import { useState } from "react";
 import { useFirebaseCollectionTyped } from "../../firebase/hooks/useFirebaseCollection";
@@ -35,11 +35,7 @@ export default function DashboardDisplay() {
    * @param {String} newFilter Filter criteria
    */
   function changeFilter(newFilter: string): void {
-    if (GradeFilterList.includes(newFilter)) {
-      setFilter(newFilter);
-    } else {
-      throw Error("Value supplied incompatible")
-    }
+    setFilter(newFilter);
   }
 
   const students = studentFilterMap(documents, user, filter);

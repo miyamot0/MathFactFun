@@ -16,8 +16,10 @@ import { CommentInterface } from "../../student/subcomponents/types/CommentTypes
 import { StudentDataInterface } from "../../student/interfaces/StudentInterfaces";
 import { act } from "react-dom/test-utils";
 import DashboardDisplay from "../DashboardDisplay";
-import StudentList from "../subcomponents/StudentList";
 import { MemoryRouter } from "react-router-dom";
+import * as UseCollectionMethods from '../../../firebase/hooks/useFirebaseCollection'
+import * as StudentListMethods from '../helpers/DashboardHelpers'
+import { waitFor } from "@testing-library/react";
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -31,47 +33,7 @@ const mockComment = {
   id: 0,
 };
 
-const mockId = "123";
-
-const mockData = {
-  id: mockId,
-  aimLine: 0,
-  createdAt: firebase.firestore.Timestamp.fromDate(new Date()),
-  dueDate: firebase.firestore.Timestamp.fromDate(new Date()),
-  lastActivity: firebase.firestore.Timestamp.fromDate(new Date()),
-  comments: [mockComment] as CommentInterface[],
-  completedBenchmark: [],
-  currentBenchmarking: ["Addition-Sums to 18", "Multiplication-Single Digit"],
-  factsMastered: ["", ""],
-  factsSkipped: ["", ""],
-  factsTargeted: ["", ""],
-
-  creator: "",
-  currentApproach: "ExplicitTiming",
-  currentErrorApproach: "",
-  currentGrade: "K",
-  currentSRApproach: "",
-  currentTarget: "Addition",
-  details: "",
-  name: "",
-  problemSet: "",
-
-  minForTask: 2,
-} as StudentDataInterface;
-
-jest.mock("../../../firebase/hooks/useFirebaseDocument", () => {
-  const originalModule = jest.requireActual(
-    "../../../firebase/hooks/useFirebaseDocument"
-  );
-  return {
-    __esModule: true,
-    ...originalModule,
-    default: () => ({
-      document: mockData,
-      documentError: undefined,
-    }),
-  };
-});
+const mockId = "456";
 
 jest.mock("../../../context/hooks/useAuthorizationContext", () => {
   const originalModule = jest.requireActual(
@@ -81,64 +43,81 @@ jest.mock("../../../context/hooks/useAuthorizationContext", () => {
     __esModule: true,
     ...originalModule,
     default: () => ({
-      user: { uid: mockId } as firebase.User,
-      authIsReady: true,
+      user: { uid: "123" } as firebase.User,
       adminFlag: false,
-      dispatch: jest.fn(() => {
-        "pass";
-      }),
+      authIsReady: true,
+      dispatch: jest.fn(() => true),
     }),
   };
 });
 
-jest.mock("react-router-dom", () => ({
-  ...jest.requireActual("react-router-dom"),
-  useParams: () => ({
-    id: mockId,
-  }),
-  useRouteMatch: () => ({ url: `/benchmark/${mockId}` }),
-}));
-
-describe("Student List: Render", () => {
-  it("Should render all components if students present", () => {
-    act(() => {
-      const wrapper = mount(
-        <MemoryRouter>
-          <StudentList students={[mockData]} />
-        </MemoryRouter>
-      );
-
-      setTimeout(() => {
-        const serializedOutput = JSON.stringify(wrapper);
-
-        expect(serializedOutput.includes("student-list")).toBe(true);
-      }, 1000);
-    });
-  });
-
-  it("Should render nothing if benchmarks listed", () => {
-    act(() => {
-      const wrapper = mount(
-        <MemoryRouter>
-          <StudentList students={[]} />
-        </MemoryRouter>
-      );
-
-      setTimeout(() => {
-        const serializedOutput = JSON.stringify(wrapper);
-
-        expect(serializedOutput.includes("student-list")).toBe(false);
-      }, 1000);
-    });
-  });
-});
-
 describe("Dashboard Display: Render", () => {
-  it("Should render all components", () => {
+  it("Good load, render ui", () => {
     act(() => {
-      const wrapper = mount(<DashboardDisplay />);
+      const docMockCollection = jest.spyOn(UseCollectionMethods, "useFirebaseCollectionTyped")
+      docMockCollection.mockReturnValue({
+        documents: [{
+          id: mockId,
+          aimLine: 0,
+          createdAt: firebase.firestore.Timestamp.fromDate(new Date()),
+          dueDate: firebase.firestore.Timestamp.fromDate(new Date()),
+          lastActivity: firebase.firestore.Timestamp.fromDate(new Date()),
+          comments: [mockComment] as CommentInterface[],
+          completedBenchmark: [],
+          currentBenchmarking: ["Addition-Sums to 18"],
+          factsMastered: [],
+          factsSkipped: [],
+          factsTargeted: [],
 
-      setTimeout(() => {
+          creator: "123",
+          currentApproach: "N/A",
+          currentErrorApproach: "N/A",
+          currentGrade: "K",
+          currentSRApproach: "N/A",
+          currentTarget: "Addition",
+          details: "",
+          name: "",
+          problemSet: "A",
+
+          minForTask: 0.04,
+        }] as StudentDataInterface[],
+        error: undefined
+      })
+
+      const dockMockFilter = jest.spyOn(StudentListMethods, "studentFilterMap")
+      dockMockFilter.mockReturnValue([{
+        id: mockId,
+        aimLine: 0,
+        createdAt: firebase.firestore.Timestamp.fromDate(new Date()),
+        dueDate: firebase.firestore.Timestamp.fromDate(new Date()),
+        lastActivity: firebase.firestore.Timestamp.fromDate(new Date()),
+        comments: [mockComment] as CommentInterface[],
+        completedBenchmark: [],
+        currentBenchmarking: ["Addition-Sums to 18"],
+        factsMastered: [],
+        factsSkipped: [],
+        factsTargeted: [],
+
+        creator: "123",
+        currentApproach: "N/A",
+        currentErrorApproach: "N/A",
+        currentGrade: "K",
+        currentSRApproach: "N/A",
+        currentTarget: "Addition",
+        details: "",
+        name: "",
+        problemSet: "A",
+
+        minForTask: 0.04,
+      }])
+
+      const wrapper = mount(<MemoryRouter><DashboardDisplay /></MemoryRouter>);
+
+      const btns = wrapper.find('.student-filter-btn')
+      const btn = btns.first();
+      btn.simulate('click')
+
+      waitFor(() => {
         const errorTag = wrapper.find({ class: "error" });
         const loadingTag = wrapper.find({ class: "loading" });
         const studentFilterTag = wrapper.find({ class: "student-filter" });
@@ -152,7 +131,36 @@ describe("Dashboard Display: Render", () => {
         expect(studentFilterTag.length).toBe(1);
         expect(studentListTag.length).toBe(1);
         expect(studentListItemTag.length).toBe(1);
-      }, 1000);
+      });
     });
   });
+
+  it("Bad load, output error", () => {
+    act(() => {
+      const docMockCollection = jest.spyOn(UseCollectionMethods, "useFirebaseCollectionTyped")
+      docMockCollection.mockReturnValue({
+        documents: null,
+        error: "Failed to load"
+      })
+
+      const wrapper = mount(<MemoryRouter><DashboardDisplay /></MemoryRouter>);
+
+      waitFor(() => {
+        const errorTag = wrapper.find({ class: "error" });
+        const loadingTag = wrapper.find({ class: "loading" });
+        const studentFilterTag = wrapper.find({ class: "student-filter" });
+        //
+        const studentListTag = wrapper.find({ class: "student-list" });
+        const studentListItemTag = wrapper.find({ class: "student-list-card" });
+
+        expect(errorTag.length).toBe(1);
+        expect(loadingTag.length).toBe(0);
+
+        expect(studentFilterTag.length).toBe(0);
+        expect(studentListTag.length).toBe(0);
+        expect(studentListItemTag.length).toBe(0);
+      });
+    });
+  });
+
 });

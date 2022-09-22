@@ -11,7 +11,7 @@ import { useState } from "react";
 import { useFirebaseCollectionTyped } from "../../firebase/hooks/useFirebaseCollection";
 import { useAuthorizationContext } from "../../context/hooks/useAuthorizationContext";
 
-import StudentFilter, { GradeFilterList } from "./functionality/StudentFilter";
+import StudentFilter from "./functionality/StudentFilter";
 import PracticeList from "./subcomponents/PracticeList";
 import { StudentDataInterface } from "../student/interfaces/StudentInterfaces";
 import { dashboardGenerateError, practiceFilterMap } from "./helpers/DashboardHelpers";
@@ -35,11 +35,7 @@ export default function DashboardPractice() {
    * @param {String} newFilter Filter criteria
    */
   function changeFilter(newFilter: string): void {
-    if (GradeFilterList.includes(newFilter)) {
-      setFilter(newFilter);
-    } else {
-      throw Error("Value supplied incompatible")
-    }
+    setFilter(newFilter);
   }
 
   const students = practiceFilterMap(documents, user, filter);

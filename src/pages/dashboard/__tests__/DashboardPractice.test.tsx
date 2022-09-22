@@ -18,10 +18,15 @@ import { act } from "react-dom/test-utils";
 import DashboardPractice from "../DashboardPractice";
 import { MemoryRouter } from "react-router-dom";
 import PracticeList from "../subcomponents/PracticeList";
+import * as UseCollectionMethods from '../../../firebase/hooks/useFirebaseCollection'
+import * as StudentListMethods from '../helpers/DashboardHelpers'
+import { waitFor } from "@testing-library/react";
+import { InterventionFormat } from "../../../maths/Facts";
 
 Enzyme.configure({ adapter: new Adapter() });
 
 ReactModal.setAppElement = () => null;
+
 
 const mockComment = {
   content: "string",
@@ -31,7 +36,7 @@ const mockComment = {
   id: 0,
 };
 
-const mockId = "123";
+const mockId = "456";
 
 const mockData = {
   id: mockId,
@@ -41,37 +46,23 @@ const mockData = {
   lastActivity: firebase.firestore.Timestamp.fromDate(new Date()),
   comments: [mockComment] as CommentInterface[],
   completedBenchmark: [],
-  currentBenchmarking: ["", ""],
+  currentBenchmarking: ["Addition-Sums to 18", "Multiplication-Single Digit"],
   factsMastered: ["", ""],
   factsSkipped: ["", ""],
   factsTargeted: ["", ""],
 
   creator: "",
-  currentApproach: "ExplicitTiming",
+  currentApproach: InterventionFormat.ExplicitTiming,
   currentErrorApproach: "",
-  currentGrade: "",
+  currentGrade: "K",
   currentSRApproach: "",
-  currentTarget: "",
+  currentTarget: "Addition",
   details: "",
   name: "",
   problemSet: "",
 
   minForTask: 2,
 } as StudentDataInterface;
-
-jest.mock("../../../firebase/hooks/useFirebaseDocument", () => {
-  const originalModule = jest.requireActual(
-    "../../../firebase/hooks/useFirebaseDocument"
-  );
-  return {
-    __esModule: true,
-    ...originalModule,
-    default: () => ({
-      document: mockData,
-      documentError: undefined,
-    }),
-  };
-});
 
 jest.mock("../../../context/hooks/useAuthorizationContext", () => {
   const originalModule = jest.requireActual(
@@ -81,64 +72,81 @@ jest.mock("../../../context/hooks/useAuthorizationContext", () => {
     __esModule: true,
     ...originalModule,
     default: () => ({
-      user: { uid: mockId } as firebase.User,
-      authIsReady: true,
+      user: { uid: "123" } as firebase.User,
       adminFlag: false,
-      dispatch: jest.fn(() => {
-        "pass";
-      }),
+      authIsReady: true,
+      dispatch: jest.fn(() => true),
     }),
   };
 });
 
-jest.mock("react-router-dom", () => ({
-  ...jest.requireActual("react-router-dom"),
-  useParams: () => ({
-    id: mockId,
-  }),
-  useRouteMatch: () => ({ url: `/benchmark/${mockId}` }),
-}));
-
-describe("Practice List: Render", () => {
-  it("Should render all components if students present", () => {
-    act(() => {
-      const wrapper = mount(
-        <MemoryRouter>
-          <PracticeList students={[mockData]} />
-        </MemoryRouter>
-      );
-
-      setTimeout(() => {
-        const serializedOutput = JSON.stringify(wrapper);
-
-        expect(serializedOutput.includes("practice-list")).toBe(true);
-      }, 1000);
-    });
-  });
-
-  it("Should render nothing if benchmarks listed", () => {
-    act(() => {
-      const wrapper = mount(
-        <MemoryRouter>
-          <PracticeList students={[]} />
-        </MemoryRouter>
-      );
-
-      setTimeout(() => {
-        const serializedOutput = JSON.stringify(wrapper);
-
-        expect(serializedOutput.includes("practice-list")).toBe(false);
-      }, 1000);
-    });
-  });
-});
-
 describe("Dashboard Practice: Render", () => {
-  it("Should render all components", () => {
+  it("Good Load: render full ui", () => {
     act(() => {
-      const wrapper = mount(<DashboardPractice />);
+      const docMockCollection = jest.spyOn(UseCollectionMethods, "useFirebaseCollectionTyped")
+      docMockCollection.mockReturnValue({
+        documents: [{
+          id: mockId,
+          aimLine: 0,
+          createdAt: firebase.firestore.Timestamp.fromDate(new Date()),
+          dueDate: firebase.firestore.Timestamp.fromDate(new Date()),
+          lastActivity: firebase.firestore.Timestamp.fromDate(new Date()),
+          comments: [mockComment] as CommentInterface[],
+          completedBenchmark: [],
+          currentBenchmarking: ["Addition-Sums to 18"],
+          factsMastered: [],
+          factsSkipped: [],
+          factsTargeted: [],
 
-      setTimeout(() => {
+          creator: "123",
+          currentApproach: InterventionFormat.ExplicitTiming,
+          currentErrorApproach: "N/A",
+          currentGrade: "K",
+          currentSRApproach: "N/A",
+          currentTarget: "Addition",
+          details: "",
+          name: "",
+          problemSet: "A",
+
+          minForTask: 0.04,
+        }] as StudentDataInterface[],
+        error: undefined
+      })
+
+      const dockMockFilter = jest.spyOn(StudentListMethods, "studentFilterMap")
+      dockMockFilter.mockReturnValue([{
+        id: mockId,
+        aimLine: 0,
+        createdAt: firebase.firestore.Timestamp.fromDate(new Date()),
+        dueDate: firebase.firestore.Timestamp.fromDate(new Date()),
+        lastActivity: firebase.firestore.Timestamp.fromDate(new Date()),
+        comments: [mockComment] as CommentInterface[],
+        completedBenchmark: [],
+        currentBenchmarking: ["Addition-Sums to 18"],
+        factsMastered: [],
+        factsSkipped: [],
+        factsTargeted: [],
+
+        creator: "123",
+        currentApproach: InterventionFormat.ExplicitTiming,
+        currentErrorApproach: "N/A",
+        currentGrade: "K",
+        currentSRApproach: "N/A",
+        currentTarget: "Addition",
+        details: "",
+        name: "",
+        problemSet: "A",
+
+        minForTask: 0.04,
+      }])
+
+      const wrapper = mount(<MemoryRouter><DashboardPractice /></MemoryRouter>);
+
+      const btns = wrapper.find('.student-filter-btn')
+      const btn = btns.first();
+      btn.simulate('click')
+
+      waitFor(() => {
         const errorTag = wrapper.find({ class: "error" });
         const loadingTag = wrapper.find({ class: "loading" });
         const studentFilterTag = wrapper.find({ class: "student-filter" });
@@ -154,7 +162,121 @@ describe("Dashboard Practice: Render", () => {
         expect(studentFilterTag.length).toBe(1);
         expect(studentListTag.length).toBe(1);
         expect(studentListItemTag.length).toBe(1);
-      }, 1000);
+      });
+    });
+  });
+
+  it("Bad load, output error", () => {
+    act(() => {
+      const docMockCollection = jest.spyOn(UseCollectionMethods, "useFirebaseCollectionTyped")
+      docMockCollection.mockReturnValue({
+        documents: null,
+        error: "Failed to load"
+      })
+
+      const dockMockFilter = jest.spyOn(StudentListMethods, "studentFilterMap")
+      dockMockFilter.mockReturnValue([{
+        id: mockId,
+        aimLine: 0,
+        createdAt: firebase.firestore.Timestamp.fromDate(new Date()),
+        dueDate: firebase.firestore.Timestamp.fromDate(new Date()),
+        lastActivity: firebase.firestore.Timestamp.fromDate(new Date()),
+        comments: [mockComment] as CommentInterface[],
+        completedBenchmark: [],
+        currentBenchmarking: ["Addition-Sums to 18"],
+        factsMastered: [],
+        factsSkipped: [],
+        factsTargeted: [],
+
+        creator: "123",
+        currentApproach: InterventionFormat.ExplicitTiming,
+        currentErrorApproach: "N/A",
+        currentGrade: "K",
+        currentSRApproach: "N/A",
+        currentTarget: "Addition",
+        details: "",
+        name: "",
+        problemSet: "A",
+
+        minForTask: 0.04,
+      }])
+
+      const wrapper = mount(<MemoryRouter><DashboardPractice /></MemoryRouter>);
+
+      waitFor(() => {
+        const errorTag = wrapper.find({ class: "error" });
+        const loadingTag = wrapper.find({ class: "loading" });
+        const studentFilterTag = wrapper.find({ class: "student-filter" });
+        //
+        const studentListTag = wrapper.find({ class: "practice-list" });
+        const studentListItemTag = wrapper.find({
+          class: "practice-list-card",
+        });
+
+        expect(errorTag.length).toBe(1);
+        expect(loadingTag.length).toBe(0);
+
+        expect(studentFilterTag.length).toBe(1);
+        expect(studentListTag.length).toBe(1);
+        expect(studentListItemTag.length).toBe(1);
+      });
+    });
+  });
+
+  it("Bad load, output error", () => {
+    act(() => {
+      const docMockCollection = jest.spyOn(UseCollectionMethods, "useFirebaseCollectionTyped")
+      docMockCollection.mockReturnValue({
+        documents: null,
+        error: "Failed to load"
+      })
+
+      const dockMockFilter = jest.spyOn(StudentListMethods, "practiceFilterMap")
+      dockMockFilter.mockReturnValue([{
+        id: mockId,
+        aimLine: 0,
+        createdAt: firebase.firestore.Timestamp.fromDate(new Date()),
+        dueDate: firebase.firestore.Timestamp.fromDate(new Date()),
+        lastActivity: firebase.firestore.Timestamp.fromDate(new Date()),
+        comments: [mockComment] as CommentInterface[],
+        completedBenchmark: [],
+        currentBenchmarking: ["Addition-Sums to 18"],
+        factsMastered: [],
+        factsSkipped: [],
+        factsTargeted: [],
+
+        creator: "123",
+        currentApproach: InterventionFormat.ExplicitTiming,
+        currentErrorApproach: "N/A",
+        currentGrade: "K",
+        currentSRApproach: "N/A",
+        currentTarget: "Addition",
+        details: "",
+        name: "",
+        problemSet: "A",
+
+        minForTask: 0.04,
+      }])
+
+      const wrapper = mount(<MemoryRouter><DashboardPractice /></MemoryRouter>);
+
+      waitFor(() => {
+        const errorTag = wrapper.find({ class: "error" });
+        const loadingTag = wrapper.find({ class: "loading" });
+        const studentFilterTag = wrapper.find({ class: "student-filter" });
+        //
+        const studentListTag = wrapper.find({ class: "practice-list" });
+        const studentListItemTag = wrapper.find({
+          class: "practice-list-card",
+        });
+
+        expect(errorTag.length).toBe(1);
+        expect(loadingTag.length).toBe(0);
+
+        expect(studentFilterTag.length).toBe(1);
+        expect(studentListTag.length).toBe(1);
+        expect(studentListItemTag.length).toBe(1);
+      });
     });
   });
 });

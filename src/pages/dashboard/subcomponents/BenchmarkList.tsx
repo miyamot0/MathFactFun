@@ -21,21 +21,14 @@ import { BenchmarkInterface } from "../types/DashboardTypes";
 
 import "./styles/BenchmarkList.css";
 
-export default function BenchmarkList({
-  student,
-}: BenchmarkInterface): JSX.Element {
-  const errMessage =
-    student.currentBenchmarking.length === 0 ? (
-      <p>No benchmarking targets</p>
-    ) : (
-      <></>
-    );
+export default function BenchmarkList({ student }: BenchmarkInterface): JSX.Element {
 
-  const outputDisplay = student ? (
-    <div className="benchmark-list" key={student.id}>
-      {errMessage}
-
-      {student.currentBenchmarking.map((benchmark: any) => {
+  if (student === null || student.currentBenchmarking.length === 0) {
+    return <p>No benchmarking targets</p>
+  }
+  else {
+    return <div className="benchmark-list" key={student.id}>
+      {student.currentBenchmarking.map((benchmark: string) => {
         const benchmarkCompleted = checkIfCompletedBenchmark(
           student,
           benchmark
@@ -64,14 +57,5 @@ export default function BenchmarkList({
         );
       })}
     </div>
-  ) : (
-    <></>
-  );
-
-  return (
-    <>
-      {errMessage}
-      {outputDisplay}
-    </>
-  );
+  }
 }

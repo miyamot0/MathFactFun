@@ -17,65 +17,50 @@ import { PracticeListInterface } from "../types/DashboardTypes";
 
 import "./styles/PracticeList.css";
 
-export default function PracticeList({
-  students,
-}: PracticeListInterface): JSX.Element {
-  const errMessage =
-    students.length === 0 ? (
-      <p>No students receiving intervention in this category.</p>
-    ) : (
-      <></>
-    );
-
-  const outputDisplay = students ? (
-    students.map((student) => (
-      <div className="practice-list-card" key={student.id}>
-        {dynamicallyGenerateLink(student, warnNoProblemsAssigned)}
-        <hr />
-        <p
-          style={{
-            marginTop: "5px",
-          }}
-        >
-          <b>Approach:</b> {GetApproachStringFromLabel(student.currentApproach)}
-        </p>
-        <p
-          style={{
-            marginTop: "5px",
-          }}
-        >
-          <b>Target:</b> {student.currentTarget} ({student.factsTargeted.length}{" "}
-          in Set)
-        </p>
-        <p
-          style={{
-            marginTop: "5px",
-          }}
-        >
-          <b>Items in Set:</b> {student.factsTargeted.length}
-        </p>
-        <br></br>
-        <p>
-          {checkIfDateCurrent(student.lastActivity) ? (
-            <span className="practiced-today"> </span>
-          ) : (
-            <span className="needs-practice"> </span>
-          )}{" "}
-          Last Practice: {student.lastActivity.toDate().toDateString()}
-        </p>
-      </div>
-    ))
-  ) : (
-    <></>
-  );
-
-  return students ? (
-    <div className="practice-list">
-      {errMessage}
-
-      {outputDisplay}
+export default function PracticeList({ students }: PracticeListInterface): JSX.Element {
+  if (students === null || students.length === 0) {
+    return <p>No benchmarking targets</p>
+  }
+  else {
+    return <div className="practice-list">
+      {students.map((student) => (
+        <div className="practice-list-card" key={student.id}>
+          {dynamicallyGenerateLink(student, warnNoProblemsAssigned)}
+          <hr />
+          <p
+            style={{
+              marginTop: "5px",
+            }}
+          >
+            <b>Approach:</b> {GetApproachStringFromLabel(student.currentApproach)}
+          </p>
+          <p
+            style={{
+              marginTop: "5px",
+            }}
+          >
+            <b>Target:</b> {student.currentTarget} ({student.factsTargeted.length}{" "}
+            in Set)
+          </p>
+          <p
+            style={{
+              marginTop: "5px",
+            }}
+          >
+            <b>Items in Set:</b> {student.factsTargeted.length}
+          </p>
+          <br></br>
+          <p>
+            {checkIfDateCurrent(student.lastActivity) ? (
+              <span className="practiced-today"> </span>
+            ) : (
+              <span className="needs-practice"> </span>
+            )}{" "}
+            Last Practice: {student.lastActivity.toDate().toDateString()}
+          </p>
+        </div>
+      ))}
     </div>
-  ) : (
-    <div></div>
-  );
+  }
+
 }

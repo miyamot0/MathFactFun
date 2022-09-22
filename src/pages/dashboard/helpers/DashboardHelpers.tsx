@@ -40,7 +40,7 @@ export function dashboardLoadingError(documentError: string | undefined): JSX.El
  * @param {string} filter 
  * @returns {StudentDataInterface[] | null} 
  */
-export function studentFilterMap(docs: StudentDataInterface[] | null, usr: firebase.User | null, filter: string) {
+export function studentFilterMap(docs: StudentDataInterface[] | null, usr: firebase.User | null, filter: string): StudentDataInterface[] | null {
     if (!docs || !usr) {
         return null;
     } else {
@@ -72,7 +72,7 @@ export function studentFilterMap(docs: StudentDataInterface[] | null, usr: fireb
  * @param {string} filter 
  * @returns {StudentDataInterface[] | null} 
  */
-export function practiceFilterMap(docs: StudentDataInterface[] | null, usr: firebase.User | null, filter: string) {
+export function practiceFilterMap(docs: StudentDataInterface[] | null, usr: firebase.User | null, filter: string): StudentDataInterface[] | null {
     if (!docs || !usr) {
         return null;
     } else {

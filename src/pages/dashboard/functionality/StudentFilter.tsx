@@ -37,7 +37,7 @@ export default function StudentFilter({
           <button
             key={f}
             data-testid={`student-filter-${f}`}
-            className={currentFilter === f ? "active" : ""}
+            className={currentFilter === f ? "active student-filter-btn" : "student-filter-btn"}
             onClick={() => handleFilterEvent(f, setCurrentFilter, changeFilter)}
           >
             {f}
