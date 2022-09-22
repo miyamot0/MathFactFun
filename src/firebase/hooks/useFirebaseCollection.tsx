@@ -8,6 +8,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import { projectFirestore } from "../config";
+import firebase from "firebase";
 
 import {
   Query,
@@ -45,17 +46,25 @@ export function useFirebaseCollectionTyped<T>({
   const orderBy = useRef(orderString).current;
 
   useEffect(() => {
-    let ref: Query = projectFirestore.collection(collectionString);
+    let ref: firebase.firestore.CollectionReference<firebase.firestore.DocumentData> =
+      projectFirestore.collection(collectionString);
 
     if (query) {
       const [fieldPath, opString, value] = query;
 
-      ref = ref.where(fieldPath, opString as WhereFilterOp, value);
+      ref = ref.where(
+        fieldPath,
+        opString as WhereFilterOp,
+        value
+      ) as firebase.firestore.CollectionReference;
     }
     if (orderBy) {
       const [fieldPath, direction] = orderBy;
 
-      ref = ref.orderBy(fieldPath, direction as OrderByDirection);
+      ref = ref.orderBy(
+        fieldPath,
+        direction as OrderByDirection
+      ) as firebase.firestore.CollectionReference;
     }
 
     if (

@@ -11,6 +11,17 @@ import { act, renderHook } from "@testing-library/react-hooks";
 import { useFirebaseCollectionTyped } from "../useFirebaseCollection";
 import { FirestoreCollections } from "../useFirestore";
 import * as Configs from "./../../config";
+import { mockFirebase } from "firestore-jest-mock";
+import {
+  mockCollection,
+  mockAdd,
+  mockUpdate,
+  mockDelete,
+  mockGet,
+  mockWhere,
+  mockDoc,
+  mockOnSnapShot,
+} from "firestore-jest-mock/mocks/firestore";
 
 //import { FirestoreMock } from "../../../__mocks__";
 
@@ -32,9 +43,91 @@ jest.mock("firebase/firestore", () => {
 */
 
 describe("useFirebaseCollectionTyped", () => {
-  it("asdf", () => {
-    expect(1).toBe(1);
+  mockFirebase({
+    database: {
+      users: [
+        {
+          id: "123",
+          displayEmail: "displayEmail",
+          displayName: "displayName",
+          displaySchool: "displaySchool",
+        },
+      ],
+      performances: [],
+    },
   });
+
+  beforeAll(() => {
+    jest.mock("React", () => ({
+      ...jest.requireActual("React"),
+      useEffect: jest.fn(),
+    }));
+  });
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it("Should query against firestore, users", async () => {
+    const mockInput = ["uid", "=", "123"];
+
+    const { result, waitFor } = renderHook(() =>
+      useFirebaseCollectionTyped({
+        collectionString: FirestoreCollections.Users,
+        queryString: mockInput,
+        orderString: undefined,
+      })
+    );
+
+    waitFor(() => {
+      expect(mockWhere).toBeCalledWith(mockInput);
+    });
+  });
+
+  /*
+
+  it("Should order against firestore, users", () => {
+    const { result } = renderHook(() =>
+      useFirebaseCollectionTyped({
+        collectionString: FirestoreCollections.Users,
+        queryString: undefined,
+        orderString: ["uid", "ascending"],
+      })
+    );
+
+    const { documents, error } = result.current;
+  });
+
+  */
+
+  /*
+
+  it("Should query against firestore, performances", () => {
+    const { result } = renderHook(() =>
+      useFirebaseCollectionTyped({
+        collectionString: `${FirestoreCollections.Performances}/Addition/123`,
+        queryString: ["uid", "=", "123"],
+        orderString: undefined,
+      })
+    );
+
+    const { documents, error } = result.current;
+  });
+
+  it("Should order against firestore, performances", () => {
+    const { result } = renderHook(() =>
+      useFirebaseCollectionTyped({
+        collectionString: `${FirestoreCollections.Performances}/Addition/123`,
+        queryString: undefined,
+        orderString: undefined,
+      })
+    );
+
+    const { documents, error } = result.current;
+  });
+
+  */
+
   /*
   const firestoreMock = new FirestoreMock();
   beforeEach(() => {
