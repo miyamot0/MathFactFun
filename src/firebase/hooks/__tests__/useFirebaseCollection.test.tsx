@@ -6,26 +6,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import firebase from "firebase";
-import { projectFirestore } from "./../../config";
-import { act, renderHook } from "@testing-library/react-hooks";
+import { renderHook } from "@testing-library/react-hooks";
 import { useFirebaseCollectionTyped } from "../useFirebaseCollection";
 import { FirestoreCollections } from "../useFirestore";
-import * as Configs from "./../../config";
 import { mockFirebase } from "firestore-jest-mock";
 
 import {
-  mockCollection,
-  mockAdd,
-  mockUpdate,
-  mockDelete,
-  mockGet,
   mockWhere,
-  mockDoc,
-  mockOnSnapShot,
   mockOrderBy,
 } from "firestore-jest-mock/mocks/firestore";
-import { onSnapshotEventCollection } from "../helpers/FirestoreSnapshotHelpers";
 
 describe("useFirebaseCollectionTyped", () => {
   mockFirebase({

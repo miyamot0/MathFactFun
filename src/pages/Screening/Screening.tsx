@@ -22,7 +22,7 @@ import {
   CommonDisplayHeadingStyle,
   CommonPanelWidth,
 } from "../../utilities/FormHelpers";
-import { reducerPerOperation } from "./helper/ScreeningHelper";
+import { reducerPerOperation, remapReducedEntriesToPoint } from "./helper/ScreeningHelper";
 import { PerformanceDataInterface } from "../intervention/interfaces/InterventionInterfaces";
 
 require("highcharts/modules/annotations")(Highcharts);
@@ -63,6 +63,7 @@ export default function Screening() {
     });
 
   useEffect(() => {
+
     if (
       additionDocuments &&
       subtractionDocuments &&
@@ -84,42 +85,22 @@ export default function Screening() {
         series: [
           {
             name: "Addition (DCPM)",
-            data: additionR.map((obj) => {
-              return {
-                x: moment(obj.Date).toDate().getTime(),
-                y: Math.round(obj.DCPM * 100) / 100,
-              };
-            }),
+            data: remapReducedEntriesToPoint(additionR),
             type: "line",
           },
           {
             name: "Subtraction (DCPM)",
-            data: subtractionR.map((obj) => {
-              return {
-                x: moment(obj.Date).toDate().getTime(),
-                y: Math.round(obj.DCPM * 100) / 100,
-              };
-            }),
+            data: remapReducedEntriesToPoint(subtractionR),
             type: "line",
           },
           {
             name: "Multiplication (DCPM)",
-            data: multiplicationR.map((obj) => {
-              return {
-                x: moment(obj.Date).toDate().getTime(),
-                y: Math.round(obj.DCPM * 100) / 100,
-              };
-            }),
+            data: remapReducedEntriesToPoint(multiplicationR),
             type: "line",
           },
           {
             name: "Division (DCPM)",
-            data: divisionR.map((obj) => {
-              return {
-                x: moment(obj.Date).toDate().getTime(),
-                y: Math.round(obj.DCPM * 100) / 100,
-              };
-            }),
+            data: remapReducedEntriesToPoint(divisionR),
             type: "line",
           },
         ],
@@ -147,6 +128,7 @@ export default function Screening() {
         ],
       });
     }
+
   }, [
     additionDocuments,
     subtractionDocuments,

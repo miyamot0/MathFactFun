@@ -58,3 +58,17 @@ export function reducerPerOperation(
         moment(b.Date).toDate().valueOf() - moment(a.Date).toDate().valueOf()
     );
 }
+
+/** remapReducedEntriesToPoint
+ * 
+ * @param metric 
+ * @returns 
+ */
+export function remapReducedEntriesToPoint(metric: DailyPerformanceMetrics[]) {
+  return metric.map((obj: DailyPerformanceMetrics) => {
+    return {
+      x: moment(obj.Date).toDate().getTime(),
+      y: Math.round(obj.DCPM * 100) / 100,
+    };
+  })
+}
