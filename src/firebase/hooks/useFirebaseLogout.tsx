@@ -6,10 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-/**
- * Firebase logout
- */
-
 import { useEffect, useState } from "react";
 import { projectAuth } from "../config";
 import { useAuthorizationContext } from "../../context/hooks/useAuthorizationContext";
@@ -29,7 +25,7 @@ export function useFirebaseLogout(): FirebaseLogout {
 
   const { dispatch } = useAuthorizationContext();
 
-  const logout = async () => {
+  async function logout(): Promise<void> {
     setLogoutError(undefined);
     setLogoutPending(true);
 
@@ -40,17 +36,19 @@ export function useFirebaseLogout(): FirebaseLogout {
         type: AuthorizationStates.LOGOUT,
       });
 
-      if (!logoutCancelled) {
+      if (logoutCancelled === false) {
         setLogoutPending(false);
         setLogoutError(undefined);
       }
     } catch (err: any) {
-      if (!logoutCancelled) {
+      if (logoutCancelled === false) {
         setLogoutError(err.message);
         setLogoutPending(false);
+      } else {
+        return;
       }
     }
-  };
+  }
 
   useEffect(() => {
     return () => setLogoutCancelled(true);

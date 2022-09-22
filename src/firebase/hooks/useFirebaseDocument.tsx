@@ -16,6 +16,7 @@ import { FirestoreCollections } from "./useFirestore";
 
 import { FirebaseError } from "@firebase/util";
 import { DocumentInputInterface } from "../interfaces/FirebaseInterfaces";
+import { onSnapshotEventDocument, onSnapshotEventDocumentErr } from "./helpers/FirestoreSnapshotHelpers";
 
 const ErrorNoData = "There was not a document at this location";
 const ErrorSnapshot = "Unable to get the document";
@@ -38,58 +39,15 @@ export function useFirebaseDocumentTyped<T>({
   const [document, setDocument] = useState<T | null>(null);
   const [documentError, setError] = useState<string>();
 
-  function pullDocs() {
+  useEffect(() => {
     const ref = projectFirestore.collection(collectionString).doc(idString);
 
-    if (collectionString === FirestoreCollections.Students) {
-      const unsubscribe = ref.onSnapshot(
-        (snapshot) => {
-          if (snapshot.data()) {
-            setDocument({
-              ...snapshot.data(),
-              id: snapshot.id,
-            } as unknown as T);
-          } else {
-            setError(ErrorNoData);
-          }
-        },
-        (err: unknown) => {
-          if (err instanceof FirebaseError) {
-            setError(err.message);
-          } else {
-            setError(ErrorSnapshot);
-          }
-        }
-      );
+    const unsubscribe = ref.onSnapshot(
+      (snapshot) => onSnapshotEventDocument(snapshot, setDocument, setError),
+      (err) => onSnapshotEventDocumentErr(err, setError)
+    );
 
-      return () => unsubscribe();
-    } else if (collectionString === FirestoreCollections.Users) {
-      const unsubscribe = ref.onSnapshot(
-        (snapshot) => {
-          if (snapshot.data()) {
-            setDocument({
-              ...snapshot.data(),
-              id: snapshot.id,
-            } as unknown as T);
-          } else {
-            setError(ErrorNoData);
-          }
-        },
-        (err: unknown) => {
-          if (err instanceof FirebaseError) {
-            setError(err.message);
-          } else {
-            setError(ErrorSnapshot);
-          }
-        }
-      );
-
-      return () => unsubscribe();
-    }
-  }
-
-  useEffect(() => {
-    pullDocs();
+    return () => unsubscribe();
   }, [collectionString, idString]);
 
   return { document, documentError };

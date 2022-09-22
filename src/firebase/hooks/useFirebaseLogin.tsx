@@ -6,10 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-/**
- * Firebase login
- */
-
 import { useState, useEffect } from "react";
 import { projectAuth } from "../config";
 import { useAuthorizationContext } from "../../context/hooks/useAuthorizationContext";
@@ -52,14 +48,16 @@ export function useFirebaseLogin(): FirebaseLogin {
         payload: loginResult.user,
       });
 
-      if (!loginCancelled) {
+      if (loginCancelled === false) {
         setPending(false);
         setLoginError(undefined);
       }
     } catch (error: any) {
-      if (!loginCancelled) {
+      if (loginCancelled === false) {
         setLoginError(error.message);
         setPending(false);
+      } else {
+        return;
       }
     }
   }

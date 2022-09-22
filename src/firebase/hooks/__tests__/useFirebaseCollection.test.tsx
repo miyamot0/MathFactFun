@@ -7,6 +7,7 @@
  */
 
 import firebase from "firebase";
+import { projectFirestore } from "./../../config";
 import { act, renderHook } from "@testing-library/react-hooks";
 import { useFirebaseCollectionTyped } from "../useFirebaseCollection";
 import { FirestoreCollections } from "../useFirestore";
@@ -24,25 +25,7 @@ import {
   mockOnSnapShot,
   mockOrderBy,
 } from "firestore-jest-mock/mocks/firestore";
-
-//import { FirestoreMock } from "../../../__mocks__";
-
-//const FirestoreMock = require("./../../../../__mocks__/FirestoreMock");
-
-/*
-jest.mock("firebase/firestore", () => {
-  const mChanges = [{ name: "fake data" }];
-  const mSnapshot = {
-    docChanges: jest.fn().mockReturnValue(mChanges),
-  };
-  return jest.fn(() => ({
-    collection: jest.fn().mockReturnThis(),
-    onSnapshot: jest.fn().mockImplementation((callback) => {
-      callback(mSnapshot);
-    }),
-  }));
-});
-*/
+import { onSnapshotEventCollection } from "../helpers/FirestoreSnapshotHelpers";
 
 describe("useFirebaseCollectionTyped", () => {
   mockFirebase({
@@ -59,14 +42,30 @@ describe("useFirebaseCollectionTyped", () => {
     },
   });
 
-  beforeEach(() => {
-    //jest.clearAllMocks();
+  afterAll(() => {
+    jest.clearAllMocks();
+  });
+
+  it("Should fail on bogus query", async () => {
+
+    const { result, waitFor } = renderHook(() =>
+      useFirebaseCollectionTyped({
+        collectionString: FirestoreCollections.Users,
+        queryString: undefined,
+        orderString: undefined,
+      })
+    );
+
+    waitFor(() => {
+      expect(result.error).toBe(true)
+    })
+
   });
 
   it("Should query against firestore, users", async () => {
     const mockInput = ["uid", "=", "123"];
 
-    const { result, waitFor } = renderHook(() =>
+    const { waitFor } = renderHook(() =>
       useFirebaseCollectionTyped({
         collectionString: FirestoreCollections.Users,
         queryString: mockInput,
@@ -82,7 +81,7 @@ describe("useFirebaseCollectionTyped", () => {
   it("Should orderby against firestore, users", async () => {
     const mockInput = ["id", "asc"];
 
-    const { result, waitFor } = renderHook(() =>
+    const { waitFor } = renderHook(() =>
       useFirebaseCollectionTyped({
         collectionString: FirestoreCollections.Users,
         queryString: undefined,
@@ -98,7 +97,7 @@ describe("useFirebaseCollectionTyped", () => {
   it("Should query against firestore, performances", async () => {
     const mockInput = ["uid", "=", "123"];
 
-    const { result, waitFor } = renderHook(() =>
+    const { waitFor } = renderHook(() =>
       useFirebaseCollectionTyped({
         collectionString: `${FirestoreCollections.Performances}/Addition/123`,
         queryString: mockInput,
@@ -114,7 +113,7 @@ describe("useFirebaseCollectionTyped", () => {
   it("Should orderby against firestore, performances", async () => {
     const mockInput = ["id", "asc"];
 
-    const { result, waitFor } = renderHook(() =>
+    const { waitFor } = renderHook(() =>
       useFirebaseCollectionTyped({
         collectionString: `${FirestoreCollections.Performances}/Addition/123`,
         queryString: undefined,
@@ -127,226 +126,6 @@ describe("useFirebaseCollectionTyped", () => {
     });
   });
 
-  /*
+  // TODO: clean up on snapshot change
 
-  it("Should order against firestore, users", () => {
-    const { result } = renderHook(() =>
-      useFirebaseCollectionTyped({
-        collectionString: FirestoreCollections.Users,
-        queryString: undefined,
-        orderString: ["uid", "ascending"],
-      })
-    );
-
-    const { documents, error } = result.current;
-  });
-
-  */
-
-  /*
-
-  it("Should query against firestore, performances", () => {
-    const { result } = renderHook(() =>
-      useFirebaseCollectionTyped({
-        collectionString: `${FirestoreCollections.Performances}/Addition/123`,
-        queryString: ["uid", "=", "123"],
-        orderString: undefined,
-      })
-    );
-
-    const { documents, error } = result.current;
-  });
-
-  it("Should order against firestore, performances", () => {
-    const { result } = renderHook(() =>
-      useFirebaseCollectionTyped({
-        collectionString: `${FirestoreCollections.Performances}/Addition/123`,
-        queryString: undefined,
-        orderString: undefined,
-      })
-    );
-
-    const { documents, error } = result.current;
-  });
-
-  */
-
-  /*
-  const firestoreMock = new FirestoreMock();
-  beforeEach(() => {
-    firebase.firestore = firestoreMock;
-    firestoreMock.reset();
-  });
-
-  it("does something", (done) => {
-    firestoreMock.mockAddReturn = { id: "test-id" };
-    Configs.projectFirestore
-      .collection("foobar")
-      .add({ foo: "bar" })
-      .then((res) => {
-        expect(firestoreMock.mockCollection).toBeCalledWith("foobar");
-        expect(firestoreMock.mockAdd).toBeCalledWith({ foo: "bar" });
-        expect(res.id).toEqual("test-id");
-        done();
-      })
-      .catch(done);
-  });
-  */
-  /*
-  test("should pass", async () => {
-    const { result } = renderHook(() =>
-      useFirebaseCollectionTyped({
-        collectionString: FirestoreCollections.Users,
-        queryString: ["uid", "=", "123"],
-        orderString: undefined,
-      })
-    );
-
-    const { documents, error } = result.current;
-
-    expect(1).toBe(1);
-  });
-  */
-  /*
-  beforeAll(() => {
-    const docMock1 = jest.spyOn(Configs.projectFirestore, "collection");
-    docMock1.mockImplementation(mockCollectionMethod);
-  });
-
-  afterAll(() => {
-    jest.clearAllMocks();
-  });
-
-  it("Should fire, with a query", async () => {
-    await act(async () => {
-      mockCollectionMethod.mockImplementation(() => ({
-        where: () => Promise.resolve(() => true),
-      }));
-
-      const { result } = renderHook(() =>
-        useFirebaseCollectionTyped({
-          collectionString: FirestoreCollections.Users,
-          queryString: ["uid", "=", "123"],
-          orderString: undefined,
-        })
-      );
-
-      const { documents, error } = result.current;
-
-      expect(1).toBe(1);
-    });
-  });
-
-  it("Should fire, with a order by", async () => {
-    await act(async () => {
-      mockCollectionMethod.mockImplementation(() => ({
-        orderBy: () => Promise.resolve(() => true),
-      }));
-
-      const { result } = renderHook(() =>
-        useFirebaseCollectionTyped({
-          collectionString: FirestoreCollections.Users,
-          queryString: undefined,
-          orderString: ["uid"],
-        })
-      );
-
-      const { documents, error } = result.current;
-
-      expect(1).toBe(1);
-    });
-  });
-
-  test("should pass", async () => {
-
-
-    const { result } = renderHook(() =>
-      useFirebaseCollectionTyped({
-        collectionString: FirestoreCollections.Users,
-        queryString: undefined,
-        orderString: ["uid"],
-      })
-    );
-
-    const { documents, error } = result.current;
-
-    expect(1).toBe(1);
-
-    //const StatisticsService = require('./index');
-
-    //await StatisticsService();
-  });
-
-  */
-  /*
-  it("Should fire, with neither", async () => {
-    await act(async () => {
-      mockCollectionMethod.mockImplementation(() => ({
-        onSnapshot: (snapshot: any) => ({
-          docs: [
-            {
-              id: "123",
-            },
-          ],
-        }),
-      }));
-
-      const { result } = renderHook(() =>
-        useFirebaseCollectionTyped({
-          collectionString: FirestoreCollections.Users,
-          queryString: undefined,
-          orderString: undefined,
-        })
-      );
-
-      const { documents, error } = result.current;
-
-      expect(documents).toStrictEqual({});
-      expect(error).toStrictEqual(undefined);
-    });
-  });
-  */
-  /*
-
-  it("Should fire, with neither, spy snapshot", async () => {
-    await act(async () => {
-      mockCollectionMethod.mockImplementation(() => ({
-        add: () => Promise.resolve(() => true),
-      }));
-
-      const { result } = renderHook(() =>
-        useFirebaseCollectionTyped({
-          collectionString: FirestoreCollections.Users,
-          queryString: undefined,
-          orderString: undefined,
-        })
-      );
-
-      const { documents, error } = result.current;
-
-      expect(1).toBe(1);
-    });
-  });
-
-  it("Should fire, with neither, but performances", async () => {
-    await act(async () => {
-      mockCollectionMethod.mockImplementation(() => ({
-        add: () => Promise.resolve(() => true),
-      }));
-
-      const { result } = renderHook(() =>
-        useFirebaseCollectionTyped({
-          collectionString: `${FirestoreCollections.Performances}/uid/Addition`,
-          queryString: undefined,
-          orderString: undefined,
-        })
-      );
-
-      const { documents, error } = result.current;
-
-      expect(1).toBe(1);
-    });
-  });
-
-  */
 });

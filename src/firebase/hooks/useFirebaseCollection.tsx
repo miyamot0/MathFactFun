@@ -11,15 +11,11 @@ import { projectFirestore } from "../config";
 import firebase from "firebase";
 
 import {
-  Query,
   WhereFilterOp,
   OrderByDirection,
 } from "@firebase/firestore-types";
-import { FirestoreCollections } from "./useFirestore";
-import { FirebaseError } from "@firebase/util";
 import { CollectionInputInterface } from "../interfaces/FirebaseInterfaces";
-
-const CollectionError = "Unable to retrieve data";
+import { onSnapshotEventCollection, onSnapshotEventCollectionErr } from "./helpers/FirestoreSnapshotHelpers";
 
 /** useFirebaseCollection
  *
@@ -46,8 +42,9 @@ export function useFirebaseCollectionTyped<T>({
   const orderBy = useRef(orderString).current;
 
   useEffect(() => {
+
     let ref: firebase.firestore.CollectionReference<firebase.firestore.DocumentData> =
-      projectFirestore.collection(collectionString);
+      projectFirestore.collection(collectionString.trim());
 
     if (query) {
       const [fieldPath, opString, value] = query;
@@ -58,6 +55,7 @@ export function useFirebaseCollectionTyped<T>({
         value
       ) as firebase.firestore.CollectionReference;
     }
+
     if (orderBy) {
       const [fieldPath, direction] = orderBy;
 
@@ -67,63 +65,12 @@ export function useFirebaseCollectionTyped<T>({
       ) as firebase.firestore.CollectionReference;
     }
 
-    if (
-      collectionString === FirestoreCollections.Students ||
-      collectionString === FirestoreCollections.Users
-    ) {
-      const unsubscribe = ref.onSnapshot(
-        (snapshot) => {
-          setDocuments(
-            snapshot.docs.map((doc) => {
-              return {
-                ...doc.data(),
-                id: doc.id,
-              } as unknown as T;
-            })
-          );
-          setError(undefined);
-        },
-        (err: unknown) => {
-          if (err instanceof FirebaseError) {
-            setError(err.message);
-          } else {
-            setError(CollectionError);
-          }
-        }
-      );
+    const unsubscribe = ref.onSnapshot(
+      (snapshot) => onSnapshotEventCollection<T>(snapshot, setDocuments, setError),
+      (err) => onSnapshotEventCollectionErr(err, setError));
 
-      return () => unsubscribe();
-    }
+    return () => unsubscribe();
 
-    const stringSplit: string[] = collectionString.split("/");
-
-    if (
-      stringSplit.length > 0 &&
-      stringSplit[0] === FirestoreCollections.Performances
-    ) {
-      const unsubscribe = ref.onSnapshot(
-        (snapshot) => {
-          setDocuments(
-            snapshot.docs.map((doc) => {
-              return {
-                ...doc.data(),
-                id: doc.id,
-              } as unknown as T;
-            })
-          );
-          setError(undefined);
-        },
-        (err: unknown) => {
-          if (err instanceof FirebaseError) {
-            setError(err.message);
-          } else {
-            setError(CollectionError);
-          }
-        }
-      );
-
-      return () => unsubscribe();
-    }
   }, [collectionString, query, orderBy]);
 
   return { documents, error };
