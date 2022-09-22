@@ -10,7 +10,6 @@ import React from "react";
 import firebase from "firebase";
 import Adapter from "enzyme-adapter-react-16";
 import Enzyme, { mount } from "enzyme";
-import { FirestoreState } from "../../../firebase/interfaces/FirebaseInterfaces";
 import { CommentInterface } from "../../student/subcomponents/types/CommentTypes";
 import { StudentDataInterface } from "../../student/interfaces/StudentInterfaces";
 import { MemoryRouter } from "react-router-dom";
@@ -18,6 +17,8 @@ import Benchmark from "./../Benchmark";
 
 import * as KeyHandling from "./../helpers/KeyHandlingHelper";
 import * as InterventionHelper from "./../helpers/InterventionHelpers";
+import * as UseAuthProvider from '../../../context/hooks/useAuthorizationContext'
+import * as UseDocumentMethods from '../../../firebase/hooks/useFirebaseDocument'
 import { waitFor } from "@testing-library/react";
 
 Enzyme.configure({ adapter: new Adapter() });
@@ -32,32 +33,6 @@ const mockComment = {
   id: 0,
 };
 
-const mockData = {
-  id: mockId,
-  aimLine: 0,
-  createdAt: firebase.firestore.Timestamp.fromDate(new Date()),
-  dueDate: firebase.firestore.Timestamp.fromDate(new Date()),
-  lastActivity: firebase.firestore.Timestamp.fromDate(new Date()),
-  comments: [mockComment] as CommentInterface[],
-  completedBenchmark: [],
-  currentBenchmarking: ["a", "b"],
-  factsMastered: ["", ""],
-  factsSkipped: ["", ""],
-  factsTargeted: ["", ""],
-
-  creator: "",
-  currentApproach: "N/A",
-  currentErrorApproach: "",
-  currentGrade: "",
-  currentSRApproach: "",
-  currentTarget: mockTarget,
-  details: "",
-  name: "Name",
-  problemSet: "",
-
-  minForTask: 2,
-} as StudentDataInterface;
-
 jest.mock("react-router-dom", () => ({
   ...jest.requireActual("react-router-dom"),
   useParams: () => ({
@@ -67,54 +42,46 @@ jest.mock("react-router-dom", () => ({
   useRouteMatch: () => ({ url: `/Screening/${mockId}` }),
 }));
 
-jest.mock("./../../../context/hooks/useAuthorizationContext", () => {
-  const originalModule = jest.requireActual(
-    "./../../../context/hooks/useAuthorizationContext"
-  );
-  return {
-    __esModule: true,
-    ...originalModule,
-    default: () => ({
+describe("Benchmark", () => {
+  it("should render", () => {
+    const docMock = jest.spyOn(UseAuthProvider, 'useAuthorizationContext');
+    docMock.mockImplementationOnce(() => ({
       user: { uid: "456" } as firebase.User,
       adminFlag: true,
       authIsReady: true,
       dispatch: jest.fn(() => true),
-    }),
-  };
-});
+    }))
 
-jest.mock("./../../../firebase/hooks/useFirestore", () => {
-  const originalModule = jest.requireActual(
-    "./../../../firebase/hooks/useFirestore"
-  );
-  return {
-    __esModule: true,
-    ...originalModule,
-    default: () => ({
-      updateDocument: jest.fn(),
-      response: {} as FirestoreState,
-    }),
-  };
-});
+    const docMockCollection = jest.spyOn(UseDocumentMethods, "useFirebaseDocumentTyped")
+    docMockCollection.mockReturnValue({
+      document: {
+        id: mockId,
+        aimLine: 0,
+        createdAt: firebase.firestore.Timestamp.fromDate(new Date()),
+        dueDate: firebase.firestore.Timestamp.fromDate(new Date()),
+        lastActivity: firebase.firestore.Timestamp.fromDate(new Date()),
+        comments: [mockComment] as CommentInterface[],
+        completedBenchmark: [],
+        currentBenchmarking: ["Addition-Sums to 18"],
+        factsMastered: [],
+        factsSkipped: [],
+        factsTargeted: [],
 
-jest.mock("./../../../firebase/hooks/useFirebaseDocument", () => {
-  const originalModule = jest.requireActual(
-    "./../../../firebase/hooks/useFirebaseDocument"
-  );
-  return {
-    __esModule: true,
-    ...originalModule,
-    default: () => ({
-      useFirebaseDocumentTyped: {
-        document: mockData,
-        documentError: undefined,
-      },
-    }),
-  };
-});
+        creator: "",
+        currentApproach: "N/A",
+        currentErrorApproach: "N/A",
+        currentGrade: "K",
+        currentSRApproach: "N/A",
+        currentTarget: "Addition",
+        details: "",
+        name: "",
+        problemSet: "A",
 
-describe("Benchmark", () => {
-  it("should render", () => {
+        minForTask: 0.04,
+      } as StudentDataInterface,
+      documentError: undefined
+    })
+
     const wrapper = mount(
       <MemoryRouter>
         <Benchmark></Benchmark>
@@ -161,6 +128,5 @@ describe("Benchmark", () => {
       expect(mockedCommonKeyListener).toBeCalled();
     });
 
-    expect(1).toBe(1);
   });
 });

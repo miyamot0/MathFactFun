@@ -32,7 +32,7 @@ export default function ListViewLayout({
           state.WorkingData.map((fact) => {
             return (
               <li
-                className="list-styling"
+                className="list-styling clickable-li-ccc"
                 key={fact}
                 onClick={() => captureItemClick(fact)}
               >

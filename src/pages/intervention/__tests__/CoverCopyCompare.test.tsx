@@ -9,8 +9,7 @@
 import React from "react";
 import firebase from "firebase";
 import Adapter from "enzyme-adapter-react-16";
-import Enzyme, { shallow } from "enzyme";
-import { FirestoreState } from "../../../firebase/interfaces/FirebaseInterfaces";
+import Enzyme, { mount } from "enzyme";
 import { CommentInterface } from "../../student/subcomponents/types/CommentTypes";
 import { StudentDataInterface } from "../../student/interfaces/StudentInterfaces";
 import { MemoryRouter } from "react-router-dom";
@@ -18,13 +17,15 @@ import CoverCopyCompare from "../CoverCopyCompare";
 
 import * as KeyHandling from "./../helpers/KeyHandlingHelper";
 import * as InterventionHelper from "./../helpers/InterventionHelpers";
+import * as UseAuthProvider from '../../../context/hooks/useAuthorizationContext'
+import * as UseDocumentMethods from '../../../firebase/hooks/useFirebaseDocument'
+
 import { waitFor } from "@testing-library/react";
-import { InitialInterventionState as StartingState } from "../functionality/InterventionBehavior";
-import { InterventionState } from "../interfaces/InterventionInterfaces";
+import ReactModal from "react-modal";
+import { ErrorHandling } from "../../../maths/Facts";
 
 Enzyme.configure({ adapter: new Adapter() });
 
-const mockStarting = StartingState;
 const mockId = "123";
 const mockTarget = "Addition";
 const mockComment = {
@@ -34,32 +35,6 @@ const mockComment = {
   createdBy: "",
   id: 0,
 };
-
-const mockData = {
-  id: mockId,
-  aimLine: 0,
-  createdAt: firebase.firestore.Timestamp.fromDate(new Date()),
-  dueDate: firebase.firestore.Timestamp.fromDate(new Date()),
-  lastActivity: firebase.firestore.Timestamp.fromDate(new Date()),
-  comments: [mockComment] as CommentInterface[],
-  completedBenchmark: [],
-  currentBenchmarking: [],
-  factsMastered: [],
-  factsSkipped: [],
-  factsTargeted: ["5+3=8:8:0", "1+2=3:8:1"],
-
-  creator: "",
-  currentApproach: "N/A",
-  currentErrorApproach: "",
-  currentGrade: "",
-  currentSRApproach: "",
-  currentTarget: mockTarget,
-  details: "",
-  name: "",
-  problemSet: "",
-
-  minForTask: 2,
-} as StudentDataInterface;
 
 jest.mock("react-router-dom", () => ({
   ...jest.requireActual("react-router-dom"),
@@ -73,69 +48,49 @@ jest.mock("react-router-dom", () => ({
   useRouteMatch: () => ({ url: `/CoverCopyCompare/${mockId}/${mockTarget}` }),
 }));
 
-jest.mock("./../../../context/hooks/useAuthorizationContext", () => {
-  const originalModule = jest.requireActual(
-    "./../../../context/hooks/useAuthorizationContext"
-  );
-  return {
-    __esModule: true,
-    ...originalModule,
-    default: () => ({
+ReactModal.setAppElement = () => null;
+
+describe("CoverCopyCompare", () => {
+  it("should render in base state", () => {
+    const docMock = jest.spyOn(UseAuthProvider, 'useAuthorizationContext');
+    docMock.mockImplementation(() => ({
       user: { uid: "456" } as firebase.User,
       adminFlag: true,
       authIsReady: true,
       dispatch: jest.fn(() => true),
-    }),
-  };
-});
+    }))
 
-jest.mock("./../../../firebase/hooks/useFirestore", () => {
-  const originalModule = jest.requireActual(
-    "./../../../firebase/hooks/useFirestore"
-  );
-  return {
-    __esModule: true,
-    ...originalModule,
-    default: () => ({
-      addDocument: jest.fn(),
-      response: {} as FirestoreState,
-    }),
-  };
-});
+    const docMockCollection = jest.spyOn(UseDocumentMethods, "useFirebaseDocumentTyped")
+    docMockCollection.mockReturnValue({
+      document: {
+        id: mockId,
+        aimLine: 0,
+        createdAt: firebase.firestore.Timestamp.fromDate(new Date()),
+        dueDate: firebase.firestore.Timestamp.fromDate(new Date()),
+        lastActivity: firebase.firestore.Timestamp.fromDate(new Date()),
+        comments: [mockComment] as CommentInterface[],
+        completedBenchmark: [],
+        currentBenchmarking: ["Addition-Sums to 18"],
+        factsMastered: [],
+        factsSkipped: [],
+        factsTargeted: [],
 
-jest.mock("./../../../firebase/hooks/useFirestore", () => {
-  const originalModule = jest.requireActual(
-    "./../../../firebase/hooks/useFirestore"
-  );
-  return {
-    __esModule: true,
-    ...originalModule,
-    default: () => ({
-      updateDocument: jest.fn(),
-      response: {} as FirestoreState,
-    }),
-  };
-});
+        creator: "",
+        currentApproach: "N/A",
+        currentErrorApproach: "N/A",
+        currentGrade: "K",
+        currentSRApproach: "N/A",
+        currentTarget: "Addition",
+        details: "",
+        name: "",
+        problemSet: "A",
 
-jest.mock("./../../../firebase/hooks/useFirebaseDocument", () => {
-  const originalModule = jest.requireActual(
-    "./../../../firebase/hooks/useFirebaseDocument"
-  );
-  return {
-    __esModule: true,
-    ...originalModule,
-    default: () => ({
-      useFirebaseDocumentTyped: {
-        document: mockData,
-        documentError: undefined,
-      },
-    }),
-  };
-});
+        minForTask: 0.04,
+      } as StudentDataInterface,
+      documentError: undefined
+    })
 
-describe("CoverCopyCompare", () => {
-  it("should render in base state", () => {
-    const wrapper = shallow(
+    const wrapper = mount(
       <MemoryRouter>
         <CoverCopyCompare />
       </MemoryRouter>
@@ -163,13 +118,65 @@ describe("CoverCopyCompare", () => {
 
     wrapper.update();
 
+    expect(mockedSharedButtonActionSequence).not.toBeCalled();
+
+    wrapper.find("button").first().simulate("click");
+
     waitFor(() => {
-      expect(wrapper.find('div.wrapper').length).toBe(1)
+      expect(mockedSharedButtonActionSequence).toBeCalled();
+    });
+
+    expect(mockedCommonKeyListener).not.toBeCalled();
+
+    const event = new KeyboardEvent("keydown", { keyCode: 37 });
+    window.dispatchEvent(event);
+    wrapper.simulate("keydown", { keyCode: 37 });
+
+    waitFor(() => {
+      expect(mockedCommonKeyListener).toBeCalled();
     });
   });
 
   it('should react on li click', () => {
-    const wrapper = shallow(
+    const docMock = jest.spyOn(UseAuthProvider, 'useAuthorizationContext');
+    docMock.mockImplementation(() => ({
+      user: { uid: "456" } as firebase.User,
+      adminFlag: true,
+      authIsReady: true,
+      dispatch: jest.fn(() => true),
+    }))
+
+    const docMockCollection = jest.spyOn(UseDocumentMethods, "useFirebaseDocumentTyped")
+    docMockCollection.mockReturnValue({
+      document: {
+        id: mockId,
+        aimLine: 0,
+        createdAt: firebase.firestore.Timestamp.fromDate(new Date()),
+        dueDate: firebase.firestore.Timestamp.fromDate(new Date()),
+        lastActivity: firebase.firestore.Timestamp.fromDate(new Date()),
+        comments: [mockComment] as CommentInterface[],
+        completedBenchmark: [],
+        currentBenchmarking: ["Addition-Sums to 18"],
+        factsMastered: [],
+        factsSkipped: [],
+        factsTargeted: ["1+1=2:0:1", "1+2=3:0:2"],
+
+        creator: "",
+        currentApproach: "N/A",
+        currentErrorApproach: ErrorHandling.Never,
+        currentGrade: "K",
+        currentSRApproach: "N/A",
+        currentTarget: "Addition",
+        details: "",
+        name: "",
+        problemSet: "A",
+
+        minForTask: 0.04,
+      } as StudentDataInterface,
+      documentError: undefined
+    })
+
+    const wrapper = mount(
       <MemoryRouter>
         <CoverCopyCompare />
       </MemoryRouter>
@@ -179,12 +186,12 @@ describe("CoverCopyCompare", () => {
     const mockedCommonKeyListener = jest.fn();
     docMock1.mockImplementation(() => mockedCommonKeyListener());
 
-    const docMock2 = jest.spyOn(
-      InterventionHelper,
-      "sharedButtonActionSequence"
-    );
-    const mockedSharedButtonActionSequence = jest.fn();
-    docMock2.mockImplementation(() => mockedSharedButtonActionSequence());
+    //const docMock2 = jest.spyOn(
+    //  InterventionHelper,
+    //  "sharedButtonActionSequence"
+    //);
+    //const mockedSharedButtonActionSequence = jest.fn();
+    //docMock2.mockImplementation(() => mockedSharedButtonActionSequence());
 
     const docMock3 = jest.spyOn(
       InterventionHelper,
@@ -193,118 +200,52 @@ describe("CoverCopyCompare", () => {
     const mockedSubmitPerformancesToFirebase = jest.fn();
     docMock3.mockImplementation(() => mockedSubmitPerformancesToFirebase());
 
-
     jest.spyOn(React, "useEffect").mockImplementation((f) => f());
 
     wrapper.update();
-  })
 
-  /**
-    it("should render", () => {
-      const wrapper = shallow(
-        <MemoryRouter>
-          <CoverCopyCompare />
-        </MemoryRouter>
-      );
-  
-  
-      const docMock1 = jest.spyOn(KeyHandling, "commonKeyListener");
-      const mockedCommonKeyListener = jest.fn();
-      docMock1.mockImplementation(() => mockedCommonKeyListener());
-  
-      const docMock2 = jest.spyOn(
-        InterventionHelper,
-        "sharedButtonActionSequence"
-      );
-      const mockedSharedButtonActionSequence = jest.fn();
-      docMock2.mockImplementation(() => mockedSharedButtonActionSequence());
-  
-      const docMock3 = jest.spyOn(
-        InterventionHelper,
-        "submitPerformancesToFirebase"
-      );
-      const mockedSubmitPerformancesToFirebase = jest.fn();
-      docMock3.mockImplementation(() => mockedSubmitPerformancesToFirebase());
-  
-      jest.spyOn(React, "useEffect").mockImplementation((f) => f());
-  
-      wrapper.update();
-  
-      expect(mockedSharedButtonActionSequence).not.toBeCalled();
-  
-      wrapper.find("button").first().simulate("click");
-  
-      waitFor(() => {
-        expect(mockedSharedButtonActionSequence).toBeCalled();
-      });
-  
-      expect(mockedCommonKeyListener).not.toBeCalled();
-  
-      const event = new KeyboardEvent("keydown", { keyCode: 37 });
-      window.dispatchEvent(event);
-      wrapper.simulate("keydown", { keyCode: 37 });
-  
-      waitFor(() => {
-        expect(mockedCommonKeyListener).toBeCalled();
-      });
-  
-      expect(1).toBe(1);
-  
-    });
-   *  */
-});
+    //expect(mockedSharedButtonActionSequence).not.toBeCalled();
 
-describe("CCC with modified state", () => {
-  beforeAll(() => {
-    jest.mock("./../functionality/InterventionBehavior", () => {
-      const originalModule = jest.requireActual(
-        "./../functionality/InterventionBehavior"
-      );
-      return {
-        __esModule: true,
-        ...originalModule,
-        default: () => ({
-          InitialInterventionState: {
-            ...mockStarting,
-            LoadedData: false,
-          } as InterventionState,
-        }),
-      };
-    });
-  })
+    wrapper.find("button").first().simulate("click");
 
-  it('asdf', () => {
-    const wrapper = shallow(
-      <MemoryRouter>
-        <CoverCopyCompare />
-      </MemoryRouter>
-    );
+    //waitFor(() => {
+    //  expect(mockedSharedButtonActionSequence).toBeCalled();
+    //});
 
-    const docMock1 = jest.spyOn(KeyHandling, "commonKeyListener");
-    const mockedCommonKeyListener = jest.fn();
-    docMock1.mockImplementation(() => mockedCommonKeyListener());
+    expect(mockedCommonKeyListener).not.toBeCalled();
 
-    const docMock2 = jest.spyOn(
-      InterventionHelper,
-      "sharedButtonActionSequence"
-    );
-    const mockedSharedButtonActionSequence = jest.fn();
-    docMock2.mockImplementation(() => mockedSharedButtonActionSequence());
-
-    const docMock3 = jest.spyOn(
-      InterventionHelper,
-      "submitPerformancesToFirebase"
-    );
-    const mockedSubmitPerformancesToFirebase = jest.fn();
-    docMock3.mockImplementation(() => mockedSubmitPerformancesToFirebase());
-
-
-    jest.spyOn(React, "useEffect").mockImplementation((f) => f());
-
-    wrapper.update();
+    const event = new KeyboardEvent("keydown", { keyCode: 37 });
+    window.dispatchEvent(event);
+    wrapper.simulate("keydown", { keyCode: 37 });
 
     waitFor(() => {
-      expect(wrapper.find('div.wrapper').length).toBe(1)
+      expect(mockedCommonKeyListener).toBeCalled();
     });
+
+    wrapper.update();
+
+    const liItems = wrapper.find('.clickable-li-ccc');
+    const liItem = liItems.first();
+    liItem.simulate('click');
+
+    //waitFor(() => {
+    //  expect(mockedSharedButtonActionSequence).toBeCalled();
+    //});
+
+    wrapper.update();
+
+    const liItems2 = wrapper.find('.clickable-li-ccc');
+    const liItem2 = liItems2.first();
+    liItem2.simulate('click');
+
+    wrapper.find("button").first().simulate("click");
+    wrapper.find("button").first().simulate("click");
+    wrapper.find("button").first().simulate("click");
+    wrapper.find("button").first().simulate("click");
+    wrapper.find("button").first().simulate("click");
+    wrapper.find("button").first().simulate("click");
+    wrapper.find("button").first().simulate("click");
+
   })
-})
+});
+

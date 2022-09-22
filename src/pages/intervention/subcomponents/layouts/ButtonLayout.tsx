@@ -43,7 +43,7 @@ export default function ButtonLayout({
     <div className={className}>
       <section>
         <button
-          className="global-btn "
+          className="global-btn"
           onClick={() => {
             sharedButtonActionSequence(
               user,

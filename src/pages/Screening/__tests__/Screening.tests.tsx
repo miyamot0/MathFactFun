@@ -16,8 +16,6 @@ import Screening from "../Screening";
 import { render, waitFor } from "@testing-library/react";
 import * as UseAuthProvider from '../../../context/hooks/useAuthorizationContext'
 import * as UseCollectionMethods from '../../../firebase/hooks/useFirebaseCollection'
-import { FactDataInterface } from "../../setcreator/interfaces/SetCreatorInterfaces";
-import { PerformanceDataInterface } from "../../intervention/interfaces/InterventionInterfaces";
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -30,13 +28,6 @@ jest.mock("react-router-dom", () => ({
   }),
   useRouteMatch: () => ({ url: `/Screening/${mockId}` }),
 }));
-
-const generateObject = () => {
-  return {
-    documents: [] as PerformanceDataInterface[],
-    error: undefined
-  }
-}
 
 describe("Screening", () => {
   it("Should render, no admin", () => {
