@@ -25,6 +25,10 @@
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.js",
       "\\.(css|less)$": "identity-obj-proxy"
     },
+    "coverageReporters": [
+      "json-summary",
+      "lcov"
+    ],
     "coveragePathIgnorePatterns": [
       "index.tsx",
       "TapedProblems.tsx",
@@ -38,8 +42,10 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "cover": "jest --coverage",
+    "make-badges": "istanbul-badges-readme",
     "test-verbose": "npm run test -- --silent=false",
-    "test-coverage": "npm run test -- --coverage --watchAll --coverageDirectory='coverage'",
+    "test-coverage": "npm run test -- --coverage --watchAll --coverageDirectory='coverage' --coverageReporters='json-summary'",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -87,6 +93,7 @@
     "identity-obj-proxy": "^3.0.0",
     "react-select-event": "^5.5.1",
     "source-map-loader": "^4.0.0",
-    "typescript": "^4.7.4"
+    "typescript": "^4.7.4",
+    "istanbul-badges-readme": "^1.8.0"
   }
 }
