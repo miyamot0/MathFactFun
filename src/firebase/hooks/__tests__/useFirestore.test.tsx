@@ -38,7 +38,7 @@ describe("useFirestore", () => {
   });
 
   it("Should have persisting state if thrown", async () => {
-    act(() => {
+    await act(async () => {
       const { result } = renderHook(() =>
         useReducer(firestoreReducer, mockInitialState)
       );
@@ -50,7 +50,7 @@ describe("useFirestore", () => {
         error: null,
       });
 
-      waitFor(() => {
+      await waitFor(() => {
         expect(result.current[0]).toStrictEqual(mockInitialState);
       });
     });
@@ -204,7 +204,6 @@ describe("useFirestore: Add document", () => {
 
       await addDocument({} as UserDataInterface);
 
-      expect(1).toBe(1);
     });
   });
 
@@ -223,8 +222,6 @@ describe("useFirestore: Add document", () => {
       const { addDocument } = result.current;
 
       await addDocument({} as UserDataInterface);
-
-      expect(1).toBe(1);
     });
   });
 });
@@ -257,8 +254,6 @@ describe("useFirestore: Delete document", () => {
       const { deleteDocument } = result.current;
 
       await deleteDocument("123");
-
-      expect(1).toBe(1);
     });
   });
 
@@ -277,8 +272,6 @@ describe("useFirestore: Delete document", () => {
       const { deleteDocument } = result.current;
 
       await deleteDocument("123");
-
-      expect(1).toBe(1);
     });
   });
 });
@@ -311,8 +304,6 @@ describe("useFirestore: Update document", () => {
       const { updateDocument } = result.current;
 
       await updateDocument("123", {});
-
-      expect(1).toBe(1);
     });
   });
 
@@ -331,8 +322,6 @@ describe("useFirestore: Update document", () => {
       const { updateDocument } = result.current;
 
       await updateDocument("123", {});
-
-      expect(1).toBe(1);
     });
   });
 });

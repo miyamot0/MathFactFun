@@ -7,36 +7,42 @@
  */
 
 import React from "react";
-import Enzyme, { mount } from "enzyme";
+import Enzyme, { shallow } from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
 import StudentFilter from "../StudentFilter";
 import * as StudentFilterHelpers from "./../helpers/StudentFilterHelpers";
+import { act } from "react-dom/test-utils";
+import { waitFor } from "@testing-library/react";
 
 Enzyme.configure({ adapter: new Adapter() });
 
 const mockCallback = jest.fn();
 
 describe("StudentFilter", () => {
-  it("Check state behavior, trigger event", () => {
-    const docMock = jest.spyOn(StudentFilterHelpers, "handleFilterEvent");
+  it("Check state behavior, trigger event", async () => {
+    await act(async () => {
+      const docMock = jest.spyOn(StudentFilterHelpers, "handleFilterEvent");
 
-    docMock.mockImplementation(mockCallback);
+      docMock.mockImplementation(mockCallback);
 
-    const wrapper = mount(<StudentFilter changeFilter={() => true} />);
-    const button = wrapper.find("button").first();
-    button.simulate("click");
+      const wrapper = shallow(<StudentFilter changeFilter={() => true} />);
+      const button = wrapper.find("button").first();
+      button.simulate("click");
 
-    setTimeout(() => {
-      expect(mockCallback).toBeCalled();
-    }, 1000);
+      await waitFor(() => {
+        expect(mockCallback).toBeCalled();
+      });
+    })
   });
 
-  it("Check state behavior, mocked callback", () => {
-    const wrapper = mount(<StudentFilter changeFilter={mockCallback} />);
-    const studentFilterTag = wrapper.find({ class: "student-filter" });
+  it("Check state behavior, mocked callback", async () => {
+    await act(async () => {
+      const wrapper = shallow(<StudentFilter changeFilter={mockCallback} />);
+      const studentFilterTag = wrapper.find("div.student-filter");
 
-    setTimeout(() => {
-      expect(studentFilterTag.length).toBe(1);
-    }, 1000);
+      await waitFor(() => {
+        expect(studentFilterTag.length).toBe(1);
+      });
+    })
   });
 });

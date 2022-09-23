@@ -521,58 +521,6 @@ describe("commonKeyListener", () => {
     expect(captureItemClick).not.toBeCalled();
   });
 
-  /*
-  
-    it('Correct key routing based on intervention: CCC', () => {
-      const key = { key: "1" } as React.KeyboardEvent<HTMLElement>
-  
-      const docMock1 = jest.spyOn(InteractionHelpers, "commonKeyHandlerCCC");
-      const mockedFunctionCC = jest.fn(() => true);
-      docMock1.mockImplementation(() => mockedFunctionCC());
-  
-      const docMock2 = jest.spyOn(InteractionHelpers, "commonKeyHandlerET");
-      const mockedFunctionET = jest.fn(() => true);
-      docMock2.mockImplementation(() => mockedFunctionET());
-  
-      const captureButtonAction = jest.fn();
-      const checkLiNullUndefinedBlank = jest.fn();
-      const captureItemClick = jest.fn();
-      const openModal = jest.fn();
-      const addDocument = jest.fn();
-      const updateDocument = jest.fn();
-      const dispatch = jest.fn();
-      const response = { error: null } as FirestoreState;
-      const history = { push: jest.fn() };
-  
-      const user = { uid: "456" } as firebase.User;
-      const id = "123";
-  
-      const document = {} as StudentDataInterface;
-  
-      commonKeyListener(
-        key,
-        state,
-        InterventionFormat.ExplicitTiming,
-        captureButtonAction,
-        checkLiNullUndefinedBlank,
-        captureItemClick,
-        user,
-        id,
-        document,
-        openModal,
-        addDocument,
-        updateDocument,
-        response,
-        history,
-        dispatch
-      )
-  
-      expect(mockedFunctionCC).not.toBeCalled();
-      expect(mockedFunctionET).toBeCalled();
-    })
-  
-    */
-
   it("Throw error upon bad routing", () => {
     const key = { key: "1" } as React.KeyboardEvent<HTMLElement>;
 

@@ -27,7 +27,8 @@ describe("logout", () => {
         await projectAuth.signOut();
 
         expect(firebase.auth().signOut).toBeCalled();
-      } catch (err: any) {}
+        // eslint-disable-next-line no-empty
+      } catch (err: any) { }
     });
   });
 
@@ -42,7 +43,7 @@ describe("logout", () => {
 
       await result.current.logout();
 
-      waitFor(() => {
+      await waitFor(() => {
         expect(mockSignOut).toBeCalled();
         expect(result.current.logoutPending).toBe(false);
         expect(result.current.logoutError).toBe(undefined);
@@ -59,15 +60,13 @@ describe("logout", () => {
         throw Error("Error");
       });
 
-      const { result, waitFor } = renderHook(() => useFirebaseLogout());
+      const { result } = renderHook(() => useFirebaseLogout());
 
       await result.current.logout();
 
-      waitFor(() => {
-        expect(mockSignOut).toBeCalled();
-        expect(result.current.logoutPending).toBe(false);
-        expect(result.current.logoutError).toStrictEqual({});
-      });
+      expect(mockSignOut).toBeCalled();
+      expect(result.current.logoutPending).toBe(false);
+      expect(result.current.logoutError).toBe("Error");
     });
   });
 });

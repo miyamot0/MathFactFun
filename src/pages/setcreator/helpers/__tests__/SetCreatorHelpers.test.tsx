@@ -566,6 +566,22 @@ describe("generateColumnSnapshotPreview", () => {
 })
 
 describe("saveUpdatedDataToFirebase", () => {
+  let confirmSpy: jest.SpyInstance<boolean, [message?: string | undefined]>;
+  let alertSpy: jest.SpyInstance<void, [message?: any]>;
+
+  beforeAll(() => {
+    confirmSpy = jest.spyOn(global, 'confirm');
+    confirmSpy.mockImplementation(jest.fn(() => true));
+    alertSpy = jest.spyOn(global, 'alert');
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    alertSpy.mockImplementation(() => { });
+  })
+
+  afterAll(() => {
+    confirmSpy.mockRestore();
+    alertSpy.mockRestore();
+  })
+
   it("Should return if appropriately formatted", () => {
 
     const columns2 = {} as ColumnObject;

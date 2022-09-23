@@ -46,6 +46,22 @@ const mockState = {
 } as UserDataState;
 
 describe("verifyUserCreate", () => {
+  let confirmSpy: jest.SpyInstance<boolean, [message?: string | undefined]>;
+  let alertSpy: jest.SpyInstance<void, [message?: any]>;
+
+  beforeAll(() => {
+    confirmSpy = jest.spyOn(global, 'confirm');
+    confirmSpy.mockImplementation(jest.fn(() => true));
+    alertSpy = jest.spyOn(global, 'alert');
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    alertSpy.mockImplementation(() => { });
+  })
+
+  afterAll(() => {
+    confirmSpy.mockRestore();
+    alertSpy.mockRestore();
+  })
+
   it("Should dispatch out at blank state", () => {
     const state = mockState;
 
@@ -134,6 +150,22 @@ describe("verifyUserCreate", () => {
 
 describe("verifyUserEdit", () => {
   const id = "123";
+
+  let confirmSpy: jest.SpyInstance<boolean, [message?: string | undefined]>;
+  let alertSpy: jest.SpyInstance<void, [message?: any]>;
+
+  beforeAll(() => {
+    confirmSpy = jest.spyOn(global, 'confirm');
+    confirmSpy.mockImplementation(jest.fn(() => true));
+    alertSpy = jest.spyOn(global, 'alert');
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    alertSpy.mockImplementation(() => { });
+  })
+
+  afterAll(() => {
+    confirmSpy.mockRestore();
+    alertSpy.mockRestore();
+  })
 
   it("Should dispatch out at blank state", () => {
     const state = mockState;

@@ -139,6 +139,7 @@ export default function SetCreator() {
           <button
             className="global-btn global-btn-red"
             data-testid="set-creator-button"
+            type="button"
             style={ClearBtn}
             onClick={() => resetItems(state, dispatch)}>
             Reset Items

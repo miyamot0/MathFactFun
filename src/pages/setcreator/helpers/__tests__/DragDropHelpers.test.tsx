@@ -714,14 +714,20 @@ describe('moveTargetedItems', () => {
 })
 
 describe('resetItems', () => {
-  let oldConfirm: typeof confirm;
+  let confirmSpy: jest.SpyInstance<boolean, [message?: string | undefined]>;
+  let alertSpy: jest.SpyInstance<void, [message?: any]>;
 
   beforeAll(() => {
-    oldConfirm = global.confirm
+    confirmSpy = jest.spyOn(window, 'confirm');
+    confirmSpy.mockImplementation(jest.fn(() => true));
+    alertSpy = jest.spyOn(window, 'alert');
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    alertSpy.mockImplementation(() => { });
   })
 
   afterAll(() => {
-    global.confirm = oldConfirm
+    confirmSpy.mockRestore();
+    alertSpy.mockRestore();
   })
 
   it('should delete on confirm', () => {
@@ -729,17 +735,17 @@ describe('resetItems', () => {
     const state = InitialSetCreatorState;
 
     global.confirm = () => true
+    window.alert = () => true
 
     resetItems(state, dispatch)
   })
-
-
 
   it('should NOT delete on decline confirm', () => {
     const dispatch = jest.fn();
     const state = InitialSetCreatorState;
 
     global.confirm = () => false
+    window.alert = () => true
 
     resetItems(state, dispatch)
   })

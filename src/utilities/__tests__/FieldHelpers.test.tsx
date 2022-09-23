@@ -9,7 +9,7 @@
 import React from "react";
 import Adapter from "enzyme-adapter-react-16";
 import Enzyme from "enzyme";
-import { mount } from "enzyme";
+import { shallow } from "enzyme";
 import selectEvent from "react-select-event";
 
 import {
@@ -39,7 +39,7 @@ describe("standardEntryFieldText", () => {
       target: { value: "the-value" },
     };
 
-    const wrapper = mount(
+    const wrapper = shallow(
       standardEntryFieldText(label, currentValue, type, dispatch)
     );
 
@@ -60,7 +60,7 @@ describe("standardEntryFieldTextArea", () => {
       target: { value: "the-value" },
     };
 
-    const wrapper = mount(
+    const wrapper = shallow(
       standardEntryFieldTextArea(label, currentValue, type, dispatch)
     );
 
@@ -83,7 +83,7 @@ describe("standardEntryFieldDate", () => {
       target: { value: "9/18/2022" },
     };
 
-    const wrapper = mount(
+    const wrapper = shallow(
       standardEntryFieldDate(label, currentValue, type, dispatch)
     );
 
@@ -104,7 +104,7 @@ describe("standardEntryFieldNumber", () => {
       target: { value: 2 },
     };
 
-    const wrapper = mount(
+    const wrapper = shallow(
       standardEntryFieldNumber(label, currentValue, type, dispatch)
     );
 
@@ -116,7 +116,7 @@ describe("standardEntryFieldNumber", () => {
 
 describe("standardSelectField", () => {
   it("Should fire dispatch", async () => {
-    act(async () => {
+    await act(async () => {
       const label = "single-select";
       const type = 0;
       const dispatch = jest.fn();
@@ -145,7 +145,7 @@ describe("standardSelectField", () => {
 
 describe("standardSelectFieldMulti", () => {
   it("Should fire dispatch", async () => {
-    act(async () => {
+    await act(async () => {
       const label = "multi-field";
       const type = 0;
       const dispatch = jest.fn();

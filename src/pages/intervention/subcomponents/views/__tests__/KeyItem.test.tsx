@@ -10,20 +10,23 @@ import Adapter from "enzyme-adapter-react-16";
 import Enzyme, { shallow } from "enzyme";
 import { KeyItem } from "../KeyItem";
 import { waitFor } from "@testing-library/react";
+import { act } from "react-dom/test-utils";
 
 Enzyme.configure({ adapter: new Adapter() });
 
 describe("KeyPadItem", () => {
-  it("should render", () => {
-    const char = "1";
-    const callbackFunction = jest.fn();
+  it("should render", async () => {
+    await act(async () => {
+      const char = "1";
+      const callbackFunction = jest.fn();
 
-    const wrapper = shallow(KeyItem(char, callbackFunction));
+      const wrapper = shallow(KeyItem(char, callbackFunction));
 
-    wrapper.find(".key-button-section").first().simulate("click");
+      wrapper.find(".key-button-section").first().simulate("click");
 
-    waitFor(() => {
-      expect(callbackFunction).toBeCalled();
-    });
+      await waitFor(() => {
+        expect(callbackFunction).toBeCalled();
+      });
+    })
   });
 });

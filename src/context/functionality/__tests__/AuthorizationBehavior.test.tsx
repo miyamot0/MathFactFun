@@ -7,7 +7,7 @@
  */
 
 import firebase from "firebase";
-import { act, renderHook, WaitOptions } from "@testing-library/react-hooks";
+import { act, renderHook } from "@testing-library/react-hooks";
 import { useReducer } from "react";
 import {
   authorizationReducer,
@@ -50,7 +50,7 @@ describe("Authorization Behavior: Reducer behavior", () => {
 
   it("test dispatch: LOGOUT", async () => {
     await act(async () => {
-      const { result, waitForValueToChange } = renderHook(() =>
+      const { result } = renderHook(() =>
         useReducer(authorizationReducer, InitialAuthorizationState)
       );
 
@@ -62,7 +62,7 @@ describe("Authorization Behavior: Reducer behavior", () => {
         payload2: false,
       });
 
-      waitFor(() => {
+      await waitFor(() => {
         expect(result.current[0].user).toBe(null);
       });
     });
@@ -70,7 +70,7 @@ describe("Authorization Behavior: Reducer behavior", () => {
 
   it("test dispatch: READY", async () => {
     await act(async () => {
-      const { result, waitForValueToChange } = renderHook(() =>
+      const { result } = renderHook(() =>
         useReducer(authorizationReducer, InitialAuthorizationState)
       );
 
@@ -84,7 +84,7 @@ describe("Authorization Behavior: Reducer behavior", () => {
         payload2: true,
       });
 
-      waitFor(() => {
+      await waitFor(() => {
         expect(result.current[0].user).toBe(newAuth);
         expect(result.current[0].adminFlag).toBe(true);
       });
@@ -93,7 +93,7 @@ describe("Authorization Behavior: Reducer behavior", () => {
 
   it("test dispatch: CLAIMS", async () => {
     await act(async () => {
-      const { result, waitForValueToChange } = renderHook(() =>
+      const { result } = renderHook(() =>
         useReducer(authorizationReducer, InitialAuthorizationState)
       );
 
@@ -107,7 +107,7 @@ describe("Authorization Behavior: Reducer behavior", () => {
         payload2: true,
       });
 
-      waitFor(() => {
+      await waitFor(() => {
         expect(result.current[0].user).toBe(newAuth);
         expect(result.current[0].adminFlag).toBe(true);
       });
@@ -116,7 +116,7 @@ describe("Authorization Behavior: Reducer behavior", () => {
 
   it("test dispatch: THROWERR", async () => {
     await act(async () => {
-      const { result, waitForValueToChange } = renderHook(() =>
+      const { result } = renderHook(() =>
         useReducer(authorizationReducer, InitialAuthorizationState)
       );
 
@@ -130,9 +130,9 @@ describe("Authorization Behavior: Reducer behavior", () => {
         payload2: true,
       });
 
-      waitFor(() => {
-        expect(result.current[0].user).toBe(newAuth);
-        expect(result.current[0].adminFlag).toBe(true);
+      await waitFor(() => {
+        expect(result.current[0].user).toBe(null);
+        expect(result.current[0].adminFlag).toBe(false);
       });
     });
   });

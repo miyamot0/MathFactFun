@@ -12,12 +12,10 @@ import Adapter from "enzyme-adapter-react-16";
 import Enzyme from "enzyme";
 import { CommentInterface } from "../../student/subcomponents/types/CommentTypes";
 import { StudentDataInterface } from "../../student/interfaces/StudentInterfaces";
-import { MemoryRouter } from "react-router-dom";
 
-import * as UseAuthProvider from '../../../context/hooks/useAuthorizationContext'
 import * as UseDocumentMethods from '../../../firebase/hooks/useFirebaseDocument'
 import * as UseCollectionMethods from '../../../firebase/hooks/useFirebaseCollection'
-import { getByTestId, render, waitFor } from "@testing-library/react";
+import { render } from "@testing-library/react";
 import { FactDataInterface } from "../interfaces/SetCreatorInterfaces";
 import { PerformanceDataInterface } from "../../intervention/interfaces/InterventionInterfaces";
 import { InterventionFormat } from "../../../maths/Facts";
@@ -47,6 +45,22 @@ jest.mock("react-router-dom", () => ({
 }));
 
 describe('SetCreator', () => {
+    let confirmSpy: jest.SpyInstance<boolean, [message?: string | undefined]>;
+    let alertSpy: jest.SpyInstance<void, [message?: any]>;
+
+    beforeAll(() => {
+        confirmSpy = jest.spyOn(global, 'confirm');
+        confirmSpy.mockImplementation(jest.fn(() => true));
+        alertSpy = jest.spyOn(global, 'alert');
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        alertSpy.mockImplementation(() => { });
+    })
+
+    afterAll(() => {
+        confirmSpy.mockRestore();
+        alertSpy.mockRestore();
+    })
+
     it('Should render with data', async () => {
         await act(async () => {
             const docMockCollection = jest.spyOn(UseCollectionMethods, "useFirebaseCollectionTyped")
