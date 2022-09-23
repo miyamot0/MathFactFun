@@ -41,3 +41,14 @@ export type ColumnsObject = {
   LoadedData: boolean;
   Callback: any;
 };
+
+export type FactSaveObject = {
+  factsTargeted: string[];
+  factsSkipped: string[];
+  factsMastered: string[];
+}
+
+export type ColumnSnapsot = {
+  Preview: FactSaveObject,
+  Current: FactSaveObject
+}

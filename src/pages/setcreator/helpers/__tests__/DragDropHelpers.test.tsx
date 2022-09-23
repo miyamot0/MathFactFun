@@ -7,15 +7,17 @@
  */
 
 import { DraggableLocation, DropReason, DropResult } from "react-beautiful-dnd";
+import { SingleOptionType } from "../../../../types/SharedComponentTypes";
 import { StudentDataInterface } from "../../../student/interfaces/StudentInterfaces";
 import { InitialSetCreatorState } from "../../functionality/SetCreatorBehavior";
 import {
   DragColumnContents,
   DragColumnsInterface,
+  ItemHistory,
   SetItem,
 } from "../../interfaces/SetCreatorInterfaces";
 import { ColumnsObject } from "../../types/SetCreatorTypes";
-import { moveItemsToTargeted, moveTargetedItems, onDragEnd, resetItems } from "../DragDropHelpers";
+import { loadCreatorMathFacts, moveItemsToTargeted, moveTargetedItems, onChangedMovedTargetsHandler, onChangedSetTargetHandler, onDragEnd, resetItems } from "../DragDropHelpers";
 
 describe("onDragEnd", () => {
   it("should swap if differing", () => {
@@ -740,5 +742,99 @@ describe('resetItems', () => {
     global.confirm = () => false
 
     resetItems(state, dispatch)
+  })
+})
+
+describe('loadCreatorMathFacts', () => {
+  it('Should correctly crunch numbers', () => {
+
+    const document = {
+      currentTarget: "Addition",
+      factsTargeted: ["1+1=2", "9+8=17"],
+      factsMastered: ["1+2=3"],
+      factsSkipped: ["1+3=4"],
+    } as StudentDataInterface
+    const state = {
+      ...InitialSetCreatorState,
+      ItemHistory: [
+        {
+          FactString: "9+8=17",
+          X: 0,
+          Y: 0,
+          Latency: 0,
+          AverageCorrect: 0,
+          Correct: 0,
+          Total: 1,
+        } as ItemHistory,
+        {
+          FactString: "8+7=15",
+          X: 0,
+          Y: 0,
+          Latency: 0,
+          AverageCorrect: 0,
+          Correct: 1,
+          Total: 1,
+        } as ItemHistory
+      ]
+    } as ColumnsObject;
+    const dispatch = jest.fn();
+
+    loadCreatorMathFacts(document, state, dispatch)
+
+    expect(dispatch).toBeCalledTimes(3)
+  })
+})
+
+describe("onChangedSetTargetHandler", () => {
+  it("Should fire with a good option", () => {
+    const option = {
+      label: '1',
+      value: '1'
+    } as SingleOptionType;
+    const document = {} as StudentDataInterface;
+    const state = InitialSetCreatorState;
+    const setAssignedSet = jest.fn();
+    const dispatch = jest.fn();
+
+    onChangedSetTargetHandler(option, document, state, setAssignedSet, dispatch);
+
+    expect(setAssignedSet).toBeCalled();
+  })
+
+  it("Should fire with a good option", () => {
+    const option = null as unknown as SingleOptionType;
+    const document = {} as StudentDataInterface;
+    const state = InitialSetCreatorState;
+    const setAssignedSet = jest.fn();
+    const dispatch = jest.fn();
+
+    onChangedSetTargetHandler(option, document, state, setAssignedSet, dispatch);
+
+    expect(setAssignedSet).not.toBeCalled();
+  })
+})
+
+describe("onChangedMovedTargetsHandler", () => {
+  it("Should fire with a good option", () => {
+    const option = {
+      label: '1',
+      value: '1'
+    } as SingleOptionType;
+    const state = InitialSetCreatorState;
+    const dispatch = jest.fn();
+
+    onChangedMovedTargetsHandler(option, state, dispatch)
+
+    expect(dispatch).toBeCalled();
+  })
+
+  it("Should fire with a good option", () => {
+    const option = null as unknown as SingleOptionType;
+    const state = InitialSetCreatorState;
+    const dispatch = jest.fn();
+
+    onChangedMovedTargetsHandler(option, state, dispatch)
+
+    expect(dispatch).not.toBeCalled();
   })
 })

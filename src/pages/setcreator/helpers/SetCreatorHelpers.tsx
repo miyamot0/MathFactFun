@@ -6,15 +6,20 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import { Id } from "react-beautiful-dnd";
+import { FirestoreState } from "../../../firebase/interfaces/FirebaseInterfaces";
 import { FactsOnFire } from "../../../maths/Mind";
-import { GetOperatorFromLabel, Sum } from "../../../utilities/LabelHelper";
+import { GetOperatorFromLabel, OnlyUnique, Sum } from "../../../utilities/LabelHelper";
+import { PerformanceDataInterface } from "../../intervention/interfaces/InterventionInterfaces";
 import { StudentDataInterface } from "../../student/interfaces/StudentInterfaces";
 import {
   FactDataInterface,
   FactStructure,
   ItemHistory,
+  ItemMetrics,
   SetItem,
 } from "../interfaces/SetCreatorInterfaces";
+import { ColumnObject, ColumnSnapsot, DragDropActions, FactSaveObject } from "../types/SetCreatorTypes";
 
 /** isEmpty
  *
@@ -162,6 +167,7 @@ export function populateColumnMetrics(
   facts: string[],
   itemHistory: ItemHistory[]
 ) {
+
   return facts.map((element) => {
     let otrs = 0,
       accuracy = 0,
@@ -175,15 +181,25 @@ export function populateColumnMetrics(
       otrs = releventResult[0].Total;
       accuracy = releventResult[0].AverageCorrect;
       latency = releventResult[0].Latency;
+
+      return {
+        Answer: element.split(":")[0],
+        id: element,
+        OTRs: otrs,
+        Accuracy: accuracy,
+        Latency: latency,
+      };
+    } else {
+      return {
+        Answer: element.split(":")[0],
+        id: element,
+        OTRs: otrs,
+        Accuracy: accuracy,
+        Latency: latency,
+      };
     }
 
-    return {
-      Answer: element.split(":")[0],
-      id: element,
-      OTRs: otrs,
-      Accuracy: accuracy,
-      Latency: latency,
-    };
+
   });
 }
 
@@ -206,5 +222,114 @@ export function getRelevantCCCSet(target: string): string[][] {
       return FactsOnFire.Division;
     default:
       return FactsOnFire.Addition;
+  }
+}
+
+/** populationCoreInformation
+ * 
+ * @param documents 
+ * @param target 
+ * @param callbackFromReducer 
+ * @param dispatch 
+ */
+export function populateCoreInformation(documents: PerformanceDataInterface[], target: string, callbackFromReducer: any, dispatch: any) {
+  const mappedDocument = documents.map((doc) => {
+    return {
+      Items: doc.entries as FactDataInterface[],
+      Date: new Date(doc.dateTimeStart),
+      ShortDate: new Date(doc.dateTimeStart).toLocaleDateString("en-US"),
+      Errors: doc.errCount,
+      DigitsCorrect: doc.correctDigits,
+      DigitsCorrectInitial: doc.nCorrectInitial,
+      DigitsTotal: doc.totalDigits,
+      SessionDuration: doc.sessionDuration,
+    } as ItemMetrics;
+  });
+
+  // Pull out fact models alone, array of array
+  const itemSummaries: FactDataInterface[][] = mappedDocument.map(
+    (items) => items.Items
+  );
+
+  const flatItemSummaries: FactDataInterface[] = itemSummaries.reduce(
+    (accumulator, value) => accumulator.concat(value)
+  );
+
+  const uniqueProblems: string[] = flatItemSummaries
+    .map((obj) => obj.factString)
+    .filter(OnlyUnique)
+    .sort();
+
+  const uniqueQuants = generateItemHistory(
+    uniqueProblems,
+    flatItemSummaries,
+    target
+  );
+
+  dispatch({ type: DragDropActions.SetItemHistory, payload: uniqueQuants });
+
+  dispatch({
+    type: DragDropActions.LoadCallback,
+    payload: callbackFromReducer,
+  });
+}
+
+/** generateColumnSnapshotPreview
+ * 
+ * @param callbackColumns 
+ * @param callbackColumnsPre 
+ * @returns 
+ */
+export function generateColumnSnapshotPreview(callbackColumns: ColumnObject, callbackColumnsPre: ColumnObject
+) {
+  const factsTargeted: string[] = callbackColumns.Targeted.items.map(
+    (a: FactStructure) => a.id
+  );
+  const factsSkipped: string[] = callbackColumns.Skipped.items.map(
+    (a: FactStructure) => a.id
+  );
+  const factsMastered: string[] = callbackColumns.Mastered.items.map(
+    (a: FactStructure) => a.id
+  );
+
+  const factsTargetedPrev: string[] = callbackColumnsPre.Targeted.items.map(
+    (a: FactStructure) => a.id
+  );
+  const factsSkippedPrev: string[] = callbackColumnsPre.Skipped.items.map(
+    (a: FactStructure) => a.id
+  );
+  const factsMasteredPrev: string[] = callbackColumnsPre.Mastered.items.map(
+    (a: FactStructure) => a.id
+  );
+
+  return {
+    Preview: {
+      factsTargeted: factsTargetedPrev,
+      factsSkipped: factsSkippedPrev,
+      factsMastered: factsMasteredPrev,
+    },
+    Current: {
+      factsTargeted: factsTargeted,
+      factsSkipped: factsSkipped,
+      factsMastered: factsMastered,
+    }
+  } as ColumnSnapsot
+}
+
+/** saveUpdatedDataToFirebase
+ * 
+ * @param id 
+ * @param comparisonObjects 
+ * @param updateDocument 
+ * @param response 
+ * @returns 
+ */
+export async function saveUpdatedDataToFirebase(id: string, comparisonObjects: ColumnSnapsot, updateDocument: any, response: FirestoreState) {
+  await updateDocument(id, comparisonObjects.Current);
+
+  if (response.error) {
+    window.alert("There was an error saving to the database");
+  } else {
+    return
   }
 }

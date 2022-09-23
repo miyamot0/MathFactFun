@@ -10,21 +10,25 @@ import {
   checkIfNullUndefinedOrEmpty,
   formatBackgroundColor,
   formatTextBox,
+  generateColumnSnapshotPreview,
   generateItemHistory,
   getRelevantCCCSet,
   isEmpty,
   loadMathFacts,
   populateColumnMetrics,
+  populateCoreInformation,
+  saveUpdatedDataToFirebase,
 } from "../SetCreatorHelpers";
 import firebase from "firebase";
 import { DropResult } from "react-beautiful-dnd";
-import { ColumnObject } from "../../types/SetCreatorTypes";
+import { ColumnObject, FactSaveObject } from "../../types/SetCreatorTypes";
 import { StudentDataInterface } from "../../../student/interfaces/StudentInterfaces";
 import {
   GetOperatorFromLabel,
   OnlyUnique,
 } from "../../../../utilities/LabelHelper";
 import {
+  DragColumnContents,
   FactDataInterface,
   ItemHistory,
   SetItem,
@@ -33,6 +37,7 @@ import { remapPerformances } from "../../../progress/helpers/ProgressHelpers";
 import { FactsOnFire } from "../../../../maths/Mind";
 import { onDragEnd } from "../DragDropHelpers";
 import { PerformanceDataInterface } from "../../../intervention/interfaces/InterventionInterfaces";
+import { FirestoreState } from "../../../../firebase/interfaces/FirebaseInterfaces";
 
 describe("isEmpty", () => {
   it("Should return false, if empty", () => {
@@ -271,7 +276,7 @@ describe("generateItemHistory", () => {
       // Arrays
       entries: [
         {
-          factCorrect: true,
+          factCorrect: false,
           initialTry: true,
 
           // Strings
@@ -331,8 +336,8 @@ describe("generateItemHistory", () => {
 
     expect(uniqueQuants).toStrictEqual([
       {
-        AverageCorrect: 100,
-        Correct: 2,
+        AverageCorrect: 50,
+        Correct: 1,
         FactString: "1+1=2",
         Latency: 1,
         Total: 2,
@@ -345,7 +350,7 @@ describe("generateItemHistory", () => {
 
 describe("populateColumnMetrics", () => {
   it("Should ...", () => {
-    const mathFacts = ["1+1=2:0123", "1+2=3:2345"];
+    const mathFacts = ["1+1=2:0:0", "1+2=3:0:1"];
     const itemHistory = [
       {
         FactString: "1+1=2",
@@ -358,8 +363,8 @@ describe("populateColumnMetrics", () => {
     const result = populateColumnMetrics(mathFacts, itemHistory);
 
     expect(result).toStrictEqual([
-      { Accuracy: 80, Answer: "1+1=2", Latency: 5, OTRs: 1, id: "1+1=2:0123" },
-      { Accuracy: 0, Answer: "1+2=3", Latency: 0, OTRs: 0, id: "1+2=3:2345" },
+      { Accuracy: 80, Answer: "1+1=2", Latency: 5, OTRs: 1, id: "1+1=2:0:0" },
+      { Accuracy: 0, Answer: "1+2=3", Latency: 0, OTRs: 0, id: "1+2=3:0:1" },
     ]);
   });
 });
@@ -400,3 +405,296 @@ describe("getRelevantCCCSet", () => {
     expect(result).toStrictEqual(FactsOnFire.Addition);
   });
 });
+
+describe("populateCoreInformation", () => {
+  it("Should fire if appropriately loaded", () => {
+    const documents = [
+      {
+        correctDigits: 1,
+        errCount: 1,
+        nCorrectInitial: 1,
+        nRetries: 1,
+        sessionDuration: 1,
+        setSize: 1,
+        totalDigits: 1,
+
+        // Arrays
+        entries: [
+          {
+            factCorrect: true,
+            initialTry: true,
+
+            // Strings
+            factType: "Addition",
+            factString: "1+1=2",
+            factEntry: "1+1=2",
+
+            // Numerics
+            latencySeconds: 1,
+
+            // Timestamps
+            dateTimeEnd: firebase.firestore.Timestamp.fromDate(new Date()),
+            dateTimeStart: firebase.firestore.Timestamp.fromDate(new Date()),
+          },
+        ] as FactDataInterface[],
+
+        // Strings
+        id: "123",
+        creator: "456",
+        target: "Addition",
+        method: "ExplicitTiming",
+        dateTimeEnd: "09/15/2022",
+        dateTimeStart: "09/15/2022",
+        // Timestamps
+        createdAt: null,
+      },
+      {
+        correctDigits: 1,
+        errCount: 1,
+        nCorrectInitial: 1,
+        nRetries: 1,
+        sessionDuration: 1,
+        setSize: 1,
+        totalDigits: 1,
+
+        // Arrays
+        entries: [
+          {
+            factCorrect: true,
+            initialTry: true,
+
+            // Strings
+            factType: "Addition",
+            factString: "1+1=2",
+            factEntry: "1+1=2",
+
+            // Numerics
+            latencySeconds: 1,
+
+            // Timestamps
+            dateTimeEnd: firebase.firestore.Timestamp.fromDate(
+              new Date("09/14/2022")
+            ),
+            dateTimeStart: firebase.firestore.Timestamp.fromDate(
+              new Date("09/14/2022")
+            ),
+          },
+        ] as FactDataInterface[],
+
+        // Strings
+        id: "123",
+        creator: "456",
+        target: "Addition",
+        method: "ExplicitTiming",
+        dateTimeEnd: "09/14/2022",
+        dateTimeStart: "09/14/2022",
+        // Timestamps
+        createdAt: null,
+      },
+    ] as PerformanceDataInterface[];
+    const target = 'Addition';
+    const callbackFromReducer = jest.fn();
+    const dispatch = jest.fn();
+
+    populateCoreInformation(documents, target, callbackFromReducer, dispatch)
+
+    expect(dispatch).toBeCalled();
+  })
+})
+
+describe("generateColumnSnapshotPreview", () => {
+  it("Should fire if appropriately loaded", () => {
+
+    const columns2 = {} as ColumnObject;
+
+    columns2["Available"] = {
+      name: "Available",
+      items: [
+        {
+          Answer: "1+1=2",
+          id: "1+1=2",
+          OTRs: 0,
+          Accuracy: 100,
+          Latency: 5,
+        } as SetItem,
+      ],
+    } as DragColumnContents;
+
+    columns2["Targeted"] = {
+      name: "Targeted",
+      items: [
+        {
+          Answer: "1+2=3",
+          id: "1+2=3",
+          OTRs: 0,
+          Accuracy: 100,
+          Latency: 5,
+        } as SetItem,
+      ],
+    } as DragColumnContents;
+
+    columns2["Mastered"] = {
+      name: "Mastered",
+      items: [
+        {
+          Answer: "1+2=3",
+          id: "1+2=3",
+          OTRs: 0,
+          Accuracy: 100,
+          Latency: 5,
+        } as SetItem,
+      ],
+    } as DragColumnContents;
+
+    columns2["Skipped"] = {
+      name: "Skipped",
+      items: [
+        {
+          Answer: "1+2=3",
+          id: "1+2=3",
+          OTRs: 0,
+          Accuracy: 100,
+          Latency: 5,
+        } as SetItem,
+      ],
+    } as DragColumnContents;
+
+    const result = generateColumnSnapshotPreview(columns2, columns2);
+
+    expect(result.Current).toStrictEqual(result.Preview);
+  })
+})
+
+describe("saveUpdatedDataToFirebase", () => {
+  it("Should return if appropriately formatted", () => {
+
+    const columns2 = {} as ColumnObject;
+
+    columns2["Available"] = {
+      name: "Available",
+      items: [
+        {
+          Answer: "1+1=2",
+          id: "1+1=2",
+          OTRs: 0,
+          Accuracy: 100,
+          Latency: 5,
+        } as SetItem,
+      ],
+    } as DragColumnContents;
+
+    columns2["Targeted"] = {
+      name: "Targeted",
+      items: [
+        {
+          Answer: "1+2=3",
+          id: "1+2=3",
+          OTRs: 0,
+          Accuracy: 100,
+          Latency: 5,
+        } as SetItem,
+      ],
+    } as DragColumnContents;
+
+    columns2["Mastered"] = {
+      name: "Mastered",
+      items: [
+        {
+          Answer: "1+2=3",
+          id: "1+2=3",
+          OTRs: 0,
+          Accuracy: 100,
+          Latency: 5,
+        } as SetItem,
+      ],
+    } as DragColumnContents;
+
+    columns2["Skipped"] = {
+      name: "Skipped",
+      items: [
+        {
+          Answer: "1+2=3",
+          id: "1+2=3",
+          OTRs: 0,
+          Accuracy: 100,
+          Latency: 5,
+        } as SetItem,
+      ],
+    } as DragColumnContents;
+
+    const id = "123";
+    const comparisonObjects = generateColumnSnapshotPreview(columns2, columns2);
+    const updateDocument = jest.fn();
+    const response = {} as FirestoreState;
+
+    saveUpdatedDataToFirebase(id, comparisonObjects, updateDocument, response);
+
+    expect(updateDocument).toBeCalled();
+  })
+
+  it("Should show alert if unsuccessful save", () => {
+
+    const columns2 = {} as ColumnObject;
+
+    columns2["Available"] = {
+      name: "Available",
+      items: [
+        {
+          Answer: "1+1=2",
+          id: "1+1=2",
+          OTRs: 0,
+          Accuracy: 100,
+          Latency: 5,
+        } as SetItem,
+      ],
+    } as DragColumnContents;
+
+    columns2["Targeted"] = {
+      name: "Targeted",
+      items: [
+        {
+          Answer: "1+2=3",
+          id: "1+2=3",
+          OTRs: 0,
+          Accuracy: 100,
+          Latency: 5,
+        } as SetItem,
+      ],
+    } as DragColumnContents;
+
+    columns2["Mastered"] = {
+      name: "Mastered",
+      items: [
+        {
+          Answer: "1+2=3",
+          id: "1+2=3",
+          OTRs: 0,
+          Accuracy: 100,
+          Latency: 5,
+        } as SetItem,
+      ],
+    } as DragColumnContents;
+
+    columns2["Skipped"] = {
+      name: "Skipped",
+      items: [
+        {
+          Answer: "1+2=3",
+          id: "1+2=3",
+          OTRs: 0,
+          Accuracy: 100,
+          Latency: 5,
+        } as SetItem,
+      ],
+    } as DragColumnContents;
+
+    const id = "123";
+    const comparisonObjects = generateColumnSnapshotPreview(columns2, columns2);
+    const updateDocument = jest.fn();
+    const response = { error: "Error" } as FirestoreState;
+
+    saveUpdatedDataToFirebase(id, comparisonObjects, updateDocument, response);
+
+    expect(updateDocument).toBeCalled();
+  })
+})

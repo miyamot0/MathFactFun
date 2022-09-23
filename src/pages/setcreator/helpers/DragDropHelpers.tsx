@@ -7,18 +7,21 @@
  */
 
 import { DropResult } from "react-beautiful-dnd";
+import { SingleOptionType } from "../../../types/SharedComponentTypes";
 import { StudentDataInterface } from "../../student/interfaces/StudentInterfaces";
 import {
   DragColumnContents,
   DragColumnsInterface,
   FactStructure,
+  ItemHistory,
+  SetItem,
 } from "../interfaces/SetCreatorInterfaces";
 import {
   ColumnObject,
   ColumnsObject,
   DragDropActions,
 } from "../types/SetCreatorTypes";
-import { loadMathFacts } from "./SetCreatorHelpers";
+import { loadMathFacts, populateColumnMetrics } from "./SetCreatorHelpers";
 
 /** onDragEnd
  *
@@ -250,4 +253,150 @@ export function resetItems(state: ColumnsObject, dispatch: any): void {
   } else {
     return;
   }
+}
+
+/** loadCreatorMathFacts
+ * 
+ * @param document 
+ * @param state 
+ * @param dispatch 
+ */
+export function loadCreatorMathFacts(document: StudentDataInterface,
+  state: ColumnsObject,
+  dispatch: any) {
+
+  const mapped: FactStructure[][] = loadMathFacts(document);
+  const mappedReduced: FactStructure[] = mapped.reduce(
+    (accumulator, value) => accumulator.concat(value)
+  );
+
+  const flattened: SetItem[] = mappedReduced.map((entry: FactStructure) => {
+    const releventResult = state.ItemHistory.filter(
+      (obj: ItemHistory) => obj.FactString === entry.Answer
+    );
+
+    if (releventResult && releventResult.length === 1) {
+      return {
+        ...entry,
+        OTRs: releventResult[0].Total,
+        Accuracy: releventResult[0].AverageCorrect,
+        Latency: releventResult[0].Latency,
+      } as SetItem;
+    }
+    else {
+      return {
+        ...entry,
+        OTRs: 0,
+        Accuracy: 0,
+        Latency: 0,
+      } as SetItem;
+    }
+  });
+
+  dispatch({ type: DragDropActions.SetBaseItems, payload: flattened });
+
+  const newColumns = state.columns;
+
+  const currTargetedSets = populateColumnMetrics(
+    document.factsTargeted,
+    state.ItemHistory
+  );
+
+  newColumns.Targeted.items = currTargetedSets;
+
+  const currMasteredSets = populateColumnMetrics(
+    document.factsMastered,
+    state.ItemHistory
+  );
+
+  newColumns.Mastered.items = currMasteredSets;
+
+  const currSkippedSets = populateColumnMetrics(
+    document.factsSkipped,
+    state.ItemHistory
+  );
+
+  newColumns.Skipped.items = currSkippedSets;
+
+  const takenArray = [
+    ...currTargetedSets.map((a) => a.id),
+    ...currMasteredSets.map((a) => a.id),
+    ...currSkippedSets.map((a) => a.id),
+  ];
+
+  const filteredMap = flattened.filter((item) => {
+    return !takenArray.includes(item.id);
+  });
+
+  newColumns.Available.items = filteredMap;
+
+  newColumns.Available.name = `Available (${newColumns.Available.items.length})`;
+  newColumns.Targeted.name = `Targeted (${newColumns.Targeted.items.length})`;
+  newColumns.Mastered.name = `Mastered (${newColumns.Mastered.items.length})`;
+  newColumns.Skipped.name = `Skipped (${newColumns.Skipped.items.length})`;
+
+  dispatch({ type: DragDropActions.UpdateColumns, payload: newColumns });
+  dispatch({ type: DragDropActions.ToggleLoaded, payload: true });
+}
+
+/** onChangedSetTargetHandler
+ * 
+ * @param option 
+ * @param document 
+ * @param state 
+ * @param setAssignedSet 
+ * @param dispatch 
+ * @returns 
+ */
+export function onChangedSetTargetHandler(option: SingleOptionType | null, document: StudentDataInterface | null,
+  state: ColumnsObject, setAssignedSet: any, dispatch: any) {
+
+  if (!option) {
+    return;
+  } else {
+    setAssignedSet(option);
+    moveItemsToTargeted(parseInt(option.value) - 1, state, document, dispatch);
+  }
+}
+
+/** onChangedMovedTargetsHandler
+ * 
+ * @param option 
+ * @param state 
+ * @param dispatch 
+ * @returns 
+ */
+export function onChangedMovedTargetsHandler(option: SingleOptionType | null, state: ColumnsObject, dispatch: any) {
+  if (!option) {
+    return;
+  } else {
+    moveTargetedItems(option.value, state, dispatch);
+  }
+}
+
+/** generateSetTargetOptions
+ * 
+ * @param relevantFOFSets 
+ */
+export function generateSetTargetOptions(relevantFOFSets: string[][]): SingleOptionType[] {
+  return relevantFOFSets.map((_set, index) => {
+    let label = "B";
+    let valueAdjustment = 6;
+
+    if (index <= 5) {
+      label = "A";
+      valueAdjustment = 0;
+    }
+
+    if (index >= 12) {
+      label = "C";
+      valueAdjustment = 12;
+    }
+
+    return {
+      value: (index + 1).toString(),
+      label:
+        "Set: " + label + (index + 1 - valueAdjustment).toString(),
+    } as SingleOptionType;
+  })
 }
