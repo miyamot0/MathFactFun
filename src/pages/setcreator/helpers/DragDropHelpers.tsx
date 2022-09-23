@@ -129,6 +129,8 @@ export function moveItemsToTargeted(
       preAvailable = preAvailable.filter((fact: FactStructure) => {
         return fact.id !== item.id;
       });
+    } else {
+      return false;
     }
   });
 
@@ -139,6 +141,8 @@ export function moveItemsToTargeted(
       preSkipped = preSkipped.filter((fact: FactStructure) => {
         return fact.id !== item.id;
       });
+    } else {
+      return false;
     }
   });
 
@@ -149,6 +153,8 @@ export function moveItemsToTargeted(
       preMastered = preMastered.filter((fact: FactStructure) => {
         return fact.id !== item.id;
       });
+    } else {
+      return false;
     }
   });
 
@@ -241,5 +247,7 @@ export function resetItems(state: ColumnsObject, dispatch: any): void {
     newColumns.Skipped.name = `Skipped (0)`;
 
     dispatch({ type: DragDropActions.UpdateColumns, payload: newColumns });
+  } else {
+    return;
   }
 }
