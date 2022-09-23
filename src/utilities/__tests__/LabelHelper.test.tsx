@@ -422,15 +422,11 @@ describe("LabelHelpers: GetApproachStringFromLabel", () => {
   });
 
   it("Fail: no matching intervention (blank)", () => {
-    expect(() => GetApproachStringFromLabel("")).toThrow(
-      Error("No matching approach found")
-    );
+    expect(GetApproachStringFromLabel("")).toBe("");
   });
 
   it("Fail: no matching intervention (undefined)", () => {
-    expect(() => GetApproachStringFromLabel(undefined)).toThrow(
-      Error("No matching approach found")
-    );
+    expect(GetApproachStringFromLabel(undefined)).toBe("");
   });
 });
 

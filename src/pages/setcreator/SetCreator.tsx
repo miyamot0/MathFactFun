@@ -35,7 +35,6 @@ import {
   generateItemHistory,
   getRelevantCCCSet,
   loadMathFacts,
-  onDragEnd,
   populateColumnMetrics,
 } from "./helpers/SetCreatorHelpers";
 import { SingleOptionType } from "../../types/SharedComponentTypes";
@@ -47,6 +46,7 @@ import {
   SetItem,
 } from "./interfaces/SetCreatorInterfaces";
 import { PerformanceDataInterface } from "../intervention/interfaces/InterventionInterfaces";
+import { moveItemsToTargeted, moveTargetedItems, onDragEnd, resetItems } from "./helpers/DragDropHelpers";
 
 export default function SetCreator() {
   const { target, id } = useParams<RoutedIdTargetParam>();
@@ -254,153 +254,10 @@ export default function SetCreator() {
     }
   }, [document, documents, state.ItemHistory, state.columns, state.LoadedData]);
 
-  /** moveTargetedItems
-   *
-   * Move items, per current targets, to the specified column
-   *
-   * @param {String} value Column to receive
-   */
-  function moveTargetedItems(value: string): void {
-    const newColumns = state.columns;
-    const preAvailable = state.columns.Available.items;
-    let preTargeted = state.columns.Targeted.items;
-    const preMastered = state.columns.Mastered.items;
-    const preSkipped = state.columns.Skipped.items;
-
-    switch (value) {
-      case "Mastered":
-        preTargeted.forEach((item: FactStructure) => {
-          preMastered.push(item);
-        });
-
-        break;
-
-      case "Available":
-        preTargeted.forEach((item: FactStructure) => {
-          preAvailable.push(item);
-        });
-        break;
-
-      case "Skipped":
-        preTargeted.forEach((item: FactStructure) => {
-          preSkipped.push(item);
-        });
-        break;
-
-      default:
-        preTargeted.forEach((item: FactStructure) => {
-          preAvailable.push(item);
-        });
-        break;
-    }
-
-    preTargeted = [];
-
-    newColumns.Available.items = preAvailable;
-    newColumns.Available.name = `Available (${preAvailable.length})`;
-    newColumns.Targeted.items = preTargeted;
-    newColumns.Targeted.name = `Targeted (${preTargeted.length})`;
-    newColumns.Mastered.items = preMastered;
-    newColumns.Mastered.name = `Mastered (${preMastered.length})`;
-    newColumns.Skipped.items = preSkipped;
-    newColumns.Skipped.name = `Skipped (${preSkipped.length})`;
-
-    dispatch({ type: DragDropActions.UpdateColumns, payload: newColumns });
-  }
-
-  /** moveItemsToTargeted
-   *
-   * Move items, per a set, to the targeted column
-   *
-   * @param {number} setArray Index of set
-   */
-  function moveItemsToTargeted(setArray: number): void {
-    if (!document) {
-      return;
-    }
-
-    const newColumns = state.columns;
-    let preAvailable = state.columns.Available.items;
-    let preTargeted = state.columns.Targeted.items;
-    let preSkipped = state.columns.Skipped.items;
-    let preMastered = state.columns.Mastered.items;
-
-    const mapped = loadMathFacts(document)[setArray].map((item) => item.id);
-
-    state.columns.Targeted.items.forEach((item: FactStructure) => {
-      preAvailable.push(item);
-    });
-
-    preTargeted = [];
-
-    state.columns.Available.items.forEach((item: FactStructure) => {
-      if (mapped.includes(item.id)) {
-        preTargeted.push(item);
-
-        preAvailable = preAvailable.filter((fact: FactStructure) => {
-          return fact.id !== item.id;
-        });
-      }
-    });
-
-    state.columns.Skipped.items.forEach((item: FactStructure) => {
-      if (mapped.includes(item.id)) {
-        preTargeted.push(item);
-
-        preSkipped = preSkipped.filter((fact: FactStructure) => {
-          return fact.id !== item.id;
-        });
-      }
-    });
-
-    state.columns.Mastered.items.forEach((item: FactStructure) => {
-      if (mapped.includes(item.id)) {
-        preTargeted.push(item);
-
-        preMastered = preMastered.filter((fact: FactStructure) => {
-          return fact.id !== item.id;
-        });
-      }
-    });
-
-    newColumns.Available.items = preAvailable;
-    newColumns.Available.name = `Available (${preAvailable.length})`;
-    newColumns.Targeted.items = preTargeted;
-    newColumns.Targeted.name = `Targeted (${preTargeted.length})`;
-    newColumns.Mastered.items = preMastered;
-    newColumns.Mastered.name = `Mastered (${preMastered.length})`;
-    newColumns.Skipped.items = preSkipped;
-    newColumns.Skipped.name = `Skipped (${preSkipped.length})`;
-
-    dispatch({ type: DragDropActions.UpdateColumns, payload: newColumns });
-  }
-
-  /** resetItems
-   *
-   * Reset columns to default
-   *
-   */
-  function resetItems(): void {
-    if (window.confirm("Are you sure you want to reset?") === true) {
-      const newColumns = state.columns;
-      newColumns.Available.items = state.BaseItems;
-      newColumns.Mastered.items = [];
-      newColumns.Skipped.items = [];
-      newColumns.Targeted.items = [];
-
-      newColumns.Available.name = `Available (${state.BaseItems.length})`;
-      newColumns.Targeted.name = `Targeted (0)`;
-      newColumns.Mastered.name = `Mastered (0)`;
-      newColumns.Skipped.name = `Skipped (0)`;
-
-      dispatch({ type: DragDropActions.UpdateColumns, payload: newColumns });
-    }
-  }
-
   const relevantFOFSets = getRelevantCCCSet(target);
 
   return (
-    <div style={SetContainer}>
+    <div style={SetContainer} className={"set-creator-wrapper"}>
       <h2 style={TitleStyle}>
         Item Set: {document ? document.name : ""} (
         {document ? document.currentTarget : ""})
@@ -436,7 +293,10 @@ export default function SetCreator() {
                 }
 
                 setAssignedSet(option);
-                moveItemsToTargeted(parseInt(option.value) - 1);
+                moveItemsToTargeted(parseInt(option.value) - 1,
+                  state,
+                  document,
+                  dispatch);
               }}
               value={assignedSet}
             />
@@ -455,15 +315,14 @@ export default function SetCreator() {
                   return;
                 }
 
-                moveTargetedItems(option.value);
+                moveTargetedItems(option.value, state, dispatch);
               }}
             />
           </label>
           <button
             className="global-btn global-btn-red"
             style={ClearBtn}
-            onClick={() => resetItems()}
-          >
+            onClick={() => resetItems(state, dispatch)}>
             Reset Items
           </button>
         </form>

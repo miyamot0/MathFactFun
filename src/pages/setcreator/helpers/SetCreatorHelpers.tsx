@@ -6,19 +6,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { DropResult } from "react-beautiful-dnd";
 import { FactsOnFire } from "../../../maths/Mind";
 import { GetOperatorFromLabel, Sum } from "../../../utilities/LabelHelper";
 import { StudentDataInterface } from "../../student/interfaces/StudentInterfaces";
 import {
-  DragColumnContents,
-  DragColumnsInterface,
   FactDataInterface,
   FactStructure,
   ItemHistory,
   SetItem,
 } from "../interfaces/SetCreatorInterfaces";
-import { DragDropActions } from "../types/SetCreatorTypes";
 
 /** isEmpty
  *
@@ -34,78 +30,6 @@ export function isEmpty(obj: object) {
  */
 export function checkIfNullUndefinedOrEmpty(obj: object) {
   return obj === null || obj === undefined || isEmpty(obj);
-}
-
-/** onDragEnd
- *
- * Event after drag ends
- *
- * @param {DraggableObject} result Results from event (Source + Destination)
- * @param {DragColumnsInterface} columns Current column state
- * @param {(value: React.SetStateAction<DragColumnsInterface>) => void} setColumns Callback for trigger column change
- * @param {(value: React.SetStateAction<boolean>) => void} setIncomingChange Callback for triggering change
- */
-export function onDragEnd(
-  result: DropResult,
-  columns: DragColumnsInterface,
-  dispatch: any
-): void {
-  if (!result.destination) {
-    return;
-  } else {
-    const { source, destination } = result;
-
-    let columnObject = {
-      Available: {} as DragColumnContents,
-      Targeted: {} as DragColumnContents,
-      Mastered: {} as DragColumnContents,
-      Skipped: {} as DragColumnContents,
-    } as DragColumnsInterface;
-
-    // Source and destination differ
-    if (source.droppableId !== destination.droppableId) {
-      const sourceColumn = columns[source.droppableId];
-      const destColumn = columns[destination.droppableId];
-      const sourceItems = [...sourceColumn.items];
-      const destItems = [...destColumn.items];
-      const [removed] = sourceItems.splice(source.index, 1);
-      destItems.splice(destination.index, 0, removed);
-
-      columnObject = {
-        ...columns,
-        [source.droppableId]: {
-          ...sourceColumn,
-          items: sourceItems,
-        },
-        [destination.droppableId]: {
-          ...destColumn,
-          items: destItems,
-        },
-      } as DragColumnsInterface;
-
-      columnObject.Available.name = `Available (${columnObject.Available.items.length})`;
-      columnObject.Targeted.name = `Targeted (${columnObject.Targeted.items.length})`;
-      columnObject.Mastered.name = `Mastered (${columnObject.Mastered.items.length})`;
-      columnObject.Skipped.name = `Skipped (${columnObject.Skipped.items.length})`;
-
-      dispatch({ type: DragDropActions.UpdateColumns, payload: columnObject });
-    } else {
-      const column = columns[source.droppableId];
-      const copiedItems = [...column.items];
-      const [removed] = copiedItems.splice(source.index, 1);
-      copiedItems.splice(destination.index, 0, removed);
-
-      columnObject = {
-        ...columns,
-        [source.droppableId]: {
-          ...column,
-          items: copiedItems,
-        },
-      } as DragColumnsInterface;
-
-      dispatch({ type: DragDropActions.UpdateColumns, payload: columnObject });
-    }
-  }
 }
 
 /** loadMathFacts

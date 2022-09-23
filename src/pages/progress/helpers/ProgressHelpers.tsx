@@ -321,23 +321,32 @@ export function prepareItemLevelCalculations(
     (accumulator, value) => accumulator.concat(value)
   );
 
-  const uniqueMathFacts = flatItemSummaries
-    .map((obj) => obj.factString)
-    .filter(OnlyUnique)
-    .sort();
+  if (!Array.isArray(flatItemSummaries)) {
+    return {
+      ItemSummaries: itemSummaries,
+      FlatItemSummaries: null,
+      UniqueMathFacts: null,
+      UniqueQuants: null,
+    } as ItemLevelCalculationsObject;
+  } else {
+    const uniqueMathFacts = flatItemSummaries
+      .map((obj) => obj.factString)
+      .filter(OnlyUnique)
+      .sort();
 
-  const uniqueQuants = aggregateItemLevelPerformances(
-    uniqueMathFacts,
-    flatItemSummaries,
-    target
-  );
+    const uniqueQuants = aggregateItemLevelPerformances(
+      uniqueMathFacts,
+      flatItemSummaries,
+      target
+    );
 
-  return {
-    ItemSummaries: itemSummaries,
-    FlatItemSummaries: flatItemSummaries,
-    UniqueMathFacts: uniqueMathFacts,
-    UniqueQuants: uniqueQuants,
-  } as ItemLevelCalculationsObject;
+    return {
+      ItemSummaries: itemSummaries,
+      FlatItemSummaries: flatItemSummaries,
+      UniqueMathFacts: uniqueMathFacts,
+      UniqueQuants: uniqueQuants,
+    } as ItemLevelCalculationsObject;
+  }
 }
 
 /** getSecondaryProgressChartData
@@ -368,17 +377,19 @@ export function getSecondaryProgressChartData(
     },
     series: {
       name: "Item Metrics",
-      data: itemLevelCalculations.UniqueQuants.map((item) => {
-        return {
-          x: item.X,
-          y: item.Y,
-          marker: {
-            symbol: getMappedMarker(item.Latency),
-            fillColor: getMappedColor(item.AverageCorrect),
-            radius: item.Total > 5 ? 5 + 1 : item.Total + 1,
-          },
-        };
-      }),
+      data: itemLevelCalculations.UniqueQuants ?
+        itemLevelCalculations.UniqueQuants.map((item) => {
+          return {
+            x: item.X,
+            y: item.Y,
+            marker: {
+              symbol: getMappedMarker(item.Latency),
+              fillColor: getMappedColor(item.AverageCorrect),
+              radius: item.Total > 5 ? 5 + 1 : item.Total + 1,
+            },
+          };
+        }) :
+        [],
     },
     yAxis: {
       title: {

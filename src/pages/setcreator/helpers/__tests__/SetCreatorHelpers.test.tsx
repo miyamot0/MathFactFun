@@ -14,12 +14,11 @@ import {
   getRelevantCCCSet,
   isEmpty,
   loadMathFacts,
-  onDragEnd,
   populateColumnMetrics,
 } from "../SetCreatorHelpers";
 import firebase from "firebase";
-import { DropReason, DropResult } from "react-beautiful-dnd";
-import { ColumnObject, DragDropActions } from "../../types/SetCreatorTypes";
+import { DropResult } from "react-beautiful-dnd";
+import { ColumnObject } from "../../types/SetCreatorTypes";
 import { StudentDataInterface } from "../../../student/interfaces/StudentInterfaces";
 import {
   GetOperatorFromLabel,
@@ -30,10 +29,10 @@ import {
   ItemHistory,
   SetItem,
 } from "../../interfaces/SetCreatorInterfaces";
-import { PerformanceDataInterface } from "../../../intervention/types/InterventionTypes";
 import { remapPerformances } from "../../../progress/helpers/ProgressHelpers";
-import { InitialSetCreatorState } from "../../functionality/SetCreatorBehavior";
 import { FactsOnFire } from "../../../../maths/Mind";
+import { onDragEnd } from "../DragDropHelpers";
+import { PerformanceDataInterface } from "../../../intervention/interfaces/InterventionInterfaces";
 
 describe("isEmpty", () => {
   it("Should return false, if empty", () => {

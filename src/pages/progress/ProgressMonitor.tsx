@@ -16,10 +16,7 @@ import { GetApproachStringFromLabel } from "../../utilities/LabelHelper";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import AnnotationsModule from "highcharts/modules/annotations";
-import {
-  ChartInformation,
-  RoutedStudentProgressSet,
-} from "./interfaces/ProgressInterfaces";
+import { RoutedStudentProgressSet } from "./interfaces/ProgressInterfaces";
 import {
   getPrimaryProgressChartData,
   getSecondaryProgressChartData,
@@ -27,7 +24,9 @@ import {
   prepareOverallCalculations,
 } from "./helpers/ProgressHelpers";
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 require("highcharts/modules/annotations")(Highcharts);
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 require("highcharts/modules/accessibility")(Highcharts);
 AnnotationsModule(Highcharts);
 
@@ -47,21 +46,12 @@ export default function ProgressMonitor() {
     orderString: undefined,
   });
 
-  //const [chartOptions, setChartOptions] = useState<ChartInformation>(
-  //  {} as ChartInformation
-  //);
-  //const [itemChartOptions, setItemChartOptions] = useState({});
-
   const [chartOptions, setChartOptions] = useState({
     mainChart: {},
     itemChart: {},
   });
 
   useEffect(() => {
-    if (!target && !aim && parseInt(aim) !== null) {
-      return;
-    }
-
     if (documents) {
       const overallCalculations = prepareOverallCalculations(documents, aim);
 

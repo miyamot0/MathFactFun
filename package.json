@@ -28,7 +28,8 @@
     "coveragePathIgnorePatterns": [
       "index.tsx",
       "TapedProblems.tsx",
-      "Cloze.tsx"
+      "Cloze.tsx",
+      "ProgressMonitor.tsx"
     ]
   },
   "scripts": {

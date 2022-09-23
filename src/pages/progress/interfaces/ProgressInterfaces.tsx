@@ -54,9 +54,9 @@ export interface OverallCalculationObject {
 
 export interface ItemLevelCalculationsObject {
   ItemSummaries: FactDataInterface[][];
-  FlatItemSummaries: FactDataInterface[];
-  UniqueMathFacts: string[];
-  UniqueQuants: ItemPerformanceMetrics[];
+  FlatItemSummaries: FactDataInterface[] | null;
+  UniqueMathFacts: string[] | null;
+  UniqueQuants: ItemPerformanceMetrics[] | null;
 }
 
 export interface ChartInformation {

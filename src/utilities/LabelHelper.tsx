@@ -267,7 +267,8 @@ export function GetApproachStringFromLabel(
   | "Cloze"
   | "Taped Problems"
   | "Explicit Timing"
-  | "N/A" {
+  | "N/A"
+  | "" {
   switch (label) {
     case "CoverCopyCompare":
       return "Cover Copy Compare";
@@ -280,7 +281,7 @@ export function GetApproachStringFromLabel(
     case "N/A":
       return "N/A";
     default:
-      throw Error("No matching approach found");
+      return "";
   }
 }
 
