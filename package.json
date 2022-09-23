@@ -34,7 +34,9 @@
       "index.tsx",
       "TapedProblems.tsx",
       "Cloze.tsx",
-      "ProgressMonitor.tsx"
+      "ProgressMonitor.tsx",
+      "Timer.tsx",
+      "TimerButton.tsx"
     ]
   },
   "scripts": {
