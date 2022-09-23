@@ -176,18 +176,22 @@ export function generateWrapperStudentList(
   const isBenchmarkingCurrent = checkIfProgrammingCurrent(student.dueDate);
   const isBenchmarkingCompleted = checkIfBenchmarksCompleted(student);
 
+  const styles = {
+
+  };
+
   if (isBenchmarkingCurrent) {
     return (
-      <p>
+      <p style={styles} className='student-list-tail-item'>
         <span className="on-track"></span>
-        {""}Next Benchmark(s): {student.dueDate.toDate().toDateString()}
+        {""}Benchmarks Start: {student.dueDate.toDate().toLocaleDateString('en-US')}
       </p>
     );
   }
 
   if (isBenchmarkingCompleted) {
     return (
-      <p>
+      <p style={styles} className='student-list-tail-item'>
         <span className="on-track"></span>
         {""}Current Benchmark(s) Completed
       </p>
@@ -195,7 +199,7 @@ export function generateWrapperStudentList(
   }
 
   return (
-    <Link to={`/probe/${student.id}`}>
+    <Link to={`/probe/${student.id}`} style={styles} className='student-list-tail-item'>
       <span className="needs-review"></span>
       {""}Benchmarking Needed
     </Link>

@@ -20,6 +20,18 @@
   box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.05);
   text-decoration: none;
   color: inherit;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+}
+
+.student-list-head-item {
+  flex: 1 1 auto;
+}
+
+.student-list-tail-item {
+  flex: 0 1 auto;
+  align-self: flex-start;
 }
 
 .student-list a {
@@ -71,6 +83,7 @@
   background: #ff5733;
   border-radius: 50%;
   margin-top: 5px;
+  text-decoration: underline;
 }
 
 .student-list p {

@@ -19,13 +19,13 @@ import React from "react"
 export function exportLogoutPanel(user: firebase.User | null, logoutPending: boolean, logout: any) {
     if (user) {
         if (logoutPending) {
-            return <button className="global-btn" onClick={logout}>
+            return <li><button className="global-btn" onClick={logout}>
                 Logging out...
-            </button>
+            </button></li>
         } else {
-            return <button className="global-btn global-btn-red" onClick={logout}>
+            return <li><button className="global-btn global-btn-red" onClick={logout}>
                 Logout
-            </button>
+            </button></li>
         }
     } else {
         return <></>;

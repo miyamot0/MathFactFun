@@ -8,7 +8,6 @@
 
 import React, { useReducer } from "react";
 import { useParams } from "react-router-dom";
-import { timestamp } from "../../firebase/config";
 import { useFirestore } from "../../firebase/hooks/useFirestore";
 import { useHistory } from "react-router-dom";
 import { useFirebaseDocumentTyped } from "../../firebase/hooks/useFirebaseDocument";
@@ -20,21 +19,14 @@ import {
   ErrorCorrection,
   Contingencies,
 } from "../../maths/Facts";
-import { formatDate } from "../../utilities/LabelHelper";
 
 // components
-import Select, { MultiValue } from "react-select";
 import { RoutedIdParam } from "../../interfaces/RoutingInterfaces";
 import {
   StudentCreateSingleInitialState,
   userCreationReducer,
 } from "./functionality/StudentFunctionality";
-import {
-  checkInputNullOrUndefined,
-  streamlinedCheck,
-} from "../../utilities/FormHelpers";
 import { StudentDataInterface } from "./interfaces/StudentInterfaces";
-import { SingleOptionType } from "../../types/SharedComponentTypes";
 import { StudentCreatorBehavior } from "./types/StudentTypes";
 import {
   onLoadSingleStudentEdit,
@@ -100,28 +92,28 @@ export default function EditStudent() {
           }}
         >
           {standardEntryFieldText(
-            "Student ID:",
+            "Student ID",
             state.Name,
             StudentCreatorBehavior.SetName,
             dispatch
           )}
 
           {standardEntryFieldTextArea(
-            "Student Details:",
+            "Student Details",
             state.Details,
             StudentCreatorBehavior.SetDetails,
             dispatch
           )}
 
           {standardEntryFieldDate(
-            "Next Benchmark Date:",
+            "Next Benchmark Date",
             state.DueDate,
             StudentCreatorBehavior.SetDueDate,
             dispatch
           )}
 
           {standardSelectField(
-            "Current Grade:",
+            "Current Grade",
             Grades,
             state.CurrentGrade,
             StudentCreatorBehavior.SetCurrentGrade,
@@ -129,7 +121,7 @@ export default function EditStudent() {
           )}
 
           {standardSelectFieldMulti(
-            "Target For Benchmarking:",
+            "Target For Benchmarking",
             CoreOperations,
             state.CurrentBenchmarking,
             StudentCreatorBehavior.SetCurrentBenchmarking,
@@ -137,7 +129,7 @@ export default function EditStudent() {
           )}
 
           {standardSelectField(
-            "Benchmark Set:",
+            "Benchmark Set",
             BenchmarkSets,
             state.CurrentProblemSet,
             StudentCreatorBehavior.SetProblemSet,
@@ -145,7 +137,7 @@ export default function EditStudent() {
           )}
 
           {standardSelectField(
-            "Target For Intervention:",
+            "Target For Intervention",
             Operations,
             state.CurrentTarget,
             StudentCreatorBehavior.SetCurrentTarget,
@@ -153,7 +145,7 @@ export default function EditStudent() {
           )}
 
           {standardSelectField(
-            "Intervention Approach:",
+            "Intervention Approach",
             InterventionApproach,
             state.CurrentApproach,
             StudentCreatorBehavior.SetCurrentApproach,
@@ -161,7 +153,7 @@ export default function EditStudent() {
           )}
 
           {standardSelectField(
-            "Error Correction Procedures:",
+            "Error Correction Procedures",
             ErrorCorrection,
             state.CurrentErrorApproach,
             StudentCreatorBehavior.SetCurrentErrorApproach,
@@ -169,7 +161,7 @@ export default function EditStudent() {
           )}
 
           {standardSelectField(
-            "Reinforcement Procedures:",
+            "Reinforcement Procedures",
             Contingencies,
             state.CurrentSRApproach,
             StudentCreatorBehavior.SetCurrentSRApproach,
@@ -177,14 +169,14 @@ export default function EditStudent() {
           )}
 
           {standardEntryFieldNumber(
-            "Target Aim Line:",
+            "Target Aim Line",
             state.AimLine,
             StudentCreatorBehavior.SetAimLine,
             dispatch
           )}
 
           {standardEntryFieldNumber(
-            "Duration for Task (Minutes; Explicit Timing Only):",
+            "Duration for Task (Minutes; Explicit Timing Only)",
             state.ExplicitTime,
             StudentCreatorBehavior.SetExplicitTime,
             dispatch

@@ -32,8 +32,8 @@ export const StudentCreateSingleInitialState: StudentCreateState = {
     label: "No Current Intervention",
   } as SingleOptionType,
   CurrentGrade: {
-    value: "N/A",
-    label: "No Current Intervention",
+    value: "K",
+    label: "Kindergarten"
   } as SingleOptionType,
   CurrentTarget: {
     value: "N/A",

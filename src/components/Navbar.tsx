@@ -67,9 +67,11 @@ export default function Navbar() {
           </li>
         )}
 
-        <button className="global-btn" onClick={openModal}>
-          Licenses
-        </button>
+        <li>
+          <button className="global-btn" onClick={openModal}>
+            Licenses
+          </button>
+        </li>
 
         {user && authIsReady && adminFlag && (
           <li>

@@ -69,28 +69,28 @@ export default function CreateStudent() {
         }}
       >
         {standardEntryFieldText(
-          "Student ID:",
+          "Student ID",
           state.Name,
           StudentCreatorBehavior.SetName,
           dispatch
         )}
 
         {standardEntryFieldTextArea(
-          "Student Details:",
+          "Student Details",
           state.Details,
           StudentCreatorBehavior.SetDetails,
           dispatch
         )}
 
         {standardEntryFieldDate(
-          "Next Benchmark Date:",
+          "Next Benchmark Date",
           state.DueDate,
           StudentCreatorBehavior.SetDueDate,
           dispatch
         )}
 
         {standardSelectField(
-          "Current Grade:",
+          "Current Grade",
           Grades,
           state.CurrentGrade,
           StudentCreatorBehavior.SetCurrentGrade,
@@ -98,7 +98,7 @@ export default function CreateStudent() {
         )}
 
         {standardSelectFieldMulti(
-          "Target For Benchmarking:",
+          "Target For Benchmarking",
           CoreOperations,
           state.CurrentBenchmarking,
           StudentCreatorBehavior.SetCurrentBenchmarking,
@@ -106,7 +106,7 @@ export default function CreateStudent() {
         )}
 
         {standardSelectField(
-          "Target For Intervention:",
+          "Target For Intervention",
           Operations,
           state.CurrentTarget,
           StudentCreatorBehavior.SetCurrentTarget,
@@ -114,7 +114,7 @@ export default function CreateStudent() {
         )}
 
         {standardSelectField(
-          "Intervention Approach:",
+          "Intervention Approach",
           InterventionApproach,
           state.CurrentApproach,
           StudentCreatorBehavior.SetCurrentApproach,
@@ -122,7 +122,7 @@ export default function CreateStudent() {
         )}
 
         {standardSelectField(
-          "Error Correction Procedures:",
+          "Error Correction Procedures",
           ErrorCorrection,
           state.CurrentErrorApproach,
           StudentCreatorBehavior.SetCurrentErrorApproach,
@@ -130,7 +130,7 @@ export default function CreateStudent() {
         )}
 
         {standardSelectField(
-          "Reinforcement Procedures:",
+          "Reinforcement Procedures",
           Contingencies,
           state.CurrentSRApproach,
           StudentCreatorBehavior.SetCurrentSRApproach,
