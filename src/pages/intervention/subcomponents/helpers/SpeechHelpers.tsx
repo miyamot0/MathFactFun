@@ -33,9 +33,13 @@ export function scheduleProblemOutput(
   synthesis: SpeechSynthesisUtterance
 ) {
   if (seconds % delta === 0 && trial < nProblems) {
-    setTrial((trial: number) => trial + 1);
+    const trialNew: number = trial + 1;
+
+    setTrial(trialNew);
     callBackFunction(`fire ${seconds} ${trial}`);
 
     speakProblem(synthesis);
+  } else {
+    return;
   }
 }

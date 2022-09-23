@@ -12,8 +12,8 @@ import { TimerButtonInterface } from "./interfaces/TimerButtonInterfaces";
 
 export default function TimerButton({
   callBackFunction,
-  nProblems = 5,
-  delta = 5,
+  nProblems,
+  delta,
 }: TimerButtonInterface): JSX.Element {
   const timeIntervalTick = 1000;
 

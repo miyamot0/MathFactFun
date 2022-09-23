@@ -7,35 +7,84 @@
  */
 
 import Adapter from "enzyme-adapter-react-16";
-import Enzyme, { mount } from "enzyme";
+import Enzyme, { shallow } from "enzyme";
 import { waitFor } from "@testing-library/react";
 import Timer from "../Timer";
 import React from "react";
+import { act } from "react-dom/test-utils";
 
 Enzyme.configure({ adapter: new Adapter() });
 
 describe("Timer", () => {
   beforeEach(() => jest.resetModules());
 
+  it("should render, valid seconds", () => {
+    act(() => {
+      const secondsTotal = 60;
+      const startTimerTime = new Date();
+      const callbackFunction = jest.fn();
+
+      const wrapper = shallow(
+        <Timer
+          secondsTotal={secondsTotal}
+          startTimerTime={startTimerTime}
+          callbackFunction={callbackFunction}
+        />
+      );
+
+      expect(wrapper.find("span").first().text().includes("01:00")).toBe(true);
+
+      wrapper.update();
+      wrapper.render();
+    });
+  });
+
+  it("should render, null start time", () => {
+    act(() => {
+      const secondsTotal = 60;
+      const startTimerTime = null;
+      const callbackFunction = jest.fn();
+
+      const wrapper = shallow(
+        <Timer
+          secondsTotal={secondsTotal}
+          startTimerTime={startTimerTime}
+          callbackFunction={callbackFunction}
+        />
+      );
+
+      expect(wrapper.find("span").first().text().includes("01:00")).toBe(true);
+
+      wrapper.update();
+      wrapper.render();
+    });
+  });
+
   it("should render, valid seconds and callback", () => {
-    const secondsTotal = 0;
-    const startTimerTime = new Date();
-    const callbackFunction = jest.fn();
+    act(() => {
+      const secondsTotal = 5;
+      const startTimerTime = new Date();
+      const callbackFunction = jest.fn();
 
-    const wrapper = mount(
-      <Timer
-        secondsTotal={secondsTotal}
-        startTimerTime={startTimerTime}
-        callbackFunction={callbackFunction}
-      />
-    );
+      const wrapper = shallow(
+        <Timer
+          secondsTotal={secondsTotal}
+          startTimerTime={startTimerTime}
+          callbackFunction={callbackFunction}
+        />
+      );
 
-    setTimeout(() => {
-      expect(1).toBe(1);
-    }, 5000);
+      wrapper.update();
+      wrapper.render();
 
-    setTimeout(() => {
-      expect(callbackFunction).toBeCalled();
-    }, 9000);
+      waitFor(
+        () => {
+          expect(wrapper.find("span").first().text().includes("00:00")).toBe(
+            true
+          );
+        },
+        { interval: 100, timeout: 10000 }
+      );
+    });
   });
 });

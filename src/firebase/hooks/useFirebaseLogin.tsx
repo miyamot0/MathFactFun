@@ -12,6 +12,8 @@ import { useAuthorizationContext } from "../../context/hooks/useAuthorizationCon
 import { FirebaseLogin } from "../interfaces/FirebaseInterfaces";
 import { AuthorizationStates } from "../../context/functionality/AuthorizationBehavior";
 
+//https://github.com/soumak77/firebase-mock/blob/master/tutorials/client/auth/authentication.md
+
 /** useFirebaseLogin
  *
  * Hook for login
@@ -54,7 +56,7 @@ export function useFirebaseLogin(): FirebaseLogin {
       }
     } catch (error: any) {
       if (loginCancelled === false) {
-        setLoginError(error.message);
+        setLoginError(error);
         setPending(false);
       } else {
         return;

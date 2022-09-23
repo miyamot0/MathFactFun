@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { speakProblem } from "../SpeechHelpers";
+import { scheduleProblemOutput, speakProblem } from "../SpeechHelpers";
 
 describe("speakProblem", () => {
   beforeAll(() => {
@@ -21,10 +21,58 @@ describe("speakProblem", () => {
 
   it("should run", () => {
     speakProblem({} as SpeechSynthesisUtterance);
+  });
+});
 
-    setTimeout(() => {
-      expect(1).toBe(1);
-    }, 2000);
+describe("scheduleProblemOutput", () => {
+  beforeAll(() => {
+    global.window.speechSynthesis = {
+      speak: jest.fn(),
+    } as unknown as SpeechSynthesis;
+  });
+
+  afterAll(() => {
+    global.window.speechSynthesis = {} as unknown as SpeechSynthesis;
+  });
+
+  it("should run, and fire", () => {
+    const seconds = 5;
+    const delta = 5;
+    const trial = 0;
+    const nProblems = 1;
+    const setTrial = jest.fn();
+    const callBackFunction = jest.fn();
+    const speech = {} as SpeechSynthesisUtterance;
+
+    scheduleProblemOutput(
+      seconds,
+      delta,
+      trial,
+      nProblems,
+      setTrial,
+      callBackFunction,
+      speech
+    );
+  });
+
+  it("should run, and return", () => {
+    const seconds = 5;
+    const delta = 5;
+    const trial = 1;
+    const nProblems = 1;
+    const setTrial = jest.fn();
+    const callBackFunction = jest.fn();
+    const speech = {} as SpeechSynthesisUtterance;
+
+    scheduleProblemOutput(
+      seconds,
+      delta,
+      trial,
+      nProblems,
+      setTrial,
+      callBackFunction,
+      speech
+    );
   });
 });
 

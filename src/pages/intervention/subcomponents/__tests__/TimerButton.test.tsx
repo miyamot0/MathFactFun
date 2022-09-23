@@ -7,9 +7,11 @@
  */
 
 import Adapter from "enzyme-adapter-react-16";
-import Enzyme, { mount } from "enzyme";
+import Enzyme, { shallow } from "enzyme";
 import TimerButton from "../TimerButton";
 import React from "react";
+import { waitFor } from "@testing-library/react";
+import { act } from "react-dom/test-utils";
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -17,11 +19,9 @@ describe("Timer", () => {
   beforeEach(() => jest.resetModules());
 
   it("should render, valid seconds and callback", () => {
-    const secondsTotal = 120;
-    const startTimerTime = new Date();
     const callBackFunction = jest.fn();
 
-    const wrapper = mount(
+    const wrapper = shallow(
       <TimerButton
         callBackFunction={callBackFunction}
         nProblems={5}
@@ -30,24 +30,37 @@ describe("Timer", () => {
     );
 
     wrapper.find("button").simulate("click");
+  });
 
-    //setTimeout(() => {
-    //  expect(1).toBe(1);
-    //}, 5000);
+  it("should render, valid seconds and callback", async () => {
+    await act(async () => {
+      const callBackFunction = jest.fn();
 
-    //setTimeout(() => {
-    //  expect(callBackFunction).toBeCalled();
-    //}, 9000);
+      const wrapper = shallow(
+        <TimerButton
+          callBackFunction={callBackFunction}
+          nProblems={1}
+          delta={1}
+        />
+      );
 
-    /*
+      expect(wrapper.find("button").first().text().includes("Trial")).toBe(
+        false
+      );
 
-    const wrapper = mount(
-      TimerButton({ callBackFunction, nProblems: 5, delta: 5 })
-    );
+      wrapper.find("button").simulate("click");
 
-    waitFor(() => {
-      expect(wrapper.find("span").length).toBe(1);
+      wrapper.update();
+      wrapper.render();
+
+      waitFor(() => {
+        expect(wrapper.find("button").first().text().includes("Trial")).toBe(
+          true
+        );
+      });
+
+      //wrapper.update();
+      //wrapper.render();
     });
-    */
   });
 });

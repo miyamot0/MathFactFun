@@ -8,23 +8,35 @@
 
 import { FirestoreAction } from "../../interfaces/FirebaseInterfaces";
 
-export function complexCollectionGetter(collection: string, studentId: string | undefined,
-    projectFirestore: any, targetSkill: string | undefined) {
+export function complexCollectionGetter(
+  collection: string,
+  studentId: string | undefined,
+  projectFirestore: any,
+  targetSkill: string | undefined
+) {
+  const ref =
+    collection === "" && studentId !== undefined
+      ? projectFirestore
+          .collection("performances")
+          .doc(targetSkill)
+          .collection(studentId)
+      : projectFirestore.collection(collection);
 
-    const ref = collection === "" && studentId !== undefined
-        ? projectFirestore
-            .collection("performances")
-            .doc(targetSkill)
-            .collection(studentId)
-        : projectFirestore.collection(collection);
-
-    return ref;
+  return ref;
 }
 
-export function dispatchIfNotCancelledHelper({ action, isCancelled, dispatch }:
-    { action: FirestoreAction, isCancelled: boolean, dispatch: any }) {
-
-    if (!isCancelled) {
-        dispatch(action);
-    }
+export function dispatchIfNotCancelledHelper({
+  action,
+  isCancelled,
+  dispatch,
+}: {
+  action: FirestoreAction;
+  isCancelled: boolean;
+  dispatch: any;
+}) {
+  if (!isCancelled) {
+    dispatch(action);
+  } else {
+    return;
+  }
 }

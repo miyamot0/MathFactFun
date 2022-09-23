@@ -27,6 +27,8 @@ export default function Timer({
 
       setIntervalId(intervalIdValue);
       return () => clearInterval(intervalId ? intervalId : undefined);
+    } else {
+      return;
     }
 
     // TODO: Dependency issue to explore
@@ -36,7 +38,7 @@ export default function Timer({
     if (fireCallback) {
       setTimeout(function () {
         callbackFunction();
-      }, 3000);
+      }, 1000);
     }
   }, [fireCallback]);
 
@@ -49,7 +51,7 @@ export default function Timer({
   if (
     startTimerTime &&
     relevantSeconds <= 0 &&
-    !fireCallback &&
+    fireCallback === false &&
     intervalId !== null
   ) {
     clearInterval(intervalId);

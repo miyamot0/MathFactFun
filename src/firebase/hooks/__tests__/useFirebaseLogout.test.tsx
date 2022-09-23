@@ -6,57 +6,68 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import firebase from "firebase";
 import { renderHook } from "@testing-library/react-hooks";
 import { act } from "react-dom/test-utils";
 import { useFirebaseLogout } from "../useFirebaseLogout";
-import * as ProjectConfig from './../../../firebase/config'
+import { projectAuth } from "./../../../firebase/config";
+
+jest.mock("../../../context/hooks/useAuthorizationContext", () => {
+  return {
+    useAuthorizationContext: () => ({
+      dispatch: jest.fn(),
+    }),
+  };
+});
 
 describe("logout", () => {
-    it("mock successful logout", () => {
-        act(async () => {
-            const mockSignOut = jest.fn();
-            const docMock = jest.spyOn(ProjectConfig.projectAuth, "signOut");
-            docMock.mockImplementation(mockSignOut);
-            mockSignOut.mockImplementation(() => Promise.resolve(() => true));
+  it("the sign in with email/pass should work", async () => {
+    await act(async () => {
+      try {
+        await projectAuth.signOut();
 
-            const { result, waitFor } = renderHook(() =>
-                useFirebaseLogout()
-            );
+        expect(firebase.auth().signOut).toBeCalled();
+      } catch (err: any) {}
+    });
+  });
 
-            await result.current.logout();
+  it("mock successful logout", async () => {
+    await act(async () => {
+      const mockSignOut = jest.fn();
+      const docMock = jest.spyOn(projectAuth, "signOut");
+      docMock.mockImplementation(mockSignOut);
+      mockSignOut.mockImplementation(() => Promise.resolve(() => true));
 
-            waitFor(() => {
-                expect(mockSignOut).toBeCalled();
-                expect(result.current.logoutPending).toBe(false);
-                expect(result.current.logoutError).toBe(undefined);
-            })
+      const { result, waitFor } = renderHook(() => useFirebaseLogout());
 
-            expect(1).toBe(1)
-        })
-    })
+      await result.current.logout();
 
-    it("mock errored logout", () => {
-        act(async () => {
-            const mockSignOut = jest.fn();
-            const docMock = jest.spyOn(ProjectConfig.projectAuth, "signOut");
-            docMock.mockImplementation(mockSignOut);
-            mockSignOut.mockImplementation(() => {
-                throw Error("Error")
-            });
+      waitFor(() => {
+        expect(mockSignOut).toBeCalled();
+        expect(result.current.logoutPending).toBe(false);
+        expect(result.current.logoutError).toBe(undefined);
+      });
+    });
+  });
 
-            const { result, waitFor } = renderHook(() =>
-                useFirebaseLogout()
-            );
+  it("mock errored logout", async () => {
+    await act(async () => {
+      const mockSignOut = jest.fn();
+      const docMock = jest.spyOn(projectAuth, "signOut");
+      docMock.mockImplementation(mockSignOut);
+      mockSignOut.mockImplementation(() => {
+        throw Error("Error");
+      });
 
-            await result.current.logout();
+      const { result, waitFor } = renderHook(() => useFirebaseLogout());
 
-            waitFor(() => {
-                expect(mockSignOut).toBeCalled();
-                expect(result.current.logoutPending).toBe(false);
-                expect(result.current.logoutError).toStrictEqual({});
-            })
+      await result.current.logout();
 
-            expect(1).toBe(1)
-        })
-    })
-})
+      waitFor(() => {
+        expect(mockSignOut).toBeCalled();
+        expect(result.current.logoutPending).toBe(false);
+        expect(result.current.logoutError).toStrictEqual({});
+      });
+    });
+  });
+});

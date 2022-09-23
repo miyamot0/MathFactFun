@@ -46,7 +46,9 @@
     "cover": "jest --coverage",
     "make-badges": "istanbul-badges-readme",
     "test-verbose": "npm run test -- --silent=false",
-    "test-coverage": "npm run test -- --coverage --watchAll --coverageDirectory='coverage' --coverageReporters='json-summary'",
+    "test-open-handles": "npm run test -- --detectOpenHandles",
+    "test-coverage": "npm run test -- --coverage --watchAll --coverageDirectory='coverage'",
+    "test-summarize": "npm run test -- --coverage --watchAll --coverageDirectory='coverage' --coverageReporters='json-summary'",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
