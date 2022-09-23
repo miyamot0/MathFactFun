@@ -1,6 +1,6 @@
 | Statements                                                                            | Branches                                                                               | Functions                                                                           | Lines                                                                      |
 | ------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
-| ![Statements](https://img.shields.io/badge/statements-89.22%25-yellow.svg?style=flat) | ![Branches](https://img.shields.io/badge/branches-91.25%25-brightgreen.svg?style=flat) | ![Functions](https://img.shields.io/badge/functions-85.56%25-yellow.svg?style=flat) | ![Lines](https://img.shields.io/badge/lines-89.5%25-yellow.svg?style=flat) |
+| ![Statements](https://img.shields.io/badge/statements-89.14%25-yellow.svg?style=flat) | ![Branches](https://img.shields.io/badge/branches-91.16%25-brightgreen.svg?style=flat) | ![Functions](https://img.shields.io/badge/functions-85.53%25-yellow.svg?style=flat) | ![Lines](https://img.shields.io/badge/lines-89.42%25-yellow.svg?style=flat) |
 
 # Math Fact Fun (Technology Implementation of MIND Project)
 
