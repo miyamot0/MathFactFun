@@ -105,36 +105,40 @@ export default function SetCreator() {
   const relevantFOFSets = getRelevantCCCSet(target);
 
   return (
-    <div style={SetContainer} className={"set-creator-wrapper"}>
+    <div style={SetContainer} className="set-creator-wrapper" data-testid="set-creator-wrapper">
       <h2 style={TitleStyle}>
         Item Set: {document ? document.name : ""} (
         {document ? document.currentTarget : ""})
       </h2>
       <div style={SetEditForm}>
         <form>
-          <label>
-            <span>Target an Existing Set:</span>
-            <Select
-              options={generateSetTargetOptions(relevantFOFSets)}
-              onChange={(option) => onChangedSetTargetHandler(option, document, state, setAssignedSet, dispatch)
-              }
-              value={assignedSet}
-            />
+          <label htmlFor="target-set-field" >
+            Target an Existing Set:
           </label>
-          <label>
-            <span>Move Current Targets to: </span>
-            <Select
-              options={["Mastered", "Available", "Skipped"].map((opt) => {
-                return {
-                  value: opt,
-                  label: "Move to: " + opt,
-                };
-              })}
-              onChange={(option) => onChangedMovedTargetsHandler(option, state, dispatch)}
-            />
+          <Select
+            options={generateSetTargetOptions(relevantFOFSets)}
+            name={"target-set-field"}
+            inputId={"target-set-field"}
+            onChange={(option) => onChangedSetTargetHandler(option, document, state, setAssignedSet, dispatch)}
+            value={assignedSet}
+          />
+          <label htmlFor="move-target-field">
+            Move Current Targets to:
           </label>
+          <Select
+            options={["Mastered", "Available", "Skipped"].map((opt) => {
+              return {
+                value: opt,
+                label: "Move to: " + opt,
+              };
+            })}
+            name={"move-target-field"}
+            inputId={"move-target-field"}
+            onChange={(option) => onChangedMovedTargetsHandler(option, state, dispatch)}
+          />
           <button
             className="global-btn global-btn-red"
+            data-testid="set-creator-button"
             style={ClearBtn}
             onClick={() => resetItems(state, dispatch)}>
             Reset Items
