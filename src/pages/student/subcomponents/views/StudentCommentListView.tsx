@@ -6,17 +6,22 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from "react";
 import firebase from "firebase";
+import React from "react";
 import { StudentDataInterface } from "../../interfaces/StudentInterfaces";
 import { CommentInterface } from "../types/CommentTypes";
 
-export function renderCommentListView(
-  user: firebase.User | null,
-  adminFlag: boolean,
-  student: StudentDataInterface,
-  updateDocument: (id: string, updates: any) => Promise<void>
-): JSX.Element {
+export default function StudentCommentListView({
+  user,
+  adminFlag,
+  student,
+  updateDocument,
+}: {
+  user: firebase.User | null;
+  adminFlag: boolean;
+  student: StudentDataInterface;
+  updateDocument: (id: string, updates: any) => Promise<void>;
+}): JSX.Element {
   const toShowList = user && student && student.comments.length > 0;
 
   if (toShowList) {

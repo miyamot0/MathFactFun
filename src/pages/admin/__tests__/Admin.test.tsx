@@ -14,6 +14,7 @@ import { mount } from "enzyme";
 import { MemoryRouter } from "react-router-dom";
 import Admin from "../Admin";
 import * as useFirebaseCollectionTypedReference from "../../../firebase/hooks/useFirebaseCollection";
+import { UserDataInterface } from "../../user/types/UserTypes";
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -25,9 +26,19 @@ describe("Admin", () => {
     );
     mockDocs.mockImplementationOnce(() => ({
       documents: [
-        { uid: "123" } as firebase.User,
-        { uid: "456" } as firebase.User,
-      ],
+        {
+          id: "123",
+          displayEmail: "",
+          displayName: "",
+          displaySchool: "",
+        } as UserDataInterface,
+        {
+          id: "456",
+          displayEmail: "",
+          displayName: "",
+          displaySchool: "",
+        } as UserDataInterface,
+      ] as UserDataInterface[],
       error: undefined,
     }));
 

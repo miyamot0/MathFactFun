@@ -8,14 +8,15 @@
 
 import firebase from "firebase";
 import Adapter from "enzyme-adapter-react-16";
-import Enzyme, { mount } from "enzyme";
+import Enzyme, { shallow } from "enzyme";
 import { StudentDataInterface } from "../../../interfaces/StudentInterfaces";
-import {
-  renderCommentForm,
-  renderCommentListView,
-} from "../StudentCommentsViews";
 import { FirestoreState } from "../../../../../firebase/interfaces/FirebaseInterfaces";
 import { CommentInterface } from "../../types/CommentTypes";
+import { waitFor } from "@testing-library/react";
+import { act } from "react-dom/test-utils";
+import React from "react";
+import StudentCommentFormView from "../StudentCommentFormView";
+import StudentCommentListView from "../StudentCommentListView";
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -45,7 +46,23 @@ const mockData = {
   minForTask: 2,
 };
 
-describe("renderCommentListView", () => {
+describe("CommentListView", () => {
+  let confirmSpy: jest.SpyInstance<boolean, [message?: string | undefined]>;
+  let alertSpy: jest.SpyInstance<void, [message?: any]>;
+
+  beforeAll(() => {
+    confirmSpy = jest.spyOn(window, "confirm");
+    confirmSpy.mockImplementation(jest.fn(() => true));
+    alertSpy = jest.spyOn(window, "alert");
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    alertSpy.mockImplementation(() => {});
+  });
+
+  afterAll(() => {
+    confirmSpy.mockRestore();
+    alertSpy.mockRestore();
+  });
+
   it("Should render li with comments", () => {
     const mockData2 = {
       ...mockData,
@@ -60,84 +77,133 @@ describe("renderCommentListView", () => {
 
     const user = {} as firebase.User;
     const cb = jest.fn();
+    const adminFlag = false;
 
-    const result = renderCommentListView(user, true, mockData2, cb);
-    const resultString = JSON.stringify(result);
+    const wrapper = shallow(
+      <StudentCommentListView
+        user={user}
+        adminFlag={adminFlag}
+        student={mockData2}
+        updateDocument={cb}
+      />
+    );
 
-    expect(resultString.includes("li")).toBe(true);
+    expect(wrapper.find("li").length).not.toBe(0);
   });
 
-  it("Should render li but not fire if id student id is null", () => {
-    window.confirm = jest.fn(() => true);
+  it("Should render li but not fire if id student id is null", async () => {
+    await act(async () => {
+      const mockData2 = {
+        ...mockData,
+        comments: [
+          {
+            id: 123,
+            displayName: "display Name",
+            createdAt: firebase.firestore.Timestamp.fromDate(new Date()),
+          } as CommentInterface,
+        ],
+      } as StudentDataInterface;
 
-    const mockData2 = {
-      ...mockData,
-      comments: [
-        {
-          id: 123,
-          displayName: "display Name",
-          createdAt: firebase.firestore.Timestamp.fromDate(new Date()),
-        } as CommentInterface,
-      ],
-    } as StudentDataInterface;
+      const user = { id: null } as unknown as firebase.User;
+      const cb = jest.fn();
+      const adminFlag = true;
 
-    const user = { id: null } as unknown as firebase.User;
-    const cb = jest.fn();
+      const wrapper = shallow(
+        <StudentCommentListView
+          user={user}
+          adminFlag={adminFlag}
+          student={mockData2}
+          updateDocument={cb}
+        />
+      );
 
-    const wrapper = mount(renderCommentListView(user, true, mockData2, cb));
-    wrapper.find("a").simulate("click");
+      wrapper.find("a").first().simulate("click");
 
-    setTimeout(() => {
-      expect(cb).toBeCalledTimes(0);
-    }, 1000);
+      wrapper.update();
+      wrapper.render();
+
+      await waitFor(() => {
+        expect(cb).toBeCalledTimes(0);
+      });
+    });
   });
 
-  it("Should render li but not fire if id student id is undefined", () => {
-    window.confirm = jest.fn(() => true);
+  it("Should render li but not fire if id student id is undefined", async () => {
+    await act(async () => {
+      const mockData2 = {
+        ...mockData,
+        comments: [
+          {
+            id: 123,
+            displayName: "display Name",
+            createdAt: firebase.firestore.Timestamp.fromDate(new Date()),
+          } as CommentInterface,
+        ],
+      } as StudentDataInterface;
 
-    const mockData2 = {
-      ...mockData,
-      comments: [
-        {
-          id: 123,
-          displayName: "display Name",
-          createdAt: firebase.firestore.Timestamp.fromDate(new Date()),
-        } as CommentInterface,
-      ],
-    } as StudentDataInterface;
+      const user = { id: undefined } as unknown as firebase.User;
+      const cb = jest.fn();
+      const adminFlag = true;
 
-    const user = { id: undefined } as unknown as firebase.User;
-    const cb = jest.fn();
+      const wrapper = shallow(
+        <StudentCommentListView
+          user={user}
+          adminFlag={adminFlag}
+          student={mockData2}
+          updateDocument={cb}
+        />
+      );
 
-    const wrapper = mount(renderCommentListView(user, true, mockData2, cb));
-    wrapper.find("a").simulate("click");
+      wrapper.find("a").first().simulate("click");
 
-    setTimeout(() => {
-      expect(cb).toBeCalledTimes(0);
-    }, 1000);
+      wrapper.update();
+      wrapper.render();
+
+      await waitFor(() => {
+        expect(cb).toBeCalledTimes(0);
+      });
+    });
   });
 
-  it("Should have working callback", () => {
-    const mockData2 = {
-      ...mockData,
-      comments: [
-        {
-          id: 123,
-          displayName: "display Name",
-          createdAt: firebase.firestore.Timestamp.fromDate(new Date()),
-        } as CommentInterface,
-      ],
-    } as StudentDataInterface;
+  it("comment listview: Should have working callback", async () => {
+    await act(async () => {
+      const mockData2 = {
+        ...mockData,
+        comments: [
+          {
+            id: 123,
+            displayName: "display Name",
+            createdAt: firebase.firestore.Timestamp.fromDate(new Date()),
+          } as CommentInterface,
+        ],
+      } as StudentDataInterface;
 
-    const user = {} as firebase.User;
-    const cb = jest.fn();
+      const user = { uid: "123" } as firebase.User;
+      const cb = jest.fn((id: string) => Promise.resolve());
+      const adminFlag = true;
 
-    const wrapper = mount(renderCommentListView(user, true, mockData2, cb));
-    wrapper.find("a").simulate("click");
+      cb.mockImplementationOnce(() => Promise.resolve());
 
-    setTimeout(() => {
-      expect(cb).toHaveBeenCalled();
-    }, 1000);
+      confirmSpy.mockReturnValueOnce(true);
+
+      const wrapper = shallow(
+        <StudentCommentListView
+          user={user}
+          adminFlag={adminFlag}
+          student={mockData2}
+          updateDocument={cb}
+        />
+      );
+
+      wrapper.find("a").first().simulate("click");
+
+      wrapper.update();
+      wrapper.render();
+
+      await waitFor(() => {
+        expect(cb).toHaveBeenCalled();
+      });
+    });
   });
 
   it("Should render no li with no comments", () => {
@@ -145,22 +211,30 @@ describe("renderCommentListView", () => {
       ...mockData,
     } as StudentDataInterface;
 
-    const user = {} as firebase.User;
+    const user = { uid: "123" } as firebase.User;
     const cb = jest.fn();
+    const adminFlag = false;
 
-    const result = renderCommentListView(user, true, mockData2, cb);
-    const resultString = JSON.stringify(result);
+    const wrapper = shallow(
+      <StudentCommentListView
+        user={user}
+        adminFlag={adminFlag}
+        student={mockData2}
+        updateDocument={cb}
+      />
+    );
 
-    expect(resultString.includes("li")).toBe(false);
+    expect(wrapper.find("li").length).toBe(0);
   });
 });
 
-describe("renderCommentForm", () => {
+describe("CommentFormView", () => {
   it("Should render the form", () => {
-    const cb = () => jest.fn();
+    const cb = jest.fn((id: string, updates: any) => Promise.resolve());
     const cb2 = jest.fn();
     const newComment = "asdf";
     const user = {} as firebase.User;
+    const response = { error: "Bad save" } as FirestoreState;
     const mockData2 = {
       ...mockData,
       comments: [
@@ -172,145 +246,178 @@ describe("renderCommentForm", () => {
       ],
     } as StudentDataInterface;
 
-    const result = renderCommentForm(
-      newComment,
-      user,
-      mockData2,
-      cb,
-      cb2,
-      {} as FirestoreState
+    const wrapper = shallow(
+      <StudentCommentFormView
+        newComment={newComment}
+        user={user}
+        student={mockData2}
+        dispatch={cb2}
+        updateDocument={cb}
+        response={response}
+      />
     );
-    const resultString = JSON.stringify(result);
 
-    expect(resultString.includes("textarea")).toBe(true);
+    expect(wrapper.find("textarea").length).toBe(1);
   });
 
-  it("Should trigger relevant button callbacks if well formed", () => {
-    const cb = () => jest.fn();
-    const cb2 = jest.fn();
-    const newComment = "asdf";
-    const user = {} as firebase.User;
-    const mockData2 = {
-      ...mockData,
-      comments: [
-        {
-          id: 123,
-          displayName: "display Name",
-          createdAt: firebase.firestore.Timestamp.fromDate(new Date()),
-        } as CommentInterface,
-      ],
-    } as StudentDataInterface;
+  it("Should trigger relevant button callbacks if well formed", async () => {
+    await act(async () => {
+      const cb = jest.fn((id: string, updates: any) => Promise.resolve());
+      const cb2 = jest.fn();
+      const newComment = "asdf";
+      const user = {} as firebase.User;
+      const response = { error: "Bad save" } as FirestoreState;
+      const mockData2 = {
+        ...mockData,
+        comments: [
+          {
+            id: 123,
+            displayName: "display Name",
+            createdAt: firebase.firestore.Timestamp.fromDate(new Date()),
+          } as CommentInterface,
+        ],
+      } as StudentDataInterface;
 
-    const wrapper = mount(
-      renderCommentForm(
-        newComment,
-        user,
-        mockData2,
-        cb,
-        cb2,
-        {} as FirestoreState
-      )
-    );
-    const event = { target: { value: "sometext" } };
-    wrapper.find("textarea").simulate("change", event);
+      const wrapper = shallow(
+        <StudentCommentFormView
+          newComment={newComment}
+          user={user}
+          student={mockData2}
+          dispatch={cb2}
+          updateDocument={cb}
+          response={response}
+        />
+      );
 
-    setTimeout(() => {
-      expect(cb).toHaveBeenCalled();
-    }, 1000);
+      const event = { target: { value: "sometext" } };
+
+      expect(wrapper.find("textarea").length).toBe(1);
+
+      wrapper.find("textarea").simulate("change", event);
+
+      wrapper.update();
+      wrapper.render();
+
+      await waitFor(() => {
+        expect(cb2).toHaveBeenCalled();
+      });
+    });
   });
 
-  it("Should trigger relevant button callbacks if well formed", () => {
-    const cb = () => jest.fn();
-    const cb2 = jest.fn();
-    const newComment = "asdf";
-    const user = {} as firebase.User;
-    const mockData2 = {
-      ...mockData,
-      comments: [
-        {
-          id: 123,
-          displayName: "display Name",
-          createdAt: firebase.firestore.Timestamp.fromDate(new Date()),
-        } as CommentInterface,
-      ],
-    } as StudentDataInterface;
+  it("Should trigger relevant button callbacks if well formed", async () => {
+    await act(async () => {
+      const cb = jest.fn((id: string, updates: any) => Promise.resolve());
+      const cb2 = jest.fn();
+      const newComment = "asdf";
+      const user = {} as firebase.User;
+      const response = { error: "Bad save" } as FirestoreState;
+      const mockData2 = {
+        ...mockData,
+        comments: [
+          {
+            id: 123,
+            displayName: "display Name",
+            createdAt: firebase.firestore.Timestamp.fromDate(new Date()),
+          } as CommentInterface,
+        ],
+      } as StudentDataInterface;
 
-    const wrapper = mount(
-      renderCommentForm(
-        newComment,
-        user,
-        mockData2,
-        cb,
-        cb2,
-        {} as FirestoreState
-      )
-    );
-    wrapper.find("button").simulate("click");
+      const wrapper = shallow(
+        <StudentCommentFormView
+          newComment={newComment}
+          user={user}
+          student={mockData2}
+          dispatch={cb2}
+          updateDocument={cb}
+          response={response}
+        />
+      );
 
-    setTimeout(() => {
-      expect(cb).toHaveBeenCalled();
-    }, 1000);
+      wrapper.find("button").simulate("click");
+
+      await waitFor(() => {
+        expect(cb).toHaveBeenCalled();
+      });
+    });
   });
 
-  it("Should not trigger relevant button callbacks if user is null", () => {
-    const cb = () => jest.fn();
-    const cb2 = jest.fn();
-    const newComment = "asdf";
-    const user = null;
-    const mockData2 = {
-      ...mockData,
-      comments: [
-        {
-          id: 123,
-          displayName: "display Name",
-          createdAt: firebase.firestore.Timestamp.fromDate(new Date()),
-        } as CommentInterface,
-      ],
-    } as StudentDataInterface;
+  it("Should not trigger relevant button callbacks if user is null", async () => {
+    await act(async () => {
+      const cb = jest.fn((id: string, updates: any) => Promise.resolve());
+      const cb2 = jest.fn();
+      const newComment = "asdf";
+      const user = null;
+      const response = { error: "Bad save" } as FirestoreState;
+      const mockData2 = {
+        ...mockData,
+        comments: [
+          {
+            id: 123,
+            displayName: "display Name",
+            createdAt: firebase.firestore.Timestamp.fromDate(new Date()),
+          } as CommentInterface,
+        ],
+      } as StudentDataInterface;
 
-    const wrapper = mount(
-      renderCommentForm(
-        newComment,
-        user,
-        mockData2,
-        cb,
-        cb2,
-        {} as FirestoreState
-      )
-    );
+      const wrapper = shallow(
+        <StudentCommentFormView
+          newComment={newComment}
+          user={user}
+          student={mockData2}
+          dispatch={cb2}
+          updateDocument={cb}
+          response={response}
+        />
+      );
 
-    wrapper.find("button").simulate("click");
+      wrapper.find("button").simulate("click");
 
-    setTimeout(() => {
-      expect(cb).toHaveBeenCalledTimes(0);
-    }, 1000);
+      await waitFor(() => {
+        expect(cb).toHaveBeenCalledTimes(0);
+      });
+    });
   });
 
-  it("Should trigger relevant button callbacks if well formed and error if bad save", () => {
-    const cb = () => jest.fn();
-    const cb2 = jest.fn();
-    const newComment = "asdf";
-    const user = {} as firebase.User;
-    const mockData2 = {
-      ...mockData,
-      comments: [
-        {
-          id: 123,
-          displayName: "display Name",
-          createdAt: firebase.firestore.Timestamp.fromDate(new Date()),
-        } as CommentInterface,
-      ],
-    } as StudentDataInterface;
+  it("Should trigger relevant button callbacks if well formed and error if bad save", async () => {
+    await act(async () => {
+      const cb = jest.fn((id: string, updates: any) => Promise.resolve());
+      const cb2 = jest.fn();
+      const newComment = "asdf";
+      const user = { uid: "123" } as firebase.User;
+      const response = { error: "Bad save" } as FirestoreState;
+      const mockData2 = {
+        ...mockData,
+        comments: [
+          {
+            id: 123,
+            displayName: "display Name",
+            createdAt: firebase.firestore.Timestamp.fromDate(new Date()),
+          } as CommentInterface,
+        ],
+      } as StudentDataInterface;
 
-    const wrapper = mount(
-      renderCommentForm(newComment, user, mockData2, cb, cb2, {
-        error: "Bad save",
-      } as FirestoreState)
-    );
-    wrapper.find("button").simulate("click");
+      const wrapper = shallow(
+        <StudentCommentFormView
+          newComment={newComment}
+          user={user}
+          student={mockData2}
+          dispatch={cb2}
+          updateDocument={cb}
+          response={response}
+        />
+      );
 
-    setTimeout(() => {
-      expect(cb).toHaveBeenCalled();
-    }, 1000);
+      const button = wrapper.find("button");
+      expect(button.length).toBe(1);
+
+      button.simulate("click");
+
+      wrapper.update();
+      wrapper.render();
+
+      await waitFor(() => {
+        expect(cb).toHaveBeenCalled();
+      });
+    });
   });
 });
