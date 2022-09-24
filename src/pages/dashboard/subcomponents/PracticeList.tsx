@@ -21,7 +21,7 @@ export default function PracticeList({
   students,
 }: PracticeListInterface): JSX.Element {
   if (students === null || students.length === 0) {
-    return <p>No benchmarking targets</p>;
+    return <p className="no-practice-objects">No benchmarking targets</p>;
   } else {
     return (
       <div className="practice-list">

@@ -21,41 +21,43 @@ import { BenchmarkInterface } from "../types/DashboardTypes";
 
 import "./styles/BenchmarkList.css";
 
-export default function BenchmarkList({ student }: BenchmarkInterface): JSX.Element {
-
+export default function BenchmarkList({
+  student,
+}: BenchmarkInterface): JSX.Element {
   if (student === null || student.currentBenchmarking.length === 0) {
-    return <p>No benchmarking targets</p>
-  }
-  else {
-    return <div className="benchmark-list" key={student.id}>
-      {student.currentBenchmarking.map((benchmark: string) => {
-        const benchmarkCompleted = checkIfCompletedBenchmark(
-          student,
-          benchmark
-        );
+    return <p className="benchmark-no-targets">No benchmarking targets</p>;
+  } else {
+    return (
+      <div className="benchmark-list" key={student.id}>
+        {student.currentBenchmarking.map((benchmark: string) => {
+          const benchmarkCompleted = checkIfCompletedBenchmark(
+            student,
+            benchmark
+          );
 
-        return (
-          <div
-            className="benchmark-list-card"
-            style={{ opacity: benchmarkCompleted ? 0.5 : 1 }}
-            key={`${student.id}-${benchmark}`}
-          >
-            {generateWrapperBenchmarkList(
-              student,
-              benchmark,
-              benchmarkCompleted
-            )}
-            <hr />
-            <p>
-              <b>Due Date:</b> {student.dueDate.toDate().toDateString()}
-            </p>
-            <p>
-              <b>Status:</b> {generatedStyledFeedback(benchmarkCompleted)}
-            </p>
-            <br></br>
-          </div>
-        );
-      })}
-    </div>
+          return (
+            <div
+              className="benchmark-list-card"
+              style={{ opacity: benchmarkCompleted ? 0.5 : 1 }}
+              key={`${student.id}-${benchmark}`}
+            >
+              {generateWrapperBenchmarkList(
+                student,
+                benchmark,
+                benchmarkCompleted
+              )}
+              <hr />
+              <p>
+                <b>Due Date:</b> {student.dueDate.toDate().toDateString()}
+              </p>
+              <p>
+                <b>Status:</b> {generatedStyledFeedback(benchmarkCompleted)}
+              </p>
+              <br></br>
+            </div>
+          );
+        })}
+      </div>
+    );
   }
 }

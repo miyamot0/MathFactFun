@@ -64,8 +64,6 @@ describe("standardEntryFieldTextArea", () => {
       standardEntryFieldTextArea(label, currentValue, type, dispatch)
     );
 
-    console.log(JSON.stringify(wrapper));
-
     wrapper.find("textarea").simulate("change", event);
 
     expect(dispatch).toBeCalled();

@@ -25,86 +25,88 @@ Enzyme.configure({ adapter: new Adapter() });
 ReactModal.setAppElement = () => null;
 
 const mockComment = {
-    content: "string",
-    displayName: "string",
-    createdAt: "",
-    createdBy: "",
-    id: 0,
+  content: "string",
+  displayName: "string",
+  createdAt: "",
+  createdBy: "",
+  id: 0,
 };
 
 const mockId = "456";
 
 const mockData = {
-    id: mockId,
-    aimLine: 0,
-    createdAt: firebase.firestore.Timestamp.fromDate(new Date()),
-    dueDate: firebase.firestore.Timestamp.fromDate(new Date()),
-    lastActivity: firebase.firestore.Timestamp.fromDate(new Date()),
-    comments: [mockComment] as CommentInterface[],
-    completedBenchmark: [],
-    currentBenchmarking: ["Addition-Sums to 18", "Multiplication-Single Digit"],
-    factsMastered: ["", ""],
-    factsSkipped: ["", ""],
-    factsTargeted: ["", ""],
+  id: mockId,
+  aimLine: 0,
+  createdAt: firebase.firestore.Timestamp.fromDate(new Date()),
+  dueDate: firebase.firestore.Timestamp.fromDate(new Date()),
+  lastActivity: firebase.firestore.Timestamp.fromDate(new Date()),
+  comments: [mockComment] as CommentInterface[],
+  completedBenchmark: [],
+  currentBenchmarking: ["Addition-Sums to 18", "Multiplication-Single Digit"],
+  factsMastered: ["", ""],
+  factsSkipped: ["", ""],
+  factsTargeted: ["", ""],
 
-    creator: "",
-    currentApproach: InterventionFormat.ExplicitTiming,
-    currentErrorApproach: "",
-    currentGrade: "K",
-    currentSRApproach: "",
-    currentTarget: "Addition",
-    details: "",
-    name: "",
-    problemSet: "",
+  creator: "",
+  currentApproach: InterventionFormat.ExplicitTiming,
+  currentErrorApproach: "",
+  currentGrade: "K",
+  currentSRApproach: "",
+  currentTarget: "Addition",
+  details: "",
+  name: "",
+  problemSet: "",
 
-    minForTask: 2,
+  minForTask: 2,
 } as StudentDataInterface;
 
 describe("Practice List: Render", () => {
-    it("Should render all components if students present", () => {
-        act(() => {
-            const wrapper = mount(
-                <MemoryRouter>
-                    <PracticeList students={[mockData]} />
-                </MemoryRouter>
-            );
+  it("Should render all components if students present", async () => {
+    await act(async () => {
+      const wrapper = mount(
+        <MemoryRouter>
+          <PracticeList students={[mockData]} />
+        </MemoryRouter>
+      );
 
-            waitFor(() => {
-                expect(wrapper.find(".practice-list").length).toBe(1);
-            });
-        });
+      await waitFor(() => {
+        expect(wrapper.find("div.practice-list").length).toBe(1);
+      });
     });
+  });
 
-    it("Should render all components if students present, needs practice", () => {
-        act(() => {
-            const mockData2 = {
-                ...mockData,
-                lastActivity: firebase.firestore.Timestamp.fromDate(new Date("01/02/2021")),
-            }
+  it("Should render all components if students present, needs practice", async () => {
+    await act(async () => {
+      const mockData2 = {
+        ...mockData,
+        lastActivity: firebase.firestore.Timestamp.fromDate(
+          new Date("01/02/2021")
+        ),
+      };
 
-            const wrapper = mount(
-                <MemoryRouter>
-                    <PracticeList students={[mockData2]} />
-                </MemoryRouter>
-            );
+      const wrapper = mount(
+        <MemoryRouter>
+          <PracticeList students={[mockData2]} />
+        </MemoryRouter>
+      );
 
-            waitFor(() => {
-                expect(wrapper.find(".practice-list").length).toBe(1);
-            });
-        });
+      await waitFor(() => {
+        expect(wrapper.find("div.practice-list").length).toBe(1);
+      });
     });
+  });
 
-    it("Should render nothing if benchmarks listed", () => {
-        act(() => {
-            const wrapper = mount(
-                <MemoryRouter>
-                    <PracticeList students={[]} />
-                </MemoryRouter>
-            );
+  it("Should render nothing if empty", async () => {
+    await act(async () => {
+      const wrapper = mount(
+        <MemoryRouter>
+          <PracticeList students={[]} />
+        </MemoryRouter>
+      );
 
-            waitFor(() => {
-                expect(wrapper.find(".practice-list").length).toBe(0);
-            });
-        });
+      await waitFor(() => {
+        expect(wrapper.find("p.no-practice-objects").length).toBe(1);
+      });
     });
+  });
 });

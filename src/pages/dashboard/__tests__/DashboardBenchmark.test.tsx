@@ -17,7 +17,7 @@ import { CommentInterface } from "../../student/subcomponents/types/CommentTypes
 import { StudentDataInterface } from "../../student/interfaces/StudentInterfaces";
 import { act } from "react-dom/test-utils";
 import { MemoryRouter } from "react-router-dom";
-import * as UseDocumentMethods from '../../../firebase/hooks/useFirebaseDocument'
+import * as UseDocumentMethods from "../../../firebase/hooks/useFirebaseDocument";
 import { waitFor } from "@testing-library/react";
 
 Enzyme.configure({ adapter: new Adapter() });
@@ -43,9 +43,12 @@ jest.mock("react-router-dom", () => ({
 }));
 
 describe("Dashboard Benchmark: Render", () => {
-  it("Good load, render ui", () => {
-    act(() => {
-      const docMockCollection = jest.spyOn(UseDocumentMethods, "useFirebaseDocumentTyped")
+  it("Good load, render ui", async () => {
+    await act(async () => {
+      const docMockCollection = jest.spyOn(
+        UseDocumentMethods,
+        "useFirebaseDocumentTyped"
+      );
       docMockCollection.mockReturnValue({
         document: {
           id: mockId,
@@ -72,76 +75,88 @@ describe("Dashboard Benchmark: Render", () => {
 
           minForTask: 0.04,
         } as StudentDataInterface,
-        documentError: undefined
-      })
+        documentError: undefined,
+      });
 
-      const wrapper = mount(<MemoryRouter><DashboardBenchmark /></MemoryRouter>);
+      const wrapper = mount(
+        <MemoryRouter>
+          <DashboardBenchmark />
+        </MemoryRouter>
+      );
 
-      waitFor(() => {
-        const errorTag = wrapper.find({ class: "error" });
-        const loadingTag = wrapper.find({ class: "loading" });
-        const benchmarkListTag = wrapper.find({ class: "benchmark-list" });
-        const benchmarkListItemTag = wrapper.find({
-          class: "benchmark-list-card",
-        });
+      await waitFor(() => {
+        const errorTag = wrapper.find("div.error");
+        const loadingTag = wrapper.find("div.loading");
+        const benchmarkListTag = wrapper.find("div.benchmark-list");
+        const benchmarkListItemTag = wrapper.find("div.benchmark-list-card");
 
         expect(errorTag.length).toBe(0);
         expect(loadingTag.length).toBe(0);
         expect(benchmarkListTag.length).toBe(1);
         expect(benchmarkListItemTag.length).toBe(1);
-      })
+      });
     });
   });
 
-  it("Bad load, output error", () => {
-    act(() => {
-      const docMockCollection = jest.spyOn(UseDocumentMethods, "useFirebaseDocumentTyped")
+  it("Bad load, output error", async () => {
+    await act(async () => {
+      const docMockCollection = jest.spyOn(
+        UseDocumentMethods,
+        "useFirebaseDocumentTyped"
+      );
       docMockCollection.mockReturnValue({
         document: null,
-        documentError: "Failed to load"
-      })
+        documentError: "Failed to load",
+      });
 
-      const wrapper = mount(<MemoryRouter><DashboardBenchmark /></MemoryRouter>);
+      const wrapper = mount(
+        <MemoryRouter>
+          <DashboardBenchmark />
+        </MemoryRouter>
+      );
 
-      waitFor(() => {
-        const errorTag = wrapper.find({ class: "error" });
-        const loadingTag = wrapper.find({ class: "loading" });
-        const benchmarkListTag = wrapper.find({ class: "benchmark-list" });
-        const benchmarkListItemTag = wrapper.find({
-          class: "benchmark-list-card",
-        });
+      await waitFor(() => {
+        const errorTag = wrapper.find("div.error");
+        const loadingTag = wrapper.find("div.loading");
+        const benchmarkListTag = wrapper.find("div.benchmark-list");
+        const benchmarkListItemTag = wrapper.find("div.benchmark-list-card");
 
         expect(errorTag.length).toBe(1);
         expect(loadingTag.length).toBe(0);
         expect(benchmarkListTag.length).toBe(0);
         expect(benchmarkListItemTag.length).toBe(0);
-      })
+      });
     });
   });
 
-  it("Stalled load, output loading", () => {
-    act(() => {
-      const docMockCollection = jest.spyOn(UseDocumentMethods, "useFirebaseDocumentTyped")
+  it("Stalled load, output loading", async () => {
+    await act(async () => {
+      const docMockCollection = jest.spyOn(
+        UseDocumentMethods,
+        "useFirebaseDocumentTyped"
+      );
       docMockCollection.mockReturnValue({
         document: null,
-        documentError: undefined
-      })
+        documentError: undefined,
+      });
 
-      const wrapper = mount(<MemoryRouter><DashboardBenchmark /></MemoryRouter>);
+      const wrapper = mount(
+        <MemoryRouter>
+          <DashboardBenchmark />
+        </MemoryRouter>
+      );
 
-      waitFor(() => {
-        const errorTag = wrapper.find({ class: "error" });
-        const loadingTag = wrapper.find({ class: "loading" });
-        const benchmarkListTag = wrapper.find({ class: "benchmark-list" });
-        const benchmarkListItemTag = wrapper.find({
-          class: "benchmark-list-card",
-        });
+      await waitFor(() => {
+        const errorTag = wrapper.find("div.error");
+        const loadingTag = wrapper.find("div.loading");
+        const benchmarkListTag = wrapper.find("div.benchmark-list");
+        const benchmarkListItemTag = wrapper.find("div.benchmark-list-card");
 
         expect(errorTag.length).toBe(0);
         expect(loadingTag.length).toBe(1);
         expect(benchmarkListTag.length).toBe(0);
         expect(benchmarkListItemTag.length).toBe(0);
-      })
+      });
     });
   });
 });

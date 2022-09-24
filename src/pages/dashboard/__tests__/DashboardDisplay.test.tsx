@@ -17,8 +17,8 @@ import { StudentDataInterface } from "../../student/interfaces/StudentInterfaces
 import { act } from "react-dom/test-utils";
 import DashboardDisplay from "../DashboardDisplay";
 import { MemoryRouter } from "react-router-dom";
-import * as UseCollectionMethods from '../../../firebase/hooks/useFirebaseCollection'
-import * as StudentListMethods from '../helpers/DashboardHelpers'
+import * as UseCollectionMethods from "../../../firebase/hooks/useFirebaseCollection";
+import * as StudentListMethods from "../helpers/DashboardHelpers";
 import { waitFor } from "@testing-library/react";
 
 Enzyme.configure({ adapter: new Adapter() });
@@ -52,11 +52,46 @@ jest.mock("../../../context/hooks/useAuthorizationContext", () => {
 });
 
 describe("Dashboard Display: Render", () => {
-  it("Good load, render ui", () => {
-    act(() => {
-      const docMockCollection = jest.spyOn(UseCollectionMethods, "useFirebaseCollectionTyped")
+  it("Good load, render ui", async () => {
+    await act(async () => {
+      const docMockCollection = jest.spyOn(
+        UseCollectionMethods,
+        "useFirebaseCollectionTyped"
+      );
       docMockCollection.mockReturnValue({
-        documents: [{
+        documents: [
+          {
+            id: mockId,
+            aimLine: 0,
+            createdAt: firebase.firestore.Timestamp.fromDate(new Date()),
+            dueDate: firebase.firestore.Timestamp.fromDate(new Date()),
+            lastActivity: firebase.firestore.Timestamp.fromDate(new Date()),
+            comments: [mockComment] as CommentInterface[],
+            completedBenchmark: [],
+            currentBenchmarking: ["Addition-Sums to 18"],
+            factsMastered: [],
+            factsSkipped: [],
+            factsTargeted: [],
+
+            creator: "123",
+            currentApproach: "N/A",
+            currentErrorApproach: "N/A",
+            currentGrade: "K",
+            currentSRApproach: "N/A",
+            currentTarget: "Addition",
+            details: "",
+            name: "",
+            problemSet: "A",
+
+            minForTask: 0.04,
+          },
+        ] as StudentDataInterface[],
+        error: undefined,
+      });
+
+      const dockMockFilter = jest.spyOn(StudentListMethods, "studentFilterMap");
+      dockMockFilter.mockReturnValue([
+        {
           id: mockId,
           aimLine: 0,
           createdAt: firebase.firestore.Timestamp.fromDate(new Date()),
@@ -80,50 +115,26 @@ describe("Dashboard Display: Render", () => {
           problemSet: "A",
 
           minForTask: 0.04,
-        }] as StudentDataInterface[],
-        error: undefined
-      })
+        },
+      ]);
 
-      const dockMockFilter = jest.spyOn(StudentListMethods, "studentFilterMap")
-      dockMockFilter.mockReturnValue([{
-        id: mockId,
-        aimLine: 0,
-        createdAt: firebase.firestore.Timestamp.fromDate(new Date()),
-        dueDate: firebase.firestore.Timestamp.fromDate(new Date()),
-        lastActivity: firebase.firestore.Timestamp.fromDate(new Date()),
-        comments: [mockComment] as CommentInterface[],
-        completedBenchmark: [],
-        currentBenchmarking: ["Addition-Sums to 18"],
-        factsMastered: [],
-        factsSkipped: [],
-        factsTargeted: [],
+      const wrapper = mount(
+        <MemoryRouter>
+          <DashboardDisplay />
+        </MemoryRouter>
+      );
 
-        creator: "123",
-        currentApproach: "N/A",
-        currentErrorApproach: "N/A",
-        currentGrade: "K",
-        currentSRApproach: "N/A",
-        currentTarget: "Addition",
-        details: "",
-        name: "",
-        problemSet: "A",
-
-        minForTask: 0.04,
-      }])
-
-      const wrapper = mount(<MemoryRouter><DashboardDisplay /></MemoryRouter>);
-
-      const btns = wrapper.find('.student-filter-btn')
+      const btns = wrapper.find(".student-filter-btn");
       const btn = btns.first();
-      btn.simulate('click')
+      btn.simulate("click");
 
-      waitFor(() => {
-        const errorTag = wrapper.find({ class: "error" });
-        const loadingTag = wrapper.find({ class: "loading" });
-        const studentFilterTag = wrapper.find({ class: "student-filter" });
-        //
-        const studentListTag = wrapper.find({ class: "student-list" });
-        const studentListItemTag = wrapper.find({ class: "student-list-card" });
+      await waitFor(() => {
+        const errorTag = wrapper.find("div.error");
+        const loadingTag = wrapper.find("div.loading");
+        const studentFilterTag = wrapper.find("div.student-filter");
+
+        const studentListTag = wrapper.find("div.student-list");
+        const studentListItemTag = wrapper.find("div.student-list-card");
 
         expect(errorTag.length).toBe(0);
         expect(loadingTag.length).toBe(0);
@@ -135,23 +146,30 @@ describe("Dashboard Display: Render", () => {
     });
   });
 
-  it("Bad load, output error", () => {
-    act(() => {
-      const docMockCollection = jest.spyOn(UseCollectionMethods, "useFirebaseCollectionTyped")
+  it("Bad load, output error", async () => {
+    await act(async () => {
+      const docMockCollection = jest.spyOn(
+        UseCollectionMethods,
+        "useFirebaseCollectionTyped"
+      );
       docMockCollection.mockReturnValue({
         documents: null,
-        error: "Failed to load"
-      })
+        error: "Failed to load",
+      });
 
-      const wrapper = mount(<MemoryRouter><DashboardDisplay /></MemoryRouter>);
+      const wrapper = mount(
+        <MemoryRouter>
+          <DashboardDisplay />
+        </MemoryRouter>
+      );
 
-      waitFor(() => {
-        const errorTag = wrapper.find({ class: "error" });
-        const loadingTag = wrapper.find({ class: "loading" });
-        const studentFilterTag = wrapper.find({ class: "student-filter" });
-        //
-        const studentListTag = wrapper.find({ class: "student-list" });
-        const studentListItemTag = wrapper.find({ class: "student-list-card" });
+      await waitFor(() => {
+        const errorTag = wrapper.find("div.error");
+        const loadingTag = wrapper.find("div.loading");
+        const studentFilterTag = wrapper.find("div.student-filter");
+
+        const studentListTag = wrapper.find("div.student-list");
+        const studentListItemTag = wrapper.find("div.student-list-card");
 
         expect(errorTag.length).toBe(1);
         expect(loadingTag.length).toBe(0);
@@ -162,5 +180,4 @@ describe("Dashboard Display: Render", () => {
       });
     });
   });
-
 });
