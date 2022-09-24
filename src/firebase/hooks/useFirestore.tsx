@@ -11,14 +11,16 @@ import { StudentDataInterface } from "../../pages/student/interfaces/StudentInte
 import { UserDataInterface } from "../../pages/user/types/UserTypes";
 import { projectFirestore } from "../config";
 
-import { FirebaseError } from "@firebase/util";
 import {
   FirestoreAction,
   FirestoreState,
   UseFirestore,
 } from "../interfaces/FirebaseInterfaces";
 import { PerformanceDataInterface } from "../../pages/intervention/interfaces/InterventionInterfaces";
-import { complexCollectionGetter, dispatchIfNotCancelledHelper } from "./helpers/FirebaseDispatchHelpers";
+import {
+  complexCollectionGetter,
+  dispatchIfNotCancelledHelper,
+} from "./helpers/FirebaseDispatchHelpers";
 
 export enum FirestoreCollections {
   Students = "students",
@@ -110,7 +112,12 @@ export function useFirestore(
   });
   const [isCancelled, setIsCancelled] = useState(false);
 
-  const ref = complexCollectionGetter(collection, studentId, projectFirestore, targetSkill);
+  const ref = complexCollectionGetter(
+    collection,
+    studentId,
+    projectFirestore,
+    targetSkill
+  );
 
   // only dispatch is not cancelled
   function dispatchIfNotCancelled(action: FirestoreAction): void {
@@ -145,8 +152,8 @@ export function useFirestore(
           error: null,
         },
         isCancelled,
-        dispatch
-      })
+        dispatch,
+      });
       /*
       dispatchIfNotCancelled({
         type: FirestoreStates.ADDED,
@@ -162,8 +169,8 @@ export function useFirestore(
           error: "error",
         },
         isCancelled,
-        dispatch
-      })
+        dispatch,
+      });
 
       /*
       dispatchIfNotCancelled({
@@ -246,8 +253,8 @@ export function useFirestore(
           error: null,
         },
         isCancelled,
-        dispatch
-      })
+        dispatch,
+      });
 
       /*
       dispatchIfNotCancelled({
@@ -259,7 +266,6 @@ export function useFirestore(
 
       return updatedDocument;
     } catch (err: unknown) {
-
       dispatchIfNotCancelledHelper({
         action: {
           type: FirestoreStates.ERROR,
@@ -267,8 +273,8 @@ export function useFirestore(
           error: "error",
         },
         isCancelled,
-        dispatch
-      })
+        dispatch,
+      });
 
       /*
       dispatchIfNotCancelled({

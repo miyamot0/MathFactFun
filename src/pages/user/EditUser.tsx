@@ -17,7 +17,6 @@ import { useHistory } from "react-router-dom";
 import { useFirebaseDocumentTyped } from "../../firebase/hooks/useFirebaseDocument";
 import { RoutedIdParam } from "../../interfaces/RoutingInterfaces";
 import { UserCreatorBehavior, UserDataInterface } from "./types/UserTypes";
-import { streamlinedCheck } from "../../utilities/FormHelpers";
 import {
   UserDataInitialState,
   UserGenerationReducer,

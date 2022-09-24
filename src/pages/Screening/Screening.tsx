@@ -12,7 +12,6 @@ import { useParams } from "react-router-dom";
 
 import { useAuthorizationContext } from "../../context/hooks/useAuthorizationContext";
 
-import moment from "moment";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import AnnotationsModule from "highcharts/modules/annotations";
@@ -22,7 +21,10 @@ import {
   CommonDisplayHeadingStyle,
   CommonPanelWidth,
 } from "../../utilities/FormHelpers";
-import { reducerPerOperation, remapReducedEntriesToPoint } from "./helper/ScreeningHelper";
+import {
+  reducerPerOperation,
+  remapReducedEntriesToPoint,
+} from "./helper/ScreeningHelper";
 import { PerformanceDataInterface } from "../intervention/interfaces/InterventionInterfaces";
 
 require("highcharts/modules/annotations")(Highcharts);
@@ -63,7 +65,6 @@ export default function Screening() {
     });
 
   useEffect(() => {
-
     if (
       additionDocuments &&
       subtractionDocuments &&
@@ -128,7 +129,6 @@ export default function Screening() {
         ],
       });
     }
-
   }, [
     additionDocuments,
     subtractionDocuments,

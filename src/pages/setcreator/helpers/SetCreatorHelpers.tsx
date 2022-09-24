@@ -6,10 +6,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { Id } from "react-beautiful-dnd";
 import { FirestoreState } from "../../../firebase/interfaces/FirebaseInterfaces";
 import { FactsOnFire } from "../../../maths/Mind";
-import { GetOperatorFromLabel, OnlyUnique, Sum } from "../../../utilities/LabelHelper";
+import {
+  GetOperatorFromLabel,
+  OnlyUnique,
+  Sum,
+} from "../../../utilities/LabelHelper";
 import { PerformanceDataInterface } from "../../intervention/interfaces/InterventionInterfaces";
 import { StudentDataInterface } from "../../student/interfaces/StudentInterfaces";
 import {
@@ -19,7 +22,11 @@ import {
   ItemMetrics,
   SetItem,
 } from "../interfaces/SetCreatorInterfaces";
-import { ColumnObject, ColumnSnapsot, DragDropActions, FactSaveObject } from "../types/SetCreatorTypes";
+import {
+  ColumnObject,
+  ColumnSnapsot,
+  DragDropActions,
+} from "../types/SetCreatorTypes";
 
 /** isEmpty
  *
@@ -167,7 +174,6 @@ export function populateColumnMetrics(
   facts: string[],
   itemHistory: ItemHistory[]
 ) {
-
   return facts.map((element) => {
     let otrs = 0,
       accuracy = 0,
@@ -198,8 +204,6 @@ export function populateColumnMetrics(
         Latency: latency,
       };
     }
-
-
   });
 }
 
@@ -226,13 +230,18 @@ export function getRelevantCCCSet(target: string): string[][] {
 }
 
 /** populationCoreInformation
- * 
- * @param documents 
- * @param target 
- * @param callbackFromReducer 
- * @param dispatch 
+ *
+ * @param documents
+ * @param target
+ * @param callbackFromReducer
+ * @param dispatch
  */
-export function populateCoreInformation(documents: PerformanceDataInterface[], target: string, callbackFromReducer: any, dispatch: any) {
+export function populateCoreInformation(
+  documents: PerformanceDataInterface[],
+  target: string,
+  callbackFromReducer: any,
+  dispatch: any
+) {
   const mappedDocument = documents.map((doc) => {
     return {
       Items: doc.entries as FactDataInterface[],
@@ -275,12 +284,14 @@ export function populateCoreInformation(documents: PerformanceDataInterface[], t
 }
 
 /** generateColumnSnapshotPreview
- * 
- * @param callbackColumns 
- * @param callbackColumnsPre 
- * @returns 
+ *
+ * @param callbackColumns
+ * @param callbackColumnsPre
+ * @returns
  */
-export function generateColumnSnapshotPreview(callbackColumns: ColumnObject, callbackColumnsPre: ColumnObject
+export function generateColumnSnapshotPreview(
+  callbackColumns: ColumnObject,
+  callbackColumnsPre: ColumnObject
 ) {
   const factsTargeted: string[] = callbackColumns.Targeted.items.map(
     (a: FactStructure) => a.id
@@ -312,24 +323,29 @@ export function generateColumnSnapshotPreview(callbackColumns: ColumnObject, cal
       factsTargeted: factsTargeted,
       factsSkipped: factsSkipped,
       factsMastered: factsMastered,
-    }
-  } as ColumnSnapsot
+    },
+  } as ColumnSnapsot;
 }
 
 /** saveUpdatedDataToFirebase
- * 
- * @param id 
- * @param comparisonObjects 
- * @param updateDocument 
- * @param response 
- * @returns 
+ *
+ * @param id
+ * @param comparisonObjects
+ * @param updateDocument
+ * @param response
+ * @returns
  */
-export async function saveUpdatedDataToFirebase(id: string, comparisonObjects: ColumnSnapsot, updateDocument: any, response: FirestoreState) {
+export async function saveUpdatedDataToFirebase(
+  id: string,
+  comparisonObjects: ColumnSnapsot,
+  updateDocument: any,
+  response: FirestoreState
+) {
   await updateDocument(id, comparisonObjects.Current);
 
   if (response.error) {
     window.alert("There was an error saving to the database");
   } else {
-    return
+    return;
   }
 }

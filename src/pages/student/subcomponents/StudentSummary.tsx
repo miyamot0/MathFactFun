@@ -17,18 +17,14 @@ import { useHistory } from "react-router-dom";
 import { useAuthorizationContext } from "../../../context/hooks/useAuthorizationContext";
 import { GetApproachStringFromLabel } from "../../../utilities/LabelHelper";
 import { StudentWidgetInterface } from "../interfaces/StudentInterfaces";
-
-// styles
-import "./styles/StudentSummary.css";
-import {
-  confirmDeletion,
-  handleStudentDelete,
-} from "./helpers/StudentSummaryHelpers";
 import {
   renderAdministrativeButtons,
   renderSetCreatorButton,
   renderSpecificOutcomesButton,
 } from "./views/StudentSummaryViews";
+
+// styles
+import "./styles/StudentSummary.css";
 
 export default function StudentSummary({ student }: StudentWidgetInterface) {
   const { deleteDocument, response } = useFirestore(

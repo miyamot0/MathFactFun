@@ -27,7 +27,6 @@ import {
 
 // styles
 import "./styles/ExplicitTiming.css";
-import { ErrorModalCustomStyle } from "./subcomponents/styles/ModalStyles";
 import { InterventionFormat } from "../../maths/Facts";
 import { StudentDataInterface } from "../student/interfaces/StudentInterfaces";
 import { useEventListener } from "./helpers/InterventionHelpers";
@@ -81,7 +80,7 @@ export default function ExplicitTiming() {
       user,
       id,
       document,
-      openModal: () => null,
+      openModal,
       addDocument,
       updateDocument,
       response: addResponse,
