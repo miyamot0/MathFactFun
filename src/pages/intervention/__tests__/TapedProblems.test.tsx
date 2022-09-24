@@ -9,13 +9,11 @@
 import React from "react";
 import firebase from "firebase";
 import Adapter from "enzyme-adapter-react-16";
-import Enzyme, { mount, shallow } from "enzyme";
-import { waitFor } from "@testing-library/react";
+import Enzyme, { shallow } from "enzyme";
 import { FirestoreState } from "../../../firebase/interfaces/FirebaseInterfaces";
 import { CommentInterface } from "../../student/subcomponents/types/CommentTypes";
 import { StudentDataInterface } from "../../student/interfaces/StudentInterfaces";
 import { MemoryRouter } from "react-router-dom";
-import CoverCopyCompare from "../CoverCopyCompare";
 import TapedProblems from "../TapedProblems";
 
 Enzyme.configure({ adapter: new Adapter() });
@@ -143,6 +141,6 @@ describe("Benchmark", () => {
         <TapedProblems />
       </MemoryRouter>
     );
-    expect(1).toBe(1);
+    expect(wrapper.find(TapedProblems).length).toBe(1);
   });
 });

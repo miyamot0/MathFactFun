@@ -14,7 +14,11 @@ import { useAuthorizationContext } from "../../context/hooks/useAuthorizationCon
 import StudentFilter from "./functionality/StudentFilter";
 import PracticeList from "./subcomponents/PracticeList";
 import { StudentDataInterface } from "../student/interfaces/StudentInterfaces";
-import { dashboardGenerateError, practiceFilterMap } from "./helpers/DashboardHelpers";
+import {
+  dashboardGenerateError,
+  dashboardLoadingError,
+  practiceFilterMap,
+} from "./helpers/DashboardHelpers";
 
 export default function DashboardPractice() {
   const { user, adminFlag } = useAuthorizationContext();
@@ -22,7 +26,7 @@ export default function DashboardPractice() {
     {
       collectionString: "students",
       queryString: user && !adminFlag ? ["creator", "==", user.uid] : undefined,
-      orderString: undefined
+      orderString: undefined,
     }
   );
 
@@ -40,12 +44,17 @@ export default function DashboardPractice() {
 
   const students = practiceFilterMap(documents, user, filter);
 
-  return (
-    <div>
-      <h2 className="global-page-title">Intervention Dashboard</h2>
-      {error && dashboardGenerateError(error)}
-      {documents && <StudentFilter changeFilter={changeFilter} />}
-      {students && <PracticeList students={students} />}
-    </div>
-  );
+  if (error) {
+    return dashboardGenerateError(error);
+  } else if (documents !== null && error === undefined) {
+    return (
+      <div>
+        <h2 className="global-page-title">Intervention Dashboard</h2>
+        {documents && <StudentFilter changeFilter={changeFilter} />}
+        {students && <PracticeList students={students} />}
+      </div>
+    );
+  } else {
+    return dashboardLoadingError(error);
+  }
 }
