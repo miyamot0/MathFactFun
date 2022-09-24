@@ -140,11 +140,6 @@ describe("Login: Display components", () => {
 
       wrapper.update();
 
-      console.log(emailInput.text);
-      console.log(passInput.text());
-
-      console.log(buttonInput);
-
       //expect(mockUploadFunction).toHaveBeenCalled();
 
       /*

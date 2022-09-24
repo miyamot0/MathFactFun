@@ -80,6 +80,9 @@ export function dynamicallyGenerateLink(
   }
 }
 
+/**
+ *
+ */
 export function warnNoProblemsAssigned() {
   alert("No math problems have been added to the targeted list yet.");
 }
@@ -176,22 +179,21 @@ export function generateWrapperStudentList(
   const isBenchmarkingCurrent = checkIfProgrammingCurrent(student.dueDate);
   const isBenchmarkingCompleted = checkIfBenchmarksCompleted(student);
 
-  const styles = {
-
-  };
+  const styles = {};
 
   if (isBenchmarkingCurrent) {
     return (
-      <p style={styles} className='student-list-tail-item'>
+      <p style={styles} className="student-list-tail-item">
         <span className="on-track"></span>
-        {""}Benchmarks Start: {student.dueDate.toDate().toLocaleDateString('en-US')}
+        {""}Benchmarks Start:{" "}
+        {student.dueDate.toDate().toLocaleDateString("en-US")}
       </p>
     );
   }
 
   if (isBenchmarkingCompleted) {
     return (
-      <p style={styles} className='student-list-tail-item'>
+      <p style={styles} className="student-list-tail-item">
         <span className="on-track"></span>
         {""}Current Benchmark(s) Completed
       </p>
@@ -199,7 +201,11 @@ export function generateWrapperStudentList(
   }
 
   return (
-    <Link to={`/probe/${student.id}`} style={styles} className='student-list-tail-item'>
+    <Link
+      to={`/probe/${student.id}`}
+      style={styles}
+      className="student-list-tail-item"
+    >
       <span className="needs-review"></span>
       {""}Benchmarking Needed
     </Link>

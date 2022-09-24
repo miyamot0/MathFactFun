@@ -1,7 +1,10 @@
 import moment from "moment";
 import { OnlyUnique, Sum } from "../../../utilities/LabelHelper";
 import { PerformanceDataInterface } from "../../intervention/interfaces/InterventionInterfaces";
-import { DailyPerformanceMetrics } from "../../progress/interfaces/ProgressInterfaces";
+import {
+  DailyPerformanceMetrics,
+  RemappedPerformances,
+} from "../../progress/interfaces/ProgressInterfaces";
 import { FactDataInterface } from "../../setcreator/interfaces/SetCreatorInterfaces";
 
 /** reducerPerOperation
@@ -14,7 +17,8 @@ import { FactDataInterface } from "../../setcreator/interfaces/SetCreatorInterfa
 export function reducerPerOperation(
   doc: PerformanceDataInterface[]
 ): DailyPerformanceMetrics[] {
-  const mappedDocument = doc.map((doc) => {
+  // Reduce records down to key metrics and corresponding dates
+  const performanceMetricsRemapped: RemappedPerformances[] = doc.map((doc) => {
     return {
       Items: doc.entries as FactDataInterface[],
       Date: new Date(doc.dateTimeStart),
@@ -25,50 +29,56 @@ export function reducerPerOperation(
       DigitsTotal: doc.totalDigits,
       SessionDuration: doc.sessionDuration,
       Method: doc.method,
-    };
+    } as RemappedPerformances;
   });
 
-  return mappedDocument
-    .map((obj) => obj.ShortDate)
-    .filter(OnlyUnique)
-    .sort()
-    .map((date) => {
-      // Pull in relevant content by date
-      const relevantData = mappedDocument.filter(
-        (obj) => obj.ShortDate === date
+  const performancesReducedToDays: DailyPerformanceMetrics[] =
+    performanceMetricsRemapped
+      .map((remapped) => remapped.ShortDate)
+      .filter(OnlyUnique)
+      .sort()
+      .map((remappedShortDate) => {
+        // Pull in relevant performance metrics by date
+        const relevantData = performanceMetricsRemapped.filter(
+          (obj) => obj.ShortDate === remappedShortDate
+        );
+
+        // Aggregate numbers per the date
+        const totalDigitsCorr = relevantData
+          .map((obj) => obj.DigitsCorrect)
+          .reduce(Sum);
+        const totalDigits = relevantData
+          .map((obj) => obj.DigitsTotal)
+          .reduce(Sum);
+        const totalTime =
+          relevantData.map((obj) => obj.SessionDuration).reduce(Sum) / 60.0;
+
+        // Generate summary, given the date
+        return {
+          Date: remappedShortDate,
+          DateObject: relevantData[0].Date,
+          DCPM: totalDigitsCorr / totalTime,
+          Accuracy: (totalDigitsCorr / totalDigits) * 100,
+        } as DailyPerformanceMetrics;
+      })
+      .sort(
+        (a: DailyPerformanceMetrics, b: DailyPerformanceMetrics) =>
+          a.DateObject.valueOf() - b.DateObject.valueOf()
       );
 
-      const totalDigitsCorr = relevantData
-        .map((obj) => obj.DigitsCorrect)
-        .reduce(Sum);
-      const totalDigits = relevantData
-        .map((obj) => obj.DigitsTotal)
-        .reduce(Sum);
-      const totalTime =
-        relevantData.map((obj) => obj.SessionDuration).reduce(Sum) / 60.0;
-
-      return {
-        Date: date,
-        DCPM: totalDigitsCorr / totalTime,
-        Accuracy: (totalDigitsCorr / totalDigits) * 100,
-      };
-    })
-    .sort(
-      (a, b) =>
-        moment(b.Date).toDate().valueOf() - moment(a.Date).toDate().valueOf()
-    );
+  return performancesReducedToDays;
 }
 
 /** remapReducedEntriesToPoint
- * 
- * @param metric 
- * @returns 
+ *
+ * @param metric
+ * @returns
  */
 export function remapReducedEntriesToPoint(metric: DailyPerformanceMetrics[]) {
   return metric.map((obj: DailyPerformanceMetrics) => {
     return {
-      x: moment(obj.Date).toDate().getTime(),
+      x: obj.DateObject.getTime(),
       y: Math.round(obj.DCPM * 100) / 100,
     };
-  })
+  });
 }

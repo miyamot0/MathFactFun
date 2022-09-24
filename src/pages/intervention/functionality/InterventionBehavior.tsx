@@ -288,6 +288,6 @@ export const InterventionReducer = (
       return overwriteOnlyExisting(state, action);
 
     default:
-      throw new Error(action.type);
+      throw new Error("Intervention action type error");
   }
 };

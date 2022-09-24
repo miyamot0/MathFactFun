@@ -9,7 +9,10 @@
 import firebase from "firebase";
 import { PerformanceDataInterface } from "../../../intervention/interfaces/InterventionInterfaces";
 import { FactDataInterface } from "../../../setcreator/interfaces/SetCreatorInterfaces";
-import { reducerPerOperation, remapReducedEntriesToPoint } from "../ScreeningHelper";
+import {
+  reducerPerOperation,
+  remapReducedEntriesToPoint,
+} from "../ScreeningHelper";
 
 describe("reducerPerOperation", () => {
   it("Should reduce: Addition", () => {
@@ -96,19 +99,83 @@ describe("reducerPerOperation", () => {
         // Timestamps
         createdAt: null,
       },
+      {
+        correctDigits: 1,
+        errCount: 1,
+        nCorrectInitial: 1,
+        nRetries: 1,
+        sessionDuration: 1,
+        setSize: 1,
+        totalDigits: 1,
+
+        // Arrays
+        entries: [
+          {
+            factCorrect: true,
+            initialTry: true,
+
+            // Strings
+            factType: "Addition",
+            factString: "1+1=2",
+            factEntry: "1+1=2",
+
+            // Numerics
+            latencySeconds: 1,
+
+            // Timestamps
+            dateTimeEnd: firebase.firestore.Timestamp.fromDate(
+              new Date("09/18/2022")
+            ),
+            dateTimeStart: firebase.firestore.Timestamp.fromDate(
+              new Date("09/18/2022")
+            ),
+          },
+        ] as FactDataInterface[],
+
+        // Strings
+        id: "123",
+        creator: "456",
+        target: "Addition",
+        method: "ExplicitTiming",
+        dateTimeEnd: "09/18/2022",
+        dateTimeStart: "09/18/2022",
+        // Timestamps
+        createdAt: null,
+      },
     ] as PerformanceDataInterface[];
 
     const result = reducerPerOperation(value);
 
-    expect(result).toStrictEqual([
-      { Accuracy: 100, DCPM: 60, Date: "9/15/2022" },
-      { Accuracy: 100, DCPM: 60, Date: "9/14/2022" },
+    const trimOutTroublesomeDate = result.map((res) => {
+      return {
+        Accuracy: res.Accuracy,
+        DCPM: res.DCPM,
+        Date: res.Date,
+      };
+    });
+
+    expect(trimOutTroublesomeDate).toStrictEqual([
+      {
+        Accuracy: 100,
+        DCPM: 60,
+        Date: "9/14/2022",
+      },
+      {
+        Accuracy: 100,
+        DCPM: 60,
+        Date: "9/15/2022",
+      },
+      {
+        Accuracy: 100,
+        DCPM: 60,
+        Date: "9/18/2022",
+      },
     ]);
   });
 });
 
 describe("remapReducedEntriesToPoint", () => {
-  it('Should reduce as expected', () => {
+  it("Should reduce as expected", () => {
     const value = [
       {
         correctDigits: 1,
@@ -195,8 +262,11 @@ describe("remapReducedEntriesToPoint", () => {
     ] as PerformanceDataInterface[];
 
     const reduced = reducerPerOperation(value);
-    const result = remapReducedEntriesToPoint(reduced)
+    const result = remapReducedEntriesToPoint(reduced);
 
-    expect(result).toStrictEqual([{ "x": 1663218000000, "y": 60 }, { "x": 1663131600000, "y": 60 }]);
-  })
-})
+    expect(result).toStrictEqual([
+      { x: 1663131600000, y: 60 },
+      { x: 1663218000000, y: 60 },
+    ]);
+  });
+});

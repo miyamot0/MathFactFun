@@ -40,7 +40,7 @@ describe("overwriteOnlyExisting", () => {
           )
         ).toThrowError(Error("Didn't match"));
       });
-    })
+    });
   });
 
   describe("DispatchUpdatePreLoadContent", () => {
@@ -73,7 +73,7 @@ describe("overwriteOnlyExisting", () => {
           expect(result.OperatorSymbol).toBe(newOperator);
           expect(result.SecondsLeft).toBe(newSecondsLeft);
         });
-      })
+      });
     });
   });
 
@@ -95,7 +95,7 @@ describe("overwriteOnlyExisting", () => {
         await waitFor(() => {
           expect(result.EntryRepresentationInternal).toBe(newString);
         });
-      })
+      });
     });
 
     it("DispatchUpdateEntryInternal, undefined update", async () => {
@@ -113,9 +113,11 @@ describe("overwriteOnlyExisting", () => {
         const result = overwriteOnlyExisting(state, value);
 
         await waitFor(() => {
-          expect(result.EntryRepresentationInternal).toBe(value.payload.EntryRepresentationInternal);
+          expect(result.EntryRepresentationInternal).toBe(
+            value.payload.EntryRepresentationInternal
+          );
         });
-      })
+      });
     });
   });
 
@@ -176,7 +178,7 @@ describe("overwriteOnlyExisting", () => {
             newViewRepresentationInternal
           );
         });
-      })
+      });
     });
 
     it("DispatchUpdateIntroduceItem, undefined updates", async () => {
@@ -234,16 +236,20 @@ describe("overwriteOnlyExisting", () => {
           // Optionals
           expect(result.ShowButton).not.toBe(newButtonShowValue);
           expect(result.IsOngoing).not.toBe(newIsOngoingValue);
-          expect(result.CoverListViewItems).not.toBe(newCoverListViewItemsValue);
+          expect(result.CoverListViewItems).not.toBe(
+            newCoverListViewItemsValue
+          );
           expect(result.NextLiItem).not.toBe(newListItemValue);
 
           // Unchanged checks
           expect(result.ShowButton).toBe(value.payload.ShowButton);
           expect(result.IsOngoing).toBe(value.payload.IsOngoing);
-          expect(result.CoverListViewItems).toBe(value.payload.CoverListViewItems);
+          expect(result.CoverListViewItems).toBe(
+            value.payload.CoverListViewItems
+          );
           expect(result.NextLiItem).toBe(value.payload.NextLiItem);
         });
-      })
+      });
     });
   });
 
@@ -297,15 +303,21 @@ describe("overwriteOnlyExisting", () => {
           );
           expect(result.NumRetries).toBe(value.payload.NumRetries);
           expect(result.OnInitialTry).toBe(value.payload.OnInitialTry);
-          expect(result.NumCorrectInitial).toBe(value.payload.NumCorrectInitial);
+          expect(result.NumCorrectInitial).toBe(
+            value.payload.NumCorrectInitial
+          );
           expect(result.NumErrors).toBe(value.payload.NumErrors);
           expect(result.TotalDigits).toBe(value.payload.TotalDigits);
-          expect(result.TotalDigitsCorrect).toBe(value.payload.TotalDigitsCorrect);
+          expect(result.TotalDigitsCorrect).toBe(
+            value.payload.TotalDigitsCorrect
+          );
           expect(result.NumbTrials).toBe(value.payload.NumbTrials);
           expect(result.PreTrialTime).toBe(value.payload.PreTrialTime);
-          expect(result.FactModelList).toStrictEqual(value.payload.FactModelList);
+          expect(result.FactModelList).toStrictEqual(
+            value.payload.FactModelList
+          );
         });
-      })
+      });
     });
 
     it("DispatchUpdateRetryItem , undefined updates", async () => {
@@ -357,15 +369,21 @@ describe("overwriteOnlyExisting", () => {
           );
           expect(result.NumRetries).toBe(value.payload.NumRetries);
           expect(result.OnInitialTry).toBe(value.payload.OnInitialTry);
-          expect(result.NumCorrectInitial).toBe(value.payload.NumCorrectInitial);
+          expect(result.NumCorrectInitial).toBe(
+            value.payload.NumCorrectInitial
+          );
           expect(result.NumErrors).toBe(value.payload.NumErrors);
           expect(result.TotalDigits).toBe(value.payload.TotalDigits);
-          expect(result.TotalDigitsCorrect).toBe(value.payload.TotalDigitsCorrect);
+          expect(result.TotalDigitsCorrect).toBe(
+            value.payload.TotalDigitsCorrect
+          );
           expect(result.NumbTrials).toBe(value.payload.NumbTrials);
           expect(result.PreTrialTime).toBe(value.payload.PreTrialTime);
-          expect(result.FactModelList).toStrictEqual(value.payload.FactModelList);
+          expect(result.FactModelList).toStrictEqual(
+            value.payload.FactModelList
+          );
         });
-      })
+      });
     });
   });
 
@@ -446,7 +464,7 @@ describe("overwriteOnlyExisting", () => {
           expect(result.NumbTrials).toBe(1);
           expect(result.PreTrialTime).toBe(preTrialTime);
         });
-      })
+      });
     });
 
     it("DispatchUpdateCompleteItem , undefined updates", async () => {
@@ -525,7 +543,7 @@ describe("overwriteOnlyExisting", () => {
           expect(result.NumbTrials).toBe(1);
           expect(result.PreTrialTime).toBe(preTrialTime);
         });
-      })
+      });
     });
   });
 
@@ -561,7 +579,7 @@ describe("overwriteOnlyExisting", () => {
           expect(result.ToVerify).toBe(newToVerify);
           expect(result.IsOngoing).toBe(newIsOngoingValue);
         });
-      })
+      });
     });
 
     it("DispatchUpdateField, updates with undefined values", async () => {
@@ -595,7 +613,7 @@ describe("overwriteOnlyExisting", () => {
           expect(result.ToVerify).toBe(state.ToVerify);
           expect(result.IsOngoing).toBe(state.IsOngoing);
         });
-      })
+      });
     });
 
     /*
@@ -677,24 +695,30 @@ describe("Intervention Engine: Reducer", () => {
     expect(InitialInterventionState).toBe(state);
   });
 
-  it("Should match original state, DEFAULT", async () => {
-    await act(() => {
-      const { result } = renderHook(() =>
+  it("Should throw an error if type is not appropriate", async () => {
+    await act(async () => {
+      const { result, waitForValueToChange } = renderHook(() =>
         useReducer(InterventionReducer, InitialInterventionState)
       );
 
       const [, dispatch] = result.current;
 
-      const priorState = result.current;
+      try {
+        dispatch({
+          type: InterventionActions.SetThrow,
+          payload: {},
+        });
 
-      dispatch({
-        type: InterventionActions.SetThrow,
-        payload: {},
-      });
+        await waitForValueToChange(
+          () => result.current[0].EntryRepresentationInternal
+        );
+      } catch (e: unknown) {
+        expect(e).toBeTruthy();
 
-      setTimeout(() => {
-        expect(result.current[0]).toBe(priorState);
-      }, 1000);
+        if (e instanceof Error) {
+          expect(e.message).toStrictEqual("Intervention action type error");
+        }
+      }
     });
   });
 

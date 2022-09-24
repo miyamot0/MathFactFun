@@ -45,7 +45,7 @@ export default function Admin(): JSX.Element {
           </thead>
           <tbody>
             {documents.map((indivUser) => (
-              <tr key={`${indivUser.id}-link2`}>
+              <tr key={`${indivUser.id}-row`}>
                 <td>{indivUser.id}</td>
                 <td>{indivUser.displayEmail}</td>
                 <td>{indivUser.displayName}</td>

@@ -29,6 +29,7 @@ export interface RemappedPerformances {
 
 export interface DailyPerformanceMetrics {
   Date: string;
+  DateObject: Date;
   DCPM: number;
   Accuracy: number;
 }

@@ -113,15 +113,17 @@ export function remapPerformances(
 export function aggregatePerformances(
   mappedDocument: RemappedPerformances[]
 ): DailyPerformanceMetrics[] {
-  return mappedDocument
-    .map((obj) => obj.ShortDate)
+  const performancesReducedToDays: DailyPerformanceMetrics[] = mappedDocument
+    .map((remapped) => remapped.ShortDate)
     .filter(OnlyUnique)
     .sort()
-    .map((date) => {
+    .map((remappedShortDate) => {
+      // Pull in relevant performance metrics by date
       const relevantData = mappedDocument.filter(
-        (obj) => obj.ShortDate === date
+        (obj) => obj.ShortDate === remappedShortDate
       );
 
+      // Aggregate numbers per the date
       const totalDigitsCorr = relevantData
         .map((obj) => obj.DigitsCorrect)
         .reduce(Sum);
@@ -131,16 +133,20 @@ export function aggregatePerformances(
       const totalTime =
         relevantData.map((obj) => obj.SessionDuration).reduce(Sum) / 60.0;
 
+      // Generate summary, given the date
       return {
-        Date: date,
+        Date: remappedShortDate,
+        DateObject: relevantData[0].Date,
         DCPM: totalDigitsCorr / totalTime,
         Accuracy: (totalDigitsCorr / totalDigits) * 100,
-      };
+      } as DailyPerformanceMetrics;
     })
     .sort(
-      (a, b) =>
-        moment(b.Date).toDate().valueOf() - moment(a.Date).toDate().valueOf()
+      (a: DailyPerformanceMetrics, b: DailyPerformanceMetrics) =>
+        a.DateObject.valueOf() - b.DateObject.valueOf()
     );
+
+  return performancesReducedToDays;
 }
 
 /** aggregateItemLevelPerformances
@@ -251,7 +257,7 @@ export function getPrimaryProgressChartData(
       name: "Digits Correct Per Minute",
       data: overallCalculations.AggregatePerformancesDaily.map((obj) => {
         return {
-          x: moment(obj.Date).toDate().getTime(),
+          x: obj.DateObject.getTime(),
           y: Math.round(obj.DCPM * 100) / 100,
         };
       }),
@@ -377,19 +383,19 @@ export function getSecondaryProgressChartData(
     },
     series: {
       name: "Item Metrics",
-      data: itemLevelCalculations.UniqueQuants ?
-        itemLevelCalculations.UniqueQuants.map((item) => {
-          return {
-            x: item.X,
-            y: item.Y,
-            marker: {
-              symbol: getMappedMarker(item.Latency),
-              fillColor: getMappedColor(item.AverageCorrect),
-              radius: item.Total > 5 ? 5 + 1 : item.Total + 1,
-            },
-          };
-        }) :
-        [],
+      data: itemLevelCalculations.UniqueQuants
+        ? itemLevelCalculations.UniqueQuants.map((item) => {
+            return {
+              x: item.X,
+              y: item.Y,
+              marker: {
+                symbol: getMappedMarker(item.Latency),
+                fillColor: getMappedColor(item.AverageCorrect),
+                radius: item.Total > 5 ? 5 + 1 : item.Total + 1,
+              },
+            };
+          })
+        : [],
     },
     yAxis: {
       title: {
