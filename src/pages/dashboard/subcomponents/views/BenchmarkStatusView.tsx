@@ -43,7 +43,7 @@ export default function BenchmarkStatusView({
   if (isBenchmarkingCompleted) {
     return (
       <p className="student-list-tail-item">
-        <span className="on-track"></span>
+        <span className="benchmark-completed"></span>
         {""}Current Benchmarking Complete
       </p>
     );

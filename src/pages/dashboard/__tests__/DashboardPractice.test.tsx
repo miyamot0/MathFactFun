@@ -17,7 +17,6 @@ import { StudentDataInterface } from "../../student/interfaces/StudentInterfaces
 import { act } from "react-dom/test-utils";
 import DashboardPractice from "../DashboardPractice";
 import { MemoryRouter } from "react-router-dom";
-import PracticeList from "../subcomponents/PracticeList";
 import * as UseAuthProvider from "../../../context/hooks/useAuthorizationContext";
 import * as UseCollectionMethods from "../../../firebase/hooks/useFirebaseCollection";
 import * as StudentListMethods from "../helpers/DashboardHelpers";

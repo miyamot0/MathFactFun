@@ -68,6 +68,12 @@ Several representative visuals of the software are presented below.
 
 ![Cover Copy Compare Fluency Exercise](screenshots/chrome_2022-08-30_17-33-00.png)
 
+## Changelog
+
+- 0.0.1: Initial alpha release
+
+- 0.1.0: first beta release for trial evaluation
+
 ## Open Source Licenses
 
 MFF functions by using several excellent open source packages. Each are presented below with attribution (relevant licenses embedded into repo).

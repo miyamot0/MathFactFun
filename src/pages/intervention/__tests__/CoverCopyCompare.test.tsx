@@ -137,7 +137,7 @@ describe("Benchmark", () => {
       );
 
       expect(wrapper.find(CoverCopyCompare).length).toBe(1);
-      expect(wrapper.find("button").length).toBe(1);
+      expect(wrapper.find("button.global-btn").length).toBe(1);
 
       expect(mockedSharedButtonActionSequence).not.toBeCalled();
 

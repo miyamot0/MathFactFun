@@ -10,6 +10,7 @@
   --keyButtonColor: #74ecaa;
   --keyButtonFocusColor: #5abd86;
   --rippleColor: #a0c0ec;
+  --rippleDuration: 0.5s;
 }
 
 .key-pad-wrapper {
@@ -197,7 +198,7 @@
   content: "";
   border-radius: 9999px;
   opacity: 1;
-  animation: 0.9s ease 1 forwards ripple-effect;
+  animation: var(--rippleDuration) ease 1 forwards ripple-effect;
 }
 
 .ripple-button-green {
@@ -218,7 +219,7 @@
   content: "";
   border-radius: 9999px;
   opacity: 1;
-  animation: 0.9s ease 1 forwards ripple-effect;
+  animation: var(--rippleDuration) ease 1 forwards ripple-effect;
 }
 
 .ripple-button-lightblue {
@@ -239,7 +240,7 @@
   content: "";
   border-radius: 9999px;
   opacity: 1;
-  animation: 0.9s ease 1 forwards ripple-effect;
+  animation: var(--rippleDuration) ease 1 forwards ripple-effect;
 }
 
 .ripple-button-red {
@@ -260,7 +261,7 @@
   content: "";
   border-radius: 9999px;
   opacity: 1;
-  animation: 0.9s ease 1 forwards ripple-effect;
+  animation: var(--rippleDuration) ease 1 forwards ripple-effect;
 }
 
 @keyframes ripple-effect {

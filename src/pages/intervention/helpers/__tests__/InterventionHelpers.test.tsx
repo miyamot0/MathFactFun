@@ -13,11 +13,10 @@ import { FactsOnFire } from "../../../../maths/Mind";
 import { FactDataInterface } from "../../../setcreator/interfaces/SetCreatorInterfaces";
 import { StudentDataInterface } from "../../../student/interfaces/StudentInterfaces";
 import {
-  InitialInterventionState, SharedActionSequence,
+  InitialInterventionState,
+  SharedActionSequence,
 } from "../../functionality/InterventionBehavior";
-import {
-  InterventionState,
-} from "../../interfaces/InterventionInterfaces";
+import { InterventionState } from "../../interfaces/InterventionInterfaces";
 import {
   checkLiNullUndefinedBlank,
   DetermineErrorCorrection,
@@ -314,9 +313,12 @@ describe("sharedButtonActionSequence", () => {
     const history = jest.fn();
     const dispatch = jest.fn();
 
+    const target = "Addition-Sums to 18";
+
     const result = sharedButtonActionSequence(
       user,
       id,
+      target,
       InterventionFormat.CoverCopyCompare,
       document,
       state,
@@ -333,6 +335,7 @@ describe("sharedButtonActionSequence", () => {
       (
         user,
         id,
+        target,
         InterventionFormat,
         document,
         state,
@@ -348,6 +351,7 @@ describe("sharedButtonActionSequence", () => {
       mockedFunctionCC(
         user,
         id,
+        target,
         InterventionFormat.CoverCopyCompare,
         document,
         state,
@@ -365,6 +369,7 @@ describe("sharedButtonActionSequence", () => {
       (
         user,
         id,
+        target,
         InterventionFormat,
         document,
         state,
@@ -380,6 +385,7 @@ describe("sharedButtonActionSequence", () => {
       mockedFunctionET(
         user,
         id,
+        target,
         InterventionFormat.ExplicitTiming,
         document,
         state,
@@ -395,6 +401,7 @@ describe("sharedButtonActionSequence", () => {
     sharedButtonActionSequence(
       user,
       id,
+      target,
       InterventionFormat.CoverCopyCompare,
       document,
       state,
@@ -417,11 +424,14 @@ describe("sharedButtonActionSequence", () => {
     const history = jest.fn();
     const dispatch = jest.fn();
 
+    const target = "Addition-Sums to 18";
+
     const docMock1 = jest.spyOn(DispatchHelpers, "coverCopyCompareSequence");
     const mockedFunctionCC = jest.fn(
       (
         user,
         id,
+        target,
         InterventionFormat,
         document,
         state,
@@ -437,6 +447,7 @@ describe("sharedButtonActionSequence", () => {
       mockedFunctionCC(
         user,
         id,
+        target,
         InterventionFormat.CoverCopyCompare,
         document,
         state,
@@ -454,6 +465,7 @@ describe("sharedButtonActionSequence", () => {
       (
         user,
         id,
+        target,
         InterventionFormat,
         document,
         state,
@@ -469,6 +481,7 @@ describe("sharedButtonActionSequence", () => {
       mockedFunctionET(
         user,
         id,
+        target,
         InterventionFormat.ExplicitTiming,
         document,
         state,
@@ -484,6 +497,7 @@ describe("sharedButtonActionSequence", () => {
     sharedButtonActionSequence(
       user,
       id,
+      target,
       InterventionFormat.ExplicitTiming,
       document,
       state,
@@ -506,10 +520,13 @@ describe("sharedButtonActionSequence", () => {
     const history = jest.fn();
     const dispatch = jest.fn();
 
+    const target = "Addition-Sums to 18";
+
     expect(() =>
       sharedButtonActionSequence(
         null as unknown as firebase.User,
         id,
+        target,
         InterventionFormat.ExplicitTiming,
         document,
         state,
@@ -530,10 +547,13 @@ describe("sharedButtonActionSequence", () => {
     const history = jest.fn();
     const dispatch = jest.fn();
 
+    const target = "Addition-Sums to 18";
+
     expect(() =>
       sharedButtonActionSequence(
         user,
         id,
+        target,
         InterventionFormat.ExplicitTiming,
         null as unknown as StudentDataInterface,
         state,
@@ -554,10 +574,13 @@ describe("sharedButtonActionSequence", () => {
     const history = jest.fn();
     const dispatch = jest.fn();
 
+    const target = "Addition-Sums to 18";
+
     expect(() =>
       sharedButtonActionSequence(
         user,
         id,
+        target,
         "asdf",
         document,
         state,
@@ -582,6 +605,8 @@ describe("submitPerformancesToFirebase", () => {
     currentTarget: "Addition",
     factsTargeted: ["1+1=2"],
   } as StudentDataInterface;
+
+  const target = "Addition-Sums to 18";
 
   const state: InterventionState = {
     ...InitialInterventionState,
@@ -625,6 +650,7 @@ describe("submitPerformancesToFirebase", () => {
     submitPerformancesToFirebase({
       user: null as unknown as firebase.User,
       id: null as unknown as string,
+      target,
       interventionFormat: InterventionFormat.CoverCopyCompare,
       finalFactObject: null,
       document,
@@ -654,6 +680,7 @@ describe("submitPerformancesToFirebase", () => {
     const result = await submitPerformancesToFirebase({
       user,
       id,
+      target,
       interventionFormat: InterventionFormat.CoverCopyCompare,
       finalFactObject: null,
       document,
@@ -682,6 +709,7 @@ describe("submitPerformancesToFirebase", () => {
     const result = await submitPerformancesToFirebase({
       user,
       id,
+      target,
       interventionFormat: InterventionFormat.CoverCopyCompare,
       finalFactObject: {
         // Bools

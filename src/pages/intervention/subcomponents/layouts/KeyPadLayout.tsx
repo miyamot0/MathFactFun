@@ -7,6 +7,7 @@
  */
 
 import React from "react";
+import { InterventionFormat } from "../../../../maths/Facts";
 import { commonKeyHandler } from "../../helpers/DispatchingHelpers";
 import { InterventionState } from "../../interfaces/InterventionInterfaces";
 import KeyPad from "../KeyPad";
@@ -24,6 +25,12 @@ export default function KeyPadLayout({
   dispatch: any;
   showEquals: boolean;
 }): JSX.Element {
+  // Note: this cuts off keys when not relevant
+  const operatorScreen =
+    intervention === InterventionFormat.CoverCopyCompare
+      ? state.OperatorSymbol
+      : undefined;
+
   return (
     <div
       className={className}
@@ -35,7 +42,7 @@ export default function KeyPadLayout({
         callBackFunction={(key: string) => {
           commonKeyHandler(intervention, key, state, dispatch);
         }}
-        operatorSymbol={state.OperatorSymbol}
+        operatorSymbol={operatorScreen}
         showEquals={showEquals}
       />
     </div>

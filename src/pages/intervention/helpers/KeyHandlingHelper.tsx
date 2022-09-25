@@ -17,21 +17,7 @@ import { sharedButtonActionSequence } from "./InterventionHelpers";
 
 /** commonKeyListener
  *
- * @param key
- * @param state
- * @param currentApproach
- * @param captureButtonAction
- * @param checkLiNullUndefinedBlank
- * @param captureItemClick
- * @param user
- * @param id
- * @param document
- * @param openModal
- * @param addDocument
- * @param updateDocument
- * @param response
- * @param history
- * @param dispatch
+ * @param param0
  * @returns
  */
 export function commonKeyListener({

@@ -36,6 +36,7 @@ describe("KeyPadLayout", () => {
 
     expect(wrapper.find(`div.${className}`).length).toBe(1);
   });
+
   it("Should render with covered problem state", () => {
     const state = {
       ...InitialInterventionState,
@@ -56,6 +57,7 @@ describe("KeyPadLayout", () => {
 
     expect(wrapper.find(`div.${className}`).length).toBe(1);
   });
+
   it("Should render with covered problem state and fire callback", async () => {
     await act(async () => {
       const state = {
@@ -79,8 +81,8 @@ describe("KeyPadLayout", () => {
         })
       );
 
-      const key = wrapper.find("div.key-button-section").first();
-      key.simulate("click", { key: "1" });
+      const key = wrapper.find("button").first();
+      key.simulate("click");
 
       await waitFor(() => {
         expect(mockCommonKeyHandler).toBeCalled();

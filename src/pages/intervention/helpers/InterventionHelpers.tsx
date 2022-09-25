@@ -331,6 +331,7 @@ export async function submitPerformancesToFirebase({
  *
  * @param user
  * @param id
+ * @param target
  * @param approach
  * @param document
  * @param state
@@ -340,6 +341,7 @@ export async function submitPerformancesToFirebase({
  * @param response
  * @param history
  * @param dispatch
+ * @returns
  */
 export function sharedButtonActionSequence(
   user: firebase.User | null,

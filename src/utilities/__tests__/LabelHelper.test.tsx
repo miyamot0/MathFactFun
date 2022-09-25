@@ -23,7 +23,7 @@ describe("LabelHelpers: formatDate", () => {
     const value = new Date(2022, 3, 1);
     const expected = "2022-04-01";
 
-    const modifiedValue = formatDate(value);
+    const modifiedValue = formatDate({ date: value });
 
     expect(modifiedValue).toEqual(expected);
   });
@@ -32,7 +32,7 @@ describe("LabelHelpers: formatDate", () => {
     const value = new Date(2022, 11, 11);
     const expected = "2022-12-11";
 
-    const modifiedValue = formatDate(value);
+    const modifiedValue = formatDate({ date: value });
 
     expect(modifiedValue).toEqual(expected);
   });
@@ -41,7 +41,7 @@ describe("LabelHelpers: formatDate", () => {
     const value = new Date("4/1/2022");
     const expected = "2022-04-01";
 
-    const modifiedValue = formatDate(value);
+    const modifiedValue = formatDate({ date: value });
 
     expect(modifiedValue).toEqual(expected);
   });
@@ -50,7 +50,7 @@ describe("LabelHelpers: formatDate", () => {
     const value = new Date("12/11/2022");
     const expected = "2022-12-11";
 
-    const modifiedValue = formatDate(value);
+    const modifiedValue = formatDate({ date: value });
 
     expect(modifiedValue).toEqual(expected);
   });
@@ -256,25 +256,25 @@ describe("LabelHelpers: CalculateDigitsCorrect", () => {
   });
 
   it("Do not fail: missing equality sign", () => {
-    expect(() => CalculateDigitsCorrect("12-12", "12-12=0", '+')).not.toThrow(
+    expect(() => CalculateDigitsCorrect("12-12", "12-12=0", "+")).not.toThrow(
       Error("No equality sign found in fact string")
     );
   });
 
   it("Do not fail: missing equality sign", () => {
-    expect(() => CalculateDigitsCorrect("12-", "12-12=0", '+')).not.toThrow(
+    expect(() => CalculateDigitsCorrect("12-", "12-12=0", "+")).not.toThrow(
       Error("No equality sign found in fact string")
     );
   });
 
   it("Do not fail: missing equality sign", () => {
-    expect(() => CalculateDigitsCorrect("12", "12-12=0", '+')).not.toThrow(
+    expect(() => CalculateDigitsCorrect("12", "12-12=0", "+")).not.toThrow(
       Error("No equality sign found in fact string")
     );
   });
 
   it("Do not fail: missing equality sign", () => {
-    expect(() => CalculateDigitsCorrect("", "12-12=0", '+')).not.toThrow(
+    expect(() => CalculateDigitsCorrect("", "12-12=0", "+")).not.toThrow(
       Error("No equality sign found in fact string")
     );
   });
@@ -432,8 +432,10 @@ describe("LabelHelpers: GetApproachStringFromLabel", () => {
 
 describe("LabelHelpers: OnlyUnique", () => {
   it("Should correctly filter facts, dupes", () => {
-    const facts = ["12-1=11", "11-1=10", "10-1=9"]
-    const factsDoubled = JSON.parse(JSON.stringify(facts)).concat(JSON.parse(JSON.stringify(facts))) as [];
+    const facts = ["12-1=11", "11-1=10", "10-1=9"];
+    const factsDoubled = JSON.parse(JSON.stringify(facts)).concat(
+      JSON.parse(JSON.stringify(facts))
+    ) as [];
 
     const result = factsDoubled.filter(OnlyUnique);
 
@@ -441,7 +443,7 @@ describe("LabelHelpers: OnlyUnique", () => {
   });
 
   it("Should correctly filter facts, no dupes", () => {
-    const facts = ["12-1=11", "11-1=10", "10-1=9"]
+    const facts = ["12-1=11", "11-1=10", "10-1=9"];
     const factsDoubled = JSON.parse(JSON.stringify(facts)) as [];
 
     const result = factsDoubled.filter(OnlyUnique);
@@ -450,7 +452,7 @@ describe("LabelHelpers: OnlyUnique", () => {
   });
 
   it("Should correctly filter facts, empty", () => {
-    const facts: string[] = []
+    const facts: string[] = [];
     const factsDoubled: string[] = [];
 
     const result = factsDoubled.filter(OnlyUnique);
@@ -469,7 +471,7 @@ describe("LabelHelpers: OnlyUnique", () => {
 
 describe("LabelHelpers: Sum", () => {
   it("Should correctly sum numbers, multiple numbers", () => {
-    const number = [1, 2, 3, 4]
+    const number = [1, 2, 3, 4];
 
     const result = number.reduce(Sum);
 
@@ -477,7 +479,7 @@ describe("LabelHelpers: Sum", () => {
   });
 
   it("Should correctly sum numbers, single number", () => {
-    const number = [1]
+    const number = [1];
 
     const result = number.reduce(Sum);
 
@@ -503,11 +505,9 @@ describe("LabelHelpers: Sum", () => {
   */
 
   it("Fail: Cannot filter badly formed array (undefined)", () => {
-    const number: any[] = [undefined, 1]
+    const number: any[] = [undefined, 1];
 
-    expect(() => number.reduce(Sum)).toThrow(
-      Error("A value was undefined")
-    );
+    expect(() => number.reduce(Sum)).toThrow(Error("A value was undefined"));
   });
 });
 

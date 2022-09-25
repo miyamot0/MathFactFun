@@ -75,6 +75,16 @@
   margin-top: 5px;
 }
 
+.student-list .benchmark-completed {
+  display: inline-block;
+  margin-right: 10px;
+  width: 12px;
+  height: 12px;
+  background: #0ebb50;
+  border-radius: 50%;
+  margin-top: 5px;
+}
+
 .student-list .needs-review {
   display: inline-block;
   margin-right: 10px;

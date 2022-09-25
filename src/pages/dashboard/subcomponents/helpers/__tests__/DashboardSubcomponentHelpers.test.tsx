@@ -6,11 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { mount } from "enzyme";
+import { mount, shallow } from "enzyme";
 import firebase from "firebase";
 import React from "react";
 import Adapter from "enzyme-adapter-react-16";
 import Enzyme from "enzyme";
+import BenchmarkStatusView from "../../views/BenchmarkStatusView";
 import { Link, MemoryRouter } from "react-router-dom";
 import { StudentDataInterface } from "../../../../student/interfaces/StudentInterfaces";
 import { CommentInterface } from "../../../../student/subcomponents/types/CommentTypes";
@@ -23,7 +24,6 @@ import {
   generatedStyledFeedback,
   generateRouteBaseOnStrategy,
   generateWrapperBenchmarkList,
-  generateWrapperStudentList,
   warnNoProblemsAssigned,
 } from "../DashboardSubcomponentHelpers";
 
@@ -334,8 +334,7 @@ describe("checkIfProgrammingCurrent", () => {
 
     const value = checkIfProgrammingCurrent(date);
 
-    // HACK: are these supposed to be reversed?
-    expect(value).toBe(true);
+    expect(value).toBe(false);
   });
 });
 
@@ -450,12 +449,10 @@ describe("generateWrapperStudentList", () => {
     minForTask: 2,
   } as StudentDataInterface;
 
-  it("Should return benchmarking needed if no benchmarks done", () => {
-    const value = generateWrapperStudentList(mockData);
+  it("BenchmarkStatusView: Should return benchmarking needed if no benchmarks done", () => {
+    const wrapper = shallow(<BenchmarkStatusView student={mockData} />);
 
-    const returnString = JSON.stringify(value);
-
-    expect(returnString.includes("Needed")).toBe(true);
+    expect(wrapper.find("span.needs-review").length).toBe(1);
   });
 
   it("Should return benchmarking needed if some benchmarks done", () => {
@@ -468,11 +465,9 @@ describe("generateWrapperStudentList", () => {
       completedBenchmark: [tag],
     };
 
-    const value = generateWrapperStudentList(mockData2);
+    const wrapper = shallow(<BenchmarkStatusView student={mockData2} />);
 
-    const returnString = JSON.stringify(value);
-
-    expect(returnString.includes("Needed")).toBe(true);
+    expect(wrapper.find("span.needs-review").length).toBe(1);
   });
 
   it("Should return benchmarking completed if benchmarks done", () => {
@@ -488,17 +483,15 @@ describe("generateWrapperStudentList", () => {
       completedBenchmark: [tag, tag2],
     };
 
-    const value = generateWrapperStudentList(mockData2);
+    const wrapper = shallow(<BenchmarkStatusView student={mockData2} />);
 
-    const returnString = JSON.stringify(value);
-
-    expect(returnString.includes("Needed")).toBe(false);
-    expect(returnString.includes("Completed")).toBe(true);
+    expect(wrapper.find("span.needs-review").length).toBe(0);
+    expect(wrapper.find("span.benchmark-completed").length).toBe(1);
   });
 
   it("Should grey out benchmarks if the date hasnt arrived yet", () => {
     const date1 = new Date();
-    date1.setDate(date1.getDate() - 2);
+    date1.setDate(date1.getDate() + 2);
 
     const date = firebase.firestore.Timestamp.fromDate(date1);
 
@@ -507,12 +500,11 @@ describe("generateWrapperStudentList", () => {
       dueDate: date,
     };
 
-    const value = generateWrapperStudentList(mockData2);
+    const wrapper = shallow(<BenchmarkStatusView student={mockData2} />);
 
-    const returnString = JSON.stringify(value);
-
-    expect(returnString.includes("Needed")).toBe(false);
-    expect(returnString.includes("Completed")).toBe(false);
+    expect(wrapper.find("span.needs-review").length).toBe(0);
+    expect(wrapper.find("span.benchmark-completed").length).toBe(0);
+    expect(wrapper.find("span.on-track").length).toBe(1);
   });
 });
 

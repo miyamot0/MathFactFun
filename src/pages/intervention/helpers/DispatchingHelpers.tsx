@@ -138,14 +138,17 @@ export function commonKeyHandler(
  *
  * @param user
  * @param id
+ * @param target
  * @param document
  * @param state
+ * @param approach
  * @param openModal
  * @param addDocument
  * @param updateDocument
  * @param response
  * @param history
  * @param dispatch
+ * @returns
  */
 export function coverCopyCompareSequence(
   user: firebase.User,

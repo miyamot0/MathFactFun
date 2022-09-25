@@ -10,6 +10,6 @@ import { KeyPadCallback } from "../types/KeyPadTypes";
 
 export interface KeypadInterface {
   callBackFunction: KeyPadCallback;
-  operatorSymbol: string;
+  operatorSymbol: string | undefined;
   showEquals: boolean;
 }

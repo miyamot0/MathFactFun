@@ -7,7 +7,7 @@
  */
 
 import React from "react";
-import RippleButton from "./RipplingButton";
+import RippleButton from "./RippleButton";
 
 /** KeyItem
  *
@@ -25,25 +25,11 @@ export function KeyItem({
 }: {
   char: string;
   addedClass: string;
-  operatorSymbol: string;
+  operatorSymbol: string | undefined;
   showEquals: boolean;
   callBackFunction: (arg0: string) => void;
 }): JSX.Element {
   const char2 = char === "\u00F7" ? "/" : char;
-
-  let showKey = true;
-
-  if (addedClass === "key16" && !operatorSymbol.includes("/")) {
-    showKey = false;
-  } else if (addedClass === "key12" && !operatorSymbol.includes("x")) {
-    showKey = false;
-  } else if (addedClass === "key8" && !operatorSymbol.includes("-")) {
-    showKey = false;
-  } else if (addedClass === "key4" && !operatorSymbol.includes("+")) {
-    showKey = false;
-  } else if (addedClass === "key15" && !showEquals) {
-    showKey = false;
-  }
 
   let rippleColor = "ripple-button-green";
 
@@ -60,25 +46,42 @@ export function KeyItem({
     rippleColor = "ripple-button-purple";
   }
 
+  let showKey = true;
+
+  if (operatorSymbol === undefined) {
+    if (addedClass === "key16") {
+      showKey = false;
+    } else if (addedClass === "key12") {
+      showKey = false;
+    } else if (addedClass === "key8") {
+      showKey = false;
+    } else if (addedClass === "key4") {
+      showKey = false;
+    }
+  } else {
+    if (addedClass === "key16" && !operatorSymbol.includes("/")) {
+      showKey = false;
+    } else if (addedClass === "key12" && !operatorSymbol.includes("x")) {
+      showKey = false;
+    } else if (addedClass === "key8" && !operatorSymbol.includes("-")) {
+      showKey = false;
+    } else if (addedClass === "key4" && !operatorSymbol.includes("+")) {
+      showKey = false;
+    }
+  }
+
+  if (addedClass === "key15" && !showEquals) {
+    showKey = false;
+  }
+
   const classList = `key-shared key-button-section ${addedClass} ${rippleColor}`;
 
   return (
     <RippleButton
       classList={classList}
-      char={char}
+      char={char2}
       showKey={showKey}
       onClick={callBackFunction}
     />
-    /*
-    <div
-      className={classList}
-      style={{
-        visibility: showKey ? "visible" : "hidden",
-      }}
-      onClick={() => callBackFunction(char2.trim())}
-    >
-      {char}
-    </div>
-    */
   );
 }

@@ -144,7 +144,7 @@ describe("Benchmark", () => {
       );
 
       expect(wrapper.find(Benchmark).length).toBe(1);
-      expect(wrapper.find("button").length).toBe(1);
+      expect(wrapper.find("button.global-btn").length).toBe(1);
 
       jest.spyOn(React, "useEffect").mockImplementation((f) => f());
 

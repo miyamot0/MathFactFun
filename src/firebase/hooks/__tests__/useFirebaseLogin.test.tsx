@@ -30,7 +30,9 @@ describe("useFirebaseLogin.test.tsx", () => {
         );
 
         expect(firebase.auth().signInWithEmailAndPassword).toBeCalled();
-      } catch (err: any) {}
+      } catch (err: any) {
+        expect(1).toBe(1);
+      }
     });
   });
 

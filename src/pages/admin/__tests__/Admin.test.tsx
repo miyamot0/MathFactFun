@@ -7,7 +7,6 @@
  */
 
 import React from "react";
-import firebase from "firebase";
 import Adapter from "enzyme-adapter-react-16";
 import Enzyme from "enzyme";
 import { mount } from "enzyme";
