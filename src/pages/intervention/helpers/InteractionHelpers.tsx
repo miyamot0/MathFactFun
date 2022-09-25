@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import { developmentConsoleLog } from "../../../utilities/LoggingTools";
 import {
   DelCode,
   InterventionActions,
@@ -28,6 +29,10 @@ export function commonKeyHandlerCCC(
   state: InterventionState,
   dispatch: any
 ) {
+  developmentConsoleLog(
+    `commonKeyHandlerCCC(char: ${char}, state.CurrentAction: ${state.CurrentAction}, dispatch: ${dispatch})`
+  );
+
   // Rule 1: Exit out if not in Covered/Copying sequence
   if (state.CurrentAction !== SharedActionSequence.CoverCopy) return;
 
@@ -80,7 +85,46 @@ export function commonKeyHandlerCCC(
       })
     );
   } else {
-    if (state.EntryRepresentationInternal.length === 3) return;
+    const strCheck = state.EntryRepresentationInternal;
+
+    // Row 1 check
+    if (
+      !strCheck.includes(state.OperatorSymbol) &&
+      char !== state.OperatorSymbol &&
+      strCheck.length === 2
+    ) {
+      console.log("rule 1");
+      // Note: maxing out first row
+      return;
+    }
+
+    // Row 2 check
+    if (
+      strCheck.includes(state.OperatorSymbol) &&
+      !strCheck.includes("=") &&
+      char !== "="
+    ) {
+      const strCheck2 = state.EntryRepresentationInternal.split(
+        state.OperatorSymbol
+      );
+
+      if (strCheck2.length === 2 && strCheck2[1].length === 2) {
+        console.log("rule 2");
+        // Note maxing out second row
+        return;
+      }
+    }
+
+    // Row 3 check
+    if (strCheck.includes("=")) {
+      const strCheck3 = state.EntryRepresentationInternal.split("=");
+
+      if (strCheck3.length === 2 && strCheck3[1].length === 2) {
+        console.log("rule 3");
+        // Note maxing out third row
+        return;
+      }
+    }
 
     dispatch(
       new DispatchUpdateEntryInternal({

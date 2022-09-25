@@ -44,6 +44,7 @@ import ListViewLayout from "./subcomponents/layouts/ListViewLayout";
 import ModalErrorCorrection from "./subcomponents/layouts/ModalErrorCorrectionLayout";
 import TopHeader from "./subcomponents/layouts/TopHeader";
 import { GeneralDataLoader } from "./helpers/LoadingHelpers";
+import { developmentConsoleLog } from "../../utilities/LoggingTools";
 
 export default function CoverCopyCompare() {
   const { id, target } = useParams<RoutedIdTargetParam>();
@@ -75,25 +76,30 @@ export default function CoverCopyCompare() {
   }
 
   // Add event listener to hook
-  useEventListener("keydown", (key) =>
-    commonKeyListener({
-      key,
-      state,
-      currentApproach: InterventionFormat.CoverCopyCompare,
-      checkLiNullUndefinedBlank,
-      captureItemClick,
-      user,
-      id,
-      target,
-      document,
-      openModal,
-      addDocument,
-      updateDocument,
-      response,
-      history,
-      dispatch,
-    })
-  );
+  useEventListener("keydown", (key) => {
+    developmentConsoleLog(`useEventListener(key: ${key})`);
+    if (modalIsOpen) {
+      return;
+    } else {
+      commonKeyListener({
+        key,
+        state,
+        currentApproach: InterventionFormat.CoverCopyCompare,
+        checkLiNullUndefinedBlank,
+        captureItemClick,
+        user,
+        id,
+        target,
+        document,
+        openModal,
+        addDocument,
+        updateDocument,
+        response,
+        history,
+        dispatch,
+      });
+    }
+  });
 
   // Fire once individual data loaded, just once
   useEffect(
