@@ -46,7 +46,12 @@ export default function ButtonLayout({
       <section>
         <button
           className="global-btn"
-          onClick={() => {
+          type="button"
+          onClick={(event) => {
+            if (event.detail === 0) {
+              return;
+            }
+
             sharedButtonActionSequence(
               user,
               id,

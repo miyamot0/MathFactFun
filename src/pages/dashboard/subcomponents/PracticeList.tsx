@@ -16,6 +16,7 @@ import { GetApproachStringFromLabel } from "../../../utilities/LabelHelper";
 import { PracticeListInterface } from "../types/DashboardTypes";
 
 import "./styles/PracticeList.css";
+import PracticeStatusView from "./views/PracticeStatusView";
 
 export default function PracticeList({
   students,
@@ -53,14 +54,8 @@ export default function PracticeList({
               <b>Items in Set:</b> {student.factsTargeted.length}
             </p>
             <br></br>
-            <p>
-              {checkIfDateCurrent(student.lastActivity) ? (
-                <span className="practiced-today"> </span>
-              ) : (
-                <span className="needs-practice"> </span>
-              )}{" "}
-              Last Practice: {student.lastActivity.toDate().toDateString()}
-            </p>
+
+            <PracticeStatusView student={student} />
           </div>
         ))}
       </div>

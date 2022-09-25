@@ -8,6 +8,7 @@
 
 import firebase from "firebase";
 import { InterventionFormat, RelevantKeys } from "../../../maths/Facts";
+import { developmentConsoleLog } from "../../../utilities/LoggingTools";
 import { StudentDataInterface } from "../../student/interfaces/StudentInterfaces";
 import { SharedActionSequence } from "../functionality/InterventionBehavior";
 import { InterventionState } from "../interfaces/InterventionInterfaces";
@@ -53,19 +54,23 @@ export function commonKeyListener({
   key: React.KeyboardEvent<HTMLElement>;
   state: InterventionState;
   currentApproach: string;
-  checkLiNullUndefinedBlank: any;
-  captureItemClick: any;
+  checkLiNullUndefinedBlank?: any;
+  captureItemClick?: any;
   user: firebase.User | null;
   id: string;
   target: string;
   document: StudentDataInterface | null;
-  openModal: any;
+  openModal?: () => void;
   addDocument: any;
   updateDocument: any;
   response: any;
   history: any;
   dispatch: any;
 }) {
+  developmentConsoleLog(
+    `commonKeyListener(currentApproach: ${currentApproach}, action: ${state.CurrentAction}, key: ${key.key})`
+  );
+
   switch (currentApproach) {
     case InterventionFormat.CoverCopyCompare:
       if (RelevantKeys.includes(key.key)) {
@@ -110,10 +115,14 @@ export function commonKeyListener({
       return;
     case InterventionFormat.ExplicitTiming:
       if (RelevantKeys.includes(key.key)) {
-        let modKey = key.key === "Backspace" ? "Del" : key.key;
+        let modKey = key.key;
+        modKey = key.key === "Backspace" ? "Del" : key.key;
         modKey = key.key === "Delete" ? "Del" : modKey;
 
         if (modKey === " ") {
+          developmentConsoleLog(
+            `In key if: ..${modKey}.., action: ${state.CurrentAction}`
+          );
           if (
             state.CurrentAction !== SharedActionSequence.Entry &&
             state.CurrentAction !== SharedActionSequence.Start
@@ -141,6 +150,8 @@ export function commonKeyListener({
 
         modKey = key.key === "*" ? "x" : modKey;
         modKey = key.key === "Enter" ? "=" : modKey;
+
+        if (modKey === "=") return;
 
         commonKeyHandler(currentApproach, modKey, state, dispatch);
       }
@@ -178,6 +189,8 @@ export function commonKeyListener({
 
         modKey = key.key === "*" ? "x" : modKey;
         modKey = key.key === "Enter" ? "=" : modKey;
+
+        if (modKey === "=") return;
 
         commonKeyHandler(currentApproach, modKey, state, dispatch);
       }

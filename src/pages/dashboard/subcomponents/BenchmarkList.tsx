@@ -20,6 +20,7 @@ import {
 import { BenchmarkInterface } from "../types/DashboardTypes";
 
 import "./styles/BenchmarkList.css";
+import BenchmarkItemStatusView from "./views/BenchmarkItemStatusView";
 
 export default function BenchmarkList({
   student,
@@ -48,12 +49,12 @@ export default function BenchmarkList({
               )}
               <hr />
               <p>
-                <b>Due Date:</b> {student.dueDate.toDate().toDateString()}
+                <b>Benchmark Period:</b>{" "}
+                {student.dueDate.toDate().toDateString()}
               </p>
-              <p>
-                <b>Status:</b> {generatedStyledFeedback(benchmarkCompleted)}
-              </p>
-              <br></br>
+              <BenchmarkItemStatusView
+                benchmarkCompleted={benchmarkCompleted}
+              />
             </div>
           );
         })}

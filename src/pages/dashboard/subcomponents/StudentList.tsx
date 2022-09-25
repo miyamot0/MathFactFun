@@ -10,7 +10,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { GetApproachStringFromLabel } from "../../../utilities/LabelHelper";
 import { StudentListInterface } from "../types/DashboardTypes";
-import { generateWrapperStudentList } from "./helpers/DashboardSubcomponentHelpers";
+import BenchmarkStatusView from "./views/BenchmarkStatusView";
+
 import "./styles/StudentList.css";
 
 /** StudentList
@@ -51,7 +52,8 @@ export default function StudentList({
               </p>
               <br></br>
             </div>
-            {generateWrapperStudentList(student)}
+
+            <BenchmarkStatusView student={student} />
           </div>
         ))}
       </div>

@@ -12,6 +12,7 @@ import { FirestoreState } from "../../../firebase/interfaces/FirebaseInterfaces"
 import { ErrorHandling, InterventionFormat } from "../../../maths/Facts";
 import { FactsOnFire } from "../../../maths/Mind";
 import { GetOperatorFromLabel } from "../../../utilities/LabelHelper";
+import { developmentConsoleLog } from "../../../utilities/LoggingTools";
 import { FactDataInterface } from "../../setcreator/interfaces/SetCreatorInterfaces";
 import { StudentDataInterface } from "../../student/interfaces/StudentInterfaces";
 import {
@@ -357,6 +358,8 @@ export function sharedButtonActionSequence(
   if (document === null || user === null) {
     throw Error("Document or user is null");
   }
+
+  developmentConsoleLog(`sharedButtonActionSequence(approach: ${approach})`);
 
   switch (approach) {
     case InterventionFormat.CoverCopyCompare:

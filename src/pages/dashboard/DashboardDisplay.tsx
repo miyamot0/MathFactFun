@@ -14,7 +14,10 @@ import { useFirebaseCollectionTyped } from "../../firebase/hooks/useFirebaseColl
 import { useAuthorizationContext } from "../../context/hooks/useAuthorizationContext";
 import { StudentDataInterface } from "../student/interfaces/StudentInterfaces";
 
-import { dashboardGenerateError, studentFilterMap } from "./helpers/DashboardHelpers";
+import {
+  dashboardGenerateError,
+  studentFilterMap,
+} from "./helpers/DashboardHelpers";
 
 export default function DashboardDisplay() {
   const { user, adminFlag } = useAuthorizationContext();
@@ -22,7 +25,7 @@ export default function DashboardDisplay() {
     {
       collectionString: "students",
       queryString: user && !adminFlag ? ["creator", "==", user.uid] : undefined,
-      orderString: undefined
+      orderString: undefined,
     }
   );
 

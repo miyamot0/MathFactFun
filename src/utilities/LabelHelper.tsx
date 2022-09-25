@@ -13,7 +13,13 @@
  * @param {Date} date Prior date object
  * @returns {String} Date output
  */
-export function formatDate(date: string | number | Date): string {
+export function formatDate({
+  date,
+  format = "firebase",
+}: {
+  date: Date;
+  format?: string | undefined;
+}): string {
   const d = new Date(date);
   const year = d.getFullYear();
 
@@ -23,7 +29,11 @@ export function formatDate(date: string | number | Date): string {
   if (month.length < 2) month = "0" + month;
   if (day.length < 2) day = "0" + day;
 
-  return [year, month, day].join("-");
+  if (format === "firebase") {
+    return [year, month, day].join("-");
+  } else {
+    return [month, day, year].join("/");
+  }
 }
 
 /** calculateDigitsTotalInProblem

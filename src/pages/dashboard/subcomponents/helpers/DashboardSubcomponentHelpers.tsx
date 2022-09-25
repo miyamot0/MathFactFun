@@ -1,3 +1,11 @@
+/** @license
+ *
+ * Copyright (c) Shawn P. Gilroy, Louisiana State University.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
 import React from "react";
 import firebase from "firebase";
 import { Link } from "react-router-dom";
@@ -126,19 +134,8 @@ export function checkIfProgrammingCurrent(
     return false;
   }
 
-  const dateObj = date.toDate();
-  const dateNow = new Date();
-  const difference = dateNow.getTime() - dateObj.getTime();
-  const daysSince = Math.ceil(difference / (1000 * 3600 * 24));
-
-  const areOnSameDay = date.toDate().toDateString() === dateNow.toDateString();
-
-  //const areOnSameDay =
-  //    dateObj.getFullYear() === dateNow.getFullYear() &&
-  //    dateObj.getMonth() === dateNow.getMonth() &&
-  //    dateObj.getDate() === dateNow.getDate();
-
-  return areOnSameDay || daysSince < 1 ? false : true;
+  // Note: if diff is negative, we're into the benchmark period
+  return date.toDate().valueOf() - new Date().valueOf() > 0;
 }
 
 /** checkIfBenchmarksCompleted
@@ -164,52 +161,6 @@ export function checkIfBenchmarksCompleted(
   });
 
   return confirmedCompleted;
-}
-
-/** generateWrapper
- *
- * Wrap info in a link, if benchmark is due
- *
- * @param {StudentDataInterface} student document info
- * @returns {Link}
- */
-export function generateWrapperStudentList(
-  student: StudentDataInterface
-): JSX.Element {
-  const isBenchmarkingCurrent = checkIfProgrammingCurrent(student.dueDate);
-  const isBenchmarkingCompleted = checkIfBenchmarksCompleted(student);
-
-  const styles = {};
-
-  if (isBenchmarkingCurrent) {
-    return (
-      <p style={styles} className="student-list-tail-item">
-        <span className="on-track"></span>
-        {""}Benchmarks Start:{" "}
-        {student.dueDate.toDate().toLocaleDateString("en-US")}
-      </p>
-    );
-  }
-
-  if (isBenchmarkingCompleted) {
-    return (
-      <p style={styles} className="student-list-tail-item">
-        <span className="on-track"></span>
-        {""}Current Benchmark(s) Completed
-      </p>
-    );
-  }
-
-  return (
-    <Link
-      to={`/probe/${student.id}`}
-      style={styles}
-      className="student-list-tail-item"
-    >
-      <span className="needs-review"></span>
-      {""}Benchmarking Needed
-    </Link>
-  );
 }
 
 /** generatedStyledFeedback

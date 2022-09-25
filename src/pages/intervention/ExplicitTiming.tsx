@@ -39,6 +39,7 @@ import ModalErrorCorrection from "./subcomponents/layouts/ModalErrorCorrectionLa
 
 // styles
 import "./styles/ExplicitTiming.css";
+import { developmentConsoleLog } from "../../utilities/LoggingTools";
 
 export default function ExplicitTiming() {
   const { id, target } = useParams<RoutedIdTargetParam>();
@@ -71,23 +72,27 @@ export default function ExplicitTiming() {
 
   // Add event listener to hook
   useEventListener("keydown", (key: React.KeyboardEvent<HTMLElement>) => {
-    commonKeyListener({
-      key,
-      state,
-      currentApproach: InterventionFormat.ExplicitTiming,
-      checkLiNullUndefinedBlank: null,
-      captureItemClick: null,
-      user,
-      id,
-      target,
-      document,
-      openModal,
-      addDocument,
-      updateDocument,
-      response: addResponse,
-      history,
-      dispatch,
-    });
+    developmentConsoleLog(`useEventListener(key: ${key})`);
+
+    if (modalIsOpen) {
+      return;
+    } else {
+      commonKeyListener({
+        key,
+        state,
+        currentApproach: InterventionFormat.ExplicitTiming,
+        user,
+        id,
+        target,
+        document,
+        openModal,
+        addDocument,
+        updateDocument,
+        response: addResponse,
+        history,
+        dispatch,
+      });
+    }
   });
 
   // Fire once individual data loaded, just once
@@ -145,7 +150,7 @@ export default function ExplicitTiming() {
         approach={InterventionFormat.ExplicitTiming}
         document={document}
         state={state}
-        openModal={null}
+        openModal={openModal}
         addDocument={addDocument}
         updateDocument={updateDocument}
         addResponse={addResponse}

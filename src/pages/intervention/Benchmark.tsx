@@ -77,7 +77,6 @@ export default function Benchmark() {
       id,
       target,
       document,
-      openModal: null,
       addDocument,
       updateDocument,
       response: updateResponse,

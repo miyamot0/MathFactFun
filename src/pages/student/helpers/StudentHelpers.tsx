@@ -343,7 +343,7 @@ export function onLoadSingleStudentEdit(
     payload: {
       uName: document.name,
       uDetails: document.details,
-      uDueDate: formatDate(document.dueDate.toDate()),
+      uDueDate: formatDate({ date: document.dueDate.toDate() }),
       uAimLine: document.aimLine,
       uExplicitTime: document.minForTask,
       uCurrentTarget,

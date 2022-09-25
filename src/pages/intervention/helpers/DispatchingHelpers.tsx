@@ -12,6 +12,7 @@ import {
   CalculateDigitsCorrectAnswer,
   CalculateDigitsTotalAnswer,
 } from "../../../utilities/LabelHelper";
+import { developmentConsoleLog } from "../../../utilities/LoggingTools";
 import { FactDataInterface } from "../../setcreator/interfaces/SetCreatorInterfaces";
 import { StudentDataInterface } from "../../student/interfaces/StudentInterfaces";
 import {
@@ -114,6 +115,10 @@ export function commonKeyHandler(
   state: InterventionState,
   dispatch: any
 ) {
+  developmentConsoleLog(
+    `commonKeyHandler(intervention: ${intervention}, char: ${char}, state: ${state}, dispatch: ${dispatch})`
+  );
+
   switch (intervention) {
     case InterventionFormat.CoverCopyCompare:
       commonKeyHandlerCCC(char, state, dispatch);
@@ -402,10 +407,18 @@ export function explicitTimingSequence(
   history: any,
   dispatch: any
 ) {
+  developmentConsoleLog(
+    `sharedButtonActionSequence(CurrentAction: ${state.CurrentAction})`
+  );
+
   if (
     state.CurrentAction === SharedActionSequence.Start ||
     state.CurrentAction === SharedActionSequence.Begin
   ) {
+    developmentConsoleLog(`In the entry point`);
+
+    // This is an entry point
+
     const listItem = state.WorkingData[0];
 
     const updatedList = state.WorkingData.filter(function (item) {
@@ -457,6 +470,10 @@ export function explicitTimingSequence(
   const secs = (current.getTime() - state.PreTrialTime.getTime()) / 1000;
 
   const holderPreTime = state.PreTrialTime;
+
+  developmentConsoleLog(
+    `shouldShowFeedback: ${shouldShowFeedback(!isMatching, document)}`
+  );
 
   if (shouldShowFeedback(!isMatching, document)) {
     const totalDigitsShown = CalculateDigitsTotalAnswer(
@@ -568,7 +585,6 @@ export function explicitTimingSequence(
             OnInitialTry: true,
             FactModelList: [...state.FactModelList, currentItem2],
             WorkingData: updatedList,
-            CurrentAction: SharedActionSequence.Entry,
             NumCorrectInitial: uNumberCorrectInitial,
             NumErrors: uNumberErrors,
             NumbTrials: state.NumbTrials + 1,
