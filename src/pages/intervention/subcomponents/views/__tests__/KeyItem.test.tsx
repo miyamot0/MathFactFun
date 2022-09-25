@@ -20,13 +20,13 @@ describe("KeyPadItem", () => {
       const char = "1";
       const callbackFunction = jest.fn();
 
-      const wrapper = shallow(KeyItem(char, callbackFunction));
+      const wrapper = shallow(KeyItem({ char, addedClass: callbackFunction }));
 
       wrapper.find(".key-button-section").first().simulate("click");
 
       await waitFor(() => {
         expect(callbackFunction).toBeCalled();
       });
-    })
+    });
   });
 });

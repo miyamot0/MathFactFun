@@ -6,24 +6,41 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+ :root {
+  --keyButtonColor: #74ecaa;
+  --keyButtonFocusColor: #5abd86;
+  --rippleColor: #a0c0ec;
+}
+
 .key-pad-wrapper {
   display: grid;
   column-gap: 10px;
   row-gap: 10px;
   grid-gap: 10px;
   height: 100%;
+  user-select: none;
 }
 
 .key-shared {
   min-width: 80px;
   text-align: center;
-  display: flex;
+  vertical-align: middle;
   border: none;
   border-radius: 1pt;
   box-shadow: 0 0 0 1pt var(--text-style-color);
   color: var(--heading-style-color);
   font-weight: bold;
   font-size: 1.25em;
+  opacity: .8;
+  transition: background 400ms;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.key-shared:hover {
+  opacity: 1;
 }
 
 .key1 {
@@ -31,7 +48,7 @@
   grid-column-end: 2;
   grid-row-start: 1;
   grid-row-end: 2;
-  background-color: lightgreen;
+  background-color: var(--keyButtonColor);
 }
 
 .key2 {
@@ -39,7 +56,7 @@
   grid-column-end: 3;
   grid-row-start: 1;
   grid-row-end: 2;
-  background-color: lightgreen;
+  background-color: var(--keyButtonColor);
 }
 
 .key3 {
@@ -47,7 +64,7 @@
   grid-column-end: 4;
   grid-row-start: 1;
   grid-row-end: 2;
-  background-color: lightgreen;
+  background-color: var(--keyButtonColor);
 }
 
 .key4 {
@@ -64,7 +81,7 @@
   grid-column-end: 2;
   grid-row-start: 2;
   grid-row-end: 3;
-  background-color: lightgreen;
+  background-color: var(--keyButtonColor);
 }
 
 .key6 {
@@ -72,7 +89,7 @@
   grid-column-end: 3;
   grid-row-start: 2;
   grid-row-end: 3;
-  background-color: lightgreen;
+  background-color: var(--keyButtonColor);
 }
 
 .key7 {
@@ -80,7 +97,7 @@
   grid-column-end: 4;
   grid-row-start: 2;
   grid-row-end: 3;
-  background-color: lightgreen;
+  background-color: var(--keyButtonColor);
 }
 
 .key8 {
@@ -97,7 +114,7 @@
   grid-column-end: 2;
   grid-row-start: 3;
   grid-row-end: 4;
-  background-color: lightgreen;
+  background-color: var(--keyButtonColor);
 }
 
 .key10 {
@@ -105,7 +122,7 @@
   grid-column-end: 3;
   grid-row-start: 3;
   grid-row-end: 4;
-  background-color: lightgreen;
+  background-color: var(--keyButtonColor);
 }
 
 .key11 {
@@ -113,7 +130,7 @@
   grid-column-end: 4;
   grid-row-start: 3;
   grid-row-end: 4;
-  background-color: lightgreen;
+  background-color: var(--keyButtonColor);
 }
 
 .key12 {
@@ -138,7 +155,7 @@
   grid-column-end: 3;
   grid-row-start: 4;
   grid-row-end: 5;
-  background-color: lightgreen;
+  background-color: var(--keyButtonColor);
 }
 
 .key15 {
@@ -159,14 +176,109 @@
 }
 
 .key-button-section {
-  flex: 1;
-  display: grid;
-  justify-content: column;
-  margin: auto auto;
+  text-align: center;
 }
 
-.key-btn {
-  justify-content: center;
-  align-content: center;
-  height: auto;
+.ripple-button-purple {
+  border: none;
+  background: purple;
+  color: #fff;
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+}
+
+.ripple-button-purple > .ripple {
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  background: var(--rippleColor);
+  display: block;
+  content: "";
+  border-radius: 9999px;
+  opacity: 1;
+  animation: 0.9s ease 1 forwards ripple-effect;
+}
+
+.ripple-button-green {
+  border: none;
+  background: var(--keyButtonColor);
+  color: var(--heading-style-color);
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+}
+
+.ripple-button-green > .ripple {
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  background: var(--rippleColor);
+  display: block;
+  content: "";
+  border-radius: 9999px;
+  opacity: 1;
+  animation: 0.9s ease 1 forwards ripple-effect;
+}
+
+.ripple-button-lightblue {
+  border: none;
+  background: lightblue;
+  color: var(--heading-style-color);
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+}
+
+.ripple-button-lightblue > .ripple {
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  background: var(--rippleColor);
+  display: block;
+  content: "";
+  border-radius: 9999px;
+  opacity: 1;
+  animation: 0.9s ease 1 forwards ripple-effect;
+}
+
+.ripple-button-red {
+  border: none;
+  background: lightcoral;
+  color: var(--heading-style-color);
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+}
+
+.ripple-button-red > .ripple {
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  background: var(--rippleColor);
+  display: block;
+  content: "";
+  border-radius: 9999px;
+  opacity: 1;
+  animation: 0.9s ease 1 forwards ripple-effect;
+}
+
+@keyframes ripple-effect {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(10);
+    opacity: 0.375;
+  }
+  100% {
+    transform: scale(35);
+    opacity: 0;
+  }
+}
+
+.ripple-button > .content {
+  position: relative;
+  z-index: 2;
 }
