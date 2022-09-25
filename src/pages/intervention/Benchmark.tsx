@@ -93,7 +93,7 @@ export default function Benchmark() {
       completeLoadingDispatch({
         intervention: "Benchmark",
         workingData: coreSetClean,
-        operatorSymbol: GetOperatorFromLabel(document.currentTarget),
+        operatorSymbol: GetOperatorFromLabel(target.split("-")[0]),
         dispatch,
       });
     }

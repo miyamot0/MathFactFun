@@ -25,8 +25,6 @@ import {
   InterventionReducer,
 } from "./functionality/InterventionBehavior";
 
-// styles
-import "./styles/ExplicitTiming.css";
 import { InterventionFormat } from "../../maths/Facts";
 import { StudentDataInterface } from "../student/interfaces/StudentInterfaces";
 import { useEventListener } from "./helpers/InterventionHelpers";
@@ -38,6 +36,9 @@ import ButtonLayout from "./subcomponents/layouts/ButtonLayout";
 import SimpleProblemItemLayout from "./subcomponents/layouts/SimpleProblemItemLayout";
 import TopHeaderTimed from "./subcomponents/layouts/TopHeaderTimed";
 import ModalErrorCorrection from "./subcomponents/layouts/ModalErrorCorrectionLayout";
+
+// styles
+import "./styles/ExplicitTiming.css";
 
 export default function ExplicitTiming() {
   const { id, target } = useParams<RoutedIdTargetParam>();
@@ -74,7 +75,6 @@ export default function ExplicitTiming() {
       key,
       state,
       currentApproach: InterventionFormat.ExplicitTiming,
-      captureButtonAction: () => null,
       checkLiNullUndefinedBlank: null,
       captureItemClick: null,
       user,

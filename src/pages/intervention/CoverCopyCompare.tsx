@@ -75,30 +75,36 @@ export default function CoverCopyCompare() {
   }
 
   // Add event listener to hook
-  useEventListener("keydown", (key) => commonKeyListener({
-    key,
-    state,
-    currentApproach: InterventionFormat.CoverCopyCompare,
-    captureButtonAction: () => null,
-    checkLiNullUndefinedBlank,
-    captureItemClick,
-    user,
-    id,
-    document,
-    openModal,
-    addDocument,
-    updateDocument,
-    response,
-    history,
-    dispatch,
-  })
+  useEventListener("keydown", (key) =>
+    commonKeyListener({
+      key,
+      state,
+      currentApproach: InterventionFormat.CoverCopyCompare,
+      checkLiNullUndefinedBlank,
+      captureItemClick,
+      user,
+      id,
+      document,
+      openModal,
+      addDocument,
+      updateDocument,
+      response,
+      history,
+      dispatch,
+    })
   );
 
   // Fire once individual data loaded, just once
-  useEffect(() => GeneralDataLoader({
-    intervention: InterventionFormat.CoverCopyCompare,
-    state, document, dispatch
-  }), [document]);
+  useEffect(
+    () =>
+      GeneralDataLoader({
+        intervention: InterventionFormat.CoverCopyCompare,
+        state,
+        document,
+        dispatch,
+      }),
+    [document]
+  );
 
   /** captureItemClick
    *

@@ -37,7 +37,6 @@ export function commonKeyListener({
   key,
   state,
   currentApproach,
-  captureButtonAction,
   checkLiNullUndefinedBlank,
   captureItemClick,
   user,
@@ -53,7 +52,6 @@ export function commonKeyListener({
   key: React.KeyboardEvent<HTMLElement>;
   state: InterventionState;
   currentApproach: string;
-  captureButtonAction?: () => void;
   checkLiNullUndefinedBlank: any;
   captureItemClick: any;
   user: firebase.User | null;
@@ -115,10 +113,22 @@ export function commonKeyListener({
         if (modKey === " ") {
           if (
             state.CurrentAction !== SharedActionSequence.Entry &&
-            state.CurrentAction !== SharedActionSequence.Start &&
-            captureButtonAction !== undefined
+            state.CurrentAction !== SharedActionSequence.Start
           ) {
-            () => captureButtonAction();
+            sharedButtonActionSequence(
+              user,
+              id,
+              currentApproach,
+              document,
+              state,
+              openModal,
+              addDocument,
+              updateDocument,
+              response,
+              history,
+              dispatch
+            );
+
             return;
           }
 
@@ -139,10 +149,22 @@ export function commonKeyListener({
         if (modKey === " ") {
           if (
             state.CurrentAction !== SharedActionSequence.Entry &&
-            state.CurrentAction !== SharedActionSequence.Start &&
-            captureButtonAction !== undefined
+            state.CurrentAction !== SharedActionSequence.Start
           ) {
-            () => captureButtonAction();
+            sharedButtonActionSequence(
+              user,
+              id,
+              currentApproach,
+              document,
+              state,
+              openModal,
+              addDocument,
+              updateDocument,
+              response,
+              history,
+              dispatch
+            );
+
             return;
           }
 
