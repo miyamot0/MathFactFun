@@ -295,9 +295,15 @@ export async function submitPerformancesToFirebase({
 
     //return { id, studentObject };
 
+    console.log(`${response.error} ${interventionFormat}`);
+
     // Push to home
-    if (response.error === null) {
+    if (response.error === null && interventionFormat === "Benchmark") {
+      history.push(`/dashboard`);
+    } else if (response.error === null) {
       history.push(`/practice`);
+    } else {
+      return;
     }
   }
 }
@@ -340,6 +346,7 @@ export function sharedButtonActionSequence(
         id,
         document,
         state,
+        approach,
         openModal,
         addDocument,
         updateDocument,
@@ -354,6 +361,7 @@ export function sharedButtonActionSequence(
         id,
         document,
         state,
+        approach,
         openModal,
         addDocument,
         updateDocument,
@@ -368,6 +376,7 @@ export function sharedButtonActionSequence(
         id,
         document,
         state,
+        approach,
         openModal,
         addDocument,
         updateDocument,

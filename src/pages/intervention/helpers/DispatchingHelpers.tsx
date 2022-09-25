@@ -147,6 +147,7 @@ export function coverCopyCompareSequence(
   id: string,
   document: StudentDataInterface,
   state: InterventionState,
+  approach: string,
   openModal: any,
   addDocument: any,
   updateDocument: any,
@@ -332,10 +333,9 @@ export function coverCopyCompareSequence(
         submitPerformancesToFirebase({
           user,
           id,
-          interventionFormat: InterventionFormat.CoverCopyCompare,
+          interventionFormat: approach,
           finalFactObject: currentItem2,
           document,
-
           state,
           response,
           addDocument,
@@ -391,6 +391,7 @@ export function explicitTimingSequence(
   id: string,
   document: StudentDataInterface,
   state: InterventionState,
+  approach: string,
   openModal: any,
   addDocument: any,
   updateDocument: any,
@@ -540,10 +541,9 @@ export function explicitTimingSequence(
       submitPerformancesToFirebase({
         user,
         id,
-        interventionFormat: InterventionFormat.CoverCopyCompare,
+        interventionFormat: approach,
         finalFactObject: currentItem2,
         document,
-
         state,
         response,
         addDocument,
