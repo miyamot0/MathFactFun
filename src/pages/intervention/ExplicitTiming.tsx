@@ -79,6 +79,7 @@ export default function ExplicitTiming() {
       captureItemClick: null,
       user,
       id,
+      target,
       document,
       openModal,
       addDocument,
@@ -111,6 +112,7 @@ export default function ExplicitTiming() {
     submitPerformancesToFirebase({
       user,
       id,
+      target,
       interventionFormat: InterventionFormat.ExplicitTiming,
       finalFactObject: null,
       document,
@@ -139,6 +141,7 @@ export default function ExplicitTiming() {
         className="box3ET"
         user={user}
         id={id}
+        target={target}
         approach={InterventionFormat.ExplicitTiming}
         document={document}
         state={state}

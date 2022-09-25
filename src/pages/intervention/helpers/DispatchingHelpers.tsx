@@ -145,6 +145,7 @@ export function commonKeyHandler(
 export function coverCopyCompareSequence(
   user: firebase.User,
   id: string,
+  target: string,
   document: StudentDataInterface,
   state: InterventionState,
   approach: string,
@@ -333,6 +334,7 @@ export function coverCopyCompareSequence(
         submitPerformancesToFirebase({
           user,
           id,
+          target,
           interventionFormat: approach,
           finalFactObject: currentItem2,
           document,
@@ -389,6 +391,7 @@ export function coverCopyCompareSequence(
 export function explicitTimingSequence(
   user: firebase.User,
   id: string,
+  target: string,
   document: StudentDataInterface,
   state: InterventionState,
   approach: string,
@@ -541,6 +544,7 @@ export function explicitTimingSequence(
       submitPerformancesToFirebase({
         user,
         id,
+        target,
         interventionFormat: approach,
         finalFactObject: currentItem2,
         document,

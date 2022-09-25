@@ -232,6 +232,7 @@ export async function submitPerformancesToFirebase({
   user,
   id,
   interventionFormat,
+  target,
   finalFactObject,
   document,
   state,
@@ -243,6 +244,7 @@ export async function submitPerformancesToFirebase({
   user: firebase.User | null;
   id: string | null;
   interventionFormat: string;
+  target: string;
   finalFactObject: FactDataInterface | null;
   document: StudentDataInterface | null;
   state: InterventionState;
@@ -286,16 +288,32 @@ export async function submitPerformancesToFirebase({
   // If added without issue, update timestamp
   if (!response || response.error === null) {
     const currentDate = new Date();
-    const studentObject = {
+
+    const updatedStudentObject = {
       lastActivity: firebase.firestore.Timestamp.fromDate(currentDate),
-    };
+      completedBenchmark: document.completedBenchmark,
+    } as StudentDataInterface;
 
-    // Update field regarding last activity
-    await updateDocument(id, studentObject);
+    if (interventionFormat === "Benchmark") {
+      // Update benchmarking records, if a benchmark
+      const completedBenchmark = document.completedBenchmark;
+      completedBenchmark.push(
+        `${target} ${document.dueDate.toDate().toDateString()}`
+      );
+      const updatedStudentObject = {
+        lastActivity: firebase.firestore.Timestamp.fromDate(currentDate),
+        completedBenchmark,
+      } as StudentDataInterface;
 
-    //return { id, studentObject };
+      await updateDocument(id, updatedStudentObject);
+    } else {
+      // Update field regarding last activity
+      const updatedStudentObject = {
+        lastActivity: firebase.firestore.Timestamp.fromDate(currentDate),
+      } as StudentDataInterface;
 
-    console.log(`${response.error} ${interventionFormat}`);
+      await updateDocument(id, updatedStudentObject);
+    }
 
     // Push to home
     if (response.error === null && interventionFormat === "Benchmark") {
@@ -325,6 +343,7 @@ export async function submitPerformancesToFirebase({
 export function sharedButtonActionSequence(
   user: firebase.User | null,
   id: string,
+  target: string,
   approach: string,
   document: StudentDataInterface | null,
   state: InterventionState,
@@ -344,6 +363,7 @@ export function sharedButtonActionSequence(
       coverCopyCompareSequence(
         user,
         id,
+        target,
         document,
         state,
         approach,
@@ -359,6 +379,7 @@ export function sharedButtonActionSequence(
       explicitTimingSequence(
         user,
         id,
+        target,
         document,
         state,
         approach,
@@ -374,6 +395,7 @@ export function sharedButtonActionSequence(
       explicitTimingSequence(
         user,
         id,
+        target,
         document,
         state,
         approach,

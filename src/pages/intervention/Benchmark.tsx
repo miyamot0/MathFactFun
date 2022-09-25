@@ -75,6 +75,7 @@ export default function Benchmark() {
       captureItemClick: null,
       user,
       id,
+      target,
       document,
       openModal: null,
       addDocument,
@@ -109,6 +110,7 @@ export default function Benchmark() {
       user,
       id,
       interventionFormat: "Benchmark",
+      target,
       finalFactObject: null,
       document,
       state,
@@ -134,6 +136,7 @@ export default function Benchmark() {
         className="box3ET"
         user={user}
         id={id}
+        target={target}
         approach={"Benchmark"}
         document={document}
         state={state}

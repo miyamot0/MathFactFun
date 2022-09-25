@@ -84,6 +84,7 @@ export default function CoverCopyCompare() {
       captureItemClick,
       user,
       id,
+      target,
       document,
       openModal,
       addDocument,
@@ -143,6 +144,7 @@ export default function CoverCopyCompare() {
     sharedButtonActionSequence(
       user,
       id,
+      target,
       InterventionFormat.CoverCopyCompare,
       document,
       state,
@@ -172,6 +174,7 @@ export default function CoverCopyCompare() {
         className="box3"
         user={user}
         id={id}
+        target={target}
         approach={InterventionFormat.CoverCopyCompare}
         document={document}
         state={state}

@@ -15,6 +15,7 @@ import { StudentDataInterface } from "../../../student/interfaces/StudentInterfa
 export default function ButtonLayout({
   user,
   id,
+  target,
   approach,
   document,
   state,
@@ -28,6 +29,7 @@ export default function ButtonLayout({
 }: {
   user: firebase.User | null;
   id: string;
+  target: string;
   approach: string;
   document: StudentDataInterface | null;
   state: InterventionState;
@@ -48,6 +50,7 @@ export default function ButtonLayout({
             sharedButtonActionSequence(
               user,
               id,
+              target,
               approach,
               document,
               state,

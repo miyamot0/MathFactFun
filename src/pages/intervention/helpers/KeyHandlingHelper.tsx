@@ -41,6 +41,7 @@ export function commonKeyListener({
   captureItemClick,
   user,
   id,
+  target,
   document,
   openModal,
   addDocument,
@@ -56,6 +57,7 @@ export function commonKeyListener({
   captureItemClick: any;
   user: firebase.User | null;
   id: string;
+  target: string;
   document: StudentDataInterface | null;
   openModal: any;
   addDocument: any;
@@ -78,6 +80,7 @@ export function commonKeyListener({
             sharedButtonActionSequence(
               user,
               id,
+              target,
               currentApproach,
               document,
               state,
@@ -118,6 +121,7 @@ export function commonKeyListener({
             sharedButtonActionSequence(
               user,
               id,
+              target,
               currentApproach,
               document,
               state,
@@ -154,6 +158,7 @@ export function commonKeyListener({
             sharedButtonActionSequence(
               user,
               id,
+              target,
               currentApproach,
               document,
               state,
