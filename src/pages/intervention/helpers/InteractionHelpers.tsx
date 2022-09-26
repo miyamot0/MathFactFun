@@ -16,6 +16,7 @@ import {
   DispatchUpdateEntryInternal,
   InterventionState,
 } from "../interfaces/InterventionInterfaces";
+import { checkForMalformedInput } from "./InputErrorHelpers";
 
 /** commonKeyHandlerCCC
  *
@@ -85,55 +86,19 @@ export function commonKeyHandlerCCC(
       })
     );
   } else {
-    const strCheck = state.EntryRepresentationInternal;
 
-    // Row 1 check
-    if (
-      !strCheck.includes(state.OperatorSymbol) &&
-      char !== state.OperatorSymbol &&
-      strCheck.length === 2
-    ) {
-      console.log("rule 1");
-      // Note: maxing out first row
+    if (checkForMalformedInput(char, state)) {
       return;
-    }
-
-    // Row 2 check
-    if (
-      strCheck.includes(state.OperatorSymbol) &&
-      !strCheck.includes("=") &&
-      char !== "="
-    ) {
-      const strCheck2 = state.EntryRepresentationInternal.split(
-        state.OperatorSymbol
+    } else {
+      dispatch(
+        new DispatchUpdateEntryInternal({
+          type: InterventionActions.UpdateResponseEntry,
+          payload: {
+            EntryRepresentationInternal: state.EntryRepresentationInternal + char,
+          },
+        })
       );
-
-      if (strCheck2.length === 2 && strCheck2[1].length === 2) {
-        console.log("rule 2");
-        // Note maxing out second row
-        return;
-      }
     }
-
-    // Row 3 check
-    if (strCheck.includes("=")) {
-      const strCheck3 = state.EntryRepresentationInternal.split("=");
-
-      if (strCheck3.length === 2 && strCheck3[1].length === 2) {
-        console.log("rule 3");
-        // Note maxing out third row
-        return;
-      }
-    }
-
-    dispatch(
-      new DispatchUpdateEntryInternal({
-        type: InterventionActions.UpdateResponseEntry,
-        payload: {
-          EntryRepresentationInternal: state.EntryRepresentationInternal + char,
-        },
-      })
-    );
   }
 }
 
@@ -165,15 +130,17 @@ export function commonKeyHandlerET(
       })
     );
   } else {
-    if (state.EntryRepresentationInternal.length === 3) return;
-
-    dispatch(
-      new DispatchUpdateEntryInternal({
-        type: InterventionActions.UpdateResponseEntry,
-        payload: {
-          EntryRepresentationInternal: state.EntryRepresentationInternal + char,
-        },
-      })
-    );
+    if (state.EntryRepresentationInternal.length >= 3) {
+      return;
+    } else {
+      dispatch(
+        new DispatchUpdateEntryInternal({
+          type: InterventionActions.UpdateResponseEntry,
+          payload: {
+            EntryRepresentationInternal: state.EntryRepresentationInternal + char,
+          },
+        })
+      );
+    }
   }
 }

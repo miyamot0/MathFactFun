@@ -138,6 +138,22 @@ describe("commonKeyHandlerCCC", () => {
     expect(dispatch).toBeCalled();
   });
 
+  it("CCC, Rule #6a: exit out if equality sign is immediately following an operator in string", () => {
+    const char = "9";
+    const dispatch = jest.fn();
+
+    const state2 = {
+      ...state,
+      EntryRepresentationInternal: "99",
+      CurrentAction: SharedActionSequence.CoverCopy,
+      OperatorSymbol: "+",
+    } as InterventionState;
+
+    commonKeyHandlerCCC(char, state2, dispatch);
+
+    expect(dispatch).toBeCalledTimes(0);
+  });
+
   it("CCC, Del code: remove trailing character", () => {
     const char = DelCode;
     const dispatch = jest.fn();
@@ -174,27 +190,45 @@ describe("commonKeyHandlerCCC", () => {
 describe("commonKeyHandlerET", () => {
   const state = InitialInterventionState;
 
-  /*
-    it('ET, fire outside of del key to add char', () => {
-        const char = "asdf";
-        const dispatch = jest.fn();
+  it('ET, fire inside size limit and append', () => {
+    const char = "+";
+    const dispatch = jest.fn();
 
-        const state2 = {
-            ...state,
-            EntryRepresentationInternal: "1",
-            CurrentAction: SharedActionSequence.Answer,
-            OperatorSymbol: "+"
-        } as InterventionState
+    const state2 = {
+      ...state,
+      EntryRepresentationInternal: "1",
+      CurrentAction: SharedActionSequence.Answer,
+      OperatorSymbol: "+"
+    } as InterventionState
 
-        commonKeyHandlerET(
-            char,
-            state2,
-            dispatch
-        );
+    commonKeyHandlerET(
+      char,
+      state2,
+      dispatch
+    );
 
-        expect(dispatch).toBeCalled();
-    })
-    */
+    expect(dispatch).toBeCalled();
+  })
+
+  it('ET, fire outside size limit and return out', () => {
+    const char = "1";
+    const dispatch = jest.fn();
+
+    const state2 = {
+      ...state,
+      EntryRepresentationInternal: "111",
+      CurrentAction: SharedActionSequence.Answer,
+      OperatorSymbol: "+"
+    } as InterventionState
+
+    commonKeyHandlerET(
+      char,
+      state2,
+      dispatch
+    );
+
+    expect(dispatch).toBeCalledTimes(0);
+  })
 
   it("ET, Del code: remove trailing character", () => {
     const char = DelCode;
