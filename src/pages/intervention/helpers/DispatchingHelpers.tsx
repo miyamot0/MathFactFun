@@ -164,9 +164,6 @@ export function coverCopyCompareSequence(
   history: any,
   dispatch: any
 ) {
-  // HACK: need a flag for update w/o waiting for state change
-  let quickCheck = false;
-
   if (
     state.CurrentAction === SharedActionSequence.Entry ||
     state.CurrentAction === SharedActionSequence.Start
@@ -219,11 +216,6 @@ export function coverCopyCompareSequence(
       })
     );
 
-    quickCheck = true;
-  }
-
-  // Fire if ready to check response
-  if (state.ToVerify || quickCheck) {
     // Compare if internal and inputted string match
     const isMatching =
       state.ViewRepresentationInternal.trim() ===
@@ -520,6 +512,8 @@ export function explicitTimingSequence(
 
     if (typeof openModal === "function") {
       openModal();
+    } else {
+      return;
     }
   } else {
     const totalDigitsShown = CalculateDigitsTotalAnswer(

@@ -14,13 +14,13 @@ import React, { useReducer } from "react";
 import { useAuthorizationContext } from "../../../context/hooks/useAuthorizationContext";
 import { useFirestore } from "../../../firebase/hooks/useFirestore";
 import { StudentWidgetInterface } from "../interfaces/StudentInterfaces";
-import { renderCommentListView } from "./views/StudentCommentsViews";
 import {
   commentReducer,
   InitialCommentState,
 } from "./functionality/StudentCommentBehavior";
 import "./styles/StudentComments.css";
 import StudentCommentFormView from "./views/StudentCommentFormView";
+import { StudentCommentViews } from "./views/StudentCommentViews";
 
 export default function StudentComments({ student }: StudentWidgetInterface) {
   const { updateDocument, response } = useFirestore(
@@ -35,7 +35,11 @@ export default function StudentComments({ student }: StudentWidgetInterface) {
     <div className="student-comments">
       <h4>Student Notes</h4>
 
-      {renderCommentListView(user, adminFlag, student, updateDocument)}
+      <StudentCommentViews
+        user={user}
+        adminFlag={adminFlag}
+        student={student}
+        updateDocument={updateDocument} />
 
       <StudentCommentFormView
         newComment={state.Comment}

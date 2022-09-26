@@ -11,6 +11,7 @@ import firebase from "firebase";
 import { sharedButtonActionSequence } from "../../helpers/InterventionHelpers";
 import { InterventionState } from "../../interfaces/InterventionInterfaces";
 import { StudentDataInterface } from "../../../student/interfaces/StudentInterfaces";
+import { checkIfSubmittedViaClick } from "../../../../utilities/ButtonHelpers";
 
 export default function ButtonLayout({
   user,
@@ -48,24 +49,24 @@ export default function ButtonLayout({
           className="global-btn"
           type="button"
           onClick={(event) => {
-            if (event.detail === 0) {
+            if (checkIfSubmittedViaClick(event) === false) {
               return;
+            } else {
+              sharedButtonActionSequence(
+                user,
+                id,
+                target,
+                approach,
+                document,
+                state,
+                openModal,
+                addDocument,
+                updateDocument,
+                addResponse,
+                history,
+                dispatch
+              );
             }
-
-            sharedButtonActionSequence(
-              user,
-              id,
-              target,
-              approach,
-              document,
-              state,
-              openModal,
-              addDocument,
-              updateDocument,
-              addResponse,
-              history,
-              dispatch
-            );
           }}
         >
           {state.ButtonText}

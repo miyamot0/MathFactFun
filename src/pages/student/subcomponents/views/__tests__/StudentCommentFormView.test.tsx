@@ -6,7 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from "react";
 import firebase from "firebase";
 import Adapter from "enzyme-adapter-react-16";
 import Enzyme, { shallow } from "enzyme";
@@ -15,7 +14,8 @@ import { FirestoreState } from "../../../../../firebase/interfaces/FirebaseInter
 import { CommentInterface } from "../../types/CommentTypes";
 import { waitFor } from "@testing-library/react";
 import { act } from "react-dom/test-utils";
-import { StudentCommentViews } from "../StudentCommentViews";
+import React from "react";
+import StudentCommentFormView from "../StudentCommentFormView";
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -45,38 +45,49 @@ const mockData = {
     minForTask: 2,
 };
 
-describe("StudentCommentView", () => {
-    it("Should render empty list if no comments", async () => {
+describe("StudentCommentFormView", () => {
+    it("Should render and sent both, if user is good", async () => {
         await act(async () => {
             const student = {
                 ...mockData,
+                comments: [
+                    {
+                        id: 123,
+                        displayName: "display Name",
+                        createdAt: firebase.firestore.Timestamp.fromDate(new Date()),
+                    } as CommentInterface,
+                ],
             } as StudentDataInterface;
 
             const user = {} as firebase.User;
-            const adminFlag = false;
             const updateDocument = jest.fn();
+            const dispatch = jest.fn();
+            const newComment = "newComment";
+            const response = { error: null } as FirestoreState;
 
             const wrapper = shallow(
-                <StudentCommentViews
+                <StudentCommentFormView
                     user={user}
-                    adminFlag={adminFlag}
+                    newComment={newComment}
                     student={student}
                     updateDocument={updateDocument}
+                    dispatch={dispatch}
+                    response={response}
                 />
             );
 
-            expect(wrapper.find("ul").length).toBe(1);
-            expect(wrapper.find("a").length).toBe(0);
+            expect(wrapper.find("button").length).toBe(1);
 
-            //wrapper.find("a").first().simulate('click');
+            wrapper.find("button").first().simulate('click');
 
             await waitFor(() => {
-                expect(updateDocument).toHaveBeenCalledTimes(0);
+                expect(updateDocument).toBeCalled();
+                expect(dispatch).toBeCalled();
             })
         })
     });
 
-    it("Should render no delete button, if not an admin", async () => {
+    it("Should render and send update alone, if response is bad", async () => {
         await act(async () => {
             const student = {
                 ...mockData,
@@ -90,31 +101,35 @@ describe("StudentCommentView", () => {
             } as StudentDataInterface;
 
             const user = {} as firebase.User;
-            const adminFlag = false;
-            const updateDocument = jest.fn((id: string, updates: any) => Promise.resolve());
+            const updateDocument = jest.fn();
+            const dispatch = jest.fn();
+            const newComment = "newComment";
+            const response = { error: "error" } as FirestoreState;
 
             const wrapper = shallow(
-                <StudentCommentViews
+                <StudentCommentFormView
                     user={user}
-                    adminFlag={adminFlag}
+                    newComment={newComment}
                     student={student}
                     updateDocument={updateDocument}
+                    dispatch={dispatch}
+                    response={response}
                 />
             );
 
-            expect(wrapper.find("ul").length).toBe(1);
-            expect(wrapper.find("a").length).toBe(0);
+            expect(wrapper.find("button").length).toBe(1);
+
+            wrapper.find("button").first().simulate('click');
 
             await waitFor(() => {
-                expect(updateDocument).toHaveBeenCalledTimes(0);
+                expect(updateDocument).toBeCalled();
+                expect(dispatch).toHaveBeenCalledTimes(0);
             })
         })
     });
 
-    it("Should render working delete button, if an admin", async () => {
+    it("Should render but send none, if user is bad", async () => {
         await act(async () => {
-            jest.spyOn(global, "confirm" as any).mockReturnValueOnce(true);
-
             const student = {
                 ...mockData,
                 comments: [
@@ -126,71 +141,30 @@ describe("StudentCommentView", () => {
                 ],
             } as StudentDataInterface;
 
-            const user = {} as firebase.User;
-            const adminFlag = true;
-            const updateDocument = jest.fn((id: string, updates: any) => Promise.resolve());
+            const user = null as unknown as firebase.User;
+            const updateDocument = jest.fn();
+            const dispatch = jest.fn();
+            const newComment = "newComment";
+            const response = { error: "error" } as FirestoreState;
 
             const wrapper = shallow(
-                <StudentCommentViews
+                <StudentCommentFormView
                     user={user}
-                    adminFlag={adminFlag}
+                    newComment={newComment}
                     student={student}
                     updateDocument={updateDocument}
+                    dispatch={dispatch}
+                    response={response}
                 />
             );
 
-            expect(wrapper.find("ul").length).toBe(1);
-            expect(wrapper.find("a").length).toBe(1);
+            expect(wrapper.find("button").length).toBe(1);
 
-            wrapper.find("a").first().simulate('click')
-
-            wrapper.update();
-            wrapper.render();
-
-            await waitFor(() => {
-                expect(updateDocument).toHaveBeenCalledTimes(1);
-            })
-        })
-    });
-
-    it("Should render working delete button, declining as necessary, if an admin", async () => {
-        await act(async () => {
-            jest.spyOn(global, "confirm" as any).mockReturnValueOnce(undefined);
-
-            const student = {
-                ...mockData,
-                comments: [
-                    {
-                        id: 123,
-                        displayName: "display Name",
-                        createdAt: firebase.firestore.Timestamp.fromDate(new Date()),
-                    } as CommentInterface,
-                ],
-            } as StudentDataInterface;
-
-            const user = {} as firebase.User;
-            const adminFlag = true;
-            const updateDocument = jest.fn((id: string, updates: any) => Promise.resolve());
-
-            const wrapper = shallow(
-                <StudentCommentViews
-                    user={user}
-                    adminFlag={adminFlag}
-                    student={student}
-                    updateDocument={updateDocument}
-                />
-            );
-
-            expect(wrapper.find("ul").length).toBe(1);
-            expect(wrapper.find("a").length).toBe(1);
-
-            wrapper.find("a").first().simulate('click')
-
-            wrapper.update();
-            wrapper.render();
+            wrapper.find("button").first().simulate('click');
 
             await waitFor(() => {
                 expect(updateDocument).toHaveBeenCalledTimes(0);
+                expect(dispatch).toHaveBeenCalledTimes(0);
             })
         })
     });

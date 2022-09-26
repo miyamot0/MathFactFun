@@ -8,7 +8,7 @@
 
 import firebase from "firebase";
 import { FirestoreState } from "../../../../firebase/interfaces/FirebaseInterfaces";
-import { InterventionFormat } from "../../../../maths/Facts";
+import { ErrorHandling, InterventionFormat } from "../../../../maths/Facts";
 import { StudentDataInterface } from "../../../student/interfaces/StudentInterfaces";
 import {
   InitialInterventionState,
@@ -113,6 +113,22 @@ describe("commonKeyHandler", () => {
     docMock2.mockImplementation(() => mockedFunctionET());
 
     commonKeyHandler(InterventionFormat.ExplicitTiming, "1", state, dispatch);
+
+    expect(mockedFunctionCC).not.toBeCalled();
+    expect(mockedFunctionET).toBeCalled();
+  });
+
+  it("Correct routing based on intervention: Benchmark", () => {
+    const dispatch = jest.fn();
+    const docMock1 = jest.spyOn(InteractionHelpers, "commonKeyHandlerCCC");
+    const mockedFunctionCC = jest.fn(() => true);
+    docMock1.mockImplementation(() => mockedFunctionCC());
+
+    const docMock2 = jest.spyOn(InteractionHelpers, "commonKeyHandlerET");
+    const mockedFunctionET = jest.fn(() => true);
+    docMock2.mockImplementation(() => mockedFunctionET());
+
+    commonKeyHandler("Benchmark", "1", state, dispatch);
 
     expect(mockedFunctionCC).not.toBeCalled();
     expect(mockedFunctionET).toBeCalled();
@@ -496,6 +512,48 @@ describe("explicitTimingSequence", () => {
     expect(dispatch).toBeCalled();
   });
 
+  it("SharedActionSequence.Begin, no verify, existing StartTime", () => {
+    const user = { uid: "456" } as firebase.User;
+    const id = "123";
+    const document = {} as StudentDataInterface;
+    const state2 = {
+      ...state,
+      CurrentAction: SharedActionSequence.Begin,
+      ViewRepresentationInternal: "1+1=2",
+      EntryRepresentationInternal: "1+1=2",
+      OperatorSymbol: "+",
+      WorkingData: ["2+2=4", "3+3=6"],
+      StartTime: new Date(),
+    } as InterventionState;
+
+    const openModal = jest.fn();
+    const addDocument = jest.fn();
+    const updateDocument = jest.fn();
+    const dispatch = jest.fn();
+
+    const response = {} as FirestoreState;
+    const history = { push: jest.fn() };
+    const target = "Addition-Sums to 18";
+    const approach = InterventionFormat.ExplicitTiming;
+
+    explicitTimingSequence(
+      user,
+      id,
+      target,
+      document,
+      state2,
+      approach,
+      openModal,
+      addDocument,
+      updateDocument,
+      response,
+      history,
+      dispatch
+    );
+
+    expect(dispatch).toBeCalled();
+  });
+
   it("SharedActionSequence.Answer, no verify", () => {
     const user = { uid: "456" } as firebase.User;
     const id = "123";
@@ -557,6 +615,52 @@ describe("explicitTimingSequence", () => {
     const dispatch = jest.fn();
 
     const response = {} as FirestoreState;
+    const history = { push: jest.fn() };
+    const target = "Addition-Sums to 18";
+    const approach = InterventionFormat.ExplicitTiming;
+
+    explicitTimingSequence(
+      user,
+      id,
+      target,
+      document,
+      state2,
+      approach,
+      openModal,
+      addDocument,
+      updateDocument,
+      response,
+      history,
+      dispatch
+    );
+
+    expect(dispatch).toBeCalled();
+  });
+
+  it("SharedActionSequence.Answer, on initial try, null openModal fx", () => {
+    const user = { uid: "456" } as firebase.User;
+    const id = "123";
+    const document = { currentErrorApproach: ErrorHandling.EveryTime } as StudentDataInterface;
+
+    const state2 = {
+      ...state,
+      CurrentAction: SharedActionSequence.Answer,
+      ViewRepresentationInternal: "1+1=2",
+      EntryRepresentationInternal: "3",
+      OperatorSymbol: "+",
+      WorkingData: ["2+2=4", "3+3=6"],
+      OnInitialTry: true,
+    } as InterventionState;
+
+    const openModal = null;
+    const addDocument = jest.fn();
+    const updateDocument = jest.fn();
+    const dispatch = jest.fn();
+
+    const response = {} as FirestoreState;
+    const docMock1 = jest.spyOn(InterventionHelpers, "shouldShowFeedback");
+    const mockCommonKeyHandler = jest.fn(() => true);
+    docMock1.mockImplementation(() => mockCommonKeyHandler());
     const history = { push: jest.fn() };
     const target = "Addition-Sums to 18";
     const approach = InterventionFormat.ExplicitTiming;
@@ -665,47 +769,4 @@ describe("explicitTimingSequence", () => {
 
     expect(dispatch).toBeCalled();
   });
-
-  /*
-
-    it('SharedActionSequence.Compare, verify, but inaccurate', () => {
-
-        const user = { uid: "456" } as firebase.User;
-        const id = "123"
-        const document = {} as StudentDataInterface;
-        const state2 = {
-            ...state,
-            CurrentAction: SharedActionSequence.Compare,
-            ViewRepresentationInternal: "1+1=2",
-            EntryRepresentationInternal: "1+1=3",
-            OperatorSymbol: "+"
-        } as InterventionState;
-
-        const openModal = jest.fn();
-        const addDocument = jest.fn();
-        const updateDocument = jest.fn();
-        const dispatch = jest.fn();
-
-        const response = {} as FirestoreState;
-        const history = { push: jest.fn() };
-
-        const docMock1 = jest.spyOn(InterventionHelpers, "shouldShowFeedback");
-        const mockCommonKeyHandler = jest.fn(() => true);
-        docMock1.mockImplementation(() => mockCommonKeyHandler());
-
-        explicitTimingSequence(
-            user,
-            id,
-            document,
-            state2,
-            openModal,
-            addDocument,
-            updateDocument,
-            response,
-            history,
-            dispatch)
-
-        expect(dispatch).toBeCalled()
-    })
-    */
 });
