@@ -11,6 +11,8 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": false,
-    "strict": true
-  }
+    "strict": true,
+    "types": ["jest", "@types/testing-library__jest-dom"],
+  },
+  "exclude": ["node_modules", "cypress", "cypress.config.ts"]
 }

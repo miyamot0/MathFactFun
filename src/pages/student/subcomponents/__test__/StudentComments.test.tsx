@@ -20,69 +20,68 @@ Enzyme.configure({ adapter: new Adapter() });
 const mockId = "123";
 
 const mockData = {
-    id: mockId,
-    aimLine: 40,
-    createdAt: firebase.firestore.Timestamp.fromDate(new Date()),
-    dueDate: firebase.firestore.Timestamp.fromDate(new Date()),
-    lastActivity: firebase.firestore.Timestamp.fromDate(new Date()),
-    comments: [] as CommentInterface[],
-    completedBenchmark: [],
-    currentBenchmarking: [],
-    factsMastered: [],
-    factsSkipped: [],
-    factsTargeted: [],
+  id: mockId,
+  aimLine: 40,
+  createdAt: firebase.firestore.Timestamp.fromDate(new Date()),
+  dueDate: firebase.firestore.Timestamp.fromDate(new Date()),
+  lastActivity: firebase.firestore.Timestamp.fromDate(new Date()),
+  comments: [] as CommentInterface[],
+  completedBenchmark: [],
+  currentBenchmarking: [],
+  factsMastered: [],
+  factsSkipped: [],
+  factsTargeted: [],
 
-    creator: '456',
-    currentApproach: 'N/A',
-    currentErrorApproach: '',
-    currentGrade: '',
-    currentSRApproach: '',
-    currentTarget: '',
-    details: '',
-    name: '',
-    problemSet: '',
+  creator: "456",
+  currentApproach: "N/A",
+  currentErrorApproach: "",
+  currentGrade: "",
+  currentSRApproach: "",
+  currentTarget: "",
+  details: "",
+  name: "",
+  problemSet: "",
 
-    minForTask: 2,
+  minForTask: 2,
 };
 
 jest.mock("./../../../../context/hooks/useAuthorizationContext", () => {
-    const originalModule = jest.requireActual(
-        "./../../../../context/hooks/useAuthorizationContext"
-    );
-    return {
-        __esModule: true,
-        ...originalModule,
-        default: () => ({
-            user: { uid: mockId, } as firebase.User,
-            authIsReady: true,
-            adminFlag: false,
-            dispatch: jest.fn(() => {
-                "pass";
-            }),
-        }),
-    };
+  const originalModule = jest.requireActual(
+    "./../../../../context/hooks/useAuthorizationContext"
+  );
+  return {
+    __esModule: true,
+    ...originalModule,
+    default: () => ({
+      user: { uid: mockId } as firebase.User,
+      authIsReady: true,
+      adminFlag: false,
+      dispatch: jest.fn(() => {
+        "pass";
+      }),
+    }),
+  };
 });
 
 jest.mock("react-router-dom", () => ({
-    ...jest.requireActual("react-router-dom"),
-    useParams: () => ({
-        id: mockId,
-    }),
-    useHistory: () => ({
-        push: jest.fn()
-    }),
-    useRouteMatch: () => ({ url: `/benchmark/${mockId}` }),
+  ...jest.requireActual("react-router-dom"),
+  useParams: () => ({
+    id: mockId,
+  }),
+  useHistory: () => ({
+    push: jest.fn(),
+  }),
+  useRouteMatch: () => ({ url: `/benchmark/${mockId}` }),
 }));
 
-describe('StudentComments', () => {
-    it("Successfully renders, NA Approach", () => {
+describe("StudentComments", () => {
+  it("Successfully renders, NA Approach", () => {
+    const wrapper = mount(
+      <MemoryRouter>
+        <StudentComments student={mockData} />
+      </MemoryRouter>
+    );
 
-        const wrapper = mount(
-            <MemoryRouter>
-                <StudentComments student={mockData} />
-            </MemoryRouter>
-        );
-
-        expect(wrapper.find(StudentComments).length).toBe(1)
-    });
-})
+    expect(wrapper.find(StudentComments).length).toBe(1);
+  });
+});

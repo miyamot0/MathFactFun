@@ -51,6 +51,7 @@
     "test-open-handles": "npm run test -- --detectOpenHandles",
     "test-coverage": "npm run test -- --coverage --watchAll --coverageDirectory='coverage'",
     "test-summarize": "npm run test -- --coverage --watchAll --coverageDirectory='coverage' --coverageReporters='json-summary'",
+    "test-cypress": "cypress open",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -90,16 +91,17 @@
     "@typescript-eslint/parser": "^5.36.2",
     "awesome-typescript-loader": "^5.2.1",
     "babel-jest": "^29.0.3",
+    "cypress": "^10.8.0",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.6",
     "eslint": "^8.23.0",
     "eslint-plugin-react": "^7.31.7",
     "firestore-jest-mock": "^0.19.0",
     "identity-obj-proxy": "^3.0.0",
+    "istanbul-badges-readme": "^1.8.0",
     "nth-check": ">=2.0.1",
     "react-select-event": "^5.5.1",
     "source-map-loader": "^4.0.0",
-    "typescript": "^4.7.4",
-    "istanbul-badges-readme": "^1.8.0"
+    "typescript": "^4.7.4"
   }
 }

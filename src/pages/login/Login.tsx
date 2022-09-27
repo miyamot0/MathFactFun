@@ -15,7 +15,7 @@ import {
 } from "./functionality/LoginBehavior";
 import { LoginDataBehavior } from "./types/LoginTypes";
 
-export default function Login() {
+export default function Login(): JSX.Element {
   const { login, loginError, loginPending } = useFirebaseLogin();
 
   const [state, dispatch] = useReducer(UserLoginReducer, InitialLoginState);
