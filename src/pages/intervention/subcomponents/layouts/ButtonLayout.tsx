@@ -49,7 +49,7 @@ export default function ButtonLayout({
           className="global-btn"
           type="button"
           onClick={(event) => {
-            if (checkIfSubmittedViaClick(event) === false) {
+            if (checkIfSubmittedViaClick(event) === true) {
               return;
             } else {
               sharedButtonActionSequence(

@@ -85,7 +85,6 @@ export default function CoverCopyCompare() {
         key,
         state,
         currentApproach: InterventionFormat.CoverCopyCompare,
-        checkLiNullUndefinedBlank,
         captureItemClick,
         user,
         id,

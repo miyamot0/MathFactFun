@@ -470,7 +470,7 @@ export function explicitTimingSequence(
     `shouldShowFeedback: ${shouldShowFeedback(!isMatching, document)}`
   );
 
-  if (shouldShowFeedback(!isMatching, document)) {
+  if (shouldShowFeedback(!isMatching, document) && approach != "Benchmark") {
     const totalDigitsShown = CalculateDigitsTotalAnswer(
       state.ViewRepresentationInternal
     );
