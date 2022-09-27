@@ -24,14 +24,30 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
-//
-// declare global {
-//   namespace Cypress {
-//     interface Chainable {
-//       login(email: string, password: string): Chainable<void>
+
+declare global {
+  namespace Cypress {
+    interface Chainable {
+      login(email: any, password: any): void;
+      logout(): void;
+    }
+  }
+}
+
 //       drag(subject: string, options?: Partial<TypeOptions>): Chainable<Element>
 //       dismiss(subject: string, options?: Partial<TypeOptions>): Chainable<Element>
 //       visit(originalFn: CommandOriginalFn, url: string, options: Partial<VisitOptions>): Chainable<Element>
-//     }
-//   }
-// }
+
+import firebase from "firebase";
+import { projectAuth } from "../../src/firebase/config";
+
+Cypress.Commands.add(
+  "login",
+  (email: "test@test.com", password = "password") => {
+    return projectAuth.signInWithEmailAndPassword(email, password);
+  }
+);
+
+Cypress.Commands.add("logout", () => {
+  return projectAuth.signOut();
+});
