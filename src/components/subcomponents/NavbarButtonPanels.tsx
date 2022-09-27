@@ -23,7 +23,7 @@ export function LogoutPanel({ user, logoutPending, logout }: { user: firebase.Us
                 Logging out...
             </button></li>
         } else {
-            return <li><button className="global-btn global-btn-red" onClick={logout}>
+            return <li><button className="global-btn global-btn-red logout" onClick={logout}>
                 Logout
             </button></li>
         }

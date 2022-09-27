@@ -36,17 +36,14 @@ describe("Basic Navigation, after authenticating", () => {
 
     cy.wait(100).get("div.navbar-modal").should('exist');
 
-    //const closeButton = cy.get("div.license-modal > button");
+    const closeButton = cy.get("button.modal-close");
 
-    //closeButton.first().wait(500).click();
+    closeButton.first().wait(100).click();
 
-    //
-    //sideLinks = cy.get("nav.links > ul > li");
-    //sideLinks.should("have.length", nSideElements);
-    //sideLinks.next().first().click();
+    sideLinks = cy.get("nav.links > ul > li");
+    sideLinks.should("have.length", nSideElements);
+    sideLinks.next().first().click();
   });
-
-  /*
 
   it("Arrives at information, authenticated", () => {
     // Probe the information page
@@ -68,6 +65,8 @@ describe("Basic Navigation, after authenticating", () => {
     sideLinks.next().next().next().first().click();
   });
 
+  // TODO: clicks for each button
+
   it("Arrives at Practice Dashboard, authenticated", () => {
     // Probe the information page
     cy.wait(2000).contains("Intervention Dashboard");
@@ -77,6 +76,8 @@ describe("Basic Navigation, after authenticating", () => {
 
     sideLinks.next().next().next().next().first().click();
   });
+
+  // TODO: clicks for each button
 
   it("Arrives at Create Student Page, authenticated", () => {
     // Probe the information page
@@ -88,5 +89,16 @@ describe("Basic Navigation, after authenticating", () => {
     sideLinks.next().next().next().next().first().click();
   });
 
-  */
+  // TODO: entry for form
+
+  it("Logs out, closes site", () => {
+    // Probe the information page
+
+    sideLinks = cy.get("nav.links > ul > li");
+    sideLinks.should("have.length", nSideElements);
+
+    const closeButton = cy.get(".logout");
+
+    closeButton.wait(100).click();
+  });
 });

@@ -9,14 +9,15 @@
 import Adapter from "enzyme-adapter-react-16";
 import Enzyme from "enzyme";
 import { mount } from "enzyme";
-import { navbarButtonCloseModal } from "../NavbarButtonCloseModal";
+import { ModalCloseButton } from "../NavbarButtonCloseModal";
+import React from "react";
 
 Enzyme.configure({ adapter: new Adapter() });
 
 describe('navbarButtonCloseModal', () => {
     it('Should fire, return TRUE', () => {
         const cb = jest.fn();
-        const wrapper = mount(navbarButtonCloseModal(cb));
+        const wrapper = mount(<ModalCloseButton closeModal={cb} />);
 
         wrapper.find('button').simulate('click');
 

@@ -8,10 +8,15 @@
 
 import React from "react";
 
-export function navbarButtonCloseModal(closeModal: any) {
+/** ModalCloseButton
+ * 
+ * @param param0 
+ * @returns 
+ */
+export function ModalCloseButton({ closeModal }: { closeModal: any; }) {
   return (
     <button
-      className="global-btn"
+      className="global-btn modal-close"
       style={{ float: "right" }}
       onClick={() => {
         closeModal();

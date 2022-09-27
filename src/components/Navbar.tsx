@@ -7,19 +7,18 @@
  */
 
 import React from "react";
+import Modal from "react-modal";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useFirebaseLogout } from "../firebase/hooks/useFirebaseLogout";
 import { useAuthorizationContext } from "../context/hooks/useAuthorizationContext";
 import { useLocation } from "react-router-dom";
 import { confirmIfInterventionScreen } from "../utilities/PathHelper";
-import Modal from "react-modal";
-
-import { navbarButtonCloseModal } from "./subcomponents/NavbarButtonCloseModal";
+import { ModalCloseButton } from "./subcomponents/NavbarButtonCloseModal";
+import { LogoutPanel } from "./subcomponents/NavbarButtonPanels";
 
 // styles & images
 import "./styles/Navbar.css";
-import { LogoutPanel } from "./subcomponents/NavbarButtonPanels";
 
 const customStyles = {
   content: {
@@ -129,7 +128,8 @@ export default function Navbar() {
             <li>react-select - Jed Watson (MIT)</li>
           </ul>
         </div>
-        {navbarButtonCloseModal(closeModal)}
+
+        <ModalCloseButton closeModal={closeModal} />
       </Modal>
     </div>
   );
