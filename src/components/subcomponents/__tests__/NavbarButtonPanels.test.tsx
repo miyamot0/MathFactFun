@@ -10,21 +10,27 @@ import firebase from "firebase";
 import Adapter from "enzyme-adapter-react-16";
 import Enzyme from "enzyme";
 import { mount } from "enzyme";
-import { exportLogoutPanel } from "../NavbarButtonPanels";
-
+import { LogoutPanel } from "../NavbarButtonPanels";
+import React from "react";
+import { act } from "react-dom/test-utils";
+import { waitFor } from "@testing-library/react";
 
 Enzyme.configure({ adapter: new Adapter() });
 
 describe('navbarButtonCloseModal', () => {
-    it('Should fire, return TRUE', () => {
-        const user = {} as firebase.User;
-        const cb = jest.fn();
-        const wrapper = mount(exportLogoutPanel(user, true, cb));
+    it('Should fire, return TRUE', async () => {
+        await act(async () => {
+            const user = {} as firebase.User;
+            const cb = jest.fn();
+            const wrapper = mount(
+                <LogoutPanel user={user} logoutPending={true} logout={cb} />
+            );
 
-        wrapper.find('button').simulate('click');
+            wrapper.find('button').simulate('click');
 
-        setTimeout(() => {
-            expect(cb).toHaveBeenCalled()
-        }, 1000)
+            await waitFor(() => {
+                expect(cb).toHaveBeenCalled()
+            })
+        })
     })
 })

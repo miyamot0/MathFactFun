@@ -21,6 +21,8 @@ import * as UseAuthProvider from "../../../context/hooks/useAuthorizationContext
 import * as UseDocumentMethods from "../../../firebase/hooks/useFirebaseDocument";
 import * as DispatchHelpers from "../helpers/DispatchingHelpers";
 import { act } from "react-dom/test-utils";
+import { waitFor } from "@testing-library/react";
+import { WaitOptions } from "@testing-library/react-hooks";
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -55,23 +57,26 @@ describe("Benchmark", () => {
     InterventionHelper,
     "submitPerformancesToFirebase"
   );
-  const spySharedButtonActionSequence = jest.spyOn(
-    InterventionHelper,
-    "sharedButtonActionSequence"
-  );
   const spyDispatchHelpers = jest.spyOn(
     DispatchHelpers,
     "completeLoadingDispatch"
   );
+  /*
+  const spySharedButtonActionSequence = jest.spyOn(
+    InterventionHelper,
+    "sharedButtonActionSequence"
+  );
+
+  spySharedButtonActionSequence.mockImplementation(
+    mockedSharedButtonActionSequence
+  );
+  spyDispatchHelpers.mockImplementation(mockedCompleteLoadingDispatch);
+  */
 
   spySubmitPerformancesToFirebase.mockImplementation(
     mockedSubmitPerformancesToFirebase
   );
-  spySharedButtonActionSequence.mockImplementation(
-    mockedSharedButtonActionSequence
-  );
   spyKeyHandling.mockImplementation(mockedCommonKeyListener);
-  spyDispatchHelpers.mockImplementation(mockedCompleteLoadingDispatch);
 
   const mockComment = {
     content: "string",
@@ -94,7 +99,7 @@ describe("Benchmark", () => {
         currentBenchmarking: ["Addition-Sums to 18"],
         factsMastered: [],
         factsSkipped: [],
-        factsTargeted: [],
+        factsTargeted: ["1+1=2"],
 
         creator: "",
         currentApproach: "N/A",
@@ -137,6 +142,11 @@ describe("Benchmark", () => {
     await act(async () => {
       jest.clearAllMocks();
 
+      const map: any = {};
+      window.addEventListener = jest.fn().mockImplementation((event, cb) => {
+        map[event] = cb;
+      });
+
       const wrapper = mount(
         <MemoryRouter>
           <Benchmark></Benchmark>
@@ -144,36 +154,18 @@ describe("Benchmark", () => {
       );
 
       expect(wrapper.find(Benchmark).length).toBe(1);
-      expect(wrapper.find("button.global-btn").length).toBe(1);
 
-      jest.spyOn(React, "useEffect").mockImplementation((f) => f());
-
-      wrapper.update();
-      wrapper.render();
-
-      //await waitFor(() => {
-      //  expect(mockedCompleteLoadingDispatch).toBeCalled();
-      //});
-
-      //const button = wrapper.find("button").first();
-
-      //button.simulate("click");
-
-      //await waitFor(() => {
-      //  expect(mockedSharedButtonActionSequence).toBeCalled();
-      //});
-
-      /*
-      expect(mockedCommonKeyListener).not.toBeCalled();
-
-      const event = new KeyboardEvent("keydown", { keyCode: 37 });
-      window.dispatchEvent(event);
-      wrapper.simulate("keydown", { keyCode: 37 });
+      const buttons = wrapper.find("button.global-btn");
 
       await waitFor(() => {
-        expect(mockedCommonKeyListener).toBeCalled();
+        expect(buttons.length).toBe(1);
+        expect(spyDispatchHelpers).toHaveBeenCalled();
       });
-      */
+
+      wrapper.instance().forceUpdate();
+      wrapper.update();
+
+      map.keydown({ 'key': ' ' });
     });
   });
 });

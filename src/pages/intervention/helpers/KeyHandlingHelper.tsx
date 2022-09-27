@@ -13,7 +13,7 @@ import { StudentDataInterface } from "../../student/interfaces/StudentInterfaces
 import { SharedActionSequence } from "../functionality/InterventionBehavior";
 import { InterventionState } from "../interfaces/InterventionInterfaces";
 import { commonKeyHandler } from "./DispatchingHelpers";
-import { sharedButtonActionSequence } from "./InterventionHelpers";
+import { checkLiNullUndefinedBlank, sharedButtonActionSequence } from "./InterventionHelpers";
 
 /** commonKeyListener
  *
@@ -24,7 +24,6 @@ export function commonKeyListener({
   key,
   state,
   currentApproach,
-  checkLiNullUndefinedBlank,
   captureItemClick,
   user,
   id,
@@ -40,7 +39,6 @@ export function commonKeyListener({
   key: React.KeyboardEvent<HTMLElement>;
   state: InterventionState;
   currentApproach: string;
-  checkLiNullUndefinedBlank?: any;
   captureItemClick?: any;
   user: firebase.User | null;
   id: string;
@@ -86,11 +84,13 @@ export function commonKeyListener({
             return;
           }
 
-          if (!checkLiNullUndefinedBlank(state.NextLiItem)) {
+          if (checkLiNullUndefinedBlank(state.NextLiItem) === false) {
             captureItemClick(state.NextLiItem);
-          }
 
-          return;
+            return;
+          } else {
+            return;
+          }
         }
 
         modKey = key.key === "*" ? "x" : modKey;

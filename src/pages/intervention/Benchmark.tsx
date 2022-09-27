@@ -71,7 +71,6 @@ export default function Benchmark() {
       key,
       state,
       currentApproach: "Benchmark",
-      checkLiNullUndefinedBlank: null,
       captureItemClick: null,
       user,
       id,

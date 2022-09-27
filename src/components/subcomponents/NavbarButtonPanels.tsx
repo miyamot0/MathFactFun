@@ -9,14 +9,14 @@
 import firebase from "firebase"
 import React from "react"
 
-/** exportLogoutPanel
+/** LogoutPanel
  * 
  * @param user 
  * @param logoutPending 
  * @param logout 
  * @returns 
  */
-export function exportLogoutPanel(user: firebase.User | null, logoutPending: boolean, logout: any) {
+export function LogoutPanel({ user, logoutPending, logout }: { user: firebase.User | null; logoutPending: boolean; logout: any; }) {
     if (user) {
         if (logoutPending) {
             return <li><button className="global-btn" onClick={logout}>

@@ -68,7 +68,7 @@ export function shouldShowFeedback(
  * @param {string} str
  * @returns {boolean}
  */
-export function checkLiNullUndefinedBlank(str: string): boolean {
+export function checkLiNullUndefinedBlank(str: string | undefined): boolean {
   return str === null || str === undefined || str.trim().length === 0;
 }
 

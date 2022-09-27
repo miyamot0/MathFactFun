@@ -6,10 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-/**
- * Nav widget
- */
-
 import React from "react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
@@ -19,10 +15,11 @@ import { useLocation } from "react-router-dom";
 import { confirmIfInterventionScreen } from "../utilities/PathHelper";
 import Modal from "react-modal";
 
+import { navbarButtonCloseModal } from "./subcomponents/NavbarButtonCloseModal";
+
 // styles & images
 import "./styles/Navbar.css";
-import { exportLogoutPanel } from "./subcomponents/NavbarButtonPanels";
-import { navbarButtonCloseModal } from "./subcomponents/NavbarButtonCloseModal";
+import { LogoutPanel } from "./subcomponents/NavbarButtonPanels";
 
 const customStyles = {
   content: {
@@ -84,7 +81,8 @@ export default function Navbar() {
           </li>
         )}
 
-        {exportLogoutPanel(user, logoutPending, logout)}
+        <LogoutPanel user={user} logoutPending={logoutPending} logout={logout} />
+
       </ul>
 
       <Modal

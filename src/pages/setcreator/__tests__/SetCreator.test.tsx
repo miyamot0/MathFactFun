@@ -153,4 +153,25 @@ describe('SetCreator', () => {
             input3.click();
         })
     })
+
+    it('Should render without user data or documents', async () => {
+        await act(async () => {
+            const docMockCollection = jest.spyOn(UseCollectionMethods, "useFirebaseCollectionTyped")
+            docMockCollection.mockReturnValue({
+                documents: null,
+                error: "Error"
+            })
+
+            const docMockDocument = jest.spyOn(UseDocumentMethods, "useFirebaseDocumentTyped")
+            docMockDocument.mockReturnValue({
+                document: undefined,
+                documentError: "Error"
+            })
+
+            const { getByTestId } = render(<SetCreator></SetCreator>)
+
+            const setCreatorWrapper = getByTestId('set-creator-wrapper');
+            expect(setCreatorWrapper).toBeTruthy();
+        })
+    })
 })

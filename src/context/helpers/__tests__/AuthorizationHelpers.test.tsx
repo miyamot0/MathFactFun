@@ -6,17 +6,27 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from "react";
-import { AuthorizationContextProvider } from "../../AuthorizationContext";
+import { simplifyPrivilegeAccess } from "../AuthorizationHelpers";
 
-describe("Authorization Context", () => {
-  it("...", () => {
-    const val = (
-      <AuthorizationContextProvider>
-        <></>
-      </AuthorizationContextProvider>
-    );
+describe("simplifyPrivilegeAccess", () => {
+  it("false, if empty", () => {
+    const value = "";
+    const result = simplifyPrivilegeAccess(value);
 
-    expect(val).not.toBe(null);
+    expect(result).toBe(false);
+  });
+
+  it("true, if admin", () => {
+    const value = "admin";
+    const result = simplifyPrivilegeAccess(value);
+
+    expect(result).toBe(true);
+  });
+
+  it("true, if sysadmin", () => {
+    const value = "sysadmin";
+    const result = simplifyPrivilegeAccess(value);
+
+    expect(result).toBe(true);
   });
 });
