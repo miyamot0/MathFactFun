@@ -61,7 +61,7 @@ export default function EditStudent() {
     StudentCreateSingleInitialState
   );
 
-  const CoreOperations = Operations.filter((op) => op.value !== "N/A");
+  const CoreOperations = Operations.filter((op) => op.value !== "NA");
 
   if (document && !state.DidBuild) {
     onLoadSingleStudentEdit(document, dispatch);

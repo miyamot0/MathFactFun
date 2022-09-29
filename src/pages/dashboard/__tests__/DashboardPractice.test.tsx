@@ -91,9 +91,9 @@ describe("Dashboard Practice: Render", () => {
 
             creator: mockId,
             currentApproach: InterventionFormat.ExplicitTiming,
-            currentErrorApproach: "N/A",
+            currentErrorApproach: "NA",
             currentGrade: "K",
-            currentSRApproach: "N/A",
+            currentSRApproach: "NA",
             currentTarget: "Addition",
             details: "",
             name: "",
@@ -124,9 +124,9 @@ describe("Dashboard Practice: Render", () => {
 
             creator: "123",
             currentApproach: InterventionFormat.ExplicitTiming,
-            currentErrorApproach: "N/A",
+            currentErrorApproach: "NA",
             currentGrade: "K",
-            currentSRApproach: "N/A",
+            currentSRApproach: "NA",
             currentTarget: "Addition",
             details: "",
             name: "",
@@ -149,8 +149,6 @@ describe("Dashboard Practice: Render", () => {
       const btns = wrapper.find({ "data-testid": "student-filter-All" });
 
       expect(btns.length).toBe(1);
-
-      const btn = btns.first();
 
       //btn.simulate("click");
 
@@ -200,9 +198,9 @@ describe("Dashboard Practice: Render", () => {
 
           creator: "123",
           currentApproach: InterventionFormat.ExplicitTiming,
-          currentErrorApproach: "N/A",
+          currentErrorApproach: "NA",
           currentGrade: "K",
-          currentSRApproach: "N/A",
+          currentSRApproach: "NA",
           currentTarget: "Addition",
           details: "",
           name: "",
@@ -267,9 +265,9 @@ describe("Dashboard Practice: Render", () => {
 
           creator: "123",
           currentApproach: InterventionFormat.ExplicitTiming,
-          currentErrorApproach: "N/A",
+          currentErrorApproach: "NA",
           currentGrade: "K",
-          currentSRApproach: "N/A",
+          currentSRApproach: "NA",
           currentTarget: "Addition",
           details: "",
           name: "",

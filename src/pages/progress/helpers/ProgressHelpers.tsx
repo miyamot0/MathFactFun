@@ -318,39 +318,50 @@ export function prepareItemLevelCalculations(
   overallCalculations: OverallCalculationObject,
   target: string
 ) {
-  const itemSummaries = overallCalculations.MappedDocument.map(
-    ({ Items }) => Items
-  );
 
-  const flatItemSummaries: FactDataInterface[] = itemSummaries.reduce(
-    (accumulator, value) => accumulator.concat(value)
-  );
-
-  if (!Array.isArray(flatItemSummaries)) {
+  if (overallCalculations.MappedDocument.length === 0) {
     return {
-      ItemSummaries: itemSummaries,
-      FlatItemSummaries: null,
-      UniqueMathFacts: null,
-      UniqueQuants: null,
+      ItemSummaries: [],
+      FlatItemSummaries: [],
+      UniqueMathFacts: [],
+      UniqueQuants: [],
     } as ItemLevelCalculationsObject;
   } else {
-    const uniqueMathFacts = flatItemSummaries
-      .map((obj) => obj.factString)
-      .filter(OnlyUnique)
-      .sort();
 
-    const uniqueQuants = aggregateItemLevelPerformances(
-      uniqueMathFacts,
-      flatItemSummaries,
-      target
+    const itemSummaries = overallCalculations.MappedDocument.map(
+      ({ Items }) => Items
     );
 
-    return {
-      ItemSummaries: itemSummaries,
-      FlatItemSummaries: flatItemSummaries,
-      UniqueMathFacts: uniqueMathFacts,
-      UniqueQuants: uniqueQuants,
-    } as ItemLevelCalculationsObject;
+    const flatItemSummaries: FactDataInterface[] = itemSummaries.reduce(
+      (accumulator, value) => accumulator.concat(value)
+    );
+
+    if (!Array.isArray(flatItemSummaries)) {
+      return {
+        ItemSummaries: itemSummaries,
+        FlatItemSummaries: null,
+        UniqueMathFacts: null,
+        UniqueQuants: null,
+      } as ItemLevelCalculationsObject;
+    } else {
+      const uniqueMathFacts = flatItemSummaries
+        .map((obj) => obj.factString)
+        .filter(OnlyUnique)
+        .sort();
+
+      const uniqueQuants = aggregateItemLevelPerformances(
+        uniqueMathFacts,
+        flatItemSummaries,
+        target
+      );
+
+      return {
+        ItemSummaries: itemSummaries,
+        FlatItemSummaries: flatItemSummaries,
+        UniqueMathFacts: uniqueMathFacts,
+        UniqueQuants: uniqueQuants,
+      } as ItemLevelCalculationsObject;
+    }
   }
 }
 
@@ -384,16 +395,16 @@ export function getSecondaryProgressChartData(
       name: "Item Metrics",
       data: itemLevelCalculations.UniqueQuants
         ? itemLevelCalculations.UniqueQuants.map((item) => {
-            return {
-              x: item.X,
-              y: item.Y,
-              marker: {
-                symbol: getMappedMarker(item.Latency),
-                fillColor: getMappedColor(item.AverageCorrect),
-                radius: item.Total > 5 ? 5 + 1 : item.Total + 1,
-              },
-            };
-          })
+          return {
+            x: item.X,
+            y: item.Y,
+            marker: {
+              symbol: getMappedMarker(item.Latency),
+              fillColor: getMappedColor(item.AverageCorrect),
+              radius: item.Total > 5 ? 5 + 1 : item.Total + 1,
+            },
+          };
+        })
         : [],
     },
     yAxis: {

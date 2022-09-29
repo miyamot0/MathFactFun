@@ -11,14 +11,14 @@ import firebase from "firebase";
 import { StudentDataInterface } from "../../interfaces/StudentInterfaces";
 import { CommentInterface } from "../types/CommentTypes";
 
-export function StudentCommentViews(
-  { user, adminFlag, student, updateDocument }:
-    {
-      user: firebase.User | null;
-      adminFlag: boolean;
-      student: StudentDataInterface;
-      updateDocument: (id: string, updates: any) => Promise<void>;
-    }): JSX.Element {
+export interface StudentCommentViewsInterface {
+  user: firebase.User | null;
+  adminFlag: boolean;
+  student: StudentDataInterface;
+  updateDocument: (id: string, updates: any) => Promise<void>;
+}
+
+export function StudentCommentViews({ user, adminFlag, student, updateDocument }: StudentCommentViewsInterface): JSX.Element {
   const toShowList = user && student && student.comments.length > 0;
 
   if (toShowList) {

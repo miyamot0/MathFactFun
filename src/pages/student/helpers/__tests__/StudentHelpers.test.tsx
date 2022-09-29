@@ -47,7 +47,7 @@ const mockData = {
 } as unknown as StudentCreateState;
 
 const history = {
-  push: (id: any) => true,
+  push: (_id: any) => true,
 };
 
 const addDocument = jest.fn();
@@ -180,7 +180,7 @@ describe("verifySingleStudentCreate", () => {
     const state = {
       ...mockData,
       CurrentGrade: {
-        value: "N/A",
+        value: "NA",
         label: "No Current Intervention",
       } as SingleOptionType,
     };
@@ -203,11 +203,11 @@ describe("verifySingleStudentCreate", () => {
     const state = {
       ...mockData,
       CurrentGrade: {
-        value: "N/A",
+        value: "NA",
         label: "No Current Intervention",
       } as SingleOptionType,
       CurrentTarget: {
-        value: "N/A",
+        value: "NA",
         label: "No Current Target",
       } as SingleOptionType,
     };
@@ -230,15 +230,15 @@ describe("verifySingleStudentCreate", () => {
     const state = {
       ...mockData,
       CurrentGrade: {
-        value: "N/A",
+        value: "NA",
         label: "No Current Intervention",
       } as SingleOptionType,
       CurrentTarget: {
-        value: "N/A",
+        value: "NA",
         label: "No Current Target",
       } as SingleOptionType,
       CurrentApproach: {
-        value: "N/A",
+        value: "NA",
         label: "No Current Intervention",
       } as SingleOptionType,
     };
@@ -261,15 +261,15 @@ describe("verifySingleStudentCreate", () => {
     const state = {
       ...mockData,
       CurrentGrade: {
-        value: "N/A",
+        value: "NA",
         label: "No Current Intervention",
       } as SingleOptionType,
       CurrentTarget: {
-        value: "N/A",
+        value: "NA",
         label: "No Current Target",
       } as SingleOptionType,
       CurrentApproach: {
-        value: "N/A",
+        value: "NA",
         label: "No Current Intervention",
       } as SingleOptionType,
       CurrentErrorApproach: {
@@ -300,15 +300,15 @@ describe("verifySingleStudentCreate", () => {
       FormError: undefined,
       DueDate: "",
       CurrentApproach: {
-        value: "N/A",
+        value: "NA",
         label: "No Current Intervention",
       } as SingleOptionType,
       CurrentGrade: {
-        value: "N/A",
+        value: "NA",
         label: "No Current Intervention",
       } as SingleOptionType,
       CurrentTarget: {
-        value: "N/A",
+        value: "NA",
         label: "No Current Target",
       } as SingleOptionType,
       CurrentErrorApproach: {
@@ -356,15 +356,15 @@ describe("verifySingleStudentCreate", () => {
       FormError: undefined,
       DueDate: "",
       CurrentApproach: {
-        value: "N/A",
+        value: "NA",
         label: "No Current Intervention",
       } as SingleOptionType,
       CurrentGrade: {
-        value: "N/A",
+        value: "NA",
         label: "No Current Intervention",
       } as SingleOptionType,
       CurrentTarget: {
-        value: "N/A",
+        value: "NA",
         label: "No Current Target",
       } as SingleOptionType,
       CurrentErrorApproach: {
@@ -508,7 +508,7 @@ describe("verifySingleStudentEdit", () => {
     const state = {
       ...mockData,
       CurrentGrade: {
-        value: "N/A",
+        value: "NA",
         label: "No Current Intervention",
       } as SingleOptionType,
     };
@@ -533,11 +533,11 @@ describe("verifySingleStudentEdit", () => {
     const state = {
       ...mockData,
       CurrentGrade: {
-        value: "N/A",
+        value: "NA",
         label: "No Current Intervention",
       } as SingleOptionType,
       CurrentTarget: {
-        value: "N/A",
+        value: "NA",
         label: "No Current Target",
       } as SingleOptionType,
     };
@@ -562,15 +562,15 @@ describe("verifySingleStudentEdit", () => {
     const state = {
       ...mockData,
       CurrentGrade: {
-        value: "N/A",
+        value: "NA",
         label: "No Current Intervention",
       } as SingleOptionType,
       CurrentTarget: {
-        value: "N/A",
+        value: "NA",
         label: "No Current Target",
       } as SingleOptionType,
       CurrentApproach: {
-        value: "N/A",
+        value: "NA",
         label: "No Current Intervention",
       } as SingleOptionType,
     };
@@ -595,15 +595,15 @@ describe("verifySingleStudentEdit", () => {
     const state = {
       ...mockData,
       CurrentGrade: {
-        value: "N/A",
+        value: "NA",
         label: "No Current Intervention",
       } as SingleOptionType,
       CurrentTarget: {
-        value: "N/A",
+        value: "NA",
         label: "No Current Target",
       } as SingleOptionType,
       CurrentApproach: {
-        value: "N/A",
+        value: "NA",
         label: "No Current Intervention",
       } as SingleOptionType,
       CurrentErrorApproach: {
@@ -636,15 +636,15 @@ describe("verifySingleStudentEdit", () => {
       FormError: undefined,
       DueDate: "",
       CurrentApproach: {
-        value: "N/A",
+        value: "NA",
         label: "No Current Intervention",
       } as SingleOptionType,
       CurrentGrade: {
-        value: "N/A",
+        value: "NA",
         label: "No Current Intervention",
       } as SingleOptionType,
       CurrentTarget: {
-        value: "N/A",
+        value: "NA",
         label: "No Current Target",
       } as SingleOptionType,
       CurrentErrorApproach: {
@@ -694,11 +694,11 @@ describe("verifySingleStudentEdit", () => {
       FormError: undefined,
       DueDate: "",
       CurrentApproach: {
-        value: "N/A",
+        value: "NA",
         label: "No Current Intervention",
       } as SingleOptionType,
       CurrentGrade: {
-        value: "N/A",
+        value: "NA",
         label: "No Current Intervention",
       } as SingleOptionType,
       CurrentTarget: {
@@ -752,15 +752,15 @@ describe("verifySingleStudentEdit", () => {
       FormError: undefined,
       DueDate: "",
       CurrentApproach: {
-        value: "N/A",
+        value: "NA",
         label: "No Current Intervention",
       } as SingleOptionType,
       CurrentGrade: {
-        value: "N/A",
+        value: "NA",
         label: "No Current Intervention",
       } as SingleOptionType,
       CurrentTarget: {
-        value: "N/A",
+        value: "NA",
         label: "No Current Target",
       } as SingleOptionType,
       CurrentErrorApproach: {
@@ -857,7 +857,7 @@ describe("verifyBulkStudentCreate", () => {
     const state = {
       ...mockData,
       CurrentGrade: {
-        value: "N/A",
+        value: "NA",
         label: "No Current Intervention",
       } as SingleOptionType,
     };
@@ -880,11 +880,11 @@ describe("verifyBulkStudentCreate", () => {
     const state = {
       ...mockData,
       CurrentGrade: {
-        value: "N/A",
+        value: "NA",
         label: "No Current Intervention",
       } as SingleOptionType,
       CurrentTarget: {
-        value: "N/A",
+        value: "NA",
         label: "No Current Target",
       } as SingleOptionType,
     };
@@ -907,15 +907,15 @@ describe("verifyBulkStudentCreate", () => {
     const state = {
       ...mockData,
       CurrentGrade: {
-        value: "N/A",
+        value: "NA",
         label: "No Current Intervention",
       } as SingleOptionType,
       CurrentTarget: {
-        value: "N/A",
+        value: "NA",
         label: "No Current Target",
       } as SingleOptionType,
       CurrentApproach: {
-        value: "N/A",
+        value: "NA",
         label: "No Current Intervention",
       } as SingleOptionType,
     };
@@ -938,15 +938,15 @@ describe("verifyBulkStudentCreate", () => {
     const state = {
       ...mockData,
       CurrentGrade: {
-        value: "N/A",
+        value: "NA",
         label: "No Current Intervention",
       } as SingleOptionType,
       CurrentTarget: {
-        value: "N/A",
+        value: "NA",
         label: "No Current Target",
       } as SingleOptionType,
       CurrentApproach: {
-        value: "N/A",
+        value: "NA",
         label: "No Current Intervention",
       } as SingleOptionType,
       CurrentErrorApproach: {
@@ -973,15 +973,15 @@ describe("verifyBulkStudentCreate", () => {
     const state = {
       ...mockData,
       CurrentGrade: {
-        value: "N/A",
+        value: "NA",
         label: "No Current Intervention",
       } as SingleOptionType,
       CurrentTarget: {
-        value: "N/A",
+        value: "NA",
         label: "No Current Target",
       } as SingleOptionType,
       CurrentApproach: {
-        value: "N/A",
+        value: "NA",
         label: "No Current Intervention",
       } as SingleOptionType,
       CurrentErrorApproach: {
@@ -1012,15 +1012,15 @@ describe("verifyBulkStudentCreate", () => {
     const state = {
       ...mockData,
       CurrentGrade: {
-        value: "N/A",
+        value: "NA",
         label: "No Current Intervention",
       } as SingleOptionType,
       CurrentTarget: {
-        value: "N/A",
+        value: "NA",
         label: "No Current Target",
       } as SingleOptionType,
       CurrentApproach: {
-        value: "N/A",
+        value: "NA",
         label: "No Current Intervention",
       } as SingleOptionType,
       CurrentErrorApproach: {
@@ -1056,15 +1056,15 @@ describe("verifyBulkStudentCreate", () => {
       FormError: undefined,
       DueDate: "",
       CurrentApproach: {
-        value: "N/A",
+        value: "NA",
         label: "No Current Intervention",
       } as SingleOptionType,
       CurrentGrade: {
-        value: "N/A",
+        value: "NA",
         label: "No Current Intervention",
       } as SingleOptionType,
       CurrentTarget: {
-        value: "N/A",
+        value: "NA",
         label: "No Current Target",
       } as SingleOptionType,
       CurrentErrorApproach: {
@@ -1112,15 +1112,15 @@ describe("verifyBulkStudentCreate", () => {
       FormError: undefined,
       DueDate: "",
       CurrentApproach: {
-        value: "N/A",
+        value: "NA",
         label: "No Current Intervention",
       } as SingleOptionType,
       CurrentGrade: {
-        value: "N/A",
+        value: "NA",
         label: "No Current Intervention",
       } as SingleOptionType,
       CurrentTarget: {
-        value: "N/A",
+        value: "NA",
         label: "No Current Target",
       } as SingleOptionType,
       CurrentErrorApproach: {
@@ -1168,15 +1168,15 @@ describe("verifyBulkStudentCreate", () => {
       FormError: undefined,
       DueDate: "",
       CurrentApproach: {
-        value: "N/A",
+        value: "NA",
         label: "No Current Intervention",
       } as SingleOptionType,
       CurrentGrade: {
-        value: "N/A",
+        value: "NA",
         label: "No Current Intervention",
       } as SingleOptionType,
       CurrentTarget: {
-        value: "N/A",
+        value: "NA",
         label: "No Current Target",
       } as SingleOptionType,
       CurrentErrorApproach: {

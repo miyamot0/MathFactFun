@@ -8,9 +8,10 @@
 
 import React from "react";
 import { useState } from "react";
-
 import { StudentFilterInterface } from "../types/DashboardTypes";
 import { handleFilterEvent } from "./helpers/StudentFilterHelpers";
+
+import './../styles/Dashboards.css'
 
 export const GradeFilterList = [
   "All",

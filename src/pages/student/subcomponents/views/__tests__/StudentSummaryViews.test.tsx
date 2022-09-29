@@ -35,7 +35,7 @@ const mockData = {
   factsTargeted: [],
 
   creator: "456",
-  currentApproach: "N/A",
+  currentApproach: "NA",
   currentErrorApproach: "",
   currentGrade: "",
   currentSRApproach: "",
@@ -54,7 +54,7 @@ describe("renderSpecificOutcomesButton", () => {
       currentTarget: "ExplicitTiming",
     } as StudentDataInterface;
 
-    const result = renderSpecificOutcomesButton(mockData2);
+    const result = renderSpecificOutcomesButton({ student: mockData2 });
     const resultString = JSON.stringify(result);
 
     expect(resultString.includes("Intervention-specific Targets")).toBe(true);
@@ -64,10 +64,10 @@ describe("renderSpecificOutcomesButton", () => {
   it("Should not render buttons without a target", () => {
     const mockData2 = {
       ...mockData,
-      currentTarget: "N/A",
+      currentTarget: "NA",
     } as StudentDataInterface;
 
-    const result = renderSpecificOutcomesButton(mockData2);
+    const result = renderSpecificOutcomesButton({ student: mockData2 });
     const resultString = JSON.stringify(result);
 
     expect(resultString.includes("Intervention-specific Targets")).toBe(false);
@@ -92,7 +92,7 @@ describe("renderSetCreatorButton", () => {
   it("Should not render buttons without a target", () => {
     const mockData2 = {
       ...mockData,
-      currentTarget: "N/A",
+      currentTarget: "NA",
     } as StudentDataInterface;
 
     const result = renderSetCreatorButton(mockData2);

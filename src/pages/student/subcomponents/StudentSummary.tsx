@@ -6,10 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-/**
- * Student summary panel
- */
-
 import React from "react";
 import { Link } from "react-router-dom";
 import { useFirestore } from "../../../firebase/hooks/useFirestore";
@@ -18,13 +14,15 @@ import { useAuthorizationContext } from "../../../context/hooks/useAuthorization
 import { GetApproachStringFromLabel } from "../../../utilities/LabelHelper";
 import { StudentWidgetInterface } from "../interfaces/StudentInterfaces";
 import {
-  renderAdministrativeButtons,
-  renderSetCreatorButton,
-  renderSpecificOutcomesButton,
+  ShowAdministrativeButtons,
+  ShowSetCreatorButton,
+  ShowSpecificOutcomesButton,
 } from "./views/StudentSummaryViews";
 
 // styles
 import "./styles/StudentSummary.css";
+import StudentSummaryCard from "./views/StudentSummaryCard";
+import StudentSettingsCard from "./views/StudentSettingsCard";
 
 export default function StudentSummary({ student }: StudentWidgetInterface) {
   const { deleteDocument, response } = useFirestore(
@@ -38,60 +36,29 @@ export default function StudentSummary({ student }: StudentWidgetInterface) {
   return (
     <div>
       <h4 className="student-summary-h4">Student Settings: {student.name}</h4>
-      <div className="student-summary">
-        <h2 className="global-page-title">Student Information</h2>
-        <hr />
-        <p>
-          <b>Current Grade:</b> {student.currentGrade}
-        </p>
-        <p>
-          <b>Current Target for Intervention:</b> {student.currentTarget}
-        </p>
-        <p>
-          <b>Current Intervention:</b>{" "}
-          {GetApproachStringFromLabel(student.currentApproach)}
-        </p>
-        <p>
-          <b>Details</b>: {student.details}
-        </p>
-        <p className="due-date">
-          Next Benchmark Scheduled: {student.dueDate?.toDate().toDateString()}
-        </p>
-      </div>
+
+      <StudentSummaryCard student={student} />
+
       <div className="student-summary">
         <h2 className="global-page-title">Student Performance</h2>
         <hr />
-
         <Link to={`/Screening/${student.id}`}>
           <button className="global-btn global-btn-green btn-below">
             Overall Math
           </button>
         </Link>
 
-        {renderSpecificOutcomesButton(student)}
+        <ShowSpecificOutcomesButton student={student} />
       </div>
-      <div className="student-summary">
-        <h2 className="global-page-title">
-          Benchmarking and Intervention Settings
-        </h2>
-        <hr />
-        <Link to={`/edit/${student.id}`}>
-          <button className="global-btn btn-below">Student Settings</button>
-        </Link>
 
-        {renderSetCreatorButton(student)}
-      </div>
-      {renderAdministrativeButtons(
-        user,
-        adminFlag,
-        student,
-        deleteDocument,
-        response,
-        history
-      )}
-      )
+      <StudentSettingsCard student={student} />
+
+      <ShowAdministrativeButtons user={user}
+        adminFlag={adminFlag}
+        student={student}
+        deleteDocument={deleteDocument}
+        response={response}
+        history={history} />
     </div>
   );
 }
-
-//

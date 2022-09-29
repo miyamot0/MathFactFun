@@ -22,7 +22,6 @@ import * as UseDocumentMethods from "../../../firebase/hooks/useFirebaseDocument
 import * as DispatchHelpers from "../helpers/DispatchingHelpers";
 import { act } from "react-dom/test-utils";
 import { waitFor } from "@testing-library/react";
-import { WaitOptions } from "@testing-library/react-hooks";
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -41,8 +40,8 @@ jest.mock("react-router-dom", () => ({
 describe("Benchmark", () => {
   const mockedCommonKeyListener = jest.fn();
   const mockedSubmitPerformancesToFirebase = jest.fn();
-  const mockedSharedButtonActionSequence = jest.fn();
-  const mockedCompleteLoadingDispatch = jest.fn();
+  //const mockedSharedButtonActionSequence = jest.fn();
+  //const mockedCompleteLoadingDispatch = jest.fn();
 
   const docMockCollection = jest.spyOn(
     UseDocumentMethods,
@@ -102,10 +101,10 @@ describe("Benchmark", () => {
         factsTargeted: ["1+1=2"],
 
         creator: "",
-        currentApproach: "N/A",
-        currentErrorApproach: "N/A",
+        currentApproach: "NA",
+        currentErrorApproach: "NA",
         currentGrade: "K",
-        currentSRApproach: "N/A",
+        currentSRApproach: "NA",
         currentTarget: "Addition",
         details: "",
         name: "",

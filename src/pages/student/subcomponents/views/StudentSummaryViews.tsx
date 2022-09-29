@@ -7,20 +7,34 @@
  */
 
 import React from "react";
+import firebase from "firebase";
 import { Link } from "react-router-dom";
 import { FirestoreState } from "../../../../firebase/interfaces/FirebaseInterfaces";
 import { StudentDataInterface } from "../../interfaces/StudentInterfaces";
 import { handleStudentDelete } from "../helpers/StudentSummaryHelpers";
 
-/** renderCurrentTargetButton
+export interface ShowButtonInterface {
+  student: StudentDataInterface;
+}
+
+export interface ShowAdminButtonInterface {
+  user: firebase.User | null,
+  adminFlag: boolean,
+  student: StudentDataInterface,
+  deleteDocument: (id: string) => Promise<void>,
+  response: FirestoreState,
+  history: any
+}
+
+/** ShowSpecificOutcomesButton
  *
  * @param {StudentDataInterface} student
  * @returns {JSX.Element}
  */
-export function renderSpecificOutcomesButton(
-  student: StudentDataInterface
-): JSX.Element {
-  const hasATarget = student.currentTarget !== "N/A";
+export function ShowSpecificOutcomesButton({ student }: ShowButtonInterface): JSX.Element {
+  const hasATarget = student.currentApproach !== "NA";
+
+  console.log(student)
 
   if (hasATarget) {
     return (
@@ -37,15 +51,13 @@ export function renderSpecificOutcomesButton(
   }
 }
 
-/** renderCurrentTargetButton
+/** ShowSetCreatorButton
  *
  * @param {StudentDataInterface} student
  * @returns {JSX.Element}
  */
-export function renderSetCreatorButton(
-  student: StudentDataInterface
-): JSX.Element {
-  const hasATarget = student.currentTarget !== "N/A";
+export function ShowSetCreatorButton({ student }: ShowButtonInterface): JSX.Element {
+  const hasATarget = student.currentTarget !== "NA";
 
   if (hasATarget) {
     return (
@@ -58,21 +70,19 @@ export function renderSetCreatorButton(
   }
 }
 
-/** renderAdministrativeButtons
+/** ShowAdministrativeButtons
  *
  * @param user
  * @param adminFlag
  * @param handleDeleteEvent
  * @returns {JSX.Element}
  */
-export function renderAdministrativeButtons(
-  user: any,
-  adminFlag: boolean,
-  student: StudentDataInterface,
-  deleteDocument: (id: string) => Promise<void>,
-  response: FirestoreState,
-  history: any
-): JSX.Element {
+export function ShowAdministrativeButtons({ user,
+  adminFlag,
+  student,
+  deleteDocument,
+  response,
+  history }: ShowAdminButtonInterface): JSX.Element {
   const shouldShowPanel = user && adminFlag;
 
   if (shouldShowPanel) {

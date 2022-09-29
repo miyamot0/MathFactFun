@@ -64,10 +64,10 @@ describe("Dashboard Benchmark: Render", () => {
           factsTargeted: [],
 
           creator: "",
-          currentApproach: "N/A",
-          currentErrorApproach: "N/A",
+          currentApproach: "NA",
+          currentErrorApproach: "NA",
           currentGrade: "K",
-          currentSRApproach: "N/A",
+          currentSRApproach: "NA",
           currentTarget: "Addition",
           details: "",
           name: "",

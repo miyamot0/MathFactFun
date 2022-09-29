@@ -11,17 +11,19 @@ import React from "react";
 import { StudentDataInterface } from "../../interfaces/StudentInterfaces";
 import { CommentInterface } from "../types/CommentTypes";
 
+export interface StudentCommentListViewInterface {
+  user: firebase.User | null;
+  adminFlag: boolean;
+  student: StudentDataInterface;
+  updateDocument: (id: string, updates: any) => Promise<void>;
+}
+
 export default function StudentCommentListView({
   user,
   adminFlag,
   student,
   updateDocument,
-}: {
-  user: firebase.User | null;
-  adminFlag: boolean;
-  student: StudentDataInterface;
-  updateDocument: (id: string, updates: any) => Promise<void>;
-}): JSX.Element {
+}: StudentCommentListViewInterface): JSX.Element {
   const toShowList = user && student && student.comments.length > 0;
 
   if (toShowList) {

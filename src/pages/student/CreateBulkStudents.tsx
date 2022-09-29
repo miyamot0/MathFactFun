@@ -51,7 +51,7 @@ export default function CreateBulkStudents() {
     StudentCreateSingleInitialState
   );
 
-  const CoreOperations = Operations.filter((op) => op.value !== "N/A");
+  const CoreOperations = Operations.filter((op) => op.value !== "NA");
 
   return (
     <div style={{ maxWidth: "600px" }} className="create-bulk-student-page">

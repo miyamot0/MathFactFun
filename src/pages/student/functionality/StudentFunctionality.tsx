@@ -28,7 +28,7 @@ export const StudentCreateSingleInitialState: StudentCreateState = {
   FormError: undefined,
   DueDate: "",
   CurrentApproach: {
-    value: "N/A",
+    value: "NA",
     label: "No Current Intervention",
   } as SingleOptionType,
   CurrentGrade: {
@@ -36,7 +36,7 @@ export const StudentCreateSingleInitialState: StudentCreateState = {
     label: "Kindergarten"
   } as SingleOptionType,
   CurrentTarget: {
-    value: "N/A",
+    value: "NA",
     label: "No Current Target",
   } as SingleOptionType,
   CurrentErrorApproach: {

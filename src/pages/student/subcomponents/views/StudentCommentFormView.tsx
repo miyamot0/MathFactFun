@@ -13,6 +13,15 @@ import { timestamp } from "../../../../firebase/config";
 import { StudentDataInterface } from "../../interfaces/StudentInterfaces";
 import { CommentTextBehavior } from "../functionality/StudentCommentBehavior";
 
+export interface StudentCommentFormViewInterface {
+  newComment: string;
+  user: firebase.User | null;
+  student: StudentDataInterface;
+  dispatch: React.Dispatch<any>;
+  updateDocument: (id: string, updates: any) => Promise<void>;
+  response: FirestoreState;
+}
+
 export default function StudentCommentFormView({
   newComment,
   user,
@@ -20,14 +29,7 @@ export default function StudentCommentFormView({
   dispatch,
   updateDocument,
   response,
-}: {
-  newComment: string;
-  user: firebase.User | null;
-  student: StudentDataInterface;
-  dispatch: React.Dispatch<any>;
-  updateDocument: (id: string, updates: any) => Promise<void>;
-  response: FirestoreState;
-}): JSX.Element {
+}: StudentCommentFormViewInterface): JSX.Element {
   return (
     <form className="add-comment">
       <span>Add a new note:</span>

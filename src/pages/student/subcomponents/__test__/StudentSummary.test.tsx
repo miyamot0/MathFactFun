@@ -62,7 +62,7 @@ const mockData = {
     factsTargeted: [],
 
     creator: '456',
-    currentApproach: 'N/A',
+    currentApproach: 'NA',
     currentErrorApproach: '',
     currentGrade: '',
     currentSRApproach: '',

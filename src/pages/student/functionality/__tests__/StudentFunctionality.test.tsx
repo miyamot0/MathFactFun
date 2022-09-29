@@ -303,7 +303,7 @@ describe("Create Student Form: Reducer", () => {
 
   it("Should adjust to changes in Current Benchmarking", async () => {
     const newCurrentValue = [
-      { value: "N/A", label: "No Current Target" } as SingleOptionType,
+      { value: "NA", label: "No Current Target" } as SingleOptionType,
     ];
 
     await act(async () => {

@@ -6,10 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-/**
- * Student summary page
- */
-
 import React from "react";
 import { useParams } from "react-router-dom";
 import { useFirebaseDocumentTyped } from "../../firebase/hooks/useFirebaseDocument";

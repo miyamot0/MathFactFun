@@ -19,7 +19,7 @@ export const Grades = [
 
 // eslint-disable-next-line
 export const Operations = [
-  { value: "N/A", label: "No Current Target" },
+  { value: "NA", label: "No Current Target" },
   { value: "Addition", label: "Addition-Sums to 18" },
   { value: "Subtraction", label: "Subtraction-Lessing From 18" },
   { value: "Multiplication", label: "Multiplication-Single Digit" },
@@ -35,7 +35,7 @@ export const BenchmarkSets = [
 
 // eslint-disable-next-line
 export const InterventionApproach = [
-  { value: "N/A", label: "No Current Intervention" },
+  { value: "NA", label: "No Current Intervention" },
   { value: "CoverCopyCompare", label: "Cover Copy Compare" },
   //{ value: "Cloze", label: "Cloze" },
   { value: "TapedProblems", label: "Taped Problems" },

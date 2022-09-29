@@ -79,11 +79,11 @@ export function practiceFilterMap(docs: StudentDataInterface[] | null, usr: fire
         return docs.filter((document) => {
             switch (filter) {
                 case "All":
-                    return document.currentApproach !== "N/A";
+                    return document.currentApproach !== "NA";
                 case "Mine":
                     return (
                         document.creator === usr.uid &&
-                        document.currentApproach !== "N/A"
+                        document.currentApproach !== "NA"
                     );
                 case "K":
                 case "1st":
@@ -94,10 +94,10 @@ export function practiceFilterMap(docs: StudentDataInterface[] | null, usr: fire
                 case "6th":
                     return (
                         document.currentGrade === filter &&
-                        document.currentApproach !== "N/A"
+                        document.currentApproach !== "NA"
                     );
                 default:
-                    return document.currentApproach !== "N/A";
+                    return document.currentApproach !== "NA";
             }
         });
     }

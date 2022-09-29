@@ -277,7 +277,7 @@ export function GetApproachStringFromLabel(
   | "Cloze"
   | "Taped Problems"
   | "Explicit Timing"
-  | "N/A"
+  | "NA"
   | "" {
   switch (label) {
     case "CoverCopyCompare":
@@ -288,8 +288,8 @@ export function GetApproachStringFromLabel(
       return "Taped Problems";
     case "ExplicitTiming":
       return "Explicit Timing";
-    case "N/A":
-      return "N/A";
+    case "NA":
+      return "NA";
     default:
       return "";
   }
