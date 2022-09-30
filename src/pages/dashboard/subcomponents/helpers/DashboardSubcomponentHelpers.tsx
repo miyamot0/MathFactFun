@@ -55,17 +55,18 @@ export function checkIfDateCurrent(
   return dateNow.getTime() <= dateObj.getTime() ? true : false;
 }
 
-/** dynamicallyGenerateLink
+export interface InterventionRoutingLinkInterface {
+  student: StudentDataInterface;
+}
+
+/** InterventionRoutingLink
  *
  * Build out a widget based on whether student has programming
  *
  * @param {StudentDataInterface} student student instance
  * @returns {JSX.Element}
  */
-export function dynamicallyGenerateLink(
-  student: StudentDataInterface,
-  callback: any
-): JSX.Element {
+export function InterventionRoutingLink({ student }: InterventionRoutingLinkInterface): JSX.Element {
   if (student.factsTargeted && student.factsTargeted.length > 0) {
     return (
       <Link
@@ -81,7 +82,7 @@ export function dynamicallyGenerateLink(
     );
   } else {
     return (
-      <Link to={"#!"} key={student.id} onClick={callback}>
+      <Link to={"#!"} key={student.id} onClick={() => { warnNoProblemsAssigned() }}>
         {student.name} ({student.currentGrade})
       </Link>
     );
@@ -92,7 +93,7 @@ export function dynamicallyGenerateLink(
  *
  */
 export function warnNoProblemsAssigned() {
-  alert("No math problems have been added to the targeted list yet.");
+  window.alert("No math problems have been added to the targeted list yet.");
 }
 
 /** checkIfCompletedBenchmark

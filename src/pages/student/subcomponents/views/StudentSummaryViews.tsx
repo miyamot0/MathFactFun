@@ -34,8 +34,6 @@ export interface ShowAdminButtonInterface {
 export function ShowSpecificOutcomesButton({ student }: ShowButtonInterface): JSX.Element {
   const hasATarget = student.currentApproach !== "NA";
 
-  console.log(student)
-
   if (hasATarget) {
     return (
       <Link

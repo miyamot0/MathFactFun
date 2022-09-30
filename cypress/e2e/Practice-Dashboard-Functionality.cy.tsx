@@ -34,7 +34,6 @@ describe("Practice Dashboard, after authenticating", () => {
         cy.contains("Intervention Dashboard");
     });
 
-    /*
     it("Should work with filter list", () => {
         const filterButtons = cy.get('button.student-filter-btn');
 
@@ -45,14 +44,23 @@ describe("Practice Dashboard, after authenticating", () => {
         filterButtons.filter(':contains(Mine)').click()
     })
 
-    it("Should redirect to individual student page [No ADMIN]", () => {
-        cy.get('div.student-list-card').within((card) => {
+    it("Should redirect to individual practice page [No ADMIN]", () => {
+        const stub = cy.stub()
+        cy.on('window:alert', stub)
+
+        cy.get('div.practice-list-card').within((card) => {
             cy.wrap(card)
                 .get('a')
                 .should('have.length', 1)
-                .wait(100)
+                .wait(250)
                 .click()
+                .wait(250)
+                .then(() => {
+                    expect(stub.getCall(0)).to.be.calledWith('No math problems have been added to the targeted list yet.')
+                })
+
         });
-    })
-    */
+    });
+
+    // TODO: add in after set creator fixed?
 });

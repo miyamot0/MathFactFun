@@ -8,8 +8,7 @@
 
 import React from "react";
 import {
-  checkIfDateCurrent,
-  dynamicallyGenerateLink,
+  InterventionRoutingLink,
   warnNoProblemsAssigned,
 } from "./helpers/DashboardSubcomponentHelpers";
 import { GetApproachStringFromLabel } from "../../../utilities/LabelHelper";
@@ -18,41 +17,36 @@ import { PracticeListInterface } from "../types/DashboardTypes";
 import "./styles/PracticeList.css";
 import PracticeStatusView from "./views/PracticeStatusView";
 
-export default function PracticeList({
-  students,
-}: PracticeListInterface): JSX.Element {
+export default function PracticeList({ students, }: PracticeListInterface): JSX.Element {
+
+  const addedPaddingStyle = {
+    marginTop: "5px",
+  }
+
   if (students === null || students.length === 0) {
-    return <p className="no-practice-objects">No benchmarking targets</p>;
+    return <p className="no-practice-objects">No students with intervention programmed.</p>;
   } else {
     return (
       <div className="practice-list">
         {students.map((student) => (
           <div className="practice-list-card" key={student.id}>
-            {dynamicallyGenerateLink(student, warnNoProblemsAssigned)}
+            <InterventionRoutingLink student={student} />
+
             <hr />
-            <p
-              style={{
-                marginTop: "5px",
-              }}
-            >
-              <b>Approach:</b>{" "}
-              {GetApproachStringFromLabel(student.currentApproach)}
+
+            <p style={addedPaddingStyle}>
+              <b>Approach:</b>{` ${GetApproachStringFromLabel(student.currentApproach)}`}
             </p>
-            <p
-              style={{
-                marginTop: "5px",
-              }}
-            >
+
+            <p style={addedPaddingStyle}>
               <b>Target:</b> {student.currentTarget} (
               {student.factsTargeted.length} in Set)
             </p>
-            <p
-              style={{
-                marginTop: "5px",
-              }}
-            >
+
+            <p style={addedPaddingStyle}>
               <b>Items in Set:</b> {student.factsTargeted.length}
             </p>
+
             <br></br>
 
             <PracticeStatusView student={student} />

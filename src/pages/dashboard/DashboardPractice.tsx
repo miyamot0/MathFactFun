@@ -51,7 +51,7 @@ export default function DashboardPractice() {
     return (
       <div>
         <h2 className="global-page-title">Intervention Dashboard</h2>
-        {documents && <StudentFilter changeFilter={changeFilter} />}
+        <StudentFilter changeFilter={changeFilter} />
         {students && <PracticeList students={students} />}
       </div>
     );

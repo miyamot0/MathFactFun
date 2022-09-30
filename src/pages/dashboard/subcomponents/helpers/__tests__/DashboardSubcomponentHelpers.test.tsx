@@ -165,7 +165,7 @@ describe("dynamicallyGenerateLink", () => {
       </Link>
     );
 
-    const value = dynamicallyGenerateLink(mockData, warnNoProblemsAssigned);
+    const value = dynamicallyGenerateLink({ student: mockData, callback: warnNoProblemsAssigned });
 
     expect(value).toStrictEqual(expected);
   });
@@ -179,7 +179,7 @@ describe("dynamicallyGenerateLink", () => {
     const cb = jest.fn();
 
     const wrapper = mount(
-      <MemoryRouter>{dynamicallyGenerateLink(mockData2, cb)}</MemoryRouter>
+      <MemoryRouter>{dynamicallyGenerateLink({ student: mockData2, callback: cb })}</MemoryRouter>
     );
 
     wrapper.find(Link).simulate("click");
@@ -199,7 +199,7 @@ describe("warnNoProblemsAssigned", () => {
     confirmSpy.mockImplementation(jest.fn(() => true));
     alertSpy = jest.spyOn(global, "alert");
     // eslint-disable-next-line @typescript-eslint/no-empty-function
-    alertSpy.mockImplementation(() => {});
+    alertSpy.mockImplementation(() => { });
   });
 
   afterAll(() => {
