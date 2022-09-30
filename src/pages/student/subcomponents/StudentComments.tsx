@@ -42,7 +42,7 @@ export default function StudentComments({ student }: StudentWidgetInterface) {
         updateDocument={updateDocument} />
 
       <StudentCommentFormView
-        newComment={state.Comment}
+        state={state}
         user={user}
         student={student}
         dispatch={dispatch}

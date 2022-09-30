@@ -6,15 +6,16 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from "react";
+import React, { FormEvent } from "react";
 import firebase from "firebase";
 import { FirestoreState } from "../../../../firebase/interfaces/FirebaseInterfaces";
 import { timestamp } from "../../../../firebase/config";
 import { StudentDataInterface } from "../../interfaces/StudentInterfaces";
 import { CommentTextBehavior } from "../functionality/StudentCommentBehavior";
+import { CommentTextInterface } from "../types/CommentTypes";
 
 export interface StudentCommentFormViewInterface {
-  newComment: string;
+  state: CommentTextInterface;
   user: firebase.User | null;
   student: StudentDataInterface;
   dispatch: React.Dispatch<any>;
@@ -23,15 +24,45 @@ export interface StudentCommentFormViewInterface {
 }
 
 export default function StudentCommentFormView({
-  newComment,
+  state,
   user,
   student,
   dispatch,
   updateDocument,
   response,
 }: StudentCommentFormViewInterface): JSX.Element {
+
+  async function commentSubmission(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (user === null) {
+      return;
+    }
+
+    let nameCheck = user.displayName ?? "";
+    nameCheck = nameCheck.trim().length === 0 ? "Unnamed" : nameCheck;
+
+    const usersComment = {
+      displayName: nameCheck,
+      content: state.Comment,
+      createdAt: timestamp.fromDate(new Date()),
+      createdBy: user.uid,
+      id: Math.random(),
+    };
+
+    await updateDocument(student.id as string, {
+      comments: [...student.comments, usersComment],
+    });
+
+    if (!response.error) {
+      dispatch({
+        type: CommentTextBehavior.UpdateComment,
+        payload: "",
+      });
+    }
+  }
+
   return (
-    <form className="add-comment">
+    <form className="add-comment" onSubmit={commentSubmission}>
       <span>Add a new note:</span>
       <textarea
         required
@@ -41,35 +72,11 @@ export default function StudentCommentFormView({
             payload: event.target.value,
           })
         }
-        value={newComment}
+        value={state.Comment}
       ></textarea>
       <button
         className="global-btn button-padding"
-        onClick={async () => {
-          if (user === null) {
-            return;
-          }
-
-          const usersComment = {
-            displayName: user.displayName,
-            content: newComment,
-            createdAt: timestamp.fromDate(new Date()),
-            createdBy: user.uid,
-            id: Math.random(),
-          };
-
-          await updateDocument(student.id as string, {
-            comments: [...student.comments, usersComment],
-          });
-
-          if (!response.error) {
-            dispatch({
-              type: CommentTextBehavior.UpdateComment,
-              payload: "",
-            });
-          }
-        }}
-      >
+        type="submit">
         Add Note
       </button>
     </form>
