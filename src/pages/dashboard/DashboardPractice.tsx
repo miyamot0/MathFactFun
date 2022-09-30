@@ -15,8 +15,8 @@ import StudentFilter from "./functionality/StudentFilter";
 import PracticeList from "./subcomponents/PracticeList";
 import { StudentDataInterface } from "../student/interfaces/StudentInterfaces";
 import {
-  dashboardGenerateError,
-  dashboardLoadingError,
+  DashboardErrorMessage,
+  DashboardLoadingMessage,
   practiceFilterMap,
 } from "./helpers/DashboardHelpers";
 
@@ -31,6 +31,7 @@ export default function DashboardPractice() {
   );
 
   const [filter, setFilter] = useState("Mine");
+  const DataType = "Intervention";
 
   /** changeFilter
    *
@@ -45,7 +46,7 @@ export default function DashboardPractice() {
   const students = practiceFilterMap(documents, user, filter);
 
   if (error) {
-    return dashboardGenerateError(error);
+    return <DashboardErrorMessage documentError={error} dataType={DataType} />
   } else if (documents !== null && error === undefined) {
     return (
       <div>
@@ -55,6 +56,6 @@ export default function DashboardPractice() {
       </div>
     );
   } else {
-    return dashboardLoadingError(error);
+    return <DashboardLoadingMessage documentError={error} dataType={DataType} />;
   }
 }

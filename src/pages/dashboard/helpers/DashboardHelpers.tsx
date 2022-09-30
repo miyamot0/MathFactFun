@@ -10,27 +10,34 @@ import React from "react"
 import firebase from "firebase"
 import { StudentDataInterface } from "../../student/interfaces/StudentInterfaces"
 
-/** dashboardGenerateError
+export interface DashboardMessageInterface {
+    documentError: string | undefined,
+    dataType: string
+}
+
+/** DashboardErrorMessage
  * 
  * @returns {JSX.Element}
  */
-export function dashboardGenerateError(documentError: string | undefined): JSX.Element {
+export function DashboardErrorMessage({ documentError, dataType }: DashboardMessageInterface): JSX.Element {
     if (!documentError) {
         throw Error("Unexpected undefined")
     }
 
-    return <div className="error">{documentError}</div>
+    return <div className="error">`Error loading ${dataType} data: ${documentError}`</div>
 }
 
-/** dashboardLoadingError
+
+
+/** DashboardLoadingMessage
  * 
  * @returns {JSX.Element}
  */
-export function dashboardLoadingError(documentError: string | undefined): JSX.Element {
+export function DashboardLoadingMessage({ documentError, dataType }: DashboardMessageInterface): JSX.Element {
     if (documentError) {
         throw Error("Unexpected error found")
     }
-    return <div className="loading">Loading benchmark data...</div>
+    return <div className="loading">`Loading ${dataType} data...`</div>
 }
 
 /** studentFilterMap

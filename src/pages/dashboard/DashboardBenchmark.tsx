@@ -13,8 +13,8 @@ import { useFirebaseDocumentTyped } from "../../firebase/hooks/useFirebaseDocume
 import { RoutedIdParam } from "../../interfaces/RoutingInterfaces";
 import { StudentDataInterface } from "../student/interfaces/StudentInterfaces";
 import {
-  dashboardGenerateError,
-  dashboardLoadingError,
+  DashboardErrorMessage,
+  DashboardLoadingMessage,
 } from "./helpers/DashboardHelpers";
 
 // styles
@@ -28,9 +28,10 @@ export default function DashboardBenchmark() {
       collectionString: "students",
       idString: id,
     });
+  const DataType = "Benchmark";
 
   if (documentError) {
-    return dashboardGenerateError(documentError);
+    return <DashboardErrorMessage documentError={documentError} dataType={DataType} />
   } else if (document !== null && documentError === undefined) {
     return (
       <div>
@@ -42,6 +43,6 @@ export default function DashboardBenchmark() {
     );
   }
   else {
-    return dashboardLoadingError(documentError);
+    return <DashboardLoadingMessage documentError={documentError} dataType={DataType} />;
   }
 }

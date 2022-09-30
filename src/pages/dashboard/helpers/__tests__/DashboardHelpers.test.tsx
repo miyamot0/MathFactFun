@@ -78,24 +78,24 @@ function generateGradedObject(grade: string, uid: string): StudentDataInterface 
 describe('dashboardGenerateError', () => {
     it('Should work well with string', () => {
         const value = 'err';
-        expect(() => dashboardGenerateError(value)).not.toThrow(Error("Unexpected undefined"));
+        expect(() => dashboardGenerateError({ documentError: value })).not.toThrow(Error("Unexpected undefined"));
     })
 
     it('Should fail with undefined', () => {
         const value = undefined;
-        expect(() => dashboardGenerateError(value)).toThrow(Error("Unexpected undefined"));
+        expect(() => dashboardGenerateError({ documentError: value })).toThrow(Error("Unexpected undefined"));
     })
 })
 
 describe('dashboardLoadingError', () => {
     it('Should fail with string', () => {
         const value = 'err';
-        expect(() => dashboardLoadingError(value)).toThrow(Error("Unexpected error found"));
+        expect(() => dashboardLoadingError({ documentError: value })).toThrow(Error("Unexpected error found"));
     })
 
     it('Should work well withundefined', () => {
         const value = undefined;
-        expect(() => dashboardLoadingError(value)).not.toThrow(Error("Unexpected error found"));
+        expect(() => dashboardLoadingError({ documentError: value })).not.toThrow(Error("Unexpected error found"));
     })
 })
 

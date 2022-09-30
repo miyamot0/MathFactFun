@@ -13,9 +13,9 @@ import { useState } from "react";
 import { useFirebaseCollectionTyped } from "../../firebase/hooks/useFirebaseCollection";
 import { useAuthorizationContext } from "../../context/hooks/useAuthorizationContext";
 import { StudentDataInterface } from "../student/interfaces/StudentInterfaces";
-
 import {
-  dashboardGenerateError,
+  DashboardErrorMessage,
+  DashboardLoadingMessage,
   studentFilterMap,
 } from "./helpers/DashboardHelpers";
 
@@ -30,6 +30,7 @@ export default function DashboardDisplay() {
   );
 
   const [filter, setFilter] = useState("Mine");
+  const DataType = "Student";
 
   /** changeFilter
    *
@@ -43,12 +44,18 @@ export default function DashboardDisplay() {
 
   const students = studentFilterMap(documents, user, filter);
 
-  return (
-    <div>
-      <h2 className="global-page-title">Student Dashboard</h2>
-      {error && dashboardGenerateError(error)}
-      {documents && <StudentFilter changeFilter={changeFilter} />}
-      {students && <StudentList students={students} />}
-    </div>
-  );
+  if (error) {
+    return <DashboardErrorMessage documentError={error} dataType={DataType} />
+  } else if (document !== null && error === undefined) {
+    return (
+      <div>
+        <h2 className="global-page-title">Student Dashboard</h2>
+        <StudentFilter changeFilter={changeFilter} />
+        {students && <StudentList students={students} />}
+      </div>
+    );
+  }
+  else {
+    return <DashboardLoadingMessage documentError={error} dataType={DataType} />;
+  }
 }
