@@ -37,9 +37,10 @@ import SimpleProblemItemLayout from "./subcomponents/layouts/SimpleProblemItemLa
 import TopHeaderTimed from "./subcomponents/layouts/TopHeaderTimed";
 import ModalErrorCorrection from "./subcomponents/layouts/ModalErrorCorrectionLayout";
 
+import { developmentConsoleLog } from "../../utilities/LoggingTools";
+
 // styles
 import "./styles/ExplicitTiming.css";
-import { developmentConsoleLog } from "../../utilities/LoggingTools";
 
 export default function ExplicitTiming() {
   const { id, target } = useParams<RoutedIdTargetParam>();
@@ -99,7 +100,7 @@ export default function ExplicitTiming() {
   useEffect(() => {
     if (document && !state.LoadedData) {
       completeLoadingDispatch({
-        intervention: InterventionFormat.CoverCopyCompare,
+        intervention: InterventionFormat.ExplicitTiming,
         workingData: document.factsTargeted,
         operatorSymbol: GetOperatorFromLabel(document.currentTarget),
         secondsLeft: document.minForTask * 60,

@@ -11,22 +11,27 @@ import { StudentDataInterface } from "../../student/interfaces/StudentInterfaces
 import { InterventionState } from "../interfaces/InterventionInterfaces";
 import { completeLoadingDispatch } from "./DispatchingHelpers";
 
-export function GeneralDataLoader({ intervention, state, document, dispatch }:
-    {
-        intervention: string;
-        state: InterventionState;
-        document: StudentDataInterface | null;
-        dispatch: any;
-    }) {
-    if (document !== null && state.LoadedData === false) {
-        completeLoadingDispatch({
-            intervention: intervention,
-            workingData: document.factsTargeted,
-            operatorSymbol: GetOperatorFromLabel(document.currentTarget),
-            dispatch,
-        });
-    }
-    else {
-        return;
-    }
+export interface GeneralDataLoaderInterface {
+  intervention: string;
+  state: InterventionState;
+  document: StudentDataInterface | null;
+  dispatch: any;
+}
+
+export function GeneralDataLoader({
+  intervention,
+  state,
+  document,
+  dispatch,
+}: GeneralDataLoaderInterface) {
+  if (document !== null && state.LoadedData === false) {
+    completeLoadingDispatch({
+      intervention: intervention,
+      workingData: document.factsTargeted,
+      operatorSymbol: GetOperatorFromLabel(document.currentTarget),
+      dispatch,
+    });
+  } else {
+    return;
+  }
 }

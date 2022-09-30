@@ -8,9 +8,9 @@
 
 .stimulus-block-wrapper {
   display: grid;
-  column-gap: 10px;
-  row-gap: 10px;
-  grid-gap: 10px;
+  column-gap: 5px;
+  row-gap: 5px;
+  grid-gap: 5px;
   height: 80%;
   margin-left: 20%;
   margin-right: 20%;

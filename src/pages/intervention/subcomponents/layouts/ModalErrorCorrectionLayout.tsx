@@ -8,6 +8,7 @@
 
 import React from "react";
 import Modal from "react-modal";
+import { ModalCloseButton } from "../../../../components/subcomponents/NavbarButtonCloseModal";
 
 import { ErrorModalCustomStyle } from "../styles/ModalStyles";
 
@@ -32,15 +33,7 @@ export default function ModalErrorCorrection({
       <div style={{ marginTop: "5px", marginBottom: "10px" }}>
         Close this window, and then try again.
       </div>
-      <button
-        className="modal-close"
-        style={{ float: "right" }}
-        onClick={() => {
-          closeModal();
-        }}
-      >
-        Close
-      </button>
+      <ModalCloseButton closeModal={closeModal} />
     </Modal>
   );
 }

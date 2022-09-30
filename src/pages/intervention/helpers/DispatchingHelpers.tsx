@@ -63,6 +63,7 @@ export function completeLoadingDispatch({
           LoadedData: true,
           OperatorSymbol: operatorSymbol,
           SecondsLeft: secondsLeft,
+          ShowButton: true,
         },
       });
 
@@ -78,6 +79,7 @@ export function completeLoadingDispatch({
             LoadedData: true,
             OperatorSymbol: operatorSymbol,
             SecondsLeft: secondsLeft,
+            ShowButton: false,
           },
         })
       );
@@ -91,6 +93,7 @@ export function completeLoadingDispatch({
           LoadedData: true,
           OperatorSymbol: operatorSymbol,
           SecondsLeft: secondsLeft,
+          ShowButton: true,
         },
       });
 

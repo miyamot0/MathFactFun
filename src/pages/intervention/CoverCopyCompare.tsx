@@ -27,15 +27,14 @@ import {
 import { RoutedIdTargetParam } from "../../interfaces/RoutingInterfaces";
 import { StudentDataInterface } from "../student/interfaces/StudentInterfaces";
 import {
-  checkLiNullUndefinedBlank,
   sharedButtonActionSequence,
   useEventListener,
 } from "./helpers/InterventionHelpers";
 
-// styles
-import "./styles/CoverCopyCompare.css";
 import { commonKeyListener } from "./helpers/KeyHandlingHelper";
 import { DispatchUpdateIntroduceItem } from "./interfaces/InterventionInterfaces";
+import { GeneralDataLoader } from "./helpers/LoadingHelpers";
+import { developmentConsoleLog } from "../../utilities/LoggingTools";
 import KeyPadLayout from "./subcomponents/layouts/KeyPadLayout";
 import ButtonLayout from "./subcomponents/layouts/ButtonLayout";
 import ProblemItemLayout from "./subcomponents/layouts/ProblemItemLayout";
@@ -43,8 +42,9 @@ import StimulusItemLayout from "./subcomponents/layouts/StimulusItemLayout";
 import ListViewLayout from "./subcomponents/layouts/ListViewLayout";
 import ModalErrorCorrection from "./subcomponents/layouts/ModalErrorCorrectionLayout";
 import TopHeader from "./subcomponents/layouts/TopHeader";
-import { GeneralDataLoader } from "./helpers/LoadingHelpers";
-import { developmentConsoleLog } from "../../utilities/LoggingTools";
+
+// styles
+import "./styles/CoverCopyCompare.css";
 
 export default function CoverCopyCompare() {
   const { id, target } = useParams<RoutedIdTargetParam>();
@@ -101,16 +101,16 @@ export default function CoverCopyCompare() {
   });
 
   // Fire once individual data loaded, just once
-  useEffect(
-    () =>
+  useEffect(() => {
+    if (document) {
       GeneralDataLoader({
         intervention: InterventionFormat.CoverCopyCompare,
         state,
         document,
         dispatch,
-      }),
-    [document]
-  );
+      });
+    }
+  }, [document]);
 
   /** captureItemClick
    *

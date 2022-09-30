@@ -104,6 +104,7 @@ export class DispatchUpdatePreLoadContent {
     LoadedData: boolean;
     OperatorSymbol: string;
     SecondsLeft: number;
+    ShowButton: boolean;
   };
   public DispatchUpdatePreLoadContent?: string;
 
@@ -117,6 +118,7 @@ export class DispatchUpdatePreLoadContent {
       LoadedData: boolean;
       OperatorSymbol: string;
       SecondsLeft: number;
+      ShowButton: boolean;
     };
   }) {
     this.type = InterventionActions.UpdateWithLoadedData;

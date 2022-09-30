@@ -42,35 +42,39 @@ export default function ButtonLayout({
   dispatch: any;
   className: string;
 }): JSX.Element {
+  //console.log("in ccc load");
+
   return (
     <div className={className}>
       <section>
-        <button
-          className="global-btn"
-          type="button"
-          onClick={(event) => {
-            if (checkIfSubmittedViaClick(event) === true) {
-              return;
-            } else {
-              sharedButtonActionSequence(
-                user,
-                id,
-                target,
-                approach,
-                document,
-                state,
-                openModal,
-                addDocument,
-                updateDocument,
-                addResponse,
-                history,
-                dispatch
-              );
-            }
-          }}
-        >
-          {state.ButtonText}
-        </button>
+        {state.ShowButton && (
+          <button
+            className="global-btn"
+            type="button"
+            onClick={(event) => {
+              if (checkIfSubmittedViaClick(event) === true) {
+                return;
+              } else {
+                sharedButtonActionSequence(
+                  user,
+                  id,
+                  target,
+                  approach,
+                  document,
+                  state,
+                  openModal,
+                  addDocument,
+                  updateDocument,
+                  addResponse,
+                  history,
+                  dispatch
+                );
+              }
+            }}
+          >
+            {state.ButtonText}
+          </button>
+        )}
       </section>
     </div>
   );
