@@ -33,7 +33,7 @@ export default function ModalErrorCorrection({
         Close this window, and then try again.
       </div>
       <button
-        className="global-btn "
+        className="modal-close"
         style={{ float: "right" }}
         onClick={() => {
           closeModal();

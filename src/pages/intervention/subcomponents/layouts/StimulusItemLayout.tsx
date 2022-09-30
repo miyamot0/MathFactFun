@@ -10,11 +10,13 @@ import React from "react";
 import { InterventionState } from "../../interfaces/InterventionInterfaces";
 import StimulusFrame from "../StimulusFrame";
 
+export interface StimulusItemLayoutInterface {
+  state: InterventionState;
+}
+
 export default function StimulusItemLayout({
   state,
-}: {
-  state: InterventionState;
-}): JSX.Element {
+}: StimulusItemLayoutInterface): JSX.Element {
   return (
     <div
       className="box1"

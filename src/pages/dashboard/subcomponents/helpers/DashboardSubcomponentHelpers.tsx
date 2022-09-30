@@ -66,7 +66,9 @@ export interface InterventionRoutingLinkInterface {
  * @param {StudentDataInterface} student student instance
  * @returns {JSX.Element}
  */
-export function InterventionRoutingLink({ student }: InterventionRoutingLinkInterface): JSX.Element {
+export function InterventionRoutingLink({
+  student,
+}: InterventionRoutingLinkInterface): JSX.Element {
   if (student.factsTargeted && student.factsTargeted.length > 0) {
     return (
       <Link
@@ -82,7 +84,13 @@ export function InterventionRoutingLink({ student }: InterventionRoutingLinkInte
     );
   } else {
     return (
-      <Link to={"#!"} key={student.id} onClick={() => { warnNoProblemsAssigned() }}>
+      <Link
+        to={"#!"}
+        key={student.id}
+        onClick={() => {
+          warnNoProblemsAssigned();
+        }}
+      >
         {student.name} ({student.currentGrade})
       </Link>
     );

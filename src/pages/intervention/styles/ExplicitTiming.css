@@ -76,3 +76,12 @@
   /* New */
   padding-top: 10px;
 }
+
+.equalsLine {
+  grid-column-start: 1 !important;
+  grid-column-end: 4 !important;
+  grid-row-start: 3 !important;
+  grid-row-end: 4 !important;
+  text-align: center;
+  background-color: black;
+}

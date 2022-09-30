@@ -179,22 +179,32 @@ export function populateColumnMetrics(
       accuracy = 0,
       latency = 0;
 
-    const releventResult = itemHistory.filter(
-      (obj) => obj.FactString === element.split(":")[0]
-    );
+    if (itemHistory && itemHistory.length > 0) {
+      const releventResult = itemHistory.filter(
+        (obj) => obj.FactString === element.split(":")[0]
+      );
 
-    if (releventResult && releventResult.length === 1) {
-      otrs = releventResult[0].Total;
-      accuracy = releventResult[0].AverageCorrect;
-      latency = releventResult[0].Latency;
+      if (releventResult && releventResult.length === 1) {
+        otrs = releventResult[0].Total;
+        accuracy = releventResult[0].AverageCorrect;
+        latency = releventResult[0].Latency;
 
-      return {
-        Answer: element.split(":")[0],
-        id: element,
-        OTRs: otrs,
-        Accuracy: accuracy,
-        Latency: latency,
-      };
+        return {
+          Answer: element.split(":")[0],
+          id: element,
+          OTRs: otrs,
+          Accuracy: accuracy,
+          Latency: latency,
+        };
+      } else {
+        return {
+          Answer: element.split(":")[0],
+          id: element,
+          OTRs: otrs,
+          Accuracy: accuracy,
+          Latency: latency,
+        };
+      }
     } else {
       return {
         Answer: element.split(":")[0],
@@ -237,50 +247,59 @@ export function getRelevantCCCSet(target: string): string[][] {
  * @param dispatch
  */
 export function populateCoreInformation(
-  documents: PerformanceDataInterface[],
+  documents: PerformanceDataInterface[] | null,
   target: string,
   callbackFromReducer: any,
   dispatch: any
 ) {
-  const mappedDocument = documents.map((doc) => {
-    return {
-      Items: doc.entries as FactDataInterface[],
-      Date: new Date(doc.dateTimeStart),
-      ShortDate: new Date(doc.dateTimeStart).toLocaleDateString("en-US"),
-      Errors: doc.errCount,
-      DigitsCorrect: doc.correctDigits,
-      DigitsCorrectInitial: doc.nCorrectInitial,
-      DigitsTotal: doc.totalDigits,
-      SessionDuration: doc.sessionDuration,
-    } as ItemMetrics;
-  });
+  if (documents && documents.length > 0) {
+    const mappedDocument = documents.map((doc) => {
+      return {
+        Items: doc.entries as FactDataInterface[],
+        Date: new Date(doc.dateTimeStart),
+        ShortDate: new Date(doc.dateTimeStart).toLocaleDateString("en-US"),
+        Errors: doc.errCount,
+        DigitsCorrect: doc.correctDigits,
+        DigitsCorrectInitial: doc.nCorrectInitial,
+        DigitsTotal: doc.totalDigits,
+        SessionDuration: doc.sessionDuration,
+      } as ItemMetrics;
+    });
 
-  // Pull out fact models alone, array of array
-  const itemSummaries: FactDataInterface[][] = mappedDocument.map(
-    (items) => items.Items
-  );
+    // Pull out fact models alone, array of array
+    const itemSummaries: FactDataInterface[][] = mappedDocument.map(
+      (items) => items.Items
+    );
 
-  const flatItemSummaries: FactDataInterface[] = itemSummaries.reduce(
-    (accumulator, value) => accumulator.concat(value)
-  );
+    const flatItemSummaries: FactDataInterface[] = itemSummaries.reduce(
+      (accumulator, value) => accumulator.concat(value)
+    );
 
-  const uniqueProblems: string[] = flatItemSummaries
-    .map((obj) => obj.factString)
-    .filter(OnlyUnique)
-    .sort();
+    const uniqueProblems: string[] = flatItemSummaries
+      .map((obj) => obj.factString)
+      .filter(OnlyUnique)
+      .sort();
 
-  const uniqueQuants = generateItemHistory(
-    uniqueProblems,
-    flatItemSummaries,
-    target
-  );
+    const uniqueQuants = generateItemHistory(
+      uniqueProblems,
+      flatItemSummaries,
+      target
+    );
 
-  dispatch({ type: DragDropActions.SetItemHistory, payload: uniqueQuants });
+    dispatch({ type: DragDropActions.SetItemHistory, payload: uniqueQuants });
 
-  dispatch({
-    type: DragDropActions.LoadCallback,
-    payload: callbackFromReducer,
-  });
+    dispatch({
+      type: DragDropActions.LoadCallback,
+      payload: callbackFromReducer,
+    });
+  } else {
+    dispatch({ type: DragDropActions.SetItemHistory, payload: undefined });
+
+    dispatch({
+      type: DragDropActions.LoadCallback,
+      payload: callbackFromReducer,
+    });
+  }
 }
 
 /** generateColumnSnapshotPreview

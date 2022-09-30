@@ -10,12 +10,12 @@ import { useEffect, useState, useRef } from "react";
 import { projectFirestore } from "../config";
 import firebase from "firebase";
 
-import {
-  WhereFilterOp,
-  OrderByDirection,
-} from "@firebase/firestore-types";
+import { WhereFilterOp, OrderByDirection } from "@firebase/firestore-types";
 import { CollectionInputInterface } from "../interfaces/FirebaseInterfaces";
-import { onSnapshotEventCollection, onSnapshotEventCollectionErr } from "./helpers/FirestoreSnapshotHelpers";
+import {
+  onSnapshotEventCollection,
+  onSnapshotEventCollectionErr,
+} from "./helpers/FirestoreSnapshotHelpers";
 
 /** useFirebaseCollection
  *
@@ -24,7 +24,7 @@ import { onSnapshotEventCollection, onSnapshotEventCollectionErr } from "./helpe
  * @param {string} collectionString collection address
  * @param {string[]} queryString string array for query
  * @param {string[]} orderString string array for order
- * @returns {useFirebaseCollectionTyped}
+ * @returns {documents: T[] | null; error: string | undefined; }
  */
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export function useFirebaseCollectionTyped<T>({
@@ -42,7 +42,6 @@ export function useFirebaseCollectionTyped<T>({
   const orderBy = useRef(orderString).current;
 
   useEffect(() => {
-
     let ref: firebase.firestore.CollectionReference<firebase.firestore.DocumentData> =
       projectFirestore.collection(collectionString.trim());
 
@@ -66,11 +65,12 @@ export function useFirebaseCollectionTyped<T>({
     }
 
     const unsubscribe = ref.onSnapshot(
-      (snapshot) => onSnapshotEventCollection<T>(snapshot, setDocuments, setError),
-      (err) => onSnapshotEventCollectionErr(err, setError));
+      (snapshot) =>
+        onSnapshotEventCollection<T>(snapshot, setDocuments, setError),
+      (err) => onSnapshotEventCollectionErr(err, setError)
+    );
 
     return () => unsubscribe();
-
   }, [collectionString, query, orderBy]);
 
   return { documents, error };

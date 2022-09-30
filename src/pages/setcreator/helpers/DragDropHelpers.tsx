@@ -256,24 +256,29 @@ export function resetItems(state: ColumnsObject, dispatch: any): void {
 }
 
 /** loadCreatorMathFacts
- * 
- * @param document 
- * @param state 
- * @param dispatch 
+ *
+ * @param document
+ * @param state
+ * @param dispatch
  */
-export function loadCreatorMathFacts(document: StudentDataInterface,
+export function loadCreatorMathFacts(
+  document: StudentDataInterface,
   state: ColumnsObject,
-  dispatch: any) {
-
+  dispatch: any
+) {
+  //TODO: address this, its a resource nightmare
   const mapped: FactStructure[][] = loadMathFacts(document);
-  const mappedReduced: FactStructure[] = mapped.reduce(
-    (accumulator, value) => accumulator.concat(value)
+  const mappedReduced: FactStructure[] = mapped.reduce((accumulator, value) =>
+    accumulator.concat(value)
   );
 
   const flattened: SetItem[] = mappedReduced.map((entry: FactStructure) => {
-    const releventResult = state.ItemHistory.filter(
-      (obj: ItemHistory) => obj.FactString === entry.Answer
-    );
+    console.log(state.ItemHistory);
+    const releventResult = !state.ItemHistory
+      ? undefined
+      : state.ItemHistory.filter(
+          (obj: ItemHistory) => obj.FactString === entry.Answer
+        );
 
     if (releventResult && releventResult.length === 1) {
       return {
@@ -282,8 +287,7 @@ export function loadCreatorMathFacts(document: StudentDataInterface,
         Accuracy: releventResult[0].AverageCorrect,
         Latency: releventResult[0].Latency,
       } as SetItem;
-    }
-    else {
+    } else {
       return {
         ...entry,
         OTRs: 0,
@@ -340,17 +344,21 @@ export function loadCreatorMathFacts(document: StudentDataInterface,
 }
 
 /** onChangedSetTargetHandler
- * 
- * @param option 
- * @param document 
- * @param state 
- * @param setAssignedSet 
- * @param dispatch 
- * @returns 
+ *
+ * @param option
+ * @param document
+ * @param state
+ * @param setAssignedSet
+ * @param dispatch
+ * @returns
  */
-export function onChangedSetTargetHandler(option: SingleOptionType | null, document: StudentDataInterface | null,
-  state: ColumnsObject, setAssignedSet: any, dispatch: any) {
-
+export function onChangedSetTargetHandler(
+  option: SingleOptionType | null,
+  document: StudentDataInterface | null,
+  state: ColumnsObject,
+  setAssignedSet: any,
+  dispatch: any
+) {
   if (!option) {
     return;
   } else {
@@ -360,13 +368,17 @@ export function onChangedSetTargetHandler(option: SingleOptionType | null, docum
 }
 
 /** onChangedMovedTargetsHandler
- * 
- * @param option 
- * @param state 
- * @param dispatch 
- * @returns 
+ *
+ * @param option
+ * @param state
+ * @param dispatch
+ * @returns
  */
-export function onChangedMovedTargetsHandler(option: SingleOptionType | null, state: ColumnsObject, dispatch: any) {
+export function onChangedMovedTargetsHandler(
+  option: SingleOptionType | null,
+  state: ColumnsObject,
+  dispatch: any
+) {
   if (!option) {
     return;
   } else {
@@ -375,10 +387,12 @@ export function onChangedMovedTargetsHandler(option: SingleOptionType | null, st
 }
 
 /** generateSetTargetOptions
- * 
- * @param relevantFOFSets 
+ *
+ * @param relevantFOFSets
  */
-export function generateSetTargetOptions(relevantFOFSets: string[][]): SingleOptionType[] {
+export function generateSetTargetOptions(
+  relevantFOFSets: string[][]
+): SingleOptionType[] {
   return relevantFOFSets.map((_set, index) => {
     let label = "B";
     let valueAdjustment = 6;
@@ -395,8 +409,7 @@ export function generateSetTargetOptions(relevantFOFSets: string[][]): SingleOpt
 
     return {
       value: (index + 1).toString(),
-      label:
-        "Set: " + label + (index + 1 - valueAdjustment).toString(),
+      label: "Set: " + label + (index + 1 - valueAdjustment).toString(),
     } as SingleOptionType;
-  })
+  });
 }

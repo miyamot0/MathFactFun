@@ -38,7 +38,14 @@ import {
 } from "./helpers/SetCreatorHelpers";
 import { SingleOptionType } from "../../types/SharedComponentTypes";
 import { PerformanceDataInterface } from "../intervention/interfaces/InterventionInterfaces";
-import { generateSetTargetOptions, loadCreatorMathFacts, onChangedMovedTargetsHandler, onChangedSetTargetHandler, onDragEnd, resetItems } from "./helpers/DragDropHelpers";
+import {
+  generateSetTargetOptions,
+  loadCreatorMathFacts,
+  onChangedMovedTargetsHandler,
+  onChangedSetTargetHandler,
+  onDragEnd,
+  resetItems,
+} from "./helpers/DragDropHelpers";
 
 export default function SetCreator() {
   const { target, id } = useParams<RoutedIdTargetParam>();
@@ -47,11 +54,12 @@ export default function SetCreator() {
     idString: id,
   });
 
-  const { documents } = useFirebaseCollectionTyped<PerformanceDataInterface>({
-    collectionString: `performances/${target}/${id}`,
-    queryString: undefined,
-    orderString: undefined,
-  });
+  const { documents, error } =
+    useFirebaseCollectionTyped<PerformanceDataInterface>({
+      collectionString: `performances/${target}/${id}`,
+      queryString: undefined,
+      orderString: undefined,
+    });
 
   const { updateDocument, response } = useFirestore(
     "students",
@@ -67,64 +75,88 @@ export default function SetCreator() {
   );
 
   useEffect(() => {
-    if (documents && target) {
-      populateCoreInformation(documents, target, callbackFromReducer, dispatch);
-    }
+    //    if (documents && target) {
+    populateCoreInformation(documents, target, callbackFromReducer, dispatch);
+    //    } else if (!error && target) {
+    //      populateCoreInformation(undefined, target, callbackFromReducer, dispatch);
+    //    }
   }, [documents, target]);
 
   /** callbackFromReducer
-   * 
-   * @param callbackColumns 
-   * @param callbackColumnsPre 
-   * @returns 
+   *
+   * @param callbackColumns
+   * @param callbackColumnsPre
+   * @returns
    */
-  async function callbackFromReducer(callbackColumns: ColumnObject, callbackColumnsPre: ColumnObject) {
-    if (!checkIfNullUndefinedOrEmpty(callbackColumns) && !checkIfNullUndefinedOrEmpty(callbackColumnsPre)) {
-
-      const comparisonObjects = generateColumnSnapshotPreview(callbackColumns, callbackColumnsPre)
+  async function callbackFromReducer(
+    callbackColumns: ColumnObject,
+    callbackColumnsPre: ColumnObject
+  ) {
+    if (
+      !checkIfNullUndefinedOrEmpty(callbackColumns) &&
+      !checkIfNullUndefinedOrEmpty(callbackColumnsPre)
+    ) {
+      const comparisonObjects = generateColumnSnapshotPreview(
+        callbackColumns,
+        callbackColumnsPre
+      );
 
       // Note: expensive
-      if (JSON.stringify(comparisonObjects.Current) ===
-        JSON.stringify(comparisonObjects.Preview)) {
+      if (
+        JSON.stringify(comparisonObjects.Current) ===
+        JSON.stringify(comparisonObjects.Preview)
+      ) {
         return;
-      }
-      else {
-        await saveUpdatedDataToFirebase(id, comparisonObjects, updateDocument, response);
+      } else {
+        await saveUpdatedDataToFirebase(
+          id,
+          comparisonObjects,
+          updateDocument,
+          response
+        );
       }
     } else {
-      return
+      return;
     }
   }
 
   useEffect(() => {
-    if (document && !checkIfNullUndefinedOrEmpty(state.ItemHistory) && !state.LoadedData) {
+    if (document && !state.LoadedData) {
       loadCreatorMathFacts(document, state, dispatch);
     }
-  }, [document, documents, state.ItemHistory, state.columns, state.LoadedData]);
+  }, [document, documents, state.LoadedData]);
 
   const relevantFOFSets = getRelevantCCCSet(target);
 
   return (
-    <div style={SetContainer} className="set-creator-wrapper" data-testid="set-creator-wrapper">
+    <div
+      style={SetContainer}
+      className="set-creator-wrapper"
+      data-testid="set-creator-wrapper"
+    >
       <h2 style={TitleStyle}>
         Item Set: {document ? document.name : ""} (
         {document ? document.currentTarget : ""})
       </h2>
       <div style={SetEditForm}>
         <form>
-          <label htmlFor="target-set-field" >
-            Target an Existing Set:
-          </label>
+          <label htmlFor="target-set-field">Target an Existing Set:</label>
           <Select
             options={generateSetTargetOptions(relevantFOFSets)}
             name={"target-set-field"}
             inputId={"target-set-field"}
-            onChange={(option) => onChangedSetTargetHandler(option, document, state, setAssignedSet, dispatch)}
+            onChange={(option) =>
+              onChangedSetTargetHandler(
+                option,
+                document,
+                state,
+                setAssignedSet,
+                dispatch
+              )
+            }
             value={assignedSet}
           />
-          <label htmlFor="move-target-field">
-            Move Current Targets to:
-          </label>
+          <label htmlFor="move-target-field">Move Current Targets to:</label>
           <Select
             options={["Mastered", "Available", "Skipped"].map((opt) => {
               return {
@@ -134,14 +166,17 @@ export default function SetCreator() {
             })}
             name={"move-target-field"}
             inputId={"move-target-field"}
-            onChange={(option) => onChangedMovedTargetsHandler(option, state, dispatch)}
+            onChange={(option) =>
+              onChangedMovedTargetsHandler(option, state, dispatch)
+            }
           />
           <button
             className="global-btn global-btn-red"
             data-testid="set-creator-button"
             type="button"
             style={ClearBtn}
-            onClick={() => resetItems(state, dispatch)}>
+            onClick={() => resetItems(state, dispatch)}
+          >
             Reset Items
           </button>
         </form>

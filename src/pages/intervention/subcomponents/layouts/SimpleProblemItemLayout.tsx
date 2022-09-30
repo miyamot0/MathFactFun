@@ -10,11 +10,13 @@ import React from "react";
 import { InterventionState } from "../../interfaces/InterventionInterfaces";
 import SimpleProblemFrame from "../SimpleProblemFrame";
 
+export interface SimpleProblemItemLayoutInterface {
+  state: InterventionState;
+}
+
 export default function SimpleProblemItemLayout({
   state,
-}: {
-  state: InterventionState;
-}): JSX.Element {
+}: SimpleProblemItemLayoutInterface): JSX.Element {
   return (
     <div
       className="box2ET"
