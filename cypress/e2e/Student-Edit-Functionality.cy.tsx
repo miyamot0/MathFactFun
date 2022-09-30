@@ -9,64 +9,54 @@
 import * as authUser from "../fixtures/auth-user.json";
 
 describe("Basic Navigation, after authenticating", () => {
-    beforeEach(() => {
-        cy.restoreLocalStorage();
-    });
+  beforeEach(() => {
+    cy.restoreLocalStorage();
+  });
 
-    afterEach(() => {
-        cy.saveLocalStorage();
-    });
+  afterEach(() => {
+    cy.saveLocalStorage();
+  });
 
-    it("Should successfully log in", () => {
-        cy.viewport(1920, 1080)
+  it("Should successfully log in", () => {
+    const { email, password } = authUser;
+    cy.login(email, password);
 
-        const { email, password } = authUser;
-        cy.login(email, password);
+    cy.visit(`/student/${authUser["student-uid"]}`);
 
-        cy.visit(`/student/${authUser["student-uid"]}`);
+    cy.contains("Student Settings");
+  });
 
-        cy.contains("Student Settings");
-    });
+  it("Should navigate successfully to areas", () => {
+    cy.get("button.global-btn")
+      .contains("Overall Math")
+      .should("have.length", 1)
+      .click()
+      .wait(2000);
 
-    it("Should navigate successfully to areas", () => {
-        cy.get('button.global-btn')
-            .contains('Overall Math')
-            .should('have.length', 1)
-            .click()
-            .wait(2000);
+    cy.contains("Benchmark Scores (Overall Fluency)").go("back").wait(1000);
 
-        cy.contains('Benchmark Scores (Overall Fluency)')
-            .go('back')
-            .wait(1000)
+    cy.get("button.global-btn")
+      .contains("Intervention-specific Targets")
+      .should("have.length", 1)
+      .click()
+      .wait(2000);
 
-        cy.get('button.global-btn')
-            .contains('Intervention-specific Targets')
-            .should('have.length', 1)
-            .click()
-            .wait(2000);
+    cy.contains("Current Progress").go("back").wait(1000);
 
-        cy.contains('Current Progress')
-            .go('back')
-            .wait(1000)
+    cy.get("button.global-btn")
+      .contains("Student Settings")
+      .should("have.length", 1)
+      .click()
+      .wait(2000);
 
-        cy.get('button.global-btn')
-            .contains('Student Settings')
-            .should('have.length', 1)
-            .click()
-            .wait(2000)
+    cy.contains("Edit current student").go("back").wait(1000);
 
-        cy.contains('Edit current student')
-            .go('back')
-            .wait(1000)
+    cy.get("button.global-btn")
+      .contains("Targeted Item Sets")
+      .should("have.length", 1)
+      .click()
+      .wait(2000);
 
-        cy.get('button.global-btn')
-            .contains('Targeted Item Sets')
-            .should('have.length', 1)
-            .click()
-            .wait(2000)
-
-        cy.contains('Item Set:')
-            .go('back')
-            .wait(1000)
-    })
+    cy.contains("Item Set:").go("back").wait(1000);
+  });
 });

@@ -18,8 +18,6 @@ describe("Basic Navigation, after authenticating", () => {
   });
 
   it("Should successfully log in, select CCC", () => {
-    cy.viewport(1920, 1080);
-
     const { email, password } = authUser;
     cy.login(email, password);
   });
@@ -32,7 +30,7 @@ describe("Basic Navigation, after authenticating", () => {
     cy.get("button.global-btn")
       .contains("Student Settings")
       .should("have.length", 1)
-      .wait(250)
+      .wait(1000)
       .click()
       .wait(2000);
 
@@ -47,15 +45,19 @@ describe("Basic Navigation, after authenticating", () => {
     //1 CCC
     //2 TP
     //3 ET
-    cy.get("#react-select-6-option-1").wait(250).click().wait(2000);
+    cy.get("#react-select-6-option-1").wait(1000).click().wait(2000);
 
     cy.get('input[role="combobox"]').eq(5).wait(1000).click().wait(2000);
 
     //0 Feedback every time
     //1 No feedback
-    cy.get("#react-select-7-option-0").wait(250).click().wait(2000);
+    cy.get("#react-select-7-option-0").wait(1000).click().wait(2000);
 
-    cy.get("button.global-btn").contains("Edit Student").wait(250).click();
+    cy.get("button.global-btn")
+      .contains("Edit Student")
+      .wait(1000)
+      .click()
+      .wait(5000);
   });
 
   it("Click button to enter into CCC", () => {
@@ -83,7 +85,7 @@ describe("Basic Navigation, after authenticating", () => {
       .wait(1000);
 
     ["7", "+", "7", "=", "1", "4"].forEach((val: string) => {
-      advanceButton.type(val).wait(250);
+      advanceButton.type(val).wait(1000);
     });
 
     advanceButton
@@ -105,7 +107,7 @@ describe("Basic Navigation, after authenticating", () => {
       .wait(1000);
 
     ["3", "+", "5", "=", "8"].forEach((val: string) => {
-      advanceButton.type(val).wait(250);
+      advanceButton.type(val).wait(1000);
     });
 
     advanceButton
@@ -127,7 +129,7 @@ describe("Basic Navigation, after authenticating", () => {
       .wait(1000);
 
     ["6", "+", "7", "=", "1", "3"].forEach((val: string) => {
-      advanceButton.type(val).wait(250);
+      advanceButton.type(val).wait(1000);
     });
 
     advanceButton
@@ -149,7 +151,7 @@ describe("Basic Navigation, after authenticating", () => {
       .wait(1000);
 
     ["5", "+", "3", "=", "8"].forEach((val: string) => {
-      advanceButton.type(val).wait(250);
+      advanceButton.type(val).wait(1000);
     });
 
     advanceButton
@@ -191,22 +193,22 @@ describe("Basic Navigation, after authenticating", () => {
 
     advanceButton
       .trigger("keydown", { key: "7", keyCode: 55, which: 55 })
-      .wait(250);
+      .wait(1000);
     advanceButton
       .trigger("keydown", { key: "+", keyCode: 107, which: 107 })
-      .wait(250);
+      .wait(1000);
     advanceButton
       .trigger("keydown", { key: "7", keyCode: 55, which: 55 })
-      .wait(250);
+      .wait(1000);
     advanceButton
       .trigger("keydown", { key: "=", keyCode: 187, which: 187 })
-      .wait(250);
+      .wait(1000);
     advanceButton
       .trigger("keydown", { key: "1", keyCode: 97, which: 97 })
-      .wait(250);
+      .wait(1000);
     advanceButton
       .trigger("keydown", { key: "4", keyCode: 52, which: 52 })
-      .wait(250);
+      .wait(1000);
     advanceButton
       .wait(delaySpace)
       .trigger("keydown", spaceKeyEvent)
@@ -219,19 +221,19 @@ describe("Basic Navigation, after authenticating", () => {
 
     advanceButton
       .trigger("keydown", { key: "3", keyCode: 51, which: 51 })
-      .wait(250);
+      .wait(1000);
     advanceButton
       .trigger("keydown", { key: "+", keyCode: 107, which: 107 })
-      .wait(250);
+      .wait(1000);
     advanceButton
       .trigger("keydown", { key: "5", keyCode: 53, which: 53 })
-      .wait(250);
+      .wait(1000);
     advanceButton
       .trigger("keydown", { key: "=", keyCode: 187, which: 187 })
-      .wait(250);
+      .wait(1000);
     advanceButton
       .trigger("keydown", { key: "8", keyCode: 56, which: 56 })
-      .wait(250);
+      .wait(1000);
     advanceButton
       .wait(delaySpace)
       .trigger("keydown", spaceKeyEvent)
@@ -244,22 +246,22 @@ describe("Basic Navigation, after authenticating", () => {
 
     advanceButton
       .trigger("keydown", { key: "6", keyCode: 54, which: 54 })
-      .wait(250);
+      .wait(1000);
     advanceButton
       .trigger("keydown", { key: "+", keyCode: 107, which: 107 })
-      .wait(250);
+      .wait(1000);
     advanceButton
       .trigger("keydown", { key: "7", keyCode: 55, which: 55 })
-      .wait(250);
+      .wait(1000);
     advanceButton
       .trigger("keydown", { key: "=", keyCode: 187, which: 187 })
-      .wait(250);
+      .wait(1000);
     advanceButton
       .trigger("keydown", { key: "1", keyCode: 97, which: 97 })
-      .wait(250);
+      .wait(1000);
     advanceButton
       .trigger("keydown", { key: "3", keyCode: 51, which: 51 })
-      .wait(250);
+      .wait(1000);
     advanceButton
       .wait(delaySpace)
       .trigger("keydown", spaceKeyEvent)
@@ -272,19 +274,19 @@ describe("Basic Navigation, after authenticating", () => {
 
     advanceButton
       .trigger("keydown", { key: "5", keyCode: 53, which: 53 })
-      .wait(250);
+      .wait(1000);
     advanceButton
       .trigger("keydown", { key: "+", keyCode: 107, which: 107 })
-      .wait(250);
+      .wait(1000);
     advanceButton
       .trigger("keydown", { key: "3", keyCode: 51, which: 51 })
-      .wait(250);
+      .wait(1000);
     advanceButton
       .trigger("keydown", { key: "=", keyCode: 187, which: 187 })
-      .wait(250);
+      .wait(1000);
     advanceButton
       .trigger("keydown", { key: "8", keyCode: 56, which: 56 })
-      .wait(250);
+      .wait(1000);
     advanceButton
       .wait(delaySpace)
       .trigger("keydown", spaceKeyEvent)
@@ -325,19 +327,19 @@ describe("Basic Navigation, after authenticating", () => {
 
     advanceButton
       .trigger("keydown", { key: "7", keyCode: 55, which: 55 })
-      .wait(250);
+      .wait(1000);
     advanceButton
       .trigger("keydown", { key: "+", keyCode: 107, which: 107 })
-      .wait(250);
+      .wait(1000);
     advanceButton
       .trigger("keydown", { key: "7", keyCode: 55, which: 55 })
-      .wait(250);
+      .wait(1000);
     advanceButton
       .trigger("keydown", { key: "=", keyCode: 187, which: 187 })
-      .wait(250);
+      .wait(1000);
     advanceButton
       .trigger("keydown", { key: "1", keyCode: 97, which: 97 })
-      .wait(250);
+      .wait(1000);
     advanceButton
       .wait(delaySpace)
       .trigger("keydown", spaceKeyEvent)
@@ -353,22 +355,22 @@ describe("Basic Navigation, after authenticating", () => {
 
     advanceButton
       .trigger("keydown", { key: "7", keyCode: 55, which: 55 })
-      .wait(250);
+      .wait(1000);
     advanceButton
       .trigger("keydown", { key: "+", keyCode: 107, which: 107 })
-      .wait(250);
+      .wait(1000);
     advanceButton
       .trigger("keydown", { key: "7", keyCode: 55, which: 55 })
-      .wait(250);
+      .wait(1000);
     advanceButton
       .trigger("keydown", { key: "=", keyCode: 187, which: 187 })
-      .wait(250);
+      .wait(1000);
     advanceButton
       .trigger("keydown", { key: "1", keyCode: 97, which: 97 })
-      .wait(250);
+      .wait(1000);
     advanceButton
       .trigger("keydown", { key: "4", keyCode: 52, which: 52 })
-      .wait(250);
+      .wait(1000);
     advanceButton
       .wait(delaySpace)
       .trigger("keydown", spaceKeyEvent)
@@ -381,19 +383,19 @@ describe("Basic Navigation, after authenticating", () => {
 
     advanceButton
       .trigger("keydown", { key: "3", keyCode: 51, which: 51 })
-      .wait(250);
+      .wait(1000);
     advanceButton
       .trigger("keydown", { key: "+", keyCode: 107, which: 107 })
-      .wait(250);
+      .wait(1000);
     advanceButton
       .trigger("keydown", { key: "5", keyCode: 53, which: 53 })
-      .wait(250);
+      .wait(1000);
     advanceButton
       .trigger("keydown", { key: "=", keyCode: 187, which: 187 })
-      .wait(250);
+      .wait(1000);
     advanceButton
       .trigger("keydown", { key: "8", keyCode: 56, which: 56 })
-      .wait(250);
+      .wait(1000);
     advanceButton
       .wait(delaySpace)
       .trigger("keydown", spaceKeyEvent)
@@ -406,22 +408,22 @@ describe("Basic Navigation, after authenticating", () => {
 
     advanceButton
       .trigger("keydown", { key: "6", keyCode: 54, which: 54 })
-      .wait(250);
+      .wait(1000);
     advanceButton
       .trigger("keydown", { key: "+", keyCode: 107, which: 107 })
-      .wait(250);
+      .wait(1000);
     advanceButton
       .trigger("keydown", { key: "7", keyCode: 55, which: 55 })
-      .wait(250);
+      .wait(1000);
     advanceButton
       .trigger("keydown", { key: "=", keyCode: 187, which: 187 })
-      .wait(250);
+      .wait(1000);
     advanceButton
       .trigger("keydown", { key: "1", keyCode: 97, which: 97 })
-      .wait(250);
+      .wait(1000);
     advanceButton
       .trigger("keydown", { key: "3", keyCode: 51, which: 51 })
-      .wait(250);
+      .wait(1000);
     advanceButton
       .wait(delaySpace)
       .trigger("keydown", spaceKeyEvent)
@@ -434,19 +436,19 @@ describe("Basic Navigation, after authenticating", () => {
 
     advanceButton
       .trigger("keydown", { key: "5", keyCode: 53, which: 53 })
-      .wait(250);
+      .wait(1000);
     advanceButton
       .trigger("keydown", { key: "+", keyCode: 107, which: 107 })
-      .wait(250);
+      .wait(1000);
     advanceButton
       .trigger("keydown", { key: "3", keyCode: 51, which: 51 })
-      .wait(250);
+      .wait(1000);
     advanceButton
       .trigger("keydown", { key: "=", keyCode: 187, which: 187 })
-      .wait(250);
+      .wait(1000);
     advanceButton
       .trigger("keydown", { key: "8", keyCode: 56, which: 56 })
-      .wait(250);
+      .wait(1000);
     advanceButton
       .wait(delaySpace)
       .trigger("keydown", spaceKeyEvent)

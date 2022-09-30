@@ -21,13 +21,15 @@
   text-align: center;
   vertical-align: middle;
   grid-template-rows: 5% 15% 20% 15% 15% 15%;
+  grid-template-columns: 40% 40% 20%;
   /* New */
   padding-top: 10px;
+  max-width: 800px;
 }
 
 .topBoxET {
   grid-column-start: 1;
-  grid-column-end: 7;
+  grid-column-end: 4;
   grid-row-start: 1;
   grid-row-end: 2;
   text-align: center;
@@ -43,8 +45,8 @@
 }
 
 .box2ET {
-  grid-column-start: 2;
-  grid-column-end: 5;
+  grid-column-start: 1;
+  grid-column-end: 3;
   grid-row-start: 2;
   grid-row-end: 4;
   text-align: center;
@@ -57,8 +59,8 @@
 }
 
 .box3ET {
-  grid-column-start: 5;
-  grid-column-end: 7;
+  grid-column-start: 3;
+  grid-column-end: 4;
   grid-row-start: 2;
   grid-row-end: 7;
   display: grid;
@@ -67,8 +69,8 @@
 
 /* fixed */
 .box5ET {
-  grid-column-start: 3;
-  grid-column-end: 5;
+  grid-column-start: 1;
+  grid-column-end: 3;
   grid-row-start: 4;
   grid-row-end: 7;
   text-align: center;

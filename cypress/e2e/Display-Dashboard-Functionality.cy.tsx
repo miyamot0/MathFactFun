@@ -18,8 +18,6 @@ describe("Student Dashboard, after authenticating", () => {
   });
 
   it("Should render after login", () => {
-    cy.viewport(1920, 1080)
-
     const totalKids = 1;
 
     const { email, password } = authUser;
@@ -27,30 +25,26 @@ describe("Student Dashboard, after authenticating", () => {
 
     cy.visit("/dashboard");
 
-    const studentCards = cy.get('div.student-list-card');
+    const studentCards = cy.get("div.student-list-card");
 
-    studentCards.should('have.length', totalKids);
+    studentCards.should("have.length", totalKids);
 
     cy.contains("Student Dashboard");
   });
 
   it("Should work with filter list", () => {
-    const filterButtons = cy.get('button.student-filter-btn');
+    const filterButtons = cy.get("button.student-filter-btn");
 
     filterButtons.each((btn) => {
-      cy.wrap(btn).click().wait(100)
-    })
+      cy.wrap(btn).click().wait(100);
+    });
 
-    filterButtons.filter(':contains(Mine)').click()
-  })
+    filterButtons.filter(":contains(Mine)").click();
+  });
 
   it("Should redirect to individual student page [No ADMIN]", () => {
-    cy.get('div.student-list-card').within((card) => {
-      cy.wrap(card)
-        .get('a')
-        .should('have.length', 1)
-        .wait(100)
-        .click()
+    cy.get("div.student-list-card").within((card) => {
+      cy.wrap(card).get("a").should("have.length", 1).wait(100).click();
     });
-  })
+  });
 });

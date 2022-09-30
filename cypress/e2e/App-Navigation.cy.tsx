@@ -21,28 +21,22 @@ describe("Basic Navigation, after authenticating", () => {
   });
 
   it("Should successfully log in", () => {
-    cy.viewport(1920, 1080)
-
     const { email, password } = authUser;
     cy.login(email, password);
     // Probe the landing page
     cy.visit("/login");
-
   });
 
   it("Should land on the welcome/landing page, once authenticated", () => {
-    cy.viewport(1920, 1080)
     cy.contains("Welcome");
   });
 
   it("Should display modal and dismiss as appropriate", () => {
-    cy.viewport(1920, 1080)
-
     const navbarLinks = cy.get("div.navbar > ul > li");
 
     navbarLinks.first().click();
 
-    cy.wait(100).get("div.navbar-modal").should('exist');
+    cy.wait(100).get("div.navbar-modal").should("exist");
 
     const closeButton = cy.get("button.modal-close");
 

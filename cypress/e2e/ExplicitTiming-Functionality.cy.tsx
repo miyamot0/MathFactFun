@@ -18,8 +18,6 @@ describe("Basic Navigation, after authenticating", () => {
   });
 
   it("Should successfully log in, select ET", () => {
-    cy.viewport(1920, 1080);
-
     const { email, password } = authUser;
     cy.login(email, password);
 
@@ -30,7 +28,7 @@ describe("Basic Navigation, after authenticating", () => {
     cy.get("button.global-btn")
       .contains("Student Settings")
       .should("have.length", 1)
-      .wait(250)
+      .wait(1000)
       .click()
       .wait(2000);
 
@@ -45,15 +43,19 @@ describe("Basic Navigation, after authenticating", () => {
     //1 CCC
     //2 TP
     //3 ET
-    cy.get("#react-select-6-option-3").wait(250).click().wait(2000);
+    cy.get("#react-select-6-option-3").wait(1000).click().wait(2000);
 
     cy.get('input[role="combobox"]').eq(5).wait(1000).click().wait(2000);
 
     //0 Feedback every time
     //1 No feedback
-    cy.get("#react-select-7-option-0").wait(250).click().wait(2000);
+    cy.get("#react-select-7-option-0").wait(1000).click().wait(2000);
 
-    cy.get("button.global-btn").contains("Edit Student").wait(250).click();
+    cy.get("button.global-btn")
+      .contains("Edit Student")
+      .wait(1000)
+      .click()
+      .wait(5000);
   });
 
   it("Click button to enter into ET", () => {
@@ -69,18 +71,18 @@ describe("Basic Navigation, after authenticating", () => {
   it("Appropriate Completion; Advance=Type", () => {
     const advanceButton = cy.wait(1000).get("button.global-btn").eq(0).click();
 
-    advanceButton.type("1").wait(250);
-    advanceButton.type("4").wait(250);
+    advanceButton.type("1").wait(1000);
+    advanceButton.type("4").wait(1000);
     advanceButton.wait(500).click();
 
-    advanceButton.type("8").wait(250);
+    advanceButton.type("8").wait(1000);
     advanceButton.wait(500).click();
 
-    advanceButton.type("1").wait(250);
-    advanceButton.type("3").wait(250);
+    advanceButton.type("1").wait(1000);
+    advanceButton.type("3").wait(1000);
     advanceButton.wait(500).click();
 
-    advanceButton.type("8").wait(250);
+    advanceButton.type("8").wait(1000);
     advanceButton.wait(500).click().wait(5000);
 
     cy.get("div.practice-list-card")
@@ -93,18 +95,18 @@ describe("Basic Navigation, after authenticating", () => {
   it("Appropriate Completion; Advance=Space", () => {
     const advanceButton = cy.wait(1000).get("button.global-btn").eq(0).click();
 
-    advanceButton.type("1").wait(250);
-    advanceButton.type("4").wait(250);
+    advanceButton.type("1").wait(1000);
+    advanceButton.type("4").wait(1000);
     advanceButton.wait(500).type(" ");
 
-    advanceButton.type("8").wait(250);
+    advanceButton.type("8").wait(1000);
     advanceButton.wait(500).type(" ");
 
-    advanceButton.type("1").wait(250);
-    advanceButton.type("3").wait(250);
+    advanceButton.type("1").wait(1000);
+    advanceButton.type("3").wait(1000);
     advanceButton.wait(500).type(" ");
 
-    advanceButton.type("8").wait(250);
+    advanceButton.type("8").wait(1000);
     advanceButton.wait(500).type(" ").wait(5000);
 
     cy.get("div.practice-list-card")
@@ -118,28 +120,28 @@ describe("Basic Navigation, after authenticating", () => {
     const advanceButton = cy.wait(1000).get("button.global-btn").eq(0).click();
 
     // 13 wrong, 14 correct
-    advanceButton.type("1").wait(250);
-    advanceButton.type("3").wait(250);
+    advanceButton.type("1").wait(1000);
+    advanceButton.type("3").wait(1000);
     advanceButton.wait(500).type(" ").wait(1000);
     cy.get("button.modal-close").eq(0).click({ force: true });
 
-    advanceButton.type("1").wait(250);
-    advanceButton.type("4").wait(250);
+    advanceButton.type("1").wait(1000);
+    advanceButton.type("4").wait(1000);
     advanceButton.wait(500).type(" ");
 
     // 7 wrong, 8 correct
-    advanceButton.type("7").wait(250);
+    advanceButton.type("7").wait(1000);
     advanceButton.wait(500).type(" ").wait(1000);
     cy.get("button.modal-close").eq(0).click({ force: true });
 
-    advanceButton.type("8").wait(250);
+    advanceButton.type("8").wait(1000);
     advanceButton.wait(500).type(" ");
 
-    advanceButton.type("1").wait(250);
-    advanceButton.type("3").wait(250);
+    advanceButton.type("1").wait(1000);
+    advanceButton.type("3").wait(1000);
     advanceButton.wait(500).type(" ");
 
-    advanceButton.type("8").wait(250);
+    advanceButton.type("8").wait(1000);
     advanceButton.wait(500).type(" ").wait(5000);
   });
 });

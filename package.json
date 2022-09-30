@@ -1,10 +1,9 @@
 {
   "name": "math-facts-fun",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A free, open source tool for supporting early math and numeracy",
   "private": true,
   "dependencies": {
-    "@types/jest": "^28.1.8",
     "@types/node": "^18.7.13",
     "@types/react-beautiful-dnd": "^13.1.2",
     "firebase": "^8.10.1",
@@ -18,8 +17,7 @@
     "react-modal": "^3.15.1",
     "react-router-dom": "5.1",
     "react-scripts": "^5.0.1",
-    "react-select": "^5.3.2",
-    "serve": "^14.0.1"
+    "react-select": "^5.3.2"
   },
   "jest": {
     "moduleNameMapper": {
@@ -51,7 +49,7 @@
     "test-open-handles": "npm run test -- --detectOpenHandles",
     "test-coverage": "npm run test -- --coverage --watchAll --coverageDirectory='coverage'",
     "test-summarize": "npm run test -- --coverage --watchAll --coverageDirectory='coverage' --coverageReporters='json-summary'",
-    "test-cypress": "cypress open"
+    "test-cypress": "cypress open --config viewportWidth=1280,viewportHeight=720"
   },
   "eslintConfig": {
     "extends": [
@@ -81,6 +79,7 @@
     "@testing-library/user-event": "^12.8.3",
     "@types/enzyme": "^3.10.12",
     "@types/enzyme-adapter-react-16": "^1.0.6",
+    "@types/jest": "^28.1.8",
     "@types/react": "^18.0.17",
     "@types/react-dom": "^18.0.6",
     "@types/react-modal": "^3.13.1",
