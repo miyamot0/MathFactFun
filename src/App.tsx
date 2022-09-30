@@ -13,8 +13,8 @@ import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
 import { useAuthorizationContext } from "./context/hooks/useAuthorizationContext";
 
 // Components
-const Navbar = lazy(() => import("./components/Navbar"));
-const SideBar = lazy(() => import("./components/Sidebar"));
+import Navbar from "./components/Navbar";
+import SideBar from "./components/Sidebar";
 
 // Pages
 const Landing = lazy(() => import("./pages/landing/Landing"));
@@ -22,15 +22,23 @@ const Information = lazy(() => import("./pages/information/Information"));
 const Login = lazy(() => import("./pages/login/Login"));
 
 const CreateStudent = lazy(() => import("./pages/student/CreateStudent"));
-const CreateBulkStudents = lazy(() => import("./pages/student/CreateBulkStudents"));
+const CreateBulkStudents = lazy(
+  () => import("./pages/student/CreateBulkStudents")
+);
 const DisplayStudent = lazy(() => import("./pages/student/DisplayStudent"));
 const EditStudent = lazy(() => import("./pages/student/EditStudent"));
 const SetCreator = lazy(() => import("./pages/setcreator/SetCreator"));
 
 const Admin = lazy(() => import("./pages/admin/Admin"));
-const DashboardDisplay = lazy(() => import("./pages/dashboard/DashboardDisplay"));
-const DashboardPractice = lazy(() => import("./pages/dashboard/DashboardPractice"));
-const DashboardBenchmark = lazy(() => import("./pages/dashboard/DashboardBenchmark"));
+const DashboardDisplay = lazy(
+  () => import("./pages/dashboard/DashboardDisplay")
+);
+const DashboardPractice = lazy(
+  () => import("./pages/dashboard/DashboardPractice")
+);
+const DashboardBenchmark = lazy(
+  () => import("./pages/dashboard/DashboardBenchmark")
+);
 const Screening = lazy(() => import("./pages/screening/Screening"));
 const ProgressMonitor = lazy(() => import("./pages/progress/ProgressMonitor"));
 
@@ -38,8 +46,12 @@ const CreateUser = lazy(() => import("./pages/user/CreateUser"));
 const EditUser = lazy(() => import("./pages/user/EditUser"));
 
 const Benchmark = lazy(() => import("./pages/intervention/Benchmark"));
-const CoverCopyCompare = lazy(() => import("./pages/intervention/CoverCopyCompare"));
-const ExplicitTiming = lazy(() => import("./pages/intervention/ExplicitTiming"));
+const CoverCopyCompare = lazy(
+  () => import("./pages/intervention/CoverCopyCompare")
+);
+const ExplicitTiming = lazy(
+  () => import("./pages/intervention/ExplicitTiming")
+);
 const TapedProblems = lazy(() => import("./pages/intervention/TapedProblems"));
 
 // Styles
@@ -58,10 +70,10 @@ export function App(): AppInterface {
     <div className="App" data-testid={"App-id"}>
       {authIsReady && (
         <BrowserRouter>
-          <Suspense fallback={<div>Loading...</div>}>
-            {user && <SideBar />}
-            <div className="container">
-              <Navbar />
+          {user && <SideBar />}
+          <div className="container">
+            <Navbar />
+            <Suspense fallback={<div>Loading...</div>}>
               <Switch>
                 <Route exact path="/">
                   {!user && <Redirect to="/login" />}
@@ -148,8 +160,8 @@ export function App(): AppInterface {
                   {user && <Landing />}
                 </Route>
               </Switch>
-            </div>
-          </Suspense>
+            </Suspense>
+          </div>
         </BrowserRouter>
       )}
     </div>

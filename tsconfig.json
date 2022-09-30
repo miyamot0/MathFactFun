@@ -3,16 +3,18 @@
     "target": "es2016",
     "jsx": "react",
     "module": "commonjs",
+    "outDir": "build",
     "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": true,
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
     "removeComments": true,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "skipLibCheck": false,
-    "strict": true,
+    "allowJs": true,
     "types": ["jest", "@types/testing-library__jest-dom"],
   },
-  "exclude": ["node_modules", "cypress", "cypress.config.ts"]
+  "exclude": ["cypress", "cypress.config.ts"]
 }
