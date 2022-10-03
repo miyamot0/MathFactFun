@@ -25,6 +25,8 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
+import "cypress-wait-until";
+
 declare global {
   namespace Cypress {
     interface Chainable {

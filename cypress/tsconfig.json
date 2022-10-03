@@ -2,7 +2,7 @@
   "extends": "../tsconfig.json",
   "compilerOptions": {
     "noEmit": false,
-    "types": ["cypress"],
+    "types": ["cypress", "cypress-wait-until"],
     "baseUrl": "/"
   },
   "include": [
@@ -10,6 +10,6 @@
     "./**/*.tsx",
     "../cypress.config.ts",
     "e2e/*.tsx"
-  ],
+, "support/component.ts", "support/e2e.ts", "support/commands.ts"  ],
   "exclude": []
 }
