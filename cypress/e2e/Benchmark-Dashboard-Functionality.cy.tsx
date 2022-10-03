@@ -97,6 +97,8 @@ function pursueSequence(
       });
     });
   }
+
+  cy.wait(5000);
 }
 
 describe("Benchmark Dashboard, after authenticating", () => {
