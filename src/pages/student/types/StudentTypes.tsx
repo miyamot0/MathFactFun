@@ -20,10 +20,10 @@ export type StudentPayloadObjects = {
 };
 
 // TODO: restore payload types at end!
-export type StudentActionObject = {
-  type: StudentCreatorBehavior;
-  payload: any;
-};
+//export type StudentActionObject = {
+//  type: StudentCreatorBehavior;
+//  payload: any;
+//};
 
 export enum StudentCreatorBehavior {
   SetName = 1000,

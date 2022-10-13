@@ -19,7 +19,7 @@ import {
   StudentDispatchUpdateFormError,
   StudentDispatchUpdateStudentLoaded,
 } from "../interfaces/StudentInterfaces";
-import { StudentActionObject, StudentCreatorBehavior } from "../types/StudentTypes";
+import { StudentCreatorBehavior } from "../types/StudentTypes";
 import { UserDataInterface } from "../../user/types/UserTypes";
 import { FirestoreState } from "../../../firebase/interfaces/FirebaseInterfaces";
 import {

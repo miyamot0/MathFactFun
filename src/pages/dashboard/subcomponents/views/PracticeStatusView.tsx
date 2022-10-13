@@ -11,6 +11,10 @@ import { formatDate } from "../../../../utilities/LabelHelper";
 import { StudentDataInterface } from "../../../student/interfaces/StudentInterfaces";
 import { checkIfDateCurrent } from "../helpers/DashboardSubcomponentHelpers";
 
+export interface PracticeStatusView {
+  student: StudentDataInterface;
+}
+
 /** PracticeStatusView
  *
  * Wrap info in a view
@@ -20,18 +24,33 @@ import { checkIfDateCurrent } from "../helpers/DashboardSubcomponentHelpers";
  */
 export default function PracticeStatusView({
   student,
-}: {
-  student: StudentDataInterface;
-}): JSX.Element {
-  return (
-    <p>
-      {checkIfDateCurrent(student.lastActivity) ? (
-        <span className="practiced-today"> </span>
-      ) : (
-        <span className="needs-practice"> </span>
-      )}{" "}
-      Last Practice:{" "}
-      {formatDate({ date: student.lastActivity.toDate(), format: "display" })}
-    </p>
-  );
+}: PracticeStatusView): JSX.Element {
+
+  if (student.currentApproach === "CoverCopyCompare" && student.tutorialCCC === false) {
+    return (
+      <p className="p-needs-training">
+        <span className="needs-training"> </span>
+        Complete Cover, Copy, Compare Tutorial
+      </p>
+    )
+  } else if (student.currentApproach === "ExplicitTiming" && student.tutorialET === false) {
+    return (
+      <p className="p-needs-training">
+        <span className="needs-training"> </span>
+        Complete Explicit Timing Tutorial
+      </p>
+    )
+  } else {
+    return (
+      <p>
+        {checkIfDateCurrent(student.lastActivity) ? (
+          <span className="practiced-today"> </span>
+        ) : (
+          <span className="needs-practice"> </span>
+        )}{" "}
+        Last Practice:{" "}
+        {formatDate({ date: student.lastActivity.toDate(), format: "display" })}
+      </p>
+    );
+  }
 }

@@ -15,27 +15,37 @@ import {
   checkIfProgrammingCurrent,
 } from "../helpers/DashboardSubcomponentHelpers";
 
-/** generateWrapper
+export interface BenchmarkStatusView {
+  student: StudentDataInterface;
+  isTutorialCompleted: boolean;
+}
+
+/** BenchmarkStatusView
  *
- * Wrap info in a link, if benchmark is due
+ * List out whether benchmarking has come due
  *
  * @param {StudentDataInterface} student document info
  * @returns {Link}
  */
-export default function BenchmarkStatusView({
-  student,
-}: {
-  student: StudentDataInterface;
-}): JSX.Element {
+export default function BenchmarkStatusView({ student, isTutorialCompleted }: BenchmarkStatusView): JSX.Element {
   const isBenchmarkingCurrent = checkIfProgrammingCurrent(student.dueDate);
   const isBenchmarkingCompleted = checkIfBenchmarksCompleted(student);
 
+  if (isTutorialCompleted === false) {
+    return (
+      <Link to={`/tutorial/benchmark/${student.id}`} className="student-list-tail-item">
+        <span className="needs-training"></span>
+        {""}Complete Initial Tutorial
+      </Link>
+    );
+  }
+
   if (isBenchmarkingCurrent) {
+    const formattedDate = formatDate({ date: student.dueDate.toDate(), format: "display" });
     return (
       <p className="student-list-tail-item">
         <span className="on-track"></span>
-        {""}Benchmarking Starts:{" "}
-        {formatDate({ date: student.dueDate.toDate(), format: "display" })}
+        `Benchmarking Starts: ${formattedDate}`
       </p>
     );
   }

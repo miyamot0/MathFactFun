@@ -57,6 +57,7 @@ export function checkIfDateCurrent(
 
 export interface InterventionRoutingLinkInterface {
   student: StudentDataInterface;
+  isTutorialCompleted: boolean;
 }
 
 /** InterventionRoutingLink
@@ -68,8 +69,18 @@ export interface InterventionRoutingLinkInterface {
  */
 export function InterventionRoutingLink({
   student,
+  isTutorialCompleted,
 }: InterventionRoutingLinkInterface): JSX.Element {
-  if (student.factsTargeted && student.factsTargeted.length > 0) {
+  if (isTutorialCompleted === false) {
+    return (
+      <Link
+        to={`/tutorial/${student.currentApproach}/${student.id}`}
+        key={student.id}
+      >
+        {student.name} ({student.currentGrade})
+      </Link>
+    );
+  } else if (student.factsTargeted && student.factsTargeted.length > 0) {
     return (
       <Link
         to={generateRouteBaseOnStrategy(

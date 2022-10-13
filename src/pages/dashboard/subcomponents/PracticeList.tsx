@@ -27,30 +27,41 @@ export default function PracticeList({ students, }: PracticeListInterface): JSX.
   } else {
     return (
       <div className="practice-list">
-        {students.map((student) => (
-          <div className="practice-list-card" key={student.id}>
-            <InterventionRoutingLink student={student} />
+        {students.map((student) => {
+          let isTutorialCompleted = false;
 
-            <hr />
+          if (student.currentApproach === "CoverCopyCompare" && student.tutorialCCC === true) {
+            isTutorialCompleted = true;
+          } else if (student.currentApproach === "ExplicitTiming" && student.tutorialET === true) {
+            isTutorialCompleted = true;
+          }
 
-            <p style={addedPaddingStyle}>
-              <b>Approach:</b>{` ${GetApproachStringFromLabel(student.currentApproach)}`}
-            </p>
+          return (
+            <div className="practice-list-card" key={student.id}>
+              <InterventionRoutingLink student={student} isTutorialCompleted={isTutorialCompleted} />
 
-            <p style={addedPaddingStyle}>
-              <b>Target:</b> {student.currentTarget} (
-              {student.factsTargeted.length} in Set)
-            </p>
+              <hr />
 
-            <p style={addedPaddingStyle}>
-              <b>Items in Set:</b> {student.factsTargeted.length}
-            </p>
+              <p style={addedPaddingStyle}>
+                <b>Approach:</b>{` ${GetApproachStringFromLabel(student.currentApproach)}`}
+              </p>
 
-            <br></br>
+              <p style={addedPaddingStyle}>
+                <b>Target:</b> {student.currentTarget} (
+                {student.factsTargeted.length} in Set)
+              </p>
 
-            <PracticeStatusView student={student} />
-          </div>
-        ))}
+              <p style={addedPaddingStyle}>
+                <b>Items in Set:</b> {student.factsTargeted.length}
+              </p>
+
+              <br></br>
+
+              <PracticeStatusView student={student} />
+            </div>
+          )
+        }
+        )}
       </div>
     );
   }

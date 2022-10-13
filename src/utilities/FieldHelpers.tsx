@@ -7,8 +7,8 @@
  */
 
 import React from "react";
-import { StudentCreatorBehavior } from "../pages/student/types/StudentTypes";
 import Select, { MultiValue, SingleValue } from "react-select";
+import { StudentCreatorBehavior } from "../pages/student/types/StudentTypes";
 import { SingleOptionType } from "../types/SharedComponentTypes";
 import { UserCreatorBehavior } from "../pages/user/types/UserTypes";
 import {

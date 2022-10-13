@@ -96,6 +96,16 @@
   text-decoration: underline;
 }
 
+.student-list .needs-training {
+  display: inline-block;
+  margin-right: 10px;
+  width: 12px;
+  height: 12px;
+  background: #3392eb;
+  border-radius: 50%;
+  margin-top: 2px;
+}
+
 .student-list p {
   margin-top: 5px;
 }

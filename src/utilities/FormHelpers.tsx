@@ -9,6 +9,9 @@
 import firebase from "firebase/app";
 import { MultiValue } from "react-select";
 import { StudentDispatchUpdateFormError } from "../pages/student/interfaces/StudentInterfaces";
+import { StudentCreatorBehavior } from "../pages/student/types/StudentTypes";
+import { UserDispatchUpdateFormError } from "../pages/user/interfaces/UserInterfaces";
+import { UserCreatorBehavior } from "../pages/user/types/UserTypes";
 import { SingleOptionType } from "../types/SharedComponentTypes";
 import { checkIfOptionKeysPresent } from "./ReducerHelpers";
 
@@ -65,7 +68,7 @@ export function checkInputNullOrUndefined(
  */
 export function streamlinedCheck(
   value: string | SingleOptionType,
-  type: any,
+  type: UserCreatorBehavior | StudentCreatorBehavior,
   err: string,
   dispatch: any
 ): boolean {
@@ -81,14 +84,26 @@ export function streamlinedCheck(
     const statusOfCheck = checkInputNullOrUndefined(value);
 
     if (statusOfCheck) {
-      dispatch(new StudentDispatchUpdateFormError({
-        type,
-        payload: {
-          FormError: err
-        }
-      }));
-    }
 
+      switch (type) {
+        case UserCreatorBehavior.SetFormError:
+          dispatch(new UserDispatchUpdateFormError({
+            type,
+            payload: {
+              FormError: err
+            }
+          }));
+          break;
+        case StudentCreatorBehavior.SetFormError:
+          dispatch(new StudentDispatchUpdateFormError({
+            type,
+            payload: {
+              FormError: err
+            }
+          }));
+          break;
+      }
+    }
     return statusOfCheck;
   }
 

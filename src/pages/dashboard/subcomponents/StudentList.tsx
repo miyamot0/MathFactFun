@@ -29,33 +29,38 @@ export default function StudentList({
   } else {
     return (
       <div className="student-list">
-        {students.map((student) => (
-          <div className="student-list-card" key={student.id}>
-            <div className="student-list-head-item">
-              <Link to={`/student/${student.id}`} key={student.id}>
-                {student.name} ({student.currentGrade})
-              </Link>
+        {students.map((student) => {
+          const isTutorialCompleted = student.tutorialBenchmark ?? false;
 
-              <hr />
-              <p>
-                <b>Benchmarking:</b> {student.currentBenchmarking.join(", ")}
-              </p>
-              <p>
-                <b>Intervention:</b>{" "}
-                {GetApproachStringFromLabel(student.currentApproach)}
-              </p>
-              <p>
-                <b>Intervention Target:</b> {student.currentTarget}
-              </p>
-              <p>
-                <b>Intervention Set Items:</b> {student.factsTargeted.length}
-              </p>
-              <br></br>
+          return (
+            <div className="student-list-card" key={student.id}>
+              <div className="student-list-head-item">
+
+                <Link to={`/student/${student.id}`} key={student.id}>
+                  {student.name} ({student.currentGrade})
+                </Link>
+
+                <hr />
+                <p>
+                  <b>Benchmarking:</b> {student.currentBenchmarking.join(", ")}
+                </p>
+                <p>
+                  <b>Intervention:</b>{" "}
+                  {GetApproachStringFromLabel(student.currentApproach)}
+                </p>
+                <p>
+                  <b>Intervention Target:</b> {student.currentTarget}
+                </p>
+                <p>
+                  <b>Intervention Set Items:</b> {student.factsTargeted.length}
+                </p>
+                <br></br>
+              </div>
+
+              <BenchmarkStatusView student={student} isTutorialCompleted={isTutorialCompleted} />
             </div>
-
-            <BenchmarkStatusView student={student} />
-          </div>
-        ))}
+          )
+        })}
       </div>
     );
   }
