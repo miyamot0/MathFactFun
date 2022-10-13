@@ -12,12 +12,13 @@ import Select, { MultiValue, SingleValue } from "react-select";
 import { SingleOptionType } from "../types/SharedComponentTypes";
 import { UserCreatorBehavior } from "../pages/user/types/UserTypes";
 import { StudentDataDispatches, StudentDispatchUpdateAimLine, StudentDispatchUpdateCurrentApproach, StudentDispatchUpdateCurrentBenchmarking, StudentDispatchUpdateCurrentErrorApproach, StudentDispatchUpdateCurrentGrade, StudentDispatchUpdateCurrentProblemSet, StudentDispatchUpdateCurrentSRApproach, StudentDispatchUpdateCurrentTarget, StudentDispatchUpdateDetails, StudentDispatchUpdateDueDate, StudentDispatchUpdateExplicitTime, StudentDispatchUpdateName } from "../pages/student/interfaces/StudentInterfaces";
+import { UserDataDispatches, UserDispatchUpdateName } from "../pages/user/interfaces/UserInterfaces";
 
 export interface StandardEntryFieldText {
   label: string;
   currentValue: string;
   type: StudentCreatorBehavior | UserCreatorBehavior;
-  dispatch: React.Dispatch<StudentDataDispatches>;
+  dispatch: React.Dispatch<StudentDataDispatches | UserDataDispatches>;
 }
 
 /** standardEntryFieldText
@@ -40,9 +41,16 @@ export function StandardEntryFieldText({
         type="text"
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
           switch (type) {
-            // User Set name
             case StudentCreatorBehavior.SetName:
               dispatch(new StudentDispatchUpdateName({
+                type,
+                payload: {
+                  Name: e.target.value
+                }
+              }));
+              break;
+            case UserCreatorBehavior.SetName:
+              dispatch(new UserDispatchUpdateName({
                 type,
                 payload: {
                   Name: e.target.value
@@ -123,7 +131,7 @@ export interface StandardEntryFieldTextArea {
   label: string;
   currentValue: string;
   type: StudentCreatorBehavior | UserCreatorBehavior;
-  dispatch: React.Dispatch<StudentDataDispatches>;
+  dispatch: React.Dispatch<StudentDataDispatches | UserDataDispatches>;
 }
 
 /** standardEntryFieldTextArea
@@ -154,10 +162,18 @@ export function StandardEntryFieldTextArea({
                 }
               }));
               break;
+            case StudentCreatorBehavior.SetName:
+              dispatch(new UserDispatchUpdateName({
+                type,
+                payload: {
+                  Name: e.target.value
+                }
+              }));
+              break;
           }
 
           //UserCreatorBehavior.SetSchool
-          //UserCreatorBehavior.SetName
+          //UserCreatorBehavior.
         }}
         value={currentValue}
       ></textarea>

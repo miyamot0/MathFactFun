@@ -18,12 +18,12 @@ export interface UserWidgetInterface {
 }
 
 export enum UserCreatorBehavior {
-  SetId,
-  SetName,
-  SetSchool,
-  SetEmail,
-  SetPassword,
-  SetLoadedUser,
-  SetFormError,
-  SetThrow,
+  SetId = 2000,
+  SetName = 2001,
+  SetSchool = 2002,
+  SetEmail = 2003,
+  SetPassword = 2004,
+  SetLoadedUser = 2005,
+  SetFormError = 2006,
+  SetThrow = 2007,
 }
