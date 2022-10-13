@@ -27,6 +27,7 @@ import {
   StandardErrorField,
 } from "../../utilities/FieldHelpers";
 import { verifyUserEdit } from "./helpers/UserHelpers";
+import { UserDispatchLoadedUser } from "./interfaces/UserInterfaces";
 
 export default function EditUser() {
   const history = useHistory();
@@ -49,16 +50,18 @@ export default function EditUser() {
     UserDataInitialState
   );
 
-  if (document && !state.DidBuild) {
-    dispatch({
+  if (document && state.DidBuild === false) {
+    dispatch(new UserDispatchLoadedUser({
       type: UserCreatorBehavior.SetLoadedUser,
       payload: {
-        uName: document.displayName,
-        uEmail: document.displayEmail,
-        uSchool: document.displaySchool,
-        uid: document.id,
+        Name: document.displayName,
+        Email: document.displayEmail,
+        School: document.displaySchool,
+        id: document.id,
+        DidBuild: true
       },
-    });
+    }
+    ));
   }
 
   if (documentError) {

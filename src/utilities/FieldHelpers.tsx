@@ -11,14 +11,28 @@ import { StudentCreatorBehavior } from "../pages/student/types/StudentTypes";
 import Select, { MultiValue, SingleValue } from "react-select";
 import { SingleOptionType } from "../types/SharedComponentTypes";
 import { UserCreatorBehavior } from "../pages/user/types/UserTypes";
-import { StudentDataDispatches, StudentDispatchUpdateAimLine, StudentDispatchUpdateCurrentApproach, StudentDispatchUpdateCurrentBenchmarking, StudentDispatchUpdateCurrentErrorApproach, StudentDispatchUpdateCurrentGrade, StudentDispatchUpdateCurrentProblemSet, StudentDispatchUpdateCurrentSRApproach, StudentDispatchUpdateCurrentTarget, StudentDispatchUpdateDetails, StudentDispatchUpdateDueDate, StudentDispatchUpdateExplicitTime, StudentDispatchUpdateName } from "../pages/student/interfaces/StudentInterfaces";
-import { UserDataDispatches, UserDispatchUpdateName } from "../pages/user/interfaces/UserInterfaces";
+import {
+  StudentDataDispatches,
+  StudentDispatchUpdateAimLine,
+  StudentDispatchUpdateCurrentApproach,
+  StudentDispatchUpdateCurrentBenchmarking,
+  StudentDispatchUpdateCurrentErrorApproach,
+  StudentDispatchUpdateCurrentGrade,
+  StudentDispatchUpdateCurrentProblemSet,
+  StudentDispatchUpdateCurrentSRApproach,
+  StudentDispatchUpdateCurrentTarget,
+  StudentDispatchUpdateDetails,
+  StudentDispatchUpdateDueDate,
+  StudentDispatchUpdateExplicitTime,
+  StudentDispatchUpdateName
+} from "../pages/student/interfaces/StudentInterfaces";
+import { UserDispatchUpdateName, UserDispatchUpdateSchool } from "../pages/user/interfaces/UserInterfaces";
 
 export interface StandardEntryFieldText {
   label: string;
   currentValue: string;
   type: StudentCreatorBehavior | UserCreatorBehavior;
-  dispatch: React.Dispatch<StudentDataDispatches | UserDataDispatches>;
+  dispatch: any;
 }
 
 /** standardEntryFieldText
@@ -131,7 +145,7 @@ export interface StandardEntryFieldTextArea {
   label: string;
   currentValue: string;
   type: StudentCreatorBehavior | UserCreatorBehavior;
-  dispatch: React.Dispatch<StudentDataDispatches | UserDataDispatches>;
+  dispatch: any;
 }
 
 /** standardEntryFieldTextArea
@@ -156,24 +170,31 @@ export function StandardEntryFieldTextArea({
           switch (type) {
             case StudentCreatorBehavior.SetDetails:
               dispatch(new StudentDispatchUpdateDetails({
-                type,
+                type: StudentCreatorBehavior.SetDetails,
                 payload: {
                   Details: e.target.value
                 }
               }));
               break;
-            case StudentCreatorBehavior.SetName:
+
+            case UserCreatorBehavior.SetName:
               dispatch(new UserDispatchUpdateName({
-                type,
+                type: UserCreatorBehavior.SetName,
                 payload: {
                   Name: e.target.value
                 }
               }));
               break;
-          }
 
-          //UserCreatorBehavior.SetSchool
-          //UserCreatorBehavior.
+            case UserCreatorBehavior.SetSchool:
+              dispatch(new UserDispatchUpdateSchool({
+                type: UserCreatorBehavior.SetSchool,
+                payload: {
+                  School: e.target.value
+                }
+              }));
+              break;
+          }
         }}
         value={currentValue}
       ></textarea>

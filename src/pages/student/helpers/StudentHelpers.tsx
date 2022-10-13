@@ -398,12 +398,14 @@ export async function verifyBulkStudentCreate(
     doc: StudentDataInterface | UserDataInterface | PerformanceDataInterface
   ) => Promise<void>,
   response: FirestoreState,
-  dispatch: React.Dispatch<StudentActionObject>
+  dispatch: any
 ) {
-  dispatch({
+  dispatch(new StudentDispatchUpdateFormError({
     type: StudentCreatorBehavior.SetFormError,
-    payload: undefined,
-  });
+    payload: {
+      FormError: undefined
+    }
+  }))
 
   if (
     streamlinedCheck(
@@ -464,10 +466,12 @@ export async function verifyBulkStudentCreate(
     checkInputNullOrUndefined(state.CurrentBenchmarking) ||
     state.CurrentBenchmarking.length < 1
   ) {
-    dispatch({
+    dispatch(new StudentDispatchUpdateFormError({
       type: StudentCreatorBehavior.SetFormError,
-      payload: "Please select benchmarking options",
-    });
+      payload: {
+        FormError: "Please select benchmarking options",
+      }
+    }))
 
     return;
   }

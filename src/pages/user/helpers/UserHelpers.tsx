@@ -8,7 +8,7 @@
 
 import { FirestoreState } from "../../../firebase/interfaces/FirebaseInterfaces";
 import { streamlinedCheck } from "../../../utilities/FormHelpers";
-import { UserDataState } from "../interfaces/UserInterfaces";
+import { UserDataState, UserDispatchUpdateFormError } from "../interfaces/UserInterfaces";
 import { UserCreatorBehavior, UserDataInterface } from "../types/UserTypes";
 
 /** verifyUserCreate
@@ -104,10 +104,12 @@ export async function verifyUserEdit(
     return;
   }
 
-  dispatch({
+  dispatch(new UserDispatchUpdateFormError({
     type: UserCreatorBehavior.SetFormError,
-    payload: undefined,
-  });
+    payload: {
+      FormError: undefined
+    }
+  }))
 
   if (
     streamlinedCheck(
