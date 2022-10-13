@@ -91,7 +91,10 @@ describe("ButtonLayout", () => {
       const target = "Addition";
       const approach = "Benchmark";
       const document = {} as StudentDataInterface;
-      const state = InitialInterventionState;
+      const state = {
+        ...InitialInterventionState,
+        ShowButton: true
+      };
       const openModal = jest.fn();
       const addDocument = jest.fn();
       const updateDocument = jest.fn();
@@ -157,7 +160,10 @@ describe("ButtonLayout", () => {
       const target = "Addition";
       const approach = "Benchmark";
       const document = {} as StudentDataInterface;
-      const state = InitialInterventionState;
+      const state = {
+        ...InitialInterventionState,
+        ShowButton: true
+      };
       const openModal = jest.fn();
       const addDocument = jest.fn();
       const updateDocument = jest.fn();

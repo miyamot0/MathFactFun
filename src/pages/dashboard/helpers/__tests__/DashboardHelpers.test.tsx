@@ -7,9 +7,16 @@
  */
 
 import firebase from "firebase";
+import Adapter from "enzyme-adapter-react-16";
+import Enzyme from "enzyme";
+import React from "react";
 import { CommentInterface } from "../../../student/subcomponents/types/CommentTypes";
 import { StudentDataInterface } from "../../../student/interfaces/StudentInterfaces";
-import { dashboardGenerateError, dashboardLoadingError, practiceFilterMap, studentFilterMap } from "../DashboardHelpers";
+import { DashboardErrorMessage, DashboardLoadingMessage, 
+    practiceFilterMap, studentFilterMap } from "../DashboardHelpers";
+import { shallow } from "enzyme";
+
+Enzyme.configure({ adapter: new Adapter() });
 
 const mockComment = {
     content: 'string',
@@ -75,27 +82,31 @@ function generateGradedObject(grade: string, uid: string): StudentDataInterface 
     } as StudentDataInterface;
 }
 
-describe('dashboardGenerateError', () => {
+describe('DashboardErrorMessage', () => {
     it('Should work well with string', () => {
         const value = 'err';
-        expect(() => dashboardGenerateError({ documentError: value })).not.toThrow(Error("Unexpected undefined"));
+        
+        const wrapper = shallow(<DashboardErrorMessage documentError={value} dataType={'value'}/>)        
     })
 
     it('Should fail with undefined', () => {
         const value = undefined;
-        expect(() => dashboardGenerateError({ documentError: value })).toThrow(Error("Unexpected undefined"));
+        
+        expect(() => shallow(<DashboardErrorMessage documentError={value} dataType={'value'}/>)).toThrow()
     })
 })
 
 describe('dashboardLoadingError', () => {
     it('Should fail with string', () => {
         const value = 'err';
-        expect(() => dashboardLoadingError({ documentError: value })).toThrow(Error("Unexpected error found"));
+
+        expect(() => shallow(<DashboardLoadingMessage documentError={value} dataType={'value'}/>)).toThrow()
     })
 
     it('Should work well withundefined', () => {
         const value = undefined;
-        expect(() => dashboardLoadingError({ documentError: value })).not.toThrow(Error("Unexpected error found"));
+
+        const wrapper = shallow(<DashboardLoadingMessage documentError={value} dataType={'value'}/>)        
     })
 })
 
@@ -184,9 +195,14 @@ describe('studentFilterMap', () => {
         expect(test).toStrictEqual(gradedObj);
     })
 
-    it('filter: Should work with string', () => {
+    it('filter: Should err out', () => {
         const value = 'err';
         expect(() => studentFilterMap(docs, user, value)).not.toThrow(Error("Unexpected undefined filter variable"));
+    })
+
+    it('filter: should return null', () => {
+        const value = 'err';
+        expect(() => studentFilterMap(null, null, value)).not.toThrow(Error("Unexpected undefined filter variable"));
     })
 })
 
@@ -275,8 +291,13 @@ describe('practiceFilterMap', () => {
         expect(test).toStrictEqual(gradedObj);
     })
 
-    it('filter: Should work with string', () => {
+    it('filter: Should err out', () => {
         const value = 'err';
         expect(() => practiceFilterMap(docs, user, value)).not.toThrow(Error("Unexpected undefined filter variable"));
+    })
+
+    it('filter: should return null', () => {
+        const value = 'err';
+        expect(() => practiceFilterMap(null, null, value)).not.toThrow(Error("Unexpected undefined filter variable"));
     })
 })

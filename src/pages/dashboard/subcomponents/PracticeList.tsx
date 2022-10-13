@@ -9,7 +9,6 @@
 import React from "react";
 import {
   InterventionRoutingLink,
-  warnNoProblemsAssigned,
 } from "./helpers/DashboardSubcomponentHelpers";
 import { GetApproachStringFromLabel } from "../../../utilities/LabelHelper";
 import { PracticeListInterface } from "../types/DashboardTypes";

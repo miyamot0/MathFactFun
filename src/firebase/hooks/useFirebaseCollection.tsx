@@ -44,7 +44,7 @@ export function useFirebaseCollectionTyped<T>({
   useEffect(() => {
     let ref: firebase.firestore.CollectionReference<firebase.firestore.DocumentData> =
       projectFirestore.collection(collectionString.trim());
-
+      
     if (query) {
       const [fieldPath, opString, value] = query;
 

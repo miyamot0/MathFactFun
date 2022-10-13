@@ -9,63 +9,54 @@
 import React from "react";
 import Adapter from "enzyme-adapter-react-16";
 import Enzyme, { shallow } from "enzyme";
-import { mount } from "enzyme";
 import CreateStudent from "../CreateStudent";
 import { FirestoreState } from "../../../firebase/interfaces/FirebaseInterfaces";
 
-import * as StudentHelpers from "./../helpers/StudentHelpers";
-
 Enzyme.configure({ adapter: new Adapter() });
 
-jest.mock("../helpers/StudentHelpers");
-
-const mockId = "123";
-
-jest.mock("react-router-dom", () => ({
-  ...jest.requireActual("react-router-dom"),
-  useParams: () => ({
-    id: mockId,
-  }),
-  useHistory: () => ({
-    push: jest.fn(),
-  }),
-  useRouteMatch: () => ({ url: `/create/${mockId}` }),
-}));
-
 jest.mock("./../../../firebase/hooks/useFirestore", () => {
-  const originalModule = jest.requireActual(
-    "./../../../firebase/hooks/useFirestore"
-  );
   return {
-    __esModule: true,
-    ...originalModule,
-    default: () => ({
+    useFirestore: () => ({
       addDocument: jest.fn(),
+      deleteDocument: jest.fn(),
+      updateDocument: jest.fn(),
       response: {} as FirestoreState,
+    })
+  };
+});
+
+var mockVerifySingleStudentCreate: jest.Mock<any, any>;
+jest.mock("./../helpers/StudentHelpers", () => {
+  mockVerifySingleStudentCreate = jest.fn();
+  return {
+      verifySingleStudentCreate: mockVerifySingleStudentCreate
+  };
+});
+
+jest.mock("react-router-dom", () => {
+  return {
+    useParams: () => ({ }),
+    useHistory: () => ({
+      push: jest.fn(),
     }),
+    useRouteMatch: () => jest.fn(),
   };
 });
 
 describe("CreateStudent", () => {
   it("Will render as normal", () => {
-    const wrapper = mount(<CreateStudent />);
+    const wrapper = shallow(<CreateStudent />);
 
     expect(wrapper.find(".create-student-page").length).toBe(1);
   });
 
   it("Will call function designed", () => {
-    const docMock = jest.spyOn(StudentHelpers, "verifySingleStudentCreate");
-    const mockedFuntion = jest.fn();
-    docMock.mockImplementation(() => mockedFuntion());
+    const wrapper = shallow(<CreateStudent />);
 
-    const wrapper = mount(<CreateStudent />);
-    const form = wrapper.find("form").first();
-    form.simulate("submit");
+    wrapper.find("form").first().simulate("submit", {
+      preventDefault: jest.fn()
+    });
 
-    setTimeout(() => {
-      expect(mockedFuntion).toHaveBeenCalled();
-    }, 1000);
-
-    expect(wrapper.find(".create-student-page").length).toBe(1);
+    expect(mockVerifySingleStudentCreate).toBeCalled();
   });
 });

@@ -6,115 +6,97 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { renderHook } from "@testing-library/react-hooks";
-import { useFirebaseCollectionTyped } from "../useFirebaseCollection";
-import { FirestoreCollections } from "../useFirestore";
-import { mockFirebase } from "firestore-jest-mock";
+import { renderHook } from '@testing-library/react-hooks';
+import { mockCollection, mockOnSnapshot, mockOrderBy, mockWhere } from '../../../setupTests';
+import { useFirebaseCollectionTyped } from '../useFirebaseCollection';
 
-import {
-  mockWhere,
-  mockOrderBy,
-} from "firestore-jest-mock/mocks/firestore";
-
-describe("useFirebaseCollectionTyped", () => {
-  mockFirebase({
-    database: {
-      users: [
-        {
-          id: "123",
-          displayEmail: "displayEmail",
-          displayName: "displayName",
-          displaySchool: "displaySchool",
-        },
-      ],
-      performances: [],
-    },
+describe('useFirebaseCollectionTyped', () => {
+  beforeEach(() => {
+    mockOrderBy.mockClear();
+    mockWhere.mockClear();
   });
 
-  afterAll(() => {
-    jest.clearAllMocks();
-  });
+  it('Should fail on bogus query', () => {
+    mockCollection.mockImplementationOnce((collection) => {
+      throw new Error('Error')
+    });
 
-  it("Should fail on bogus query", async () => {
-
-    const { result, waitFor } = renderHook(() =>
+    const { result } = renderHook(() =>
       useFirebaseCollectionTyped({
-        collectionString: FirestoreCollections.Users,
+        collectionString: 'blerg',
         queryString: undefined,
         orderString: undefined,
-      })
+      }),
     );
 
-    waitFor(() => {
-      expect(result.error).toBe(true)
-    })
-
+    expect(result.error).not.toBe(undefined);
   });
 
-  it("Should query against firestore, users", async () => {
-    const mockInput = ["uid", "=", "123"];
+  it('Should query against firestore, users, no args', () => {
+    mockCollection.mockImplementationOnce((collection) => ({
+    onSnapshot: mockOnSnapshot.mockImplementation(() => {}),
+    where: mockWhere.mockResolvedValue(this),
+    orderBy: mockOrderBy.mockResolvedValue(this),
+    }));
 
-    const { waitFor } = renderHook(() =>
+    const {result} = renderHook(() =>
       useFirebaseCollectionTyped({
-        collectionString: FirestoreCollections.Users,
+        collectionString: 'users',
+        queryString: undefined,
+        orderString: undefined,
+      }),
+    );
+
+    expect(mockWhere).toBeCalledTimes(0);
+    expect(mockOrderBy).toBeCalledTimes(0);
+    expect(mockOnSnapshot).toBeCalledTimes(1);
+    expect(result.current.error).toBe(undefined)
+  });
+
+  it('Should query against firestore, users', () => {
+    mockCollection.mockImplementationOnce((collection) => ({
+      where: mockWhere.mockReturnThis(),
+      orderBy: mockOrderBy.mockReturnThis(),
+      onSnapshot: mockOnSnapshot
+    }));
+
+    const mockInput = ['uid', '=', '123'];
+
+    const { result } = renderHook(() =>
+      useFirebaseCollectionTyped({
+        collectionString: 'users',
         queryString: mockInput,
         orderString: undefined,
-      })
+      }),
     );
 
-    waitFor(() => {
-      expect(mockWhere).toBeCalledWith(mockInput);
-    });
+    expect(mockWhere).toBeCalledTimes(1);
+    expect(mockOrderBy).toBeCalledTimes(0);
+    expect(mockOnSnapshot).toBeCalledTimes(1);
+    expect(result.current.error).toBe(undefined)
   });
 
-  it("Should orderby against firestore, users", async () => {
-    const mockInput = ["id", "asc"];
 
-    const { waitFor } = renderHook(() =>
+  it('Should orderby against firestore, users', () => {
+    mockCollection.mockImplementationOnce((collection) => ({
+      where: mockWhere.mockReturnThis(),
+      orderBy: mockOrderBy.mockReturnThis(),
+      onSnapshot: mockOnSnapshot
+    }));
+
+    const mockInput = ['id', 'asc'];
+
+    const { result } = renderHook(() =>
       useFirebaseCollectionTyped({
-        collectionString: FirestoreCollections.Users,
+        collectionString: 'users',
         queryString: undefined,
         orderString: mockInput,
-      })
+      }),
     );
 
-    waitFor(() => {
-      expect(mockOrderBy).toBeCalledWith(mockInput);
-    });
+    expect(mockWhere).toBeCalledTimes(0);
+    expect(mockOrderBy).toBeCalledTimes(1);
+    expect(mockOnSnapshot).toBeCalledTimes(1);
+    expect(result.current.error).toBe(undefined)
   });
-
-  it("Should query against firestore, performances", async () => {
-    const mockInput = ["uid", "=", "123"];
-
-    const { waitFor } = renderHook(() =>
-      useFirebaseCollectionTyped({
-        collectionString: `${FirestoreCollections.Performances}/Addition/123`,
-        queryString: mockInput,
-        orderString: undefined,
-      })
-    );
-
-    waitFor(() => {
-      expect(mockWhere).toBeCalledWith(mockInput);
-    });
-  });
-
-  it("Should orderby against firestore, performances", async () => {
-    const mockInput = ["id", "asc"];
-
-    const { waitFor } = renderHook(() =>
-      useFirebaseCollectionTyped({
-        collectionString: `${FirestoreCollections.Performances}/Addition/123`,
-        queryString: undefined,
-        orderString: mockInput,
-      })
-    );
-
-    waitFor(() => {
-      expect(mockOrderBy).toBeCalledWith(mockInput);
-    });
-  });
-
-  // TODO: clean up on snapshot change
-
 });

@@ -6,17 +6,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-/**
- * Information Page
- */
-
 import React from "react";
 import { Link } from "react-router-dom";
 
 // styles
 import "./styles/Information.css";
 
-export default function Information() {
+export default function Information(): JSX.Element {
   return (
     <>
       <h2 className="global-page-title">Information and Start-up Guide</h2>

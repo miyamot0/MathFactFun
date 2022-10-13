@@ -11,7 +11,6 @@
  */
 
 import React from "react";
-
 import { Link } from "react-router-dom";
 import { useFirebaseCollectionTyped } from "../../firebase/hooks/useFirebaseCollection";
 import { UserDataInterface } from "../user/types/UserTypes";

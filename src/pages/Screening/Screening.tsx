@@ -36,33 +36,36 @@ export default function Screening() {
   const { user, adminFlag } = useAuthorizationContext();
   const [chartOptions, setChartOptions] = useState({});
 
-  const { documents: additionDocuments } =
+  const { documents: additionDocuments, error: additionError } =
     useFirebaseCollectionTyped<PerformanceDataInterface>({
       collectionString: `performances/Addition/${id}`,
-      queryString: user && !adminFlag ? ["creator", "==", user.uid] : undefined,
+      queryString: user && adminFlag === false ? ["creator", "==", user.uid] : undefined,
       orderString: undefined,
     });
 
   const { documents: subtractionDocuments } =
     useFirebaseCollectionTyped<PerformanceDataInterface>({
       collectionString: `performances/Subtraction/${id}`,
-      queryString: user && !adminFlag ? ["creator", "==", user.uid] : undefined,
+      queryString: user && adminFlag === false ? ["creator", "==", user.uid] : undefined,
       orderString: undefined,
     });
 
   const { documents: multiplicationDocuments } =
     useFirebaseCollectionTyped<PerformanceDataInterface>({
       collectionString: `performances/Multiplication/${id}`,
-      queryString: user && !adminFlag ? ["creator", "==", user.uid] : undefined,
+      queryString: user && adminFlag === false ? ["creator", "==", user.uid] : undefined,
       orderString: undefined,
     });
 
   const { documents: divisionDocuments } =
     useFirebaseCollectionTyped<PerformanceDataInterface>({
       collectionString: `performances/Division/${id}`,
-      queryString: user && !adminFlag ? ["creator", "==", user.uid] : undefined,
+      queryString: user && adminFlag === false ? ["creator", "==", user.uid] : undefined,
       orderString: undefined,
     });
+
+    console.log(additionDocuments)
+    console.log(additionError)
 
   useEffect(() => {
     if (

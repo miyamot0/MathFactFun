@@ -59,8 +59,8 @@ describe("StudentCommentFormView", () => {
                 ],
             } as StudentDataInterface;
 
-            const user = {} as firebase.User;
-            const updateDocument = jest.fn();
+            const user = {displayName: "display Name"} as firebase.User;
+            const updateDocument = jest.fn().mockImplementation((string, obj) => true);
             const dispatch = jest.fn();
             const newComment = "newComment";
             const response = { error: null } as FirestoreState;
@@ -68,7 +68,7 @@ describe("StudentCommentFormView", () => {
             const wrapper = shallow(
                 <StudentCommentFormView
                     user={user}
-                    newComment={newComment}
+                    state={{Comment: newComment}}
                     student={student}
                     updateDocument={updateDocument}
                     dispatch={dispatch}
@@ -76,14 +76,75 @@ describe("StudentCommentFormView", () => {
                 />
             );
 
-            expect(wrapper.find("button").length).toBe(1);
+            expect(wrapper.find("form").length).toBe(1);
 
-            wrapper.find("button").first().simulate('click');
+            wrapper.find('textarea').forEach((input) => {
+                input.simulate('change', { target: { value: '1' } });
+            });
 
-            await waitFor(() => {
-                expect(updateDocument).toBeCalled();
-                expect(dispatch).toBeCalled();
-            })
+            wrapper.update();
+            wrapper.render();
+
+            wrapper.find("form").first().simulate('submit', {
+                preventDefault: () => {}
+            });
+
+            wrapper.update();
+            wrapper.render();
+
+            expect(updateDocument).toBeCalled();
+            expect(dispatch).toBeCalled();
+        })
+    });
+
+    it("Should render and sent both, if user is good, but has no name", async () => {
+        await act(async () => {
+            const student = {
+                ...mockData,
+                comments: [
+                    {
+                        id: 123,
+                        displayName: "display Name",
+                        createdAt: firebase.firestore.Timestamp.fromDate(new Date()),
+                    } as CommentInterface,
+                ],
+            } as StudentDataInterface;
+
+            const user = {displayName: ""} as firebase.User;
+            const updateDocument = jest.fn().mockImplementation((string, obj) => true);
+            const dispatch = jest.fn();
+            const newComment = "newComment";
+            const response = { error: null } as FirestoreState;
+
+            const wrapper = shallow(
+                <StudentCommentFormView
+                    user={user}
+                    state={{Comment: newComment}}
+                    student={student}
+                    updateDocument={updateDocument}
+                    dispatch={dispatch}
+                    response={response}
+                />
+            );
+
+            expect(wrapper.find("form").length).toBe(1);
+
+            wrapper.find('textarea').forEach((input) => {
+                input.simulate('change', { target: { value: '1' } });
+            });
+
+            wrapper.update();
+            wrapper.render();
+
+            wrapper.find("form").first().simulate('submit', {
+                preventDefault: () => {}
+            });
+
+            wrapper.update();
+            wrapper.render();
+
+            expect(updateDocument).toBeCalled();
+            expect(dispatch).toBeCalled();
         })
     });
 
@@ -109,7 +170,7 @@ describe("StudentCommentFormView", () => {
             const wrapper = shallow(
                 <StudentCommentFormView
                     user={user}
-                    newComment={newComment}
+                    state={{Comment: newComment}}
                     student={student}
                     updateDocument={updateDocument}
                     dispatch={dispatch}
@@ -117,14 +178,24 @@ describe("StudentCommentFormView", () => {
                 />
             );
 
-            expect(wrapper.find("button").length).toBe(1);
+            expect(wrapper.find("form").length).toBe(1);
 
-            wrapper.find("button").first().simulate('click');
+            wrapper.find('textarea').forEach((input) => {
+                input.simulate('change', { target: { value: '1' } });
+            });
 
-            await waitFor(() => {
-                expect(updateDocument).toBeCalled();
-                expect(dispatch).toHaveBeenCalledTimes(0);
-            })
+            wrapper.update();
+            wrapper.render();
+
+            wrapper.find("form").first().simulate('submit', {
+                preventDefault: () => {}
+            });
+
+            wrapper.update();
+            wrapper.render();
+
+            expect(updateDocument).toBeCalled();
+            expect(dispatch).toBeCalled();
         })
     });
 
@@ -150,7 +221,7 @@ describe("StudentCommentFormView", () => {
             const wrapper = shallow(
                 <StudentCommentFormView
                     user={user}
-                    newComment={newComment}
+                    state={{Comment: newComment}}
                     student={student}
                     updateDocument={updateDocument}
                     dispatch={dispatch}
@@ -158,14 +229,12 @@ describe("StudentCommentFormView", () => {
                 />
             );
 
-            expect(wrapper.find("button").length).toBe(1);
+            wrapper.find("form").first().simulate('submit', {
+                preventDefault: () => {}
+            });
 
-            wrapper.find("button").first().simulate('click');
-
-            await waitFor(() => {
-                expect(updateDocument).toHaveBeenCalledTimes(0);
-                expect(dispatch).toHaveBeenCalledTimes(0);
-            })
+            expect(updateDocument).toHaveBeenCalledTimes(0);
+            expect(dispatch).toHaveBeenCalledTimes(0);
         })
     });
 });

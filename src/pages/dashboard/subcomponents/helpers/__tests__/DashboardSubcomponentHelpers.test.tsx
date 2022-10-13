@@ -20,12 +20,13 @@ import {
   checkIfCompletedBenchmark,
   checkIfDateCurrent,
   checkIfProgrammingCurrent,
-  dynamicallyGenerateLink,
   generatedStyledFeedback,
   generateRouteBaseOnStrategy,
   generateWrapperBenchmarkList,
+  InterventionRoutingLink,
   warnNoProblemsAssigned,
 } from "../DashboardSubcomponentHelpers";
+import { act } from "react-dom/test-utils";
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -75,19 +76,6 @@ describe("generateRouteBaseOnStrategy", () => {
 
     expect(calculatedValue).toBe(errorRoute);
   });
-
-  /*
-    export function generateRouteBaseOnStrategy(
-        strategy: string | undefined,
-        target: string | undefined,
-        id: string | undefined | null
-    ): string {
-        if (strategy === undefined || target === undefined || id === undefined) {
-            return "#!";
-        }
-    
-        return `/${strategy}/${target}/${id}`;
-    } */
 });
 
 describe("checkIfDateCurrent", () => {
@@ -165,50 +153,41 @@ describe("dynamicallyGenerateLink", () => {
       </Link>
     );
 
-    const value = dynamicallyGenerateLink({ student: mockData, callback: warnNoProblemsAssigned });
+    const wrapper = shallow(<MemoryRouter><InterventionRoutingLink student={mockData}/></MemoryRouter>)
 
-    expect(value).toStrictEqual(expected);
+    expect(wrapper.html().includes(`/${mockData.currentApproach}/${mockData.currentTarget}/${mockData.id}`))
+    .toBe(true);
   });
 
   it("Should return warning that there are no problems", () => {
     const mockData2 = {
       ...mockData,
-      factsTargeted: [],
+      factsTargeted: null as unknown as [],
     };
 
-    const cb = jest.fn();
+    const wrapper = mount(<MemoryRouter><InterventionRoutingLink student={mockData2}/></MemoryRouter>)
 
-    const wrapper = mount(
-      <MemoryRouter>{dynamicallyGenerateLink({ student: mockData2, callback: cb })}</MemoryRouter>
-    );
+    expect(wrapper.html().includes("#!")).toBe(true);
 
-    wrapper.find(Link).simulate("click");
+    const a = wrapper.find('a');
+    expect(a.length).toBe(1);
 
-    setTimeout(() => {
-      expect(cb).toHaveBeenCalled();
-    }, 1000);
+    a.simulate("click");
   });
 });
 
 describe("warnNoProblemsAssigned", () => {
-  let confirmSpy: jest.SpyInstance<boolean, [message?: string | undefined]>;
-  let alertSpy: jest.SpyInstance<void, [message?: any]>;
-
-  beforeAll(() => {
-    confirmSpy = jest.spyOn(global, "confirm");
-    confirmSpy.mockImplementation(jest.fn(() => true));
-    alertSpy = jest.spyOn(global, "alert");
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    alertSpy.mockImplementation(() => { });
-  });
-
-  afterAll(() => {
-    confirmSpy.mockRestore();
-    alertSpy.mockRestore();
-  });
-
   it("Should fire", () => {
-    expect(() => warnNoProblemsAssigned()).not.toThrow();
+    act(() => {
+      let confirmSpy = jest.spyOn(global, "confirm");
+      confirmSpy.mockImplementation(jest.fn(() => true));
+
+      let alertSpy = jest.spyOn(global, "alert");
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      alertSpy.mockImplementation(jest.fn(() => true));
+
+      expect(() => warnNoProblemsAssigned()).not.toThrow();
+    })
   });
 });
 

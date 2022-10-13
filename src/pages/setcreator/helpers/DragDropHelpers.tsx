@@ -273,7 +273,6 @@ export function loadCreatorMathFacts(
   );
 
   const flattened: SetItem[] = mappedReduced.map((entry: FactStructure) => {
-    console.log(state.ItemHistory);
     const releventResult = !state.ItemHistory
       ? undefined
       : state.ItemHistory.filter(

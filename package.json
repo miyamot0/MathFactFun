@@ -37,7 +37,8 @@
       "Cloze.tsx",
       "ProgressMonitor.tsx",
       "Timer.tsx",
-      "TimerButton.tsx"
+      "TimerButton.tsx",
+      "App.tsx"
     ]
   },
   "scripts": {

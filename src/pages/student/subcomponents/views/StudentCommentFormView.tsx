@@ -9,7 +9,6 @@
 import React, { FormEvent } from "react";
 import firebase from "firebase";
 import { FirestoreState } from "../../../../firebase/interfaces/FirebaseInterfaces";
-import { timestamp } from "../../../../firebase/config";
 import { StudentDataInterface } from "../../interfaces/StudentInterfaces";
 import { CommentTextBehavior } from "../functionality/StudentCommentBehavior";
 import { CommentTextInterface } from "../types/CommentTypes";
@@ -44,7 +43,7 @@ export default function StudentCommentFormView({
     const usersComment = {
       displayName: nameCheck,
       content: state.Comment,
-      createdAt: timestamp.fromDate(new Date()),
+      createdAt: firebase.firestore.Timestamp.fromDate(new Date()),
       createdBy: user.uid,
       id: Math.random(),
     };

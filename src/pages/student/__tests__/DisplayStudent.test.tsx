@@ -9,35 +9,29 @@
 import React from "react";
 import firebase from "firebase";
 import Adapter from "enzyme-adapter-react-16";
-import Enzyme from "enzyme";
-import { mount } from "enzyme";
+import Enzyme, { mount, shallow } from "enzyme";
+import DisplayStudent from "../DisplayStudent";
 import { StudentDataInterface } from "../interfaces/StudentInterfaces";
 import { CommentInterface } from "../subcomponents/types/CommentTypes";
-import DisplayStudent from "../DisplayStudent";
-import * as useFirebaseDocumentTyped from "./../../../firebase/hooks/useFirebaseDocument";
-import { MemoryRouter } from "react-router-dom";
+import { MemoryRouter, Route } from "react-router-dom";
+import { FirestoreState } from "../../../firebase/interfaces/FirebaseInterfaces";
+//import { mockUseParams } from "../../../setupTests";
 
 Enzyme.configure({ adapter: new Adapter() });
 
-jest.mock("../helpers/StudentHelpers");
-
-const mockComment = {
-  content: "string",
-  displayName: "string",
-  createdAt: "",
-  createdBy: "",
-  id: 0,
-};
-
-const mockId = "123";
-
 const mockData = {
-  id: mockId,
+  id: "123",
   aimLine: 0,
   createdAt: firebase.firestore.Timestamp.fromDate(new Date()),
   dueDate: firebase.firestore.Timestamp.fromDate(new Date()),
   lastActivity: firebase.firestore.Timestamp.fromDate(new Date()),
-  comments: [mockComment] as CommentInterface[],
+  comments: [{
+      content: "string",
+      displayName: "string",
+      createdAt: "",
+      createdBy: "",
+      id: 0,
+    }] as CommentInterface[],
   completedBenchmark: [],
   currentBenchmarking: ["a", "b"],
   factsMastered: ["", ""],
@@ -45,7 +39,7 @@ const mockData = {
   factsTargeted: ["", ""],
 
   creator: "",
-  currentApproach: "NA",
+  currentApproach: "",
   currentErrorApproach: "",
   currentGrade: "",
   currentSRApproach: "",
@@ -57,94 +51,83 @@ const mockData = {
   minForTask: 2,
 } as StudentDataInterface;
 
-jest.mock("./../../../firebase/hooks/useFirebaseDocument", () => {
-  const originalModule = jest.requireActual(
-    "./../../../firebase/hooks/useFirebaseDocument"
-  );
+jest.mock("./../../../firebase/hooks/useFirestore", () => {
   return {
-    __esModule: true,
-    ...originalModule,
-    default: () => ({
-      useFirebaseDocumentTyped: {
-        document: mockData,
-        documentError: undefined,
-      },
-    }),
+    useFirestore: () => ({
+      addDocument: jest.fn(),
+      deleteDocument: jest.fn(),
+      updateDocument: jest.fn(),
+      response: {} as FirestoreState,
+    })
   };
 });
 
-jest.mock("react-router-dom", () => ({
-  ...jest.requireActual("react-router-dom"),
-  useParams: () => ({
-    id: mockId,
-  }),
-  useHistory: () => ({
-    push: jest.fn(),
-  }),
-  useRouteMatch: () => ({ url: `/create/${mockId}` }),
-}));
+var mockUseFirebaseDocumentTyped: jest.Mock<any, any>;
+jest.mock("./../../../firebase/hooks/useFirebaseDocument", () => {
+  mockUseFirebaseDocumentTyped = jest.fn();
+
+  return {
+    useFirebaseDocumentTyped: mockUseFirebaseDocumentTyped
+}});
+
+var mockVerifySingleStudentCreate: jest.Mock<any, any>;
+var mockVerifySingleStudentEdit: jest.Mock<any, any>;
+var mockOnLoadSingleStudentEdit: jest.Mock<any, any>;
+jest.mock("./../helpers/StudentHelpers", () => {
+  mockVerifySingleStudentCreate = jest.fn();
+  mockVerifySingleStudentEdit = jest.fn();
+  mockOnLoadSingleStudentEdit = jest.fn();
+
+  return {
+      verifySingleStudentCreate: () => mockVerifySingleStudentCreate,
+      verifySingleStudentEdit: () => mockVerifySingleStudentEdit,
+      onLoadSingleStudentEdit: () => mockOnLoadSingleStudentEdit,
+  };
+});
+
+jest.mock("react-router-dom", () => {
+  return {
+    useParams: () => ({ id: "123" }),
+    useHistory: () => ({
+      push: jest.fn(),
+    }),
+    useRouteMatch: () => jest.fn(),
+  };
+});
 
 describe("DisplayStudent", () => {
+  it('stub', () => { expect(1).toBe(1) })
+
   it("Will render when data is received", () => {
-    const docMock = jest.spyOn(
-      useFirebaseDocumentTyped,
-      "useFirebaseDocumentTyped"
-    );
-    docMock.mockImplementation(() => ({
+    mockUseFirebaseDocumentTyped.mockReturnValue({
       document: mockData,
       documentError: undefined,
-    }));
+    })
 
-    const wrapper = mount(
-      <MemoryRouter>
-        <DisplayStudent />
-      </MemoryRouter>
-    );
+    const wrapper = shallow(<DisplayStudent />);
 
-    setTimeout(() => {
-      expect(wrapper.find(".student-details-style").length).toBe(1);
-    }, 1000);
+    expect(wrapper.find(".student-details-style").length).toBe(1);
   });
 
   it("Will render error upon error", () => {
-    const docMock = jest.spyOn(
-      useFirebaseDocumentTyped,
-      "useFirebaseDocumentTyped"
-    );
-    docMock.mockImplementation(() => ({
+    mockUseFirebaseDocumentTyped.mockReturnValue({
       document: null,
-      documentError: "No data received",
-    }));
+      documentError: "error",
+    })
 
-    const wrapper = mount(
-      <MemoryRouter>
-        <DisplayStudent />
-      </MemoryRouter>
-    );
+    const wrapper = shallow(<DisplayStudent />);
 
-    setTimeout(() => {
-      expect(wrapper.find(".error").length).toBe(1);
-    }, 1000);
+    expect(wrapper.find(".error").length).toBe(1);
   });
 
   it("Will render loading upon loading", () => {
-    const docMock = jest.spyOn(
-      useFirebaseDocumentTyped,
-      "useFirebaseDocumentTyped"
-    );
-    docMock.mockImplementation(() => ({
+    mockUseFirebaseDocumentTyped.mockReturnValue({
       document: null,
       documentError: undefined,
-    }));
+    })
 
-    const wrapper = mount(
-      <MemoryRouter>
-        <DisplayStudent />
-      </MemoryRouter>
-    );
+    const wrapper = shallow(<DisplayStudent />);
 
-    setTimeout(() => {
-      expect(wrapper.find(".loading").length).toBe(1);
-    }, 1000);
+    expect(wrapper.find(".loading").length).toBe(1);
   });
 });

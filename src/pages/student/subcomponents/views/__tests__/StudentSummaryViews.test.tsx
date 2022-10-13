@@ -8,16 +8,14 @@
 
 import firebase from "firebase";
 import Adapter from "enzyme-adapter-react-16";
-import Enzyme, { mount } from "enzyme";
+import React from "react";
+import Enzyme, { shallow } from "enzyme";
 import { CommentInterface } from "../../types/CommentTypes";
 import { StudentDataInterface } from "../../../interfaces/StudentInterfaces";
-import {
-  renderAdministrativeButtons,
-  renderSetCreatorButton,
-  renderSpecificOutcomesButton,
-} from "../StudentSummaryViews";
 import { FirestoreState } from "../../../../../firebase/interfaces/FirebaseInterfaces";
-import * as SummaryHelpers from "./../../helpers/StudentSummaryHelpers";
+import { ShowAdministrativeButtons, ShowSetCreatorButton, 
+  ShowSpecificOutcomesButton } from "../StudentSummaryViews";
+import { MemoryRouter } from "react-router-dom";
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -47,31 +45,43 @@ const mockData = {
   minForTask: 2,
 } as StudentDataInterface;
 
+var mockHandleStudentDelete: jest.Mock<any, any>;
+
+jest.mock("./../../helpers/StudentSummaryHelpers", () => {
+  mockHandleStudentDelete = jest.fn();
+
+  return {
+      handleStudentDelete: () => mockHandleStudentDelete,
+  };
+});
+
 describe("renderSpecificOutcomesButton", () => {
   it("Should render buttons with a target", () => {
     const mockData2 = {
       ...mockData,
-      currentTarget: "ExplicitTiming",
+      currentApproach: "ExplicitTiming",
     } as StudentDataInterface;
 
-    const result = renderSpecificOutcomesButton({ student: mockData2 });
-    const resultString = JSON.stringify(result);
-
-    expect(resultString.includes("Intervention-specific Targets")).toBe(true);
-    expect(resultString.includes("no-specific-outcomes-button")).toBe(false);
+    const wrapper = shallow(<MemoryRouter>
+      <ShowSpecificOutcomesButton student={ mockData2 } />
+    </MemoryRouter>);
+    
+    expect(wrapper.html().includes("Intervention-specific Targets")).toBe(true);
+    expect(wrapper.html().includes("no-specific-outcomes-button")).toBe(false);
   });
 
   it("Should not render buttons without a target", () => {
     const mockData2 = {
       ...mockData,
-      currentTarget: "NA",
+      currentApproach: "NA",
     } as StudentDataInterface;
 
-    const result = renderSpecificOutcomesButton({ student: mockData2 });
-    const resultString = JSON.stringify(result);
+    const wrapper = shallow(<MemoryRouter>
+      <ShowSpecificOutcomesButton student={ mockData2 } />
+    </MemoryRouter>);
 
-    expect(resultString.includes("Intervention-specific Targets")).toBe(false);
-    expect(resultString.includes("no-specific-outcomes-button")).toBe(true);
+    expect(wrapper.html().includes("Intervention-specific Targets")).toBe(false);
+    expect(wrapper.html().includes("no-specific-outcomes-button")).toBe(true);
   });
 });
 
@@ -82,11 +92,12 @@ describe("renderSetCreatorButton", () => {
       currentTarget: "ExplicitTiming",
     } as StudentDataInterface;
 
-    const result = renderSetCreatorButton(mockData2);
-    const resultString = JSON.stringify(result);
+    const wrapper = shallow(<MemoryRouter>
+      <ShowSetCreatorButton student={ mockData2 } />
+    </MemoryRouter>);
 
-    expect(resultString.includes("Targeted Item Sets")).toBe(true);
-    expect(resultString.includes("no-set-items-button")).toBe(false);
+    expect(wrapper.html().includes("Targeted Item Sets")).toBe(true);
+    expect(wrapper.html().includes("no-set-items-button")).toBe(false);
   });
 
   it("Should not render buttons without a target", () => {
@@ -95,11 +106,12 @@ describe("renderSetCreatorButton", () => {
       currentTarget: "NA",
     } as StudentDataInterface;
 
-    const result = renderSetCreatorButton(mockData2);
-    const resultString = JSON.stringify(result);
+    const wrapper = shallow(<MemoryRouter>
+      <ShowSetCreatorButton student={ mockData2 } />
+    </MemoryRouter>);
 
-    expect(resultString.includes("Targeted Item Sets")).toBe(false);
-    expect(resultString.includes("no-set-items-button")).toBe(true);
+    expect(wrapper.html().includes("Targeted Item Sets")).toBe(false);
+    expect(wrapper.html().includes("no-set-items-button")).toBe(true);
   });
 });
 
@@ -111,21 +123,14 @@ describe("renderAdministrativeButtons", () => {
     const response = {} as FirestoreState;
     const history = jest.fn();
 
-    const result = renderAdministrativeButtons(
-      user,
-      adminFlag,
-      mockData,
-      handleDeleteEvent,
-      response,
-      history
-    );
+    const wrapper = shallow(<ShowAdministrativeButtons user={user}
+    adminFlag={adminFlag} deleteDocument={handleDeleteEvent} response={response}
+    history={history} student={mockData} />);
 
-    const resultString = JSON.stringify(result);
-
-    expect(resultString.includes("Advanced and Administrative Options")).toBe(
+    expect(wrapper.html().includes("Advanced and Administrative Options")).toBe(
       false
     );
-    expect(resultString.includes("no-admin-panel")).toBe(true);
+    expect(wrapper.html().includes("no-admin-panel")).toBe(true);
   });
 
   it("Should render buttons with a target", () => {
@@ -135,49 +140,27 @@ describe("renderAdministrativeButtons", () => {
     const response = {} as FirestoreState;
     const history = jest.fn();
 
-    const result = renderAdministrativeButtons(
-      user,
-      adminFlag,
-      mockData,
-      handleDeleteEvent,
-      response,
-      history
-    );
-    const resultString = JSON.stringify(result);
+    const wrapper = shallow(<ShowAdministrativeButtons user={user}
+    adminFlag={adminFlag} deleteDocument={handleDeleteEvent} response={response}
+    history={history} student={mockData} />);
 
-    expect(resultString.includes("Advanced and Administrative Options")).toBe(
+    expect(wrapper.html().includes("Advanced and Administrative Options")).toBe(
       true
     );
-    expect(resultString.includes("no-admin-panel")).toBe(false);
+    expect(wrapper.html().includes("no-admin-panel")).toBe(false);
   });
 
   it("Should render buttons with a target and trigger event", () => {
-    const docMock = jest.spyOn(SummaryHelpers, "handleStudentDelete");
-    const mockedFuntion = jest.fn();
-    docMock.mockImplementation(() => mockedFuntion());
-
     const user = { uid: "123" } as firebase.User;
     const adminFlag = true;
     const handleDeleteEvent = jest.fn();
     const response = {} as FirestoreState;
     const history = jest.fn();
 
-    const wrapper = mount(
-      renderAdministrativeButtons(
-        user,
-        adminFlag,
-        mockData,
-        handleDeleteEvent,
-        response,
-        history
-      )
-    );
+    const wrapper = shallow(<ShowAdministrativeButtons user={user}
+    adminFlag={adminFlag} deleteDocument={handleDeleteEvent} response={response}
+    history={history} student={mockData} />);
 
-    const button = wrapper.find("button").first();
-    button.simulate("click");
-
-    setTimeout(() => {
-      expect(mockedFuntion).toHaveBeenCalled();
-    }, 1000);
+    wrapper.find("button").first().simulate("click");
   });
 });

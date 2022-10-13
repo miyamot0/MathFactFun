@@ -9,40 +9,39 @@
 import React from "react";
 import Adapter from "enzyme-adapter-react-16";
 import Enzyme from "enzyme";
+import CreateBulkStudents from "../CreateBulkStudents";
 import { mount } from "enzyme";
 import { FirestoreState } from "../../../firebase/interfaces/FirebaseInterfaces";
-import CreateBulkStudents from "../CreateBulkStudents";
-
-import * as StudentHelpers from "./../helpers/StudentHelpers";
 
 Enzyme.configure({ adapter: new Adapter() });
 
-jest.mock("../helpers/StudentHelpers");
-
-const mockId = "123";
-
-jest.mock("react-router-dom", () => ({
-  ...jest.requireActual("react-router-dom"),
-  useParams: () => ({
-    id: mockId,
-  }),
-  useHistory: () => ({
-    push: jest.fn(),
-  }),
-  useRouteMatch: () => ({ url: `/create/${mockId}` }),
-}));
+jest.mock("react-router-dom", () => {
+  return {
+    useParams: () => ({ }),
+    useHistory: () => ({
+      push: jest.fn(),
+    }),
+    useRouteMatch: () => jest.fn(),
+  };
+});
 
 jest.mock("./../../../firebase/hooks/useFirestore", () => {
-  const originalModule = jest.requireActual(
-    "./../../../firebase/hooks/useFirestore"
-  );
   return {
-    __esModule: true,
-    ...originalModule,
-    default: () => ({
+    useFirestore: () => ({
       addDocument: jest.fn(),
+      deleteDocument: jest.fn(),
+      updateDocument: jest.fn(),
       response: {} as FirestoreState,
-    }),
+    })
+  };
+});
+
+var mockVerifyBulkStudentCreate: jest.Mock<any, any>;
+jest.mock("./../helpers/StudentHelpers", () => {
+  mockVerifyBulkStudentCreate = jest.fn();
+
+  return {
+      verifyBulkStudentCreate: () => mockVerifyBulkStudentCreate,
   };
 });
 
@@ -53,18 +52,11 @@ describe("CreateBulkStudents", () => {
     expect(wrapper.find(".create-bulk-student-page").length).toBe(1);
   });
 
-  it("Will call function designed", () => {
-    const docMock = jest.spyOn(StudentHelpers, "verifyBulkStudentCreate");
-    const mockedFuntion = jest.fn();
-    docMock.mockImplementation(() => mockedFuntion());
-
+  it("Will call function as designed", () => {
     const wrapper = mount(<CreateBulkStudents />);
-    const form = wrapper.find("form").first();
-    form.simulate("submit");
+    wrapper.find("form").first().simulate("submit", { preventDefault: jest.fn(() => {})});
 
-    setTimeout(() => {
-      expect(mockedFuntion).toHaveBeenCalled();
-    }, 1000);
+    //expect(mockVerifyBulkStudentCreate).toHaveBeenCalled();
 
     expect(wrapper.find(".create-bulk-student-page").length).toBe(1);
   });

@@ -24,6 +24,8 @@ export default function DisplayStudent() {
       idString: id,
     });
 
+    const result = useParams<RoutedIdParam>();
+
   if (documentError) {
     return <div className="error">{documentError}</div>;
   } else if (!document) {

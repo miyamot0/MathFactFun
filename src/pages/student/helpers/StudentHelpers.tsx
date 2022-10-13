@@ -17,7 +17,6 @@ import {
   StudentDataInterface,
 } from "../interfaces/StudentInterfaces";
 import { StudentCreatorBehavior } from "../types/StudentTypes";
-import { timestamp } from "../../../firebase/config";
 import { UserDataInterface } from "../../user/types/UserTypes";
 import { FirestoreState } from "../../../firebase/interfaces/FirebaseInterfaces";
 import {
@@ -140,9 +139,9 @@ export async function verifySingleStudentCreate(
       (benchmark: SingleOptionType) => benchmark.label
     ),
     creator: user.uid,
-    dueDate: timestamp.fromDate(new Date(state.DueDate)),
-    lastActivity: timestamp.fromDate(laggedDate),
-    createdAt: timestamp.fromDate(new Date()),
+    dueDate: firebase.firestore.Timestamp.fromDate(new Date(state.DueDate)),
+    lastActivity: firebase.firestore.Timestamp.fromDate(laggedDate),
+    createdAt: firebase.firestore.Timestamp.fromDate(new Date()),
 
     currentTarget: state.CurrentTarget.value,
     currentErrorApproach: state.CurrentErrorApproach.value,
@@ -284,7 +283,7 @@ export async function verifySingleStudentEdit(
     ),
     currentErrorApproach: state.CurrentErrorApproach.value,
     currentSRApproach: state.CurrentSRApproach.value,
-    dueDate: timestamp.fromDate(date),
+    dueDate: firebase.firestore.Timestamp.fromDate(date),
     aimLine: state.AimLine,
     minForTask: state.ExplicitTime,
     problemSet: state.CurrentProblemSet.value,
@@ -479,9 +478,9 @@ export async function verifyBulkStudentCreate(
       ),
       completedBenchmark: [],
       creator: id,
-      dueDate: timestamp.fromDate(new Date(state.DueDate)),
-      lastActivity: timestamp.fromDate(laggedDate),
-      createdAt: timestamp.fromDate(new Date()),
+      dueDate: firebase.firestore.Timestamp.fromDate(new Date(state.DueDate)),
+      lastActivity: firebase.firestore.Timestamp.fromDate(laggedDate),
+      createdAt: firebase.firestore.Timestamp.fromDate(new Date()),
       comments,
       factsTargeted,
       factsMastered,

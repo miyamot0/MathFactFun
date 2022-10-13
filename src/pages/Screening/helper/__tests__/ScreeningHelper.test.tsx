@@ -201,8 +201,12 @@ describe("remapReducedEntriesToPoint", () => {
             latencySeconds: 1,
 
             // Timestamps
-            dateTimeEnd: firebase.firestore.Timestamp.fromDate(new Date()),
-            dateTimeStart: firebase.firestore.Timestamp.fromDate(new Date()),
+            dateTimeEnd: firebase.firestore.Timestamp.fromDate(
+               new Date("09/15/2022")
+              ),
+            dateTimeStart: firebase.firestore.Timestamp.fromDate(
+               new Date("09/15/2022")
+              ),
           },
         ] as FactDataInterface[],
 
@@ -264,9 +268,12 @@ describe("remapReducedEntriesToPoint", () => {
     const reduced = reducerPerOperation(value);
     const result = remapReducedEntriesToPoint(reduced);
 
+    const d1 = new Date("09/14/2022").getTime();
+    const d2 = new Date("09/15/2022").getTime();
+
     expect(result).toStrictEqual([
-      { x: 1663131600000, y: 60 },
-      { x: 1663218000000, y: 60 },
+      { x: d1, y: 60 },
+      { x: d2, y: 60 },
     ]);
   });
 });

@@ -6,11 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { renderHook } from "@testing-library/react-hooks";
 import { act } from "react-dom/test-utils";
-import { useFirebaseLogin } from "../useFirebaseLogin";
-import firebase from "firebase";
+import { renderHook } from "@testing-library/react-hooks";
 import { projectAuth } from "./../../../firebase/config";
+import { useFirebaseLogin } from "../useFirebaseLogin";
+import { mockSignInWithEmailAndPassword } from "../../../setupTests";
+import firebase from "firebase";
 
 jest.mock("../../../context/hooks/useAuthorizationContext", () => {
   return {
@@ -20,65 +21,73 @@ jest.mock("../../../context/hooks/useAuthorizationContext", () => {
   };
 });
 
-describe("useFirebaseLogin.test.tsx", () => {
+describe("useFirebaseLogin", () => {
+  beforeEach(() => {
+    mockSignInWithEmailAndPassword.mockClear();
+  });
+
   it("the sign in with email/pass should work", async () => {
     await act(async () => {
       try {
-        await projectAuth.signInWithEmailAndPassword(
+        const { result, waitFor } = renderHook(() => useFirebaseLogin());
+
+        const { login } = result.current;
+
+        await login(
           "email@email.com",
           "password"
         );
 
-        expect(firebase.auth().signInWithEmailAndPassword).toBeCalled();
+        await waitFor(() => {
+          expect(mockSignInWithEmailAndPassword).toBeCalled();
+        })
       } catch (err: any) {
-        expect(1).toBe(1);
+        expect(1).toBe(2);
       }
     });
   });
 
   it("mock successful login", async () => {
     await act(async () => {
-      const mockJestSignIn = jest.fn();
-      mockJestSignIn.mockReturnValueOnce({
-        user: { uid: "123" },
-      } as firebase.auth.UserCredential);
-
-      const mockSignIn = jest.spyOn(projectAuth, "signInWithEmailAndPassword");
-      mockSignIn.mockImplementationOnce(mockJestSignIn);
-
+      mockSignInWithEmailAndPassword.mockReturnValueOnce(
+        {
+          user: {uid: '123'} as firebase.User
+        }
+      )
       const { result, waitFor } = renderHook(() => useFirebaseLogin());
-
       const { login } = result.current;
 
-      await login("shawnpgilroy@gmail.com", "password");
+      await login(
+        "email@email.com",
+        "password"
+      );
 
       await waitFor(() => {
-        expect(mockSignIn).toBeCalled();
+          expect(mockSignInWithEmailAndPassword).toBeCalled();
+      })
+
+        expect(mockSignInWithEmailAndPassword).toBeCalled();
         expect(result.current.loginPending).toBe(false);
         expect(result.current.loginError).toStrictEqual(undefined);
-      });
     });
   });
 
   it("mock errored login", async () => {
     await act(async () => {
-      const mockJestSignIn = jest.fn();
-      mockJestSignIn.mockImplementation(() => {
+      mockSignInWithEmailAndPassword.mockImplementationOnce(() => {
         throw Error("Error");
       });
 
-      const mockSignIn = jest.spyOn(projectAuth, "signInWithEmailAndPassword");
-      mockSignIn.mockImplementation(mockJestSignIn);
-
-      const { result } = renderHook(() => useFirebaseLogin());
+      const { result, waitFor } = renderHook(() => useFirebaseLogin());
 
       const { login } = result.current;
 
       await login("email@something.com", "pass");
 
-      expect(mockSignIn).toBeCalled();
-      expect(result.current.loginPending).toBe(false);
-      expect(result.current.loginError).not.toBe(undefined);
+        expect(mockSignInWithEmailAndPassword).toBeCalled();
+        expect(result.current.loginPending).toBe(false);
+        expect(result.current.loginError).not.toBe(undefined);
     });
   });
 });
+

@@ -104,18 +104,6 @@ export function overwriteOnlyExisting(
     const local: DispatchUpdatePreLoadContent =
       incoming as DispatchUpdatePreLoadContent;
 
-    console.log({
-      destination,
-    });
-
-    console.log({
-      local,
-    });
-
-    console.log({
-      ...destination,
-      ...local.payload,
-    });
     // Note: these are always to be true and valid
 
     return {
