@@ -12,6 +12,8 @@ import { GetApproachStringFromLabel } from "../../../utilities/LabelHelper";
 import { StudentListInterface } from "../types/DashboardTypes";
 import BenchmarkStatusView from "./views/BenchmarkStatusView";
 
+import SettingsIcon from "../../../assets/gear.svg"
+
 import "./styles/StudentList.css";
 
 /** StudentList
@@ -35,11 +37,26 @@ export default function StudentList({
           return (
             <div className="student-list-card" key={student.id}>
               <div className="student-list-head-item">
+                <div className="horizontal-header-student-list-item"
+                  style={{
+                    display: 'inline-block',
+                    width: '100%',
+                  }}>
+                  <p style={{ display: 'inline-block' }}>
+                    {student.name} ({student.currentGrade})
+                  </p>
 
-                <Link to={`/student/${student.id}`} key={student.id}>
-                  {student.name} ({student.currentGrade})
-                </Link>
-
+                  <Link
+                    to={`/student/${student.id}`}
+                    key={student.id}
+                    style={{ display: 'inline-block', float: 'right' }}
+                    className="student-list-settings-link"
+                  >
+                    <img
+                      src={SettingsIcon}
+                      alt="Settings link"></img>
+                  </Link>
+                </div>
                 <hr />
                 <p>
                   <b>Benchmarking:</b> {student.currentBenchmarking.join(", ")}

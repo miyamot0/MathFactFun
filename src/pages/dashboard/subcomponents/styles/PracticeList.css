@@ -113,3 +113,9 @@
   border-top: 1px dotted black;
   border-bottom: 0px dotted black;
 }
+
+.practice-list-name-tag {
+  text-decoration: none;
+  color: var(--heading-style-color) !important;
+  font-weight: bold;
+}

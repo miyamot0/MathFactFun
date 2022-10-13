@@ -7,17 +7,12 @@
  */
 
 import React from "react";
-import {
-  InterventionRoutingLink,
-} from "./helpers/DashboardSubcomponentHelpers";
+import PracticeStatusView from "./views/PracticeStatusView";
 import { GetApproachStringFromLabel } from "../../../utilities/LabelHelper";
 import { PracticeListInterface } from "../types/DashboardTypes";
-
 import "./styles/PracticeList.css";
-import PracticeStatusView from "./views/PracticeStatusView";
 
 export default function PracticeList({ students, }: PracticeListInterface): JSX.Element {
-
   const addedPaddingStyle = {
     marginTop: "5px",
   }
@@ -28,17 +23,11 @@ export default function PracticeList({ students, }: PracticeListInterface): JSX.
     return (
       <div className="practice-list">
         {students.map((student) => {
-          let isTutorialCompleted = false;
-
-          if (student.currentApproach === "CoverCopyCompare" && student.tutorialCCC === true) {
-            isTutorialCompleted = true;
-          } else if (student.currentApproach === "ExplicitTiming" && student.tutorialET === true) {
-            isTutorialCompleted = true;
-          }
-
           return (
             <div className="practice-list-card" key={student.id}>
-              <InterventionRoutingLink student={student} isTutorialCompleted={isTutorialCompleted} />
+              <p className="practice-list-name-tag">
+                {student.name} ({student.currentGrade})
+              </p>
 
               <hr />
 

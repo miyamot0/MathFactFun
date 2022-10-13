@@ -10,6 +10,7 @@ import React from "react";
 import firebase from "firebase";
 import { Link } from "react-router-dom";
 import { StudentDataInterface } from "../../../student/interfaces/StudentInterfaces";
+import PlayIcon from "../../../../assets/play.svg"
 
 /** generateRouteBaseOnStrategy
  *
@@ -57,7 +58,6 @@ export function checkIfDateCurrent(
 
 export interface InterventionRoutingLinkInterface {
   student: StudentDataInterface;
-  isTutorialCompleted: boolean;
 }
 
 /** InterventionRoutingLink
@@ -69,18 +69,9 @@ export interface InterventionRoutingLinkInterface {
  */
 export function InterventionRoutingLink({
   student,
-  isTutorialCompleted,
 }: InterventionRoutingLinkInterface): JSX.Element {
-  if (isTutorialCompleted === false) {
-    return (
-      <Link
-        to={`/tutorial/${student.currentApproach}/${student.id}`}
-        key={student.id}
-      >
-        {student.name} ({student.currentGrade})
-      </Link>
-    );
-  } else if (student.factsTargeted && student.factsTargeted.length > 0) {
+
+  if (student.factsTargeted && student.factsTargeted.length > 0) {
     return (
       <Link
         to={generateRouteBaseOnStrategy(

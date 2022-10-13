@@ -114,3 +114,9 @@
   border-top: 1px dotted black;
   border-bottom: 0px dotted black;
 }
+
+.horizontal-header-student-list-item p {
+  text-decoration: none;
+  color: var(--heading-style-color);
+  font-weight: bold;
+}
