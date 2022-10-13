@@ -40,7 +40,7 @@ describe("standardEntryFieldText", () => {
     };
 
     const wrapper = shallow(
-      standardEntryFieldText(label, currentValue, type, dispatch)
+      standardEntryFieldText({ label, currentValue, type, dispatch })
     );
 
     wrapper.find("input").simulate("change", event);
@@ -161,12 +161,7 @@ describe("standardSelectFieldMulti", () => {
       const result = render(
         <>
           {standardSelectFieldMulti(
-            label,
-            options,
-            [options[0]] as MultiValue<SingleOptionType>,
-            type,
-            dispatch
-          )}
+            { label, options, currentValue: [options[0]] as MultiValue<SingleOptionType>, type, dispatch })}
         </>
       );
       const input = result.getByLabelText(`${label}:`);
@@ -183,14 +178,14 @@ describe("standardSelectFieldMulti", () => {
 describe("standardErrorField", () => {
   it("Should render same, if valid", () => {
     const label = "";
-    const returner = standardErrorField(label);
+    const returner = standardErrorField({ formError: label });
 
     expect(returner).toStrictEqual(<p className="error">{label}</p>);
   });
 
   it("Should render blank div, if undefined", () => {
     const label = undefined;
-    const returner = standardErrorField(label);
+    const returner = standardErrorField({ formError: label });
 
     expect(returner).toStrictEqual(<></>);
   });

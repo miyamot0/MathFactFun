@@ -33,13 +33,13 @@ import {
   verifySingleStudentEdit,
 } from "./helpers/StudentHelpers";
 import {
-  standardEntryFieldDate,
-  standardEntryFieldNumber,
-  standardEntryFieldText,
-  standardEntryFieldTextArea,
-  standardErrorField,
-  standardSelectField,
-  standardSelectFieldMulti,
+  StandardEntryFieldDate,
+  StandardEntryFieldNumber,
+  StandardEntryFieldText,
+  StandardEntryFieldTextArea,
+  StandardErrorField,
+  StandardSelectField,
+  StandardSelectFieldMulti,
 } from "../../utilities/FieldHelpers";
 
 export default function EditStudent() {
@@ -91,98 +91,86 @@ export default function EditStudent() {
             );
           }}
         >
-          {standardEntryFieldText(
-            "Student ID",
-            state.Name,
-            StudentCreatorBehavior.SetName,
-            dispatch
-          )}
+          <StandardEntryFieldText
+            label={"Student ID"}
+            currentValue={state.Name}
+            type={StudentCreatorBehavior.SetName}
+            dispatch={dispatch} />
 
-          {standardEntryFieldTextArea(
-            "Student Details",
-            state.Details,
-            StudentCreatorBehavior.SetDetails,
-            dispatch
-          )}
+          <StandardEntryFieldTextArea
+            label={"Student Details"}
+            currentValue={state.Details}
+            type={StudentCreatorBehavior.SetDetails}
+            dispatch={dispatch} />
 
-          {standardEntryFieldDate(
-            "Next Benchmark Date",
-            state.DueDate,
-            StudentCreatorBehavior.SetDueDate,
-            dispatch
-          )}
+          <StandardEntryFieldDate
+            label={"Next Benchmark Date"}
+            currentValue={state.DueDate}
+            type={StudentCreatorBehavior.SetDueDate}
+            dispatch={dispatch} />
 
-          {standardSelectField(
-            "Current Grade",
-            Grades,
-            state.CurrentGrade,
-            StudentCreatorBehavior.SetCurrentGrade,
-            dispatch
-          )}
+          <StandardSelectField
+            label={"Current Grade"}
+            options={Grades}
+            currentValue={state.CurrentGrade}
+            type={StudentCreatorBehavior.SetCurrentGrade}
+            dispatch={dispatch} />
 
-          {standardSelectFieldMulti(
-            "Target For Benchmarking",
-            CoreOperations,
-            state.CurrentBenchmarking,
-            StudentCreatorBehavior.SetCurrentBenchmarking,
-            dispatch
-          )}
+          <StandardSelectFieldMulti
+            label={"Target For Benchmarking"}
+            options={CoreOperations}
+            currentValue={state.CurrentBenchmarking}
+            type={StudentCreatorBehavior.SetCurrentBenchmarking}
+            dispatch={dispatch} />
 
-          {standardSelectField(
-            "Benchmark Set",
-            BenchmarkSets,
-            state.CurrentProblemSet,
-            StudentCreatorBehavior.SetProblemSet,
-            dispatch
-          )}
+          <StandardSelectField
+            label={"Benchmark Set"}
+            options={BenchmarkSets}
+            currentValue={state.CurrentProblemSet}
+            type={StudentCreatorBehavior.SetProblemSet}
+            dispatch={dispatch} />
 
-          {standardSelectField(
-            "Target For Intervention",
-            Operations,
-            state.CurrentTarget,
-            StudentCreatorBehavior.SetCurrentTarget,
-            dispatch
-          )}
+          <StandardSelectField
+            label={"Target For Intervention"}
+            options={Operations}
+            currentValue={state.CurrentTarget}
+            type={StudentCreatorBehavior.SetCurrentTarget}
+            dispatch={dispatch} />
 
-          {standardSelectField(
-            "Intervention Approach",
-            InterventionApproach,
-            state.CurrentApproach,
-            StudentCreatorBehavior.SetCurrentApproach,
-            dispatch
-          )}
+          <StandardSelectField
+            label={"Intervention Approach"}
+            options={InterventionApproach}
+            currentValue={state.CurrentApproach}
+            type={StudentCreatorBehavior.SetCurrentApproach}
+            dispatch={dispatch} />
 
-          {standardSelectField(
-            "Error Correction Procedures",
-            ErrorCorrection,
-            state.CurrentErrorApproach,
-            StudentCreatorBehavior.SetCurrentErrorApproach,
-            dispatch
-          )}
+          <StandardSelectField
+            label={"Error Correction Procedures"}
+            options={ErrorCorrection}
+            currentValue={state.CurrentErrorApproach}
+            type={StudentCreatorBehavior.SetCurrentErrorApproach}
+            dispatch={dispatch} />
 
-          {standardSelectField(
-            "Reinforcement Procedures",
-            Contingencies,
-            state.CurrentSRApproach,
-            StudentCreatorBehavior.SetCurrentSRApproach,
-            dispatch
-          )}
+          <StandardSelectField
+            label={"Reinforcement Procedures"}
+            options={Contingencies}
+            currentValue={state.CurrentSRApproach}
+            type={StudentCreatorBehavior.SetCurrentSRApproach}
+            dispatch={dispatch} />
 
-          {standardEntryFieldNumber(
-            "Target Aim Line",
-            state.AimLine,
-            StudentCreatorBehavior.SetAimLine,
-            dispatch
-          )}
+          <StandardEntryFieldNumber
+            label={"Target Aim Line"}
+            currentValue={state.AimLine}
+            type={StudentCreatorBehavior.SetAimLine}
+            dispatch={dispatch} />
 
-          {standardEntryFieldNumber(
-            "Duration for Task (Minutes; Explicit Timing Only)",
-            state.ExplicitTime,
-            StudentCreatorBehavior.SetExplicitTime,
-            dispatch
-          )}
+          <StandardEntryFieldNumber
+            label={"Duration for Task (Minutes; Explicit Timing Only)"}
+            currentValue={state.ExplicitTime}
+            type={StudentCreatorBehavior.SetExplicitTime}
+            dispatch={dispatch} />
 
-          {standardErrorField(state.FormError)}
+          <StandardErrorField formError={state.FormError} />
 
           <button className="global-btn" style={{ marginTop: "30px" }}>
             Edit Student

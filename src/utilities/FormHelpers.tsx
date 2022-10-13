@@ -8,6 +8,7 @@
 
 import firebase from "firebase/app";
 import { MultiValue } from "react-select";
+import { StudentDispatchUpdateFormError } from "../pages/student/interfaces/StudentInterfaces";
 import { SingleOptionType } from "../types/SharedComponentTypes";
 import { checkIfOptionKeysPresent } from "./ReducerHelpers";
 
@@ -80,10 +81,12 @@ export function streamlinedCheck(
     const statusOfCheck = checkInputNullOrUndefined(value);
 
     if (statusOfCheck) {
-      dispatch({
-        type: type,
-        payload: err,
-      });
+      dispatch(new StudentDispatchUpdateFormError({
+        type,
+        payload: {
+          FormError: err
+        }
+      }));
     }
 
     return statusOfCheck;

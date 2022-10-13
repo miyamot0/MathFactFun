@@ -43,6 +43,10 @@ const mockData = {
   problemSet: "",
 
   minForTask: 2,
+
+  tutorialBenchmark: false,
+  tutorialCCC: false,
+  tutorialET: false
 };
 
 jest.mock("./../../../../context/hooks/useAuthorizationContext", () => {

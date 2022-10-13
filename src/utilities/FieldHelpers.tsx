@@ -8,9 +8,17 @@
 
 import React from "react";
 import { StudentCreatorBehavior } from "../pages/student/types/StudentTypes";
-import Select, { MultiValue } from "react-select";
+import Select, { MultiValue, SingleValue } from "react-select";
 import { SingleOptionType } from "../types/SharedComponentTypes";
 import { UserCreatorBehavior } from "../pages/user/types/UserTypes";
+import { StudentDataDispatches, StudentDispatchUpdateAimLine, StudentDispatchUpdateCurrentApproach, StudentDispatchUpdateCurrentBenchmarking, StudentDispatchUpdateCurrentErrorApproach, StudentDispatchUpdateCurrentGrade, StudentDispatchUpdateCurrentProblemSet, StudentDispatchUpdateCurrentSRApproach, StudentDispatchUpdateCurrentTarget, StudentDispatchUpdateDetails, StudentDispatchUpdateDueDate, StudentDispatchUpdateExplicitTime, StudentDispatchUpdateName } from "../pages/student/interfaces/StudentInterfaces";
+
+export interface StandardEntryFieldText {
+  label: string;
+  currentValue: string;
+  type: StudentCreatorBehavior | UserCreatorBehavior;
+  dispatch: React.Dispatch<StudentDataDispatches>;
+}
 
 /** standardEntryFieldText
  *
@@ -19,12 +27,11 @@ import { UserCreatorBehavior } from "../pages/user/types/UserTypes";
  * @param dispatch
  * @returns
  */
-export function standardEntryFieldText(
-  label: string,
-  currentValue: string,
-  type: StudentCreatorBehavior | UserCreatorBehavior,
-  dispatch: any
-) {
+export function StandardEntryFieldText({
+  label,
+  currentValue,
+  type,
+  dispatch }: StandardEntryFieldText) {
   return (
     <label>
       <span>{label}:</span>
@@ -32,10 +39,17 @@ export function standardEntryFieldText(
         required
         type="text"
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-          dispatch({
-            type: type,
-            payload: e.target.value,
-          });
+          switch (type) {
+            // User Set name
+            case StudentCreatorBehavior.SetName:
+              dispatch(new StudentDispatchUpdateName({
+                type,
+                payload: {
+                  Name: e.target.value
+                }
+              }));
+              break;
+          }
         }}
         value={currentValue}
       ></input>
@@ -105,6 +119,13 @@ export function standardPasswordFieldText(
   );
 }
 
+export interface StandardEntryFieldTextArea {
+  label: string;
+  currentValue: string;
+  type: StudentCreatorBehavior | UserCreatorBehavior;
+  dispatch: React.Dispatch<StudentDataDispatches>;
+}
+
 /** standardEntryFieldTextArea
  *
  * @param label
@@ -113,27 +134,42 @@ export function standardPasswordFieldText(
  * @param dispatch
  * @returns
  */
-export function standardEntryFieldTextArea(
-  label: string,
-  currentValue: string,
-  type: StudentCreatorBehavior | UserCreatorBehavior,
-  dispatch: any
-) {
+export function StandardEntryFieldTextArea({
+  label,
+  currentValue,
+  type,
+  dispatch }: StandardEntryFieldTextArea) {
   return (
     <label>
       <span>{label}:</span>
       <textarea
         required
         onChange={(e) => {
-          dispatch({
-            type: type,
-            payload: e.target.value,
-          });
+          switch (type) {
+            case StudentCreatorBehavior.SetDetails:
+              dispatch(new StudentDispatchUpdateDetails({
+                type,
+                payload: {
+                  Details: e.target.value
+                }
+              }));
+              break;
+          }
+
+          //UserCreatorBehavior.SetSchool
+          //UserCreatorBehavior.SetName
         }}
         value={currentValue}
       ></textarea>
     </label>
   );
+}
+
+export interface StandardEntryFieldNumber {
+  label: string;
+  currentValue: number;
+  type: StudentCreatorBehavior;
+  dispatch: React.Dispatch<StudentDataDispatches>;
 }
 
 /** standardEntryFieldNumber
@@ -144,12 +180,11 @@ export function standardEntryFieldTextArea(
  * @param dispatch
  * @returns
  */
-export function standardEntryFieldNumber(
-  label: string,
-  currentValue: number,
-  type: StudentCreatorBehavior,
-  dispatch: any
-) {
+export function StandardEntryFieldNumber({
+  label,
+  currentValue,
+  type,
+  dispatch }: StandardEntryFieldNumber) {
   return (
     <label>
       <span>{label}:</span>
@@ -159,10 +194,24 @@ export function standardEntryFieldNumber(
         min="0"
         max="80"
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-          dispatch({
-            type: type,
-            payload: e.target.value,
-          });
+          switch (type) {
+            case StudentCreatorBehavior.SetAimLine:
+              dispatch(new StudentDispatchUpdateAimLine({
+                type: StudentCreatorBehavior.SetAimLine,
+                payload: {
+                  AimLine: parseInt(e.target.value)
+                }
+              }));
+              break;
+            case StudentCreatorBehavior.SetExplicitTime:
+              dispatch(new StudentDispatchUpdateExplicitTime({
+                type: StudentCreatorBehavior.SetExplicitTime,
+                payload: {
+                  ExplicitTime: parseInt(e.target.value)
+                }
+              }));
+              break;
+          }
         }}
         value={currentValue}
       ></input>
@@ -170,7 +219,14 @@ export function standardEntryFieldNumber(
   );
 }
 
-/** standardEntryFieldDate
+export interface StandardEntryFieldDate {
+  label: string;
+  currentValue: string;
+  type: StudentCreatorBehavior | UserCreatorBehavior;
+  dispatch: React.Dispatch<StudentDataDispatches>;
+}
+
+/** StandardEntryFieldDate
  *
  * @param label
  * @param currentValue
@@ -178,12 +234,11 @@ export function standardEntryFieldNumber(
  * @param dispatch
  * @returns
  */
-export function standardEntryFieldDate(
-  label: string,
-  currentValue: string,
-  type: StudentCreatorBehavior,
-  dispatch: any
-) {
+export function StandardEntryFieldDate({
+  label,
+  currentValue,
+  type,
+  dispatch }: StandardEntryFieldDate) {
   return (
     <label>
       <span>{label}:</span>
@@ -191,15 +246,25 @@ export function standardEntryFieldDate(
         required
         type="date"
         onChange={(e) => {
-          dispatch({
-            type: type,
-            payload: e.target.value,
-          });
+          dispatch(new StudentDispatchUpdateDueDate({
+            type,
+            payload: {
+              DueDate: e.target.value
+            }
+          }));
         }}
         value={currentValue}
       ></input>
     </label>
   );
+}
+
+export interface StandardSelectField {
+  label: string;
+  options: SingleOptionType[];
+  currentValue: SingleOptionType;
+  type: StudentCreatorBehavior;
+  dispatch: React.Dispatch<StudentDataDispatches>;
 }
 
 /**
@@ -211,13 +276,12 @@ export function standardEntryFieldDate(
  * @param dispatch
  * @returns
  */
-export function standardSelectField(
-  label: string,
-  options: any,
-  currentValue: SingleOptionType,
-  type: StudentCreatorBehavior,
-  dispatch: any
-) {
+export function StandardSelectField({
+  label,
+  options,
+  currentValue,
+  type,
+  dispatch }: StandardSelectField) {
   return (
     <>
       <label htmlFor="single-field" className="select-label">
@@ -227,16 +291,70 @@ export function standardSelectField(
         name={"single-field"}
         inputId={"single-field"}
         options={options}
-        onChange={(option) => {
-          dispatch({
-            type: type,
-            payload: option,
-          });
+        onChange={(option: SingleValue<SingleOptionType>) => {
+          switch (type) {
+            case StudentCreatorBehavior.SetCurrentGrade:
+              dispatch(new StudentDispatchUpdateCurrentGrade({
+                type,
+                payload: {
+                  CurrentGrade: option as SingleOptionType
+                }
+              }));
+              break;
+            case StudentCreatorBehavior.SetCurrentTarget:
+              dispatch(new StudentDispatchUpdateCurrentTarget({
+                type,
+                payload: {
+                  CurrentTarget: option as SingleOptionType
+                }
+              }));
+              break;
+            case StudentCreatorBehavior.SetCurrentApproach:
+              dispatch(new StudentDispatchUpdateCurrentApproach({
+                type,
+                payload: {
+                  CurrentApproach: option as SingleOptionType
+                }
+              }));
+              break;
+            case StudentCreatorBehavior.SetCurrentErrorApproach:
+              dispatch(new StudentDispatchUpdateCurrentErrorApproach({
+                type,
+                payload: {
+                  CurrentErrorApproach: option as SingleOptionType
+                }
+              }));
+              break;
+            case StudentCreatorBehavior.SetCurrentSRApproach:
+              dispatch(new StudentDispatchUpdateCurrentSRApproach({
+                type,
+                payload: {
+                  CurrentSRApproach: option as SingleOptionType
+                }
+              }));
+              break;
+            case StudentCreatorBehavior.SetProblemSet:
+              dispatch(new StudentDispatchUpdateCurrentProblemSet({
+                type,
+                payload: {
+                  CurrentProblemSet: option as SingleOptionType
+                }
+              }));
+              break;
+          }
         }}
         value={currentValue}
       />
     </>
   );
+}
+
+export interface StandardSelectFieldMulti {
+  label: string;
+  options: SingleOptionType[];
+  currentValue: MultiValue<SingleOptionType>;
+  type: StudentCreatorBehavior;
+  dispatch: React.Dispatch<StudentDataDispatches>;
 }
 
 /** standardSelectFieldMulti
@@ -248,13 +366,12 @@ export function standardSelectField(
  * @param dispatch
  * @returns
  */
-export function standardSelectFieldMulti(
-  label: string,
-  options: any,
-  currentValue: MultiValue<SingleOptionType>,
-  type: StudentCreatorBehavior,
-  dispatch: any
-) {
+export function StandardSelectFieldMulti({
+  label,
+  options,
+  currentValue,
+  type,
+  dispatch }: StandardSelectFieldMulti) {
   return (
     <>
       <label htmlFor="multi-field" className="select-label">
@@ -265,10 +382,12 @@ export function standardSelectFieldMulti(
         inputId={"multi-field"}
         options={options}
         onChange={(option: MultiValue<SingleOptionType>) => {
-          dispatch({
-            type: type,
-            payload: option,
-          });
+          dispatch(new StudentDispatchUpdateCurrentBenchmarking({
+            type,
+            payload: {
+              CurrentBenchmarking: option
+            }
+          }));
         }}
         value={currentValue}
         isMulti={true}
@@ -277,12 +396,17 @@ export function standardSelectFieldMulti(
   );
 }
 
+export interface StandardErrorField {
+  formError: string | undefined | null;
+}
+
 /** standardErrorField
  *
  * @param formError
  * @returns
  */
-export function standardErrorField(formError: string | undefined | null) {
+export function StandardErrorField({
+  formError }: StandardErrorField) {
   if (formError === undefined) {
     return <></>;
   } else {

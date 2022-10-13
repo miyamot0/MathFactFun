@@ -15,8 +15,11 @@ import {
 import {
   StudentCreateState,
   StudentDataInterface,
+  StudentDispatchUpdateDidBuild,
+  StudentDispatchUpdateFormError,
+  StudentDispatchUpdateStudentLoaded,
 } from "../interfaces/StudentInterfaces";
-import { StudentCreatorBehavior } from "../types/StudentTypes";
+import { StudentActionObject, StudentCreatorBehavior } from "../types/StudentTypes";
 import { UserDataInterface } from "../../user/types/UserTypes";
 import { FirestoreState } from "../../../firebase/interfaces/FirebaseInterfaces";
 import {
@@ -55,10 +58,12 @@ export async function verifySingleStudentCreate(
     return;
   }
 
-  dispatch({
+  dispatch(new StudentDispatchUpdateFormError({
     type: StudentCreatorBehavior.SetFormError,
-    payload: undefined,
-  });
+    payload: {
+      FormError: undefined
+    }
+  }));
 
   if (
     streamlinedCheck(
@@ -119,10 +124,12 @@ export async function verifySingleStudentCreate(
     checkInputNullOrUndefined(state.CurrentBenchmarking) ||
     state.CurrentBenchmarking.length < 1
   ) {
-    dispatch({
+    dispatch(new StudentDispatchUpdateFormError({
       type: StudentCreatorBehavior.SetFormError,
-      payload: "Please select benchmarking options",
-    });
+      payload: {
+        FormError: "Please select benchmarking options"
+      }
+    }));
 
     return;
   }
@@ -157,6 +164,10 @@ export async function verifySingleStudentCreate(
     factsMastered: [],
     factsSkipped: [],
     factsTargeted: [],
+
+    tutorialBenchmark: state.TutorialBenchmark,
+    tutorialCCC: state.TutorialCCC,
+    tutorialET: state.TutorialET
   };
 
   await addDocument(studentInformationToAdd);
@@ -192,10 +203,12 @@ export async function verifySingleStudentEdit(
     return;
   }
 
-  dispatch({
+  dispatch(new StudentDispatchUpdateFormError({
     type: StudentCreatorBehavior.SetFormError,
-    payload: undefined,
-  });
+    payload: {
+      FormError: undefined
+    }
+  }));
 
   if (
     streamlinedCheck(
@@ -256,10 +269,12 @@ export async function verifySingleStudentEdit(
     checkInputNullOrUndefined(state.CurrentBenchmarking) ||
     state.CurrentBenchmarking.length < 1
   ) {
-    dispatch({
+    dispatch(new StudentDispatchUpdateFormError({
       type: StudentCreatorBehavior.SetFormError,
-      payload: { uFormError: "Please select benchmarking options" },
-    });
+      payload: {
+        FormError: "Please select benchmarking options"
+      }
+    }));
 
     return;
   }
@@ -308,52 +323,61 @@ export function onLoadSingleStudentEdit(
   document: StudentDataInterface,
   dispatch: any
 ) {
-  dispatch({
+  dispatch(new StudentDispatchUpdateDidBuild({
     type: StudentCreatorBehavior.SetBuilt,
-    payload: true,
-  });
+    payload: {
+      DidBuild: true
+    }
+  }))
 
-  const uCurrentTarget = Operations.find(
+  const CurrentTarget = Operations.find(
     (obj) => obj.value === document.currentTarget
-  );
+  ) as SingleOptionType;
 
-  const uCurrentBenchmarking = Operations.filter((obj) =>
+  const CurrentBenchmarking = Operations.filter((obj) =>
     document.currentBenchmarking.includes(obj.label)
   );
 
-  const uProblemSet = BenchmarkSets.find(
+  const CurrentProblemSet = BenchmarkSets.find(
     (obj) => obj.value === document.problemSet
-  );
-  const uCurrentGrade = Grades.find(
+  ) as SingleOptionType;
+  const CurrentGrade = Grades.find(
     (obj) => obj.value === document.currentGrade
-  );
-  const uCurrentApproach = InterventionApproach.find(
+  ) as SingleOptionType;
+  const CurrentApproach = InterventionApproach.find(
     (obj) => obj.value === document.currentApproach
-  );
-  const uCurrentErrorApproach = ErrorCorrection.find(
+  ) as SingleOptionType;
+  const CurrentErrorApproach = ErrorCorrection.find(
     (obj) => obj.value === document.currentErrorApproach
-  );
-  const uCurrentSRApproach = Contingencies.find(
+  ) as SingleOptionType;
+  const CurrentSRApproach = Contingencies.find(
     (obj) => obj.value === document.currentSRApproach
-  );
+  ) as SingleOptionType;
 
-  dispatch({
+  const tutorialBenchmark = document.tutorialBenchmark;
+  const tutorialCCC = document.tutorialCCC;
+  const tutorialET = document.tutorialET;
+
+  dispatch(new StudentDispatchUpdateStudentLoaded({
     type: StudentCreatorBehavior.SetLoadedStudent,
     payload: {
-      uName: document.name,
-      uDetails: document.details,
-      uDueDate: formatDate({ date: document.dueDate.toDate() }),
-      uAimLine: document.aimLine,
-      uExplicitTime: document.minForTask,
-      uCurrentTarget,
-      uCurrentGrade,
-      uCurrentApproach,
-      uCurrentErrorApproach,
-      uCurrentSRApproach,
-      uCurrentBenchmarking,
-      uProblemSet,
+      Name: document.name,
+      Details: document.details,
+      DueDate: formatDate({ date: document.dueDate.toDate() }),
+      AimLine: document.aimLine,
+      ExplicitTime: document.minForTask,
+      CurrentTarget,
+      CurrentGrade,
+      CurrentApproach,
+      CurrentErrorApproach,
+      CurrentSRApproach,
+      CurrentBenchmarking,
+      CurrentProblemSet,
+      TutorialBenchmark: tutorialBenchmark,
+      TutorialCCC: tutorialCCC,
+      TutorialET: tutorialET,
     },
-  });
+  }))
 }
 
 /** verifyBulkStudentCreate
@@ -374,7 +398,7 @@ export async function verifyBulkStudentCreate(
     doc: StudentDataInterface | UserDataInterface | PerformanceDataInterface
   ) => Promise<void>,
   response: FirestoreState,
-  dispatch: any
+  dispatch: React.Dispatch<StudentActionObject>
 ) {
   dispatch({
     type: StudentCreatorBehavior.SetFormError,
@@ -489,6 +513,10 @@ export async function verifyBulkStudentCreate(
       minForTask,
       problemSet: "A",
       id: null,
+
+      tutorialBenchmark: false,
+      tutorialCCC: false,
+      tutorialET: false
     } as StudentDataInterface;
 
     await addDocument(studentObject);

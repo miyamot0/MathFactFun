@@ -7,7 +7,6 @@
  */
 
 import React, { useReducer } from "react";
-
 import { useAuthorizationContext } from "../../context/hooks/useAuthorizationContext";
 import { useFirestore } from "../../firebase/hooks/useFirestore";
 import { useHistory } from "react-router-dom";
@@ -24,12 +23,12 @@ import {
 } from "./functionality/StudentFunctionality";
 import { StudentCreatorBehavior } from "./types/StudentTypes";
 import {
-  standardEntryFieldDate,
-  standardEntryFieldText,
-  standardEntryFieldTextArea,
-  standardErrorField,
-  standardSelectField,
-  standardSelectFieldMulti,
+  StandardEntryFieldDate,
+  StandardEntryFieldText,
+  StandardEntryFieldTextArea,
+  StandardErrorField,
+  StandardSelectField,
+  StandardSelectFieldMulti,
 } from "../../utilities/FieldHelpers";
 import { verifySingleStudentCreate } from "./helpers/StudentHelpers";
 
@@ -68,76 +67,68 @@ export default function CreateStudent() {
           );
         }}
       >
-        {standardEntryFieldText(
-          "Student ID",
-          state.Name,
-          StudentCreatorBehavior.SetName,
-          dispatch
-        )}
 
-        {standardEntryFieldTextArea(
-          "Student Details",
-          state.Details,
-          StudentCreatorBehavior.SetDetails,
-          dispatch
-        )}
+        <StandardEntryFieldText
+          label={"Student ID"}
+          currentValue={state.Name}
+          type={StudentCreatorBehavior.SetName}
+          dispatch={dispatch} />
 
-        {standardEntryFieldDate(
-          "Next Benchmark Date",
-          state.DueDate,
-          StudentCreatorBehavior.SetDueDate,
-          dispatch
-        )}
+        <StandardEntryFieldTextArea
+          label={"Student Details"}
+          currentValue={state.Details}
+          type={StudentCreatorBehavior.SetDetails}
+          dispatch={dispatch} />
 
-        {standardSelectField(
-          "Current Grade",
-          Grades,
-          state.CurrentGrade,
-          StudentCreatorBehavior.SetCurrentGrade,
-          dispatch
-        )}
+        <StandardEntryFieldDate
+          label={"Next Benchmark Date"}
+          currentValue={state.DueDate}
+          type={StudentCreatorBehavior.SetDueDate}
+          dispatch={dispatch} />
 
-        {standardSelectFieldMulti(
-          "Target For Benchmarking",
-          CoreOperations,
-          state.CurrentBenchmarking,
-          StudentCreatorBehavior.SetCurrentBenchmarking,
-          dispatch
-        )}
+        <StandardSelectField
+          label={"Current Grade"}
+          options={Grades}
+          currentValue={state.CurrentGrade}
+          type={StudentCreatorBehavior.SetCurrentGrade}
+          dispatch={dispatch} />
 
-        {standardSelectField(
-          "Target For Intervention",
-          Operations,
-          state.CurrentTarget,
-          StudentCreatorBehavior.SetCurrentTarget,
-          dispatch
-        )}
+        <StandardSelectFieldMulti
+          label={"Target For Benchmarking"}
+          options={CoreOperations}
+          currentValue={state.CurrentBenchmarking}
+          type={StudentCreatorBehavior.SetCurrentBenchmarking}
+          dispatch={dispatch} />
 
-        {standardSelectField(
-          "Intervention Approach",
-          InterventionApproach,
-          state.CurrentApproach,
-          StudentCreatorBehavior.SetCurrentApproach,
-          dispatch
-        )}
+        <StandardSelectField
+          label={"Target For Intervention"}
+          options={Operations}
+          currentValue={state.CurrentTarget}
+          type={StudentCreatorBehavior.SetCurrentTarget}
+          dispatch={dispatch} />
 
-        {standardSelectField(
-          "Error Correction Procedures",
-          ErrorCorrection,
-          state.CurrentErrorApproach,
-          StudentCreatorBehavior.SetCurrentErrorApproach,
-          dispatch
-        )}
+        <StandardSelectField
+          label={"Intervention Approach"}
+          options={InterventionApproach}
+          currentValue={state.CurrentApproach}
+          type={StudentCreatorBehavior.SetCurrentApproach}
+          dispatch={dispatch} />
 
-        {standardSelectField(
-          "Reinforcement Procedures",
-          Contingencies,
-          state.CurrentSRApproach,
-          StudentCreatorBehavior.SetCurrentSRApproach,
-          dispatch
-        )}
+        <StandardSelectField
+          label={"Error Correction Procedures"}
+          options={ErrorCorrection}
+          currentValue={state.CurrentErrorApproach}
+          type={StudentCreatorBehavior.SetCurrentErrorApproach}
+          dispatch={dispatch} />
 
-        {standardErrorField(state.FormError)}
+        <StandardSelectField
+          label={"Reinforcement Procedures"}
+          options={Contingencies}
+          currentValue={state.CurrentSRApproach}
+          type={StudentCreatorBehavior.SetCurrentSRApproach}
+          dispatch={dispatch} />
+
+        <StandardErrorField formError={state.FormError} />
 
         <button
           className="global-btn global-btn-light-red"

@@ -18,9 +18,9 @@ import { UserGenerationReducer } from "./functionality/UserFunctionality";
 import { UserDataInitialState } from "./functionality/UserFunctionality";
 import {
   standardEmailFieldText,
-  standardEntryFieldText,
-  standardEntryFieldTextArea,
-  standardErrorField,
+  StandardEntryFieldText,
+  StandardEntryFieldTextArea,
+  StandardErrorField,
   standardPasswordFieldText,
 } from "../../utilities/FieldHelpers";
 import { verifyUserCreate } from "./helpers/UserHelpers";
@@ -50,12 +50,11 @@ export default function CreateUser(): JSX.Element {
           verifyUserCreate(state, history, addDocument, response, dispatch);
         }}
       >
-        {standardEntryFieldText(
-          "Teacher Name:",
-          state.Name,
-          UserCreatorBehavior.SetName,
-          dispatch
-        )}
+        <StandardEntryFieldText
+          label={"Teacher Name"}
+          currentValue={state.Name}
+          type={UserCreatorBehavior.SetName}
+          dispatch={dispatch} />
 
         {standardEmailFieldText(
           "Teacher Email:",
@@ -71,14 +70,13 @@ export default function CreateUser(): JSX.Element {
           dispatch
         )}
 
-        {standardEntryFieldTextArea(
-          "Teacher School:",
-          state.School,
-          UserCreatorBehavior.SetSchool,
-          dispatch
-        )}
+        <StandardEntryFieldTextArea
+          label={"Teacher School"}
+          currentValue={state.School}
+          type={UserCreatorBehavior.SetSchool}
+          dispatch={dispatch} />
 
-        {standardErrorField(state.FormError)}
+        <StandardErrorField formError={state.FormError} />
 
         <button className="global-btn global-btn-light-red">
           Create New User

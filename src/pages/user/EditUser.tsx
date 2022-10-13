@@ -22,9 +22,9 @@ import {
   UserGenerationReducer,
 } from "./functionality/UserFunctionality";
 import {
-  standardEntryFieldText,
-  standardEntryFieldTextArea,
-  standardErrorField,
+  StandardEntryFieldText,
+  StandardEntryFieldTextArea,
+  StandardErrorField,
 } from "../../utilities/FieldHelpers";
 import { verifyUserEdit } from "./helpers/UserHelpers";
 
@@ -83,21 +83,19 @@ export default function EditUser() {
             );
           }}
         >
-          {standardEntryFieldText(
-            "Teacher Name:",
-            state.Name,
-            UserCreatorBehavior.SetName,
-            dispatch
-          )}
+          <StandardEntryFieldText
+            label={"Teacher Name"}
+            currentValue={state.Name}
+            type={UserCreatorBehavior.SetName}
+            dispatch={dispatch} />
 
-          {standardEntryFieldTextArea(
-            "Teacher School:",
-            state.School,
-            UserCreatorBehavior.SetSchool,
-            dispatch
-          )}
+          <StandardEntryFieldTextArea
+            label={"Teacher School"}
+            currentValue={state.School}
+            type={UserCreatorBehavior.SetSchool}
+            dispatch={dispatch} />
 
-          {standardErrorField(state.FormError)}
+          <StandardErrorField formError={state.FormError} />
 
           <button className="global-btn ">Edit Teacher</button>
         </form>

@@ -10,14 +10,40 @@ import { MultiValue } from "react-select";
 import { ErrorHandling } from "../../../maths/Facts";
 import { SingleOptionType } from "../../../types/SharedComponentTypes";
 import {
-  confirmMultiSingleOptionType,
-  confirmNumberType,
-  confirmSingleOptionType,
-  confirmStringType,
-} from "../../../utilities/ReducerHelpers";
-import { StudentCreateState } from "../interfaces/StudentInterfaces";
+  isStudentDispatchUpdateAimLine,
+  isStudentDispatchUpdateCurrentApproach,
+  isStudentDispatchUpdateCurrentBenchmarking,
+  isStudentDispatchUpdateCurrentErrorApproach,
+  isStudentDispatchUpdateCurrentGrade,
+  isStudentDispatchUpdateCurrentProblemSet,
+  isStudentDispatchUpdateCurrentSRApproach,
+  isStudentDispatchUpdateCurrentTarget,
+  isStudentDispatchUpdateDetails,
+  isStudentDispatchUpdateDidBuild,
+  isStudentDispatchUpdateDueDate,
+  isStudentDispatchUpdateExplicitTime,
+  isStudentDispatchUpdateFormError,
+  isStudentDispatchUpdateName,
+  isStudentDispatchUpdateStudentLoaded,
+  StudentCreateState,
+  StudentDataDispatches,
+  StudentDispatchUpdateAimLine,
+  StudentDispatchUpdateCurrentApproach,
+  StudentDispatchUpdateCurrentBenchmarking,
+  StudentDispatchUpdateCurrentErrorApproach,
+  StudentDispatchUpdateCurrentGrade,
+  StudentDispatchUpdateCurrentProblemSet,
+  StudentDispatchUpdateCurrentSRApproach,
+  StudentDispatchUpdateCurrentTarget,
+  StudentDispatchUpdateDetails,
+  StudentDispatchUpdateDidBuild,
+  StudentDispatchUpdateDueDate,
+  StudentDispatchUpdateExplicitTime,
+  StudentDispatchUpdateFormError,
+  StudentDispatchUpdateName,
+  StudentDispatchUpdateStudentLoaded
+} from "../interfaces/StudentInterfaces";
 import {
-  StudentActionObject,
   StudentCreatorBehavior,
 } from "../types/StudentTypes";
 
@@ -55,7 +81,315 @@ export const StudentCreateSingleInitialState: StudentCreateState = {
     value: "A",
     label: "A",
   } as SingleOptionType,
+  TutorialBenchmark: false,
+  TutorialCCC: false,
+  TutorialET: false,
 };
+
+/** overwriteOnlyExisting
+ *
+ * @param destination
+ * @param incoming
+ * @returns
+ */
+export function overwriteOnlyExistingStudent(
+  destination: StudentCreateState,
+  incoming: StudentDataDispatches
+): StudentCreateState {
+  if (isStudentDispatchUpdateName(incoming)) {
+    const local: StudentDispatchUpdateName =
+      incoming as StudentDispatchUpdateName;
+
+    local.payload.Name =
+      local.payload.Name === undefined
+        ? destination.Name
+        : local.payload.Name;
+
+    return {
+      ...destination,
+      ...local.payload,
+    };
+  }
+
+  if (isStudentDispatchUpdateDetails(incoming)) {
+    const local: StudentDispatchUpdateDetails =
+      incoming as StudentDispatchUpdateDetails;
+
+    local.payload.Details =
+      local.payload.Details === undefined
+        ? destination.Details
+        : local.payload.Details;
+
+    return {
+      ...destination,
+      ...local.payload,
+    };
+  }
+
+  if (isStudentDispatchUpdateDueDate(incoming)) {
+    const local: StudentDispatchUpdateDueDate =
+      incoming as StudentDispatchUpdateDueDate;
+
+    local.payload.DueDate =
+      local.payload.DueDate === undefined
+        ? destination.DueDate
+        : local.payload.DueDate;
+
+    return {
+      ...destination,
+      ...local.payload,
+    };
+  }
+
+  if (isStudentDispatchUpdateCurrentApproach(incoming)) {
+    const local: StudentDispatchUpdateCurrentApproach =
+      incoming as StudentDispatchUpdateCurrentApproach;
+
+    local.payload.CurrentApproach =
+      local.payload.CurrentApproach === undefined
+        ? destination.CurrentApproach
+        : local.payload.CurrentApproach;
+
+    return {
+      ...destination,
+      ...local.payload,
+    };
+  }
+
+  if (isStudentDispatchUpdateCurrentGrade(incoming)) {
+    const local: StudentDispatchUpdateCurrentGrade =
+      incoming as StudentDispatchUpdateCurrentGrade;
+
+    local.payload.CurrentGrade =
+      local.payload.CurrentGrade === undefined
+        ? destination.CurrentGrade
+        : local.payload.CurrentGrade;
+
+    return {
+      ...destination,
+      ...local.payload,
+    };
+  }
+
+  if (isStudentDispatchUpdateCurrentErrorApproach(incoming)) {
+    const local: StudentDispatchUpdateCurrentErrorApproach =
+      incoming as StudentDispatchUpdateCurrentErrorApproach;
+
+    local.payload.CurrentErrorApproach =
+      local.payload.CurrentErrorApproach === undefined
+        ? destination.CurrentErrorApproach
+        : local.payload.CurrentErrorApproach;
+
+    return {
+      ...destination,
+      ...local.payload,
+    };
+  }
+
+  if (isStudentDispatchUpdateCurrentTarget(incoming)) {
+    const local: StudentDispatchUpdateCurrentTarget =
+      incoming as StudentDispatchUpdateCurrentTarget;
+
+    local.payload.CurrentTarget =
+      local.payload.CurrentTarget === undefined
+        ? destination.CurrentTarget
+        : local.payload.CurrentTarget;
+
+    return {
+      ...destination,
+      ...local.payload,
+    };
+  }
+
+  if (isStudentDispatchUpdateCurrentSRApproach(incoming)) {
+    const local: StudentDispatchUpdateCurrentSRApproach =
+      incoming as StudentDispatchUpdateCurrentSRApproach;
+
+    local.payload.CurrentSRApproach =
+      local.payload.CurrentSRApproach === undefined
+        ? destination.CurrentSRApproach
+        : local.payload.CurrentSRApproach;
+
+    return {
+      ...destination,
+      ...local.payload,
+    };
+  }
+
+  if (isStudentDispatchUpdateCurrentProblemSet(incoming)) {
+    const local: StudentDispatchUpdateCurrentProblemSet =
+      incoming as StudentDispatchUpdateCurrentProblemSet;
+
+    local.payload.CurrentProblemSet =
+      local.payload.CurrentProblemSet === undefined
+        ? destination.CurrentProblemSet
+        : local.payload.CurrentProblemSet;
+
+    return {
+      ...destination,
+      ...local.payload,
+    };
+  }
+
+  if (isStudentDispatchUpdateCurrentBenchmarking(incoming)) {
+    const local: StudentDispatchUpdateCurrentBenchmarking =
+      incoming as StudentDispatchUpdateCurrentBenchmarking;
+
+    local.payload.CurrentBenchmarking =
+      local.payload.CurrentBenchmarking === undefined
+        ? destination.CurrentBenchmarking
+        : local.payload.CurrentBenchmarking;
+
+    return {
+      ...destination,
+      ...local.payload,
+    };
+  }
+
+  if (isStudentDispatchUpdateDidBuild(incoming)) {
+    const local: StudentDispatchUpdateDidBuild =
+      incoming as StudentDispatchUpdateDidBuild;
+
+    local.payload.DidBuild =
+      local.payload.DidBuild === undefined
+        ? destination.DidBuild
+        : local.payload.DidBuild;
+
+    return {
+      ...destination,
+      ...local.payload,
+    };
+  }
+
+  if (isStudentDispatchUpdateAimLine(incoming)) {
+    const local: StudentDispatchUpdateAimLine =
+      incoming as StudentDispatchUpdateAimLine;
+
+    local.payload.AimLine =
+      local.payload.AimLine === undefined
+        ? destination.AimLine
+        : local.payload.AimLine;
+
+    return {
+      ...destination,
+      ...local.payload,
+    };
+  }
+
+  if (isStudentDispatchUpdateExplicitTime(incoming)) {
+    const local: StudentDispatchUpdateExplicitTime =
+      incoming as StudentDispatchUpdateExplicitTime;
+
+    local.payload.ExplicitTime =
+      local.payload.ExplicitTime === undefined
+        ? destination.ExplicitTime
+        : local.payload.ExplicitTime;
+
+    return {
+      ...destination,
+      ...local.payload,
+    };
+  }
+
+  if (isStudentDispatchUpdateStudentLoaded(incoming)) {
+    const local: StudentDispatchUpdateStudentLoaded =
+      incoming as StudentDispatchUpdateStudentLoaded;
+
+    local.payload.Name =
+      local.payload.Name === undefined
+        ? destination.Name
+        : local.payload.Name;
+
+    local.payload.Details =
+      local.payload.Details === undefined
+        ? destination.Details
+        : local.payload.Details;
+
+    local.payload.DueDate =
+      local.payload.DueDate === undefined
+        ? destination.DueDate
+        : local.payload.DueDate;
+
+    local.payload.AimLine =
+      local.payload.AimLine === undefined
+        ? destination.AimLine
+        : local.payload.AimLine;
+
+    local.payload.ExplicitTime =
+      local.payload.ExplicitTime === undefined
+        ? destination.ExplicitTime
+        : local.payload.ExplicitTime;
+
+    local.payload.CurrentTarget =
+      local.payload.CurrentTarget === undefined
+        ? destination.CurrentTarget
+        : local.payload.CurrentTarget;
+
+    local.payload.CurrentGrade =
+      local.payload.CurrentGrade === undefined
+        ? destination.CurrentGrade
+        : local.payload.CurrentGrade;
+
+    local.payload.CurrentApproach =
+      local.payload.CurrentApproach === undefined
+        ? destination.CurrentApproach
+        : local.payload.CurrentApproach;
+
+    local.payload.CurrentErrorApproach =
+      local.payload.CurrentErrorApproach === undefined
+        ? destination.CurrentErrorApproach
+        : local.payload.CurrentErrorApproach;
+
+    local.payload.CurrentSRApproach =
+      local.payload.CurrentSRApproach === undefined
+        ? destination.CurrentSRApproach
+        : local.payload.CurrentSRApproach;
+
+    local.payload.CurrentBenchmarking =
+      local.payload.CurrentBenchmarking === undefined
+        ? destination.CurrentBenchmarking
+        : local.payload.CurrentBenchmarking;
+
+    local.payload.CurrentProblemSet =
+      local.payload.CurrentProblemSet === undefined
+        ? destination.CurrentProblemSet
+        : local.payload.CurrentProblemSet;
+
+    local.payload.TutorialBenchmark =
+      local.payload.TutorialBenchmark === undefined
+        ? destination.TutorialBenchmark
+        : local.payload.TutorialBenchmark;
+
+    local.payload.TutorialCCC =
+      local.payload.TutorialCCC === undefined
+        ? destination.TutorialCCC
+        : local.payload.TutorialCCC;
+
+    local.payload.TutorialET =
+      local.payload.TutorialET === undefined
+        ? destination.TutorialET
+        : local.payload.TutorialET;
+
+    return {
+      ...destination,
+      ...local.payload,
+    };
+  }
+
+  if (isStudentDispatchUpdateFormError(incoming)) {
+    const local: StudentDispatchUpdateFormError =
+      incoming as StudentDispatchUpdateFormError;
+
+    // NOTE: should be undefined most of the time
+
+    return {
+      ...destination,
+      ...local.payload,
+    };
+  }
+
+  throw Error(`Didn't match: ${JSON.stringify(incoming)}`);
+}
 
 /** userCreationReducer
  *
@@ -67,105 +401,25 @@ export const StudentCreateSingleInitialState: StudentCreateState = {
  */
 export function userCreationReducer(
   state: StudentCreateState,
-  action: StudentActionObject
+  action: StudentDataDispatches
 ): StudentCreateState {
   switch (action.type) {
     case StudentCreatorBehavior.SetName:
-      return { ...state, Name: confirmStringType(action.payload) };
     case StudentCreatorBehavior.SetDetails:
-      return { ...state, Details: confirmStringType(action.payload) };
     case StudentCreatorBehavior.SetFormError:
-      return {
-        ...state,
-        FormError:
-          action.payload === undefined || action.payload === null
-            ? undefined
-            : confirmStringType(action.payload),
-      };
     case StudentCreatorBehavior.SetDueDate:
-      return { ...state, DueDate: confirmStringType(action.payload) };
     case StudentCreatorBehavior.SetCurrentApproach:
-      return {
-        ...state,
-        CurrentApproach: confirmSingleOptionType(
-          action.payload
-        ),
-      };
     case StudentCreatorBehavior.SetCurrentGrade:
-      return {
-        ...state,
-        CurrentGrade: confirmSingleOptionType(action.payload),
-      };
-    case StudentCreatorBehavior.SetCurrentTarget:
-      return {
-        ...state,
-        CurrentTarget: confirmSingleOptionType(action.payload),
-      };
     case StudentCreatorBehavior.SetCurrentErrorApproach:
-      return {
-        ...state,
-        CurrentErrorApproach: confirmSingleOptionType(
-          action.payload
-        ),
-      };
+    case StudentCreatorBehavior.SetCurrentTarget:
     case StudentCreatorBehavior.SetCurrentSRApproach:
-      return {
-        ...state,
-        CurrentSRApproach: confirmSingleOptionType(
-          action.payload
-        ),
-      };
-    case StudentCreatorBehavior.SetCurrentBenchmarking:
-      return {
-        ...state,
-        CurrentBenchmarking: confirmMultiSingleOptionType(
-          action.payload
-        ),
-      };
     case StudentCreatorBehavior.SetProblemSet:
-      return {
-        ...state,
-        CurrentProblemSet: confirmSingleOptionType(action.payload),
-      };
+    case StudentCreatorBehavior.SetCurrentBenchmarking:
     case StudentCreatorBehavior.SetBuilt:
-      return {
-        ...state,
-        DidBuild: true,
-      };
     case StudentCreatorBehavior.SetAimLine:
-      return {
-        ...state,
-        AimLine: confirmNumberType(action.payload),
-      };
     case StudentCreatorBehavior.SetExplicitTime:
-      return {
-        ...state,
-        ExplicitTime: confirmNumberType(action.payload),
-      };
     case StudentCreatorBehavior.SetLoadedStudent:
-      return {
-        ...state,
-        Name: confirmStringType(action.payload.uName),
-        Details: confirmStringType(action.payload.uDetails),
-        DueDate: confirmStringType(action.payload.uDueDate),
-        AimLine: confirmNumberType(action.payload.uAimLine),
-        ExplicitTime: confirmNumberType(action.payload.uExplicitTime),
-        CurrentTarget: confirmSingleOptionType(action.payload.uCurrentTarget),
-        CurrentGrade: confirmSingleOptionType(action.payload.uCurrentGrade),
-        CurrentApproach: confirmSingleOptionType(
-          action.payload.uCurrentApproach
-        ),
-        CurrentErrorApproach: confirmSingleOptionType(
-          action.payload.uCurrentErrorApproach
-        ),
-        CurrentSRApproach: confirmSingleOptionType(
-          action.payload.uCurrentSRApproach
-        ),
-        CurrentBenchmarking: confirmMultiSingleOptionType(
-          action.payload.uCurrentBenchmarking
-        ),
-        CurrentProblemSet: confirmSingleOptionType(action.payload.uProblemSet),
-      };
+      return overwriteOnlyExistingStudent(state, action);
 
     default:
       return state;

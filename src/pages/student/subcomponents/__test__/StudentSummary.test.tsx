@@ -72,6 +72,10 @@ const mockData = {
     problemSet: '',
 
     minForTask: 2,
+
+    tutorialBenchmark: false,
+    tutorialCCC: false,
+    tutorialET: false
 };
 
 describe("StudentSummary", () => {
