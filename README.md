@@ -102,6 +102,10 @@ MFF functions by using several excellent open source packages. Each are presente
 
 [react-select](https://github.com/JedWatson/react-select/tree/master/packages/react-select) - Jed Watson (MIT)
 
+## Open Source Assets
+
+[Blop](https://soundbible.com/2067-Blop.html) - Mark DiAngelo (CC-BY-3.0 Attribution)
+
 ## Software License
 
 MIT-licensed (2022) - Shawn P. Gilroy, Louisiana State University
