@@ -46,12 +46,18 @@ const CreateUser = lazy(() => import("./pages/user/CreateUser"));
 const EditUser = lazy(() => import("./pages/user/EditUser"));
 
 const Benchmark = lazy(() => import("./pages/intervention/Benchmark"));
+const TutorialBenchmark = lazy(() => import("./pages/tutorials/TutorialBenchmark"));
+
 const CoverCopyCompare = lazy(
   () => import("./pages/intervention/CoverCopyCompare")
 );
+const TutorialCoverCopyCompare = lazy(() => import("./pages/tutorials/TutorialCoverCopyCompare"));
+
 const ExplicitTiming = lazy(
   () => import("./pages/intervention/ExplicitTiming")
 );
+const TutorialExplicitTiming = lazy(() => import("./pages/tutorials/TutorialExplicitTiming"));
+
 const TapedProblems = lazy(() => import("./pages/intervention/TapedProblems"));
 
 // Styles
@@ -115,13 +121,25 @@ export function App(): AppInterface {
                   {!user && <Redirect to="/login" />}
                   {user && <Benchmark />}
                 </Route>
+                <Route path="/tutorial/benchmark/:id">
+                  {!user && <Redirect to="/login" />}
+                  {user && <TutorialBenchmark />}
+                </Route>
                 <Route path="/CoverCopyCompare/:target/:id">
                   {!user && <Redirect to="/login" />}
                   {user && <CoverCopyCompare />}
                 </Route>
+                <Route path="/tutorial/CoverCopyCompare/:id">
+                  {!user && <Redirect to="/login" />}
+                  {user && <TutorialCoverCopyCompare />}
+                </Route>
                 <Route path="/ExplicitTiming/:target/:id">
                   {!user && <Redirect to="/login" />}
                   {user && <ExplicitTiming />}
+                </Route>
+                <Route path="/tutorial/ExplicitTiming/:id">
+                  {!user && <Redirect to="/login" />}
+                  {user && <TutorialExplicitTiming />}
                 </Route>
                 <Route path="/TapedProblems/:target/:id">
                   {!user && <Redirect to="/login" />}

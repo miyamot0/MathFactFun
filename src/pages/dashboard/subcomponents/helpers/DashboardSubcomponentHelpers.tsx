@@ -10,7 +10,6 @@ import React from "react";
 import firebase from "firebase";
 import { Link } from "react-router-dom";
 import { StudentDataInterface } from "../../../student/interfaces/StudentInterfaces";
-import PlayIcon from "../../../../assets/play.svg"
 
 /** generateRouteBaseOnStrategy
  *

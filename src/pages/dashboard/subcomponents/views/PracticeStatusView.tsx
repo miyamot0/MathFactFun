@@ -11,7 +11,11 @@ import { Link } from "react-router-dom";
 import PlayIcon from "../../../../assets/play.svg"
 import { formatDate } from "../../../../utilities/LabelHelper";
 import { StudentDataInterface } from "../../../student/interfaces/StudentInterfaces";
-import { checkIfDateCurrent, generateRouteBaseOnStrategy, InterventionRoutingLink, warnNoProblemsAssigned } from "../helpers/DashboardSubcomponentHelpers";
+import {
+  checkIfDateCurrent,
+  generateRouteBaseOnStrategy,
+  warnNoProblemsAssigned
+} from "../helpers/DashboardSubcomponentHelpers";
 
 export interface PracticeStatusView {
   student: StudentDataInterface;
