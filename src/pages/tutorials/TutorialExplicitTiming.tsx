@@ -9,5 +9,5 @@
 import React from "react";
 
 export default function TutorialExplicitTiming() {
-    return <></>
+  return <></>;
 }

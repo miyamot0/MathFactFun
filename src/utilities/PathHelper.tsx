@@ -20,18 +20,18 @@ export function confirmIfInterventionScreen(address: string): boolean {
   let valueToReturn = false;
 
   if (
-    addressStringLower === "/" ||
-    !addressStringLower.includes("/") ||
+    addressStringLower === '/' ||
+    !addressStringLower.includes('/') ||
     addressStringLower.trim().length === 0
   ) {
     return false;
   }
 
   const stringArray = addressStringLower
-    .split("/")
-    .filter((str) => str.trim().length > 1)[0];
+    .split('/')
+    .filter(str => str.trim().length > 1)[0];
 
-  screens.forEach((screen) => {
+  screens.forEach(screen => {
     const pageReferenceLower = screen.toLowerCase();
     if (stringArray.includes(pageReferenceLower)) {
       valueToReturn = true;
@@ -43,9 +43,10 @@ export function confirmIfInterventionScreen(address: string): boolean {
 
 // eslint-disable-next-line
 export const InterventionPaths = {
-  Benchmark: "Benchmark",
-  CoverCopyCompare: "CoverCopyCompare",
-  Cloze: "Cloze",
-  ExplicitTiming: "ExplicitTiming",
-  TapedProblems: "TapedProblems",
+  Benchmark: 'Benchmark',
+  CoverCopyCompare: 'CoverCopyCompare',
+  Cloze: 'Cloze',
+  ExplicitTiming: 'ExplicitTiming',
+  TapedProblems: 'TapedProblems',
+  tutorial: 'tutorial',
 };

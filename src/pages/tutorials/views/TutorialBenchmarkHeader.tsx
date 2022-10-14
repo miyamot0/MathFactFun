@@ -8,6 +8,10 @@
 
 import React from "react";
 
-export default function TutorialCoverCopyCompare() {
-  return <></>;
+export default function TutorialBenchmarkHeader(): JSX.Element {
+  return (
+    <div className="topBox-tutorial">
+      <h2 style={{ display: "inline-block" }}>PLACEHOLDER</h2>
+    </div>
+  );
 }

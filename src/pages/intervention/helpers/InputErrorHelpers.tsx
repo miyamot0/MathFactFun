@@ -9,49 +9,55 @@
 import { InterventionState } from "../interfaces/InterventionInterfaces";
 
 /** checkForMalformedInput
- * 
+ *
  * Returns true if the input does not resemble the math problem
- * 
- * @param char 
- * @param state 
- * @returns 
+ *
+ * @param char
+ * @param state
+ * @returns
  */
-export function checkForMalformedInput(char: string, state: InterventionState): boolean {
-    const strCheck = state.EntryRepresentationInternal;
+export function checkForMalformedInput(
+  char: string,
+  state: InterventionState
+): boolean {
+  const strCheck = state.EntryRepresentationInternal;
 
-    // Row 1 check
-    if (!strCheck.includes(state.OperatorSymbol) &&
-        char !== state.OperatorSymbol &&
-        strCheck.length === 2) {
+  // Row 1 check
+  if (
+    !strCheck.includes(state.OperatorSymbol) &&
+    char !== state.OperatorSymbol &&
+    strCheck.length === 2
+  ) {
+    return true;
+  } else {
+    // Row 2 check
+    if (
+      strCheck.includes(state.OperatorSymbol) &&
+      !strCheck.includes("=") &&
+      char !== "="
+    ) {
+      const strCheck2 = state.EntryRepresentationInternal.split(
+        state.OperatorSymbol
+      );
+
+      if (strCheck2.length === 2 && strCheck2[1].length === 2) {
         return true;
+      } else {
+        return false;
+      }
     } else {
-        // Row 2 check
-        if (strCheck.includes(state.OperatorSymbol) &&
-            !strCheck.includes("=") &&
-            char !== "=") {
-            const strCheck2 = state.EntryRepresentationInternal.split(
-                state.OperatorSymbol
-            );
+      // Row 3 check
+      if (strCheck.includes("=")) {
+        const strCheck3 = state.EntryRepresentationInternal.split("=");
 
-            if (strCheck2.length === 2 && strCheck2[1].length === 2) {
-                return true;
-            } else {
-                return false;
-            }
+        if (strCheck3.length === 2 && strCheck3[1].length === 2) {
+          return true;
+        } else {
+          return false;
         }
-        else {
-            // Row 3 check
-            if (strCheck.includes("=")) {
-                const strCheck3 = state.EntryRepresentationInternal.split("=");
-
-                if (strCheck3.length === 2 && strCheck3[1].length === 2) {
-                    return true;
-                } else {
-                    return false;
-                }
-            } else {
-                return false;
-            }
-        }
+      } else {
+        return false;
+      }
     }
+  }
 }

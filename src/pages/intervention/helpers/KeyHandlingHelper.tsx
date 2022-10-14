@@ -13,7 +13,10 @@ import { StudentDataInterface } from "../../student/interfaces/StudentInterfaces
 import { SharedActionSequence } from "../functionality/InterventionBehavior";
 import { InterventionState } from "../interfaces/InterventionInterfaces";
 import { commonKeyHandler } from "./DispatchingHelpers";
-import { checkLiNullUndefinedBlank, sharedButtonActionSequence } from "./InterventionHelpers";
+import {
+  checkLiNullUndefinedBlank,
+  sharedButtonActionSequence,
+} from "./InterventionHelpers";
 
 /** commonKeyListener
  *
@@ -36,20 +39,20 @@ export function commonKeyListener({
   history,
   dispatch,
 }: {
-  key: React.KeyboardEvent<HTMLElement>;
-  state: InterventionState;
-  currentApproach: string;
-  captureItemClick?: any;
-  user: firebase.User | null;
-  id: string;
-  target: string;
-  document: StudentDataInterface | null;
-  openModal?: () => void;
-  addDocument: any;
-  updateDocument: any;
-  response: any;
-  history: any;
-  dispatch: any;
+  key: React.KeyboardEvent<HTMLElement>,
+  state: InterventionState,
+  currentApproach: string,
+  captureItemClick?: any,
+  user: firebase.User | null,
+  id: string,
+  target: string,
+  document: StudentDataInterface | null,
+  openModal?: () => void,
+  addDocument: any,
+  updateDocument: any,
+  response: any,
+  history: any,
+  dispatch: any,
 }) {
   developmentConsoleLog(
     `commonKeyListener(currentApproach: ${currentApproach}, action: ${state.CurrentAction}, key: ${key.key})`

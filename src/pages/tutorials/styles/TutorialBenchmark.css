@@ -1,0 +1,89 @@
+/** @license
+ *
+ * Copyright (c) Shawn P. Gilroy, Louisiana State University.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+.wrapper-tutorial {
+  display: grid;
+  column-gap: 10px;
+  row-gap: 10px;
+  grid-gap: 10px;
+  margin: 0 auto;
+  /*
+    Calculate height WRT gutter vals
+    */
+  height: calc(100vh - 0px);
+  width: calc(100vw - 200px);
+
+  text-align: center;
+  vertical-align: middle;
+  grid-template-rows: 5% 15% 20% 15% 15% 15%;
+  grid-template-columns: 40% 40% 20%;
+  /* New */
+  padding-top: 10px;
+  max-width: 800px;
+}
+
+.topBox-tutorial {
+  grid-column-start: 1;
+  grid-column-end: 4;
+  grid-row-start: 1;
+  grid-row-end: 2;
+  text-align: center;
+  justify-content: center;
+  align-content: center;
+}
+
+/* New */
+.topBox-tutorial h2 {
+  color: var(--heading-style-color);
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.box2-tutorial {
+  grid-column-start: 1;
+  grid-column-end: 3;
+  grid-row-start: 2;
+  grid-row-end: 4;
+  text-align: center;
+
+  /* New */
+  border: none;
+  border-radius: 2pt;
+  box-shadow: 0 0 0 1pt var(--text-style-color);
+  padding-top: 15px;
+}
+
+.box3-tutorial {
+  grid-column-start: 3;
+  grid-column-end: 4;
+  grid-row-start: 2;
+  grid-row-end: 7;
+  display: grid;
+  place-items: center;
+}
+
+/* fixed */
+.box5-tutorial {
+  grid-column-start: 1;
+  grid-column-end: 3;
+  grid-row-start: 4;
+  grid-row-end: 7;
+  text-align: center;
+
+  /* New */
+  padding-top: 10px;
+}
+
+.equalsLine-tutorial {
+  grid-column-start: 1 !important;
+  grid-column-end: 4 !important;
+  grid-row-start: 3 !important;
+  grid-row-end: 4 !important;
+  text-align: center;
+  background-color: black;
+}

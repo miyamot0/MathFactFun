@@ -8,6 +8,10 @@
 
 import { developmentConsoleLog } from "../../../utilities/LoggingTools";
 import {
+  InitialTutorialBenchmarkState,
+  TutorialBenchmarkActions,
+} from "../../tutorials/TutorialBenchmark";
+import {
   DelCode,
   InterventionActions,
   SharedActionSequence,
@@ -86,7 +90,6 @@ export function commonKeyHandlerCCC(
       })
     );
   } else {
-
     if (checkForMalformedInput(char, state)) {
       return;
     } else {
@@ -94,7 +97,8 @@ export function commonKeyHandlerCCC(
         new DispatchUpdateEntryInternal({
           type: InterventionActions.UpdateResponseEntry,
           payload: {
-            EntryRepresentationInternal: state.EntryRepresentationInternal + char,
+            EntryRepresentationInternal:
+              state.EntryRepresentationInternal + char,
           },
         })
       );
@@ -137,10 +141,52 @@ export function commonKeyHandlerET(
         new DispatchUpdateEntryInternal({
           type: InterventionActions.UpdateResponseEntry,
           payload: {
-            EntryRepresentationInternal: state.EntryRepresentationInternal + char,
+            EntryRepresentationInternal:
+              state.EntryRepresentationInternal + char,
           },
         })
       );
+    }
+  }
+}
+
+/** commonKeyHandlerET
+ *
+ * @param char
+ * @param state
+ * @param dispatch
+ * @returns
+ */
+export function commonKeyHandlerTutorialBenchmark(
+  char: string,
+  state: InitialTutorialBenchmarkState,
+  dispatch: any
+) {
+  if (char === DelCode) {
+    // # Rule #7: Exit out if nothin to delete
+    if (state.EntryRepresentationInternal.length === 0) return;
+
+    //TODO:
+
+    dispatch({
+      type: TutorialBenchmarkActions.UpdateEntry,
+      payload: {
+        EntryRepresentationInternal: state.EntryRepresentationInternal.slice(
+          0,
+          -1
+        ),
+      },
+    });
+  } else {
+    if (state.EntryRepresentationInternal.length >= 3) {
+      return;
+    } else {
+      dispatch({
+        type: TutorialBenchmarkActions.UpdateEntry,
+        payload: {
+          EntryRepresentationInternal: state.EntryRepresentationInternal + char,
+        },
+      });
     }
   }
 }
