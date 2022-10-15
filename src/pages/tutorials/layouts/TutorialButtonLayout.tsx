@@ -13,43 +13,19 @@ import {
   TutorialSequenceBenchmark,
 } from '../TutorialBenchmark';
 
+export interface TutorialButtonLayout {
+  state: InitialTutorialBenchmarkState;
+  dispatch: any;
+  className: string;
+  displayFeedback: any;
+}
+
 export default function TutorialButtonLayout({
-  //user,
-  //id,
-  //target,
-  //approach,
-  //document,
   state,
-  //openModal,
-  //addDocument,
-  //updateDocument,
-  //addResponse,
-  //history,
   dispatch,
   className,
   displayFeedback,
-}: {
-  /*
-    user: firebase.User | null;
-    id: string;
-    target: string;
-    approach: string;
-    document: StudentDataInterface | null;
-    */
-  state: InitialTutorialBenchmarkState,
-  /*
-    openModal: any;
-    addDocument: any;
-    updateDocument: any;
-    addResponse: any;
-    history: any;
-    */
-  dispatch: any,
-  className: string,
-  displayFeedback: any,
-}): JSX.Element {
-  //console.log("in ccc load");
-
+}: TutorialButtonLayout): JSX.Element {
   return (
     <div className={className}>
       <section>
@@ -65,35 +41,9 @@ export default function TutorialButtonLayout({
                   dispatch({ type: TutorialBenchmarkActions.LoadTrainingItem });
                   break;
                 case TutorialSequenceBenchmark.Responding:
-                  console.log('answer');
-
                   displayFeedback();
-
                   break;
               }
-
-              //switch
-
-              /*
-                            if (checkIfSubmittedViaClick(event) === true) {
-                                return;
-                            } else {
-                                sharedButtonActionSequence(
-                                    user,
-                                    id,
-                                    target,
-                                    approach,
-                                    document,
-                                    state,
-                                    openModal,
-                                    addDocument,
-                                    updateDocument,
-                                    addResponse,
-                                    history,
-                                    dispatch
-                                );
-                            }
-                            */
             }}
           >
             {state.ButtonText}

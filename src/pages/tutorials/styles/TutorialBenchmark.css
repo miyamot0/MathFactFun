@@ -18,8 +18,8 @@
   height: calc(100vh - 0px);
   width: calc(100vw - 200px);
 
-  text-align: center;
-  vertical-align: middle;
+  text-align: center !important;
+  vertical-align: middle !important;
   grid-template-rows: 5% 15% 20% 15% 15% 15%;
   grid-template-columns: 40% 40% 20%;
   /* New */
@@ -32,9 +32,9 @@
   grid-column-end: 4;
   grid-row-start: 1;
   grid-row-end: 2;
-  text-align: center;
-  justify-content: center;
-  align-content: center;
+  text-align: center !important;
+  justify-content: center !important;
+  align-content: center !important;
 }
 
 /* New */

@@ -7,12 +7,17 @@
  */
 
 import React from 'react';
+import {
+  InitialTutorialBenchmarkState,
+  TutorialSequenceBenchmark,
+} from '../TutorialBenchmark';
 
 export interface TutorialButton {
   char: string;
   classList: string;
   showKey: boolean;
   onClick: any;
+  state: InitialTutorialBenchmarkState;
 }
 
 export default function TutorialButton({
@@ -20,6 +25,7 @@ export default function TutorialButton({
   classList,
   showKey,
   onClick,
+  state,
 }: TutorialButton) {
   return (
     <button
@@ -28,7 +34,20 @@ export default function TutorialButton({
         visibility: showKey ? 'visible' : 'hidden',
       }}
       onClick={(event: React.MouseEvent<HTMLElement>): void => {
-        onClick(event, char.trim());
+        console.log(state);
+
+        switch (state.CurrentAction) {
+          case TutorialSequenceBenchmark.InitialLoading:
+            return;
+
+          case TutorialSequenceBenchmark.Responding:
+            onClick(event, char.trim());
+
+            return;
+
+          case TutorialSequenceBenchmark.Correcting:
+            return;
+        }
       }}
     >
       <span className='content'>{char}</span>

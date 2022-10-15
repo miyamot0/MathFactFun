@@ -24,12 +24,12 @@ import {
 import './styles/TutorialBenchmark.css'
 
 export const DelCode = "Del";
-const DelayFeedbackReset = 3000;
+const DelayFeedbackResetPerItem = 1000;
 
 const PreSetTrainingItems = [
     "1+2=3",
-    "4+2=8",
-    "2+6=6",
+    "4+2=6",
+    "2+6=8",
     "3+2=5",
     "1+6=7"
 ]
@@ -185,67 +185,54 @@ export default function TutorialBenchmark() {
     });
 
     function showFeedback() {
-        /**
-            const combinedResponse =
-            state.ViewRepresentationInternal.split('=')[0] +
-            '=' +
-            state.EntryRepresentationInternal;
 
-            const isMatching =
-            state.ViewRepresentationInternal.trim() ===
-            combinedResponse.trim();
-        */
+        const combinedResponse =
+        state.ViewRepresentationInternal.split('=')[0] +
+        '=' +
+        state.EntryRepresentationInternal;
+
+        const isMatching =
+        state.ViewRepresentationInternal.trim() ===
+        combinedResponse.trim();
+
+        console.log(state)
+
+        if (isMatching === false) {
+            console.log('Wrong answer')
+            return;
+        }
+
+        const nAnimationsToShow = state.EntryRepresentationInternal.length;
 
         dispatch({type: TutorialBenchmarkActions.DeliverFeedback, payload: {}})
 
-        
         timeline = new mojs.Timeline({ speed: 1.5 });
 
-        const tune1 = getCoordsForReferencedDiv(numberBoxReference1);
+        const coords = [{},{},{}];
 
-        const circle1 = buildCircleFigure({delay: 0});
-        const burst1 = buildBurstFigure({delay: 0});
-        const star1 = buildStarFigure({delay: 0, playBoop});
+        coords[2] = getCoordsForReferencedDiv(numberBoxReference1);
+        coords[1]  = getCoordsForReferencedDiv(numberBoxReference2);
+        coords[0]  = getCoordsForReferencedDiv(numberBoxReference3);
 
-        burst1.tune(tune1);
-        circle1.tune(tune1);
-        star1.tune(tune1);
+        for (let i = 0; i < nAnimationsToShow; i++) {
+            const coordLocal = coords[i];
 
-        const tune2 = {
-            ...getCoordsForReferencedDiv(numberBoxReference2)
-        };
+            const circle = buildCircleFigure({delay: i * 500});
+            const burst = buildBurstFigure({delay: i * 500});
+            const star = buildStarFigure({delay: i * 500, playBoop});
 
-        const circle2 = buildCircleFigure({delay: 500});
-        const burst2 = buildBurstFigure({delay: 500});
-        const star2 = buildStarFigure({delay: 800, playBoop});
+            burst.tune(coordLocal);
+            circle.tune(coordLocal);
+            star.tune(coordLocal);
 
-        burst2.tune(tune2);
-        circle2.tune(tune2);
-        star2.tune(tune2);
-
-        const tune3 = {
-            ...getCoordsForReferencedDiv(numberBoxReference3)
-        };
-
-        const circle3 = buildCircleFigure({delay: 1500});
-        const burst3 = buildBurstFigure({delay: 1500});
-        const star3 = buildStarFigure({delay: 1800, playBoop});
-
-        burst3.tune(tune3);
-        circle3.tune(tune3);
-        star3.tune(tune3);
-
-        timeline.add(
-            burst1, circle1, star1,
-            burst2, circle2, star2,
-            burst3, circle3, star3
-            );
+            timeline.add(burst, circle, star)
+        }
 
         timeline.replay();
         
         setTimeout(() => {
             dispatch({type: TutorialBenchmarkActions.LoadNextItem, payload: {}})
-        }, DelayFeedbackReset)
+        }, DelayFeedbackResetPerItem * nAnimationsToShow)
     }
 
     function clickHandler(e: any, char: string) {   
@@ -279,62 +266,6 @@ export default function TutorialBenchmark() {
                 }
             );
             }
-        }
-
-
-
-        return;
-        const correctResponse = true;
-
-
-        //return
-        if (state.Animations === false || !correctResponse) return;
-        e.persist();
-
-        if (correctResponse) {
-            timeline = new mojs.Timeline({ speed: 1.5 });
-
-            const tune1 = getCoordsForReferencedDiv(numberBoxReference1);
-
-            const circle1 = buildCircleFigure({delay: 0});
-            const burst1 = buildBurstFigure({delay: 0});
-            const star1 = buildStarFigure({delay: 0, playBoop});
-
-            burst1.tune(tune1);
-            circle1.tune(tune1);
-            star1.tune(tune1);
-
-            const tune2 = {
-                ...getCoordsForReferencedDiv(numberBoxReference2)
-            };
-
-            const circle2 = buildCircleFigure({delay: 500});
-            const burst2 = buildBurstFigure({delay: 500});
-            const star2 = buildStarFigure({delay: 800, playBoop});
-
-            burst2.tune(tune2);
-            circle2.tune(tune2);
-            star2.tune(tune2);
-
-            const tune3 = {
-                ...getCoordsForReferencedDiv(numberBoxReference3)
-            };
-
-            const circle3 = buildCircleFigure({delay: 1500});
-            const burst3 = buildBurstFigure({delay: 1500});
-            const star3 = buildStarFigure({delay: 1800, playBoop});
-
-            burst3.tune(tune3);
-            circle3.tune(tune3);
-            star3.tune(tune3);
-
-            timeline.add(
-                burst1, circle1, star1,
-                burst2, circle2, star2,
-                burst3, circle3, star3
-                );
-
-            timeline.replay();            
         }
     }
 

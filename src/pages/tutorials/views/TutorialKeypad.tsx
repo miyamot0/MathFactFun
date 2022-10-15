@@ -41,6 +41,7 @@ export default function TutorialKeyPad({
     <div className='key-pad-wrapper'>
       <TutorialKeyItem
         char={' 1 '}
+        state={state}
         showEquals={showEquals}
         addedClass={'key1'}
         operatorSymbol={operatorSymbol}
@@ -48,6 +49,7 @@ export default function TutorialKeyPad({
       />
       <TutorialKeyItem
         char={' 2 '}
+        state={state}
         showEquals={showEquals}
         addedClass={'key2'}
         operatorSymbol={operatorSymbol}
@@ -55,6 +57,7 @@ export default function TutorialKeyPad({
       />
       <TutorialKeyItem
         char={' 3 '}
+        state={state}
         showEquals={showEquals}
         addedClass={'key3'}
         operatorSymbol={operatorSymbol}
@@ -62,6 +65,7 @@ export default function TutorialKeyPad({
       />
       <TutorialKeyItem
         char={' + '}
+        state={state}
         showEquals={showEquals}
         addedClass={'key4'}
         operatorSymbol={operatorSymbol}
@@ -70,6 +74,7 @@ export default function TutorialKeyPad({
 
       <TutorialKeyItem
         char={' 4 '}
+        state={state}
         showEquals={showEquals}
         addedClass={'key5'}
         operatorSymbol={operatorSymbol}
@@ -77,6 +82,7 @@ export default function TutorialKeyPad({
       />
       <TutorialKeyItem
         char={' 5 '}
+        state={state}
         showEquals={showEquals}
         addedClass={'key6'}
         operatorSymbol={operatorSymbol}
@@ -84,6 +90,7 @@ export default function TutorialKeyPad({
       />
       <TutorialKeyItem
         char={' 6 '}
+        state={state}
         showEquals={showEquals}
         addedClass={'key7'}
         operatorSymbol={operatorSymbol}
@@ -91,6 +98,7 @@ export default function TutorialKeyPad({
       />
       <TutorialKeyItem
         char={' - '}
+        state={state}
         showEquals={showEquals}
         addedClass={'key8'}
         operatorSymbol={operatorSymbol}
@@ -99,6 +107,7 @@ export default function TutorialKeyPad({
 
       <TutorialKeyItem
         char={' 7 '}
+        state={state}
         showEquals={showEquals}
         addedClass={'key9'}
         operatorSymbol={operatorSymbol}
@@ -106,6 +115,7 @@ export default function TutorialKeyPad({
       />
       <TutorialKeyItem
         char={' 8 '}
+        state={state}
         showEquals={showEquals}
         addedClass={'key10'}
         operatorSymbol={operatorSymbol}
@@ -113,6 +123,7 @@ export default function TutorialKeyPad({
       />
       <TutorialKeyItem
         char={' 9 '}
+        state={state}
         showEquals={showEquals}
         addedClass={'key11'}
         operatorSymbol={operatorSymbol}
@@ -120,6 +131,7 @@ export default function TutorialKeyPad({
       />
       <TutorialKeyItem
         char={' x '}
+        state={state}
         showEquals={showEquals}
         addedClass={'key12'}
         operatorSymbol={operatorSymbol}
@@ -128,6 +140,7 @@ export default function TutorialKeyPad({
 
       <TutorialKeyItem
         char={'Del'}
+        state={state}
         showEquals={showEquals}
         addedClass={'key13'}
         operatorSymbol={operatorSymbol}
@@ -135,6 +148,7 @@ export default function TutorialKeyPad({
       />
       <TutorialKeyItem
         char={' 0 '}
+        state={state}
         showEquals={showEquals}
         addedClass={'key14'}
         operatorSymbol={operatorSymbol}
@@ -142,6 +156,7 @@ export default function TutorialKeyPad({
       />
       <TutorialKeyItem
         char={' = '}
+        state={state}
         showEquals={showEquals}
         addedClass={'key15'}
         operatorSymbol={operatorSymbol}
@@ -149,6 +164,7 @@ export default function TutorialKeyPad({
       />
       <TutorialKeyItem
         char={'\u00F7'}
+        state={state}
         showEquals={showEquals}
         addedClass={'key16'}
         operatorSymbol={operatorSymbol}

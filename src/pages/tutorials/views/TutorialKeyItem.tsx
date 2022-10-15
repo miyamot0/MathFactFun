@@ -7,6 +7,7 @@
  */
 
 import React from 'react';
+import { InitialTutorialBenchmarkState } from '../TutorialBenchmark';
 import TutorialButton from './TutorialButton';
 
 /** KeyItem
@@ -21,12 +22,14 @@ export function TutorialKeyItem({
   addedClass,
   operatorSymbol,
   showEquals,
+  state,
   callBackFunction,
 }: {
   char: string,
   addedClass: string,
   operatorSymbol: string | undefined,
   showEquals: boolean,
+  state: InitialTutorialBenchmarkState,
   callBackFunction: (arg0: string) => void,
 }): JSX.Element {
   const char2 = char === '\u00F7' ? '/' : char;
@@ -81,6 +84,7 @@ export function TutorialKeyItem({
       classList={classList}
       char={char2}
       showKey={showKey}
+      state={state}
       onClick={callBackFunction}
     />
   );

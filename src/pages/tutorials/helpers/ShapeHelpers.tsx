@@ -13,7 +13,7 @@ const mojs = require('@mojs/core');
 const RADIUS = 28;
 
 export interface buildCircleFigure {
-  delay: number
+  delay: number;
 }
 
 /** buildCircleFigure
@@ -21,7 +21,7 @@ export interface buildCircleFigure {
  * Build out shape for animation
  *
  */
-export function buildCircleFigure({delay} : buildCircleFigure) {
+export function buildCircleFigure({ delay }: buildCircleFigure): mojs.Shape {
   return new mojs.Shape({
     left: 0,
     top: 0,
@@ -39,7 +39,7 @@ export function buildCircleFigure({delay} : buildCircleFigure) {
 }
 
 export interface buildBurstFigure {
-  delay: number
+  delay: number;
 }
 
 /** buildBurstFigure
@@ -47,7 +47,7 @@ export interface buildBurstFigure {
  * Build out shape for animation
  *
  */
-export function buildBurstFigure({delay} : buildBurstFigure) {
+export function buildBurstFigure({ delay }: buildBurstFigure): mojs.Shape {
   const nParticles = Math.floor(Math.random() * 10) + 4;
 
   return new mojs.Burst({
@@ -94,7 +94,7 @@ export function buildBurstFigure({delay} : buildBurstFigure) {
 }
 
 export interface buildStarFigure {
-  delay: number,
+  delay: number;
   playBoop: any;
 }
 
@@ -103,7 +103,10 @@ export interface buildStarFigure {
  * Build out shape for animation
  *
  */
-export function buildStarFigure({delay, playBoop} : buildStarFigure) {
+export function buildStarFigure({
+  delay,
+  playBoop,
+}: buildStarFigure): mojs.Shape {
   return new mojs.Shape({
     left: 0,
     top: 0,
@@ -123,21 +126,16 @@ export function buildStarFigure({delay, playBoop} : buildStarFigure) {
   });
 }
 
-export interface ReferencedDivCoords {
-  x: number;
-  y: number;
-}
-
 /** getCoordsForReferencedDiv
- * 
+ *
  * @param {React.RefObject<HTMLDivElement>} reference answer box reference
  * @returns {ReferencedDivCoords | null}
  */
 export function getCoordsForReferencedDiv(
   reference: React.RefObject<HTMLDivElement>,
-): ReferencedDivCoords | null {
+) {
   if (reference === null || reference.current === null) {
-    return null;
+    throw new Error('Invalid number reference');
   }
 
   const x =
@@ -150,5 +148,5 @@ export function getCoordsForReferencedDiv(
       reference.current.getBoundingClientRect().bottom) /
     2;
 
-    return {x, y} as ReferencedDivCoords
+  return { x, y };
 }
