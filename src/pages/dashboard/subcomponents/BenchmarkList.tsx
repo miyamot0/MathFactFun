@@ -12,12 +12,10 @@
 
 import React from 'react'
 import BenchmarkItemStatusView from './views/BenchmarkItemStatusView'
+import PlayIcon from '../../../assets/play.svg'
 import { BenchmarkInterface } from '../types/DashboardTypes'
 import { Link } from 'react-router-dom'
-import {
-    checkIfCompletedBenchmark,
-    WrapperBenchmarkList,
-} from './helpers/DashboardSubcomponentHelpers'
+import { checkIfCompletedBenchmark } from './helpers/DashboardSubcomponentHelpers'
 
 import './styles/BenchmarkList.css'
 
@@ -90,12 +88,25 @@ export default function BenchmarkList({
                                     <br></br>
                                 </div>
                                 <div className="benchmark-list-tail-item">
+                                    <span className={'needs-training'} />
+                                    <span style={{ color: '#3392eb' }}>
+                                        {' '}
+                                        Complete Tutorial
+                                    </span>
+
                                     <Link
                                         to={`/tutorial/benchmark/${student.id}/${benchmark}`}
-                                        className="student-list-tail-item"
+                                        key={student.id}
+                                        style={{
+                                            display: 'inline-block',
+                                            float: 'right',
+                                        }}
+                                        className="student-list-settings-link"
                                     >
-                                        <span className="needs-training"></span>
-                                        {''}Complete Initial Tutorial
+                                        <img
+                                            src={PlayIcon}
+                                            alt="Settings link"
+                                        ></img>
                                     </Link>
                                 </div>
                             </div>
@@ -109,19 +120,32 @@ export default function BenchmarkList({
                                 }}
                                 key={`${student.id}-${benchmark}`}
                             >
-                                <WrapperBenchmarkList
-                                    student={student}
-                                    benchmark={benchmark}
-                                    isCompleted={benchmarkCompleted}
-                                />
-                                <hr />
-                                <p>
-                                    <b>Benchmark Period:</b>{' '}
-                                    {student.dueDate.toDate().toDateString()}
-                                </p>
-                                <BenchmarkItemStatusView
-                                    benchmarkCompleted={benchmarkCompleted}
-                                />
+                                <div className="benchmark-list-head-item">
+                                    <div
+                                        className="horizontal-header-benchmark-list-item"
+                                        style={{
+                                            display: 'inline-block',
+                                            width: '100%',
+                                        }}
+                                    >
+                                        <p>{`${benchmark}`}</p>
+                                    </div>
+                                    <hr />
+                                    <p>
+                                        <b>Benchmark Period:</b>{' '}
+                                        {student.dueDate
+                                            .toDate()
+                                            .toDateString()}
+                                    </p>
+                                </div>
+                                <br />
+                                <div className="benchmark-list-tail-item">
+                                    <BenchmarkItemStatusView
+                                        benchmarkCompleted={benchmarkCompleted}
+                                        student={student}
+                                        benchmark={benchmark}
+                                    />
+                                </div>
                             </div>
                         )
                     }

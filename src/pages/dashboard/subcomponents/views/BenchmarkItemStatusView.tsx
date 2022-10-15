@@ -7,10 +7,15 @@
  */
 
 import React from 'react'
-import { generatedStyledFeedback } from '../helpers/DashboardSubcomponentHelpers'
+import { Link } from 'react-router-dom'
+import { StudentDataInterface } from '../../../student/interfaces/StudentInterfaces'
+import { OutputStyledFeedbackBenchmarking } from '../helpers/DashboardSubcomponentHelpers'
+import PlayIcon from '../../../../assets/play.svg'
 
 export interface BenchmarkItemStatusView {
+    benchmark: string
     benchmarkCompleted: boolean
+    student: StudentDataInterface
 }
 
 /** BenchmarkItemStatusView
@@ -19,11 +24,41 @@ export interface BenchmarkItemStatusView {
  * @returns {Link}
  */
 export default function BenchmarkItemStatusView({
+    benchmark,
     benchmarkCompleted,
+    student,
 }: BenchmarkItemStatusView): JSX.Element {
+    const classNameConditional = benchmarkCompleted
+        ? 'benchmarkd-today'
+        : 'needs-training'
+
     return (
         <p>
-            <b>Status:</b> {generatedStyledFeedback(benchmarkCompleted)}
+            <span className={classNameConditional} />
+
+            <OutputStyledFeedbackBenchmarking
+                IsCompleted={benchmarkCompleted}
+            />
+
+            {!benchmarkCompleted && (
+                <Link
+                    to={`/benchmark/${student.id}/${benchmark}`}
+                    key={student.id}
+                    style={{ display: 'inline-block', float: 'right' }}
+                    className="student-list-settings-link"
+                >
+                    <img src={PlayIcon} alt="Settings link"></img>
+                </Link>
+            )}
+
+            {benchmarkCompleted && (
+                <div
+                    className="student-list-settings-link"
+                    style={{ display: 'inline-block', float: 'right' }}
+                >
+                    <img src={PlayIcon} alt="Settings link"></img>
+                </div>
+            )}
         </p>
     )
 }

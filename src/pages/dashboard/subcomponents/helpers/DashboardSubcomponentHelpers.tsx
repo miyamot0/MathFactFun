@@ -172,6 +172,10 @@ export function checkIfBenchmarksCompleted(
     return confirmedCompleted
 }
 
+export interface OutputStyledFeedbackBenchmarking {
+    IsCompleted: boolean
+}
+
 /** generatedStyledFeedback
  *
  * Wrap info in a link, if benchmark is due
@@ -179,11 +183,13 @@ export function checkIfBenchmarksCompleted(
  * @param {boolean} isCompleted if probe completed
  * @returns {JSX.Element}
  */
-export function generatedStyledFeedback(isCompleted: boolean): JSX.Element {
-    return isCompleted ? (
+export function OutputStyledFeedbackBenchmarking({
+    IsCompleted,
+}: OutputStyledFeedbackBenchmarking): JSX.Element {
+    return IsCompleted ? (
         <span style={{ color: 'green' }}> Completed</span>
     ) : (
-        <span style={{ color: 'red' }}> Incomplete</span>
+        <span style={{ color: '#ff9439' }}> Needs Benchmarking</span>
     )
 }
 
@@ -207,13 +213,5 @@ export function WrapperBenchmarkList({
     benchmark,
     isCompleted,
 }: WrapperBenchmarkList): JSX.Element {
-    if (isCompleted) {
-        return <p className="benchmark-list-card-title">{benchmark}</p>
-    } else {
-        return (
-            <Link to={`/benchmark/${student.id}/${benchmark}`} key={student.id}>
-                {benchmark}
-            </Link>
-        )
-    }
+    return <p className="benchmark-list-card-title">{benchmark}</p>
 }

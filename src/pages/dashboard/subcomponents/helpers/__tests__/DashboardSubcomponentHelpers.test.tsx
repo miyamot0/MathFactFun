@@ -524,7 +524,7 @@ describe('generateWrapperStudentList', () => {
 
 describe('generatedStyledFeedback', () => {
     it('Should be green if true', () => {
-        const value = generatedStyledFeedback(true)
+        const value = generatedStyledFeedback({ isCompleted: true })
 
         const returnString = JSON.stringify(value)
 
@@ -533,7 +533,7 @@ describe('generatedStyledFeedback', () => {
     })
 
     it('Should be red if false', () => {
-        const value = generatedStyledFeedback(false)
+        const value = generatedStyledFeedback({ isCompleted: false })
 
         const returnString = JSON.stringify(value)
 

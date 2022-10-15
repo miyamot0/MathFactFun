@@ -95,29 +95,29 @@ export default function TutorialBenchmark() {
                     break
                 case 'Subtraction-Lessing From 18':
                     trainingItems = [
-                        '1+2=3',
-                        '4+2=6',
-                        '2+6=8',
-                        '3+2=5',
-                        '1+6=7',
+                        '8-4=4',
+                        '6-3=3',
+                        '5-4=1',
+                        '7-2=5',
+                        '3-2=1',
                     ]
                     break
                 case 'Multiplication-Single Digit':
                     trainingItems = [
-                        '1+2=3',
-                        '4+2=6',
-                        '2+6=8',
-                        '3+2=5',
-                        '1+6=7',
+                        '2x3=6',
+                        '8x2=16',
+                        '7x3=21',
+                        '5x5=25',
+                        '6x4=24',
                     ]
                     break
                 case 'Division-Single Digit':
                     trainingItems = [
-                        '1+2=3',
-                        '4+2=6',
-                        '2+6=8',
-                        '3+2=5',
-                        '1+6=7',
+                        '16/4=4',
+                        '25/5=5',
+                        '10/2=5',
+                        '36/6=6',
+                        '49/7=7',
                     ]
                     break
             }
@@ -226,7 +226,7 @@ export default function TutorialBenchmark() {
         coords[1] = getCoordsForReferencedDiv(numberBoxReference2)
         coords[0] = getCoordsForReferencedDiv(numberBoxReference3)
 
-        for (let i = 0; i < nAnimationsToShow; i++) {
+        for (let i = nAnimationsToShow - 1; i >= 0; i--) {
             const coordLocal = coords[i]
 
             const circle = buildCircleFigure({ delay: i * 500 })
