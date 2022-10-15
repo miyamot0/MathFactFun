@@ -7,15 +7,16 @@
  */
 
 import React from 'react'
-import { Link } from 'react-router-dom'
 import PlayIcon from '../../../../assets/play.svg'
-import { formatDate } from '../../../../utilities/LabelHelper'
+import PracticeFooterLinkedSummary from './PracticeFooterLinkedSummary'
+import { Link } from 'react-router-dom'
 import { StudentDataInterface } from '../../../student/interfaces/StudentInterfaces'
 import {
     checkIfDateCurrent,
     generateRouteBaseOnStrategy,
     warnNoProblemsAssigned,
 } from '../helpers/DashboardSubcomponentHelpers'
+import PracticeFooterLinkedAction from './PracticeFooterLinkedActions'
 
 export interface PracticeStatusView {
     student: StudentDataInterface
@@ -185,36 +186,15 @@ export default function PracticeStatusView({
                     width: '100%',
                 }}
             >
-                <div
-                    className="p-needs-training"
-                    style={{ display: 'inline-block' }}
-                >
-                    {practiceIsCurrent ? (
-                        <>
-                            <span className="practiced-today"> </span>
-                            <span style={{ color: '#0ebb50' }}>
-                                Last Practice:{' '}
-                                {formatDate({
-                                    date: student.lastActivity.toDate(),
-                                    format: 'display',
-                                })}
-                            </span>
-                        </>
-                    ) : (
-                        <>
-                            <span className="needs-training"> </span>
-                            <span style={{ color: 'rgb(51, 146, 235)' }}>
-                                Last Practice:{' '}
-                                {formatDate({
-                                    date: student.lastActivity.toDate(),
-                                    format: 'display',
-                                })}
-                            </span>
-                        </>
-                    )}{' '}
-                </div>
+                <PracticeFooterLinkedSummary
+                    practiceIsCurrent={practiceIsCurrent}
+                    student={student}
+                />
 
-                {checkForProblems}
+                <PracticeFooterLinkedAction
+                    student={student}
+                    practiceIsCurrent={practiceIsCurrent}
+                />
             </div>
         )
     }
