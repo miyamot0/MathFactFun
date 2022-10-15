@@ -19,7 +19,7 @@ export interface TutorialKeyPad {
   callBackFunction: any;
   operatorSymbol: string | undefined;
   showEquals: boolean;
-  state: InitialTutorialBenchmarkState,
+  state: InitialTutorialBenchmarkState;
   dispatch: any;
 }
 
@@ -30,12 +30,12 @@ export default function TutorialKeyPad({
   state,
   dispatch,
 }: TutorialKeyPad) {
-  useEffect(() => {
-    dispatch({
-      type: 0,
-      payload: {},
-    });
-  });
+  //useEffect(() => {
+  //  dispatch({
+  //    type: 0,
+  //    payload: {},
+  //  });
+  //});
 
   return (
     <div className='key-pad-wrapper'>

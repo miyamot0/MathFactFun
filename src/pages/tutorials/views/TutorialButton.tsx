@@ -7,9 +7,8 @@
  */
 
 import React from 'react';
-import { useEffect, useState } from 'react';
 
-interface TutorialButton {
+export interface TutorialButton {
   char: string;
   classList: string;
   showKey: boolean;

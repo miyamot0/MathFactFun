@@ -17,7 +17,8 @@ import { Star } from "./animations/Star";
 import {
     buildBurstFigure,
     buildCircleFigure,
-    buildStarFigure
+    buildStarFigure,
+    getCoordsForReferencedDiv
 } from "./helpers/ShapeHelpers";
 
 import './styles/TutorialBenchmark.css'
@@ -51,7 +52,6 @@ const InitialTutorialBenchmarkState: InitialTutorialBenchmarkState = {
 
 export const enum TutorialBenchmarkActions {
     LoadInformation,
-    LoadReferences,
     LoadTrainingItem,
     UpdateEntry,
     DeliverFeedback,
@@ -73,13 +73,7 @@ export const TutorialReducer = (
             return {
                 ...state,
                 DidLoad: true,
-                ShowButton: true,
-            }
-
-        case TutorialBenchmarkActions.LoadReferences:
-            return {
-                ...state,
-                KeyRefs: [],
+                ShowButton: true
             }
 
         case TutorialBenchmarkActions.LoadTrainingItem:
@@ -91,11 +85,10 @@ export const TutorialReducer = (
                 OperatorSymbol: "+",
                 ButtonText: "Start",
                 CoverProblemItem: false,
+                Animations: true,
             }
 
         case TutorialBenchmarkActions.UpdateEntry:
-            //state.FunctionReference();
-
             return {
                 ...state,
                 EntryRepresentationInternal: action.payload.EntryRepresentationInternal
@@ -111,23 +104,29 @@ export default function TutorialBenchmark() {
     const [state, dispatch] = useReducer(TutorialReducer, InitialTutorialBenchmarkState);
 
     const domReference = useRef<HTMLDivElement>(null);
+    const numberBoxReference1 = useRef<HTMLDivElement>(null);
+    const numberBoxReference2 = useRef<HTMLDivElement>(null);
+    const numberBoxReference3 = useRef<HTMLDivElement>(null);
 
-    let circle: any;
-    let burst: any;
-    let star: any;
+    //let circle: any[];
+    //let burst: any[];
+    //let star: any[];
     let timeline: any;
 
     useEffect(() => {
         if (state.DidLoad === false) {
             mojs.addShape("star", Star);
 
-            if (circle && circle.current) return;
-            if (burst && burst.current) return;
-            if (star && star.current) return;
+            /*
+            // Prevent multiple loads
+            if (circle && circle[0].current) return;
+            if (burst && burst[0].current) return;
+            if (star && star[0].current) return;
 
-            circle = buildCircleFigure();
-            burst = buildBurstFigure();
-            star = buildStarFigure(playBoop);
+            circle[0] = buildCircleFigure();
+            burst[0] = buildBurstFigure();
+            star[0] = buildStarFigure(playBoop);
+            */
 
             dispatch({
                 type: TutorialBenchmarkActions.LoadInformation,
@@ -135,6 +134,7 @@ export default function TutorialBenchmark() {
                     playBoop
                 }
             })
+            console.log(`dispatch: TutorialBenchmarkActions.LoadInformation`)
         }
     });
 
@@ -163,33 +163,83 @@ export default function TutorialBenchmark() {
     */
 
     function clickHandler(e: any, char: string) {
-        console.log(e)
-        //if (state.Animations === false) return;
-
+        const correctResponse = true;
+        if (state.Animations === false || !correctResponse) return;
         e.persist();
 
-        //commonKeyHandlerTutorialBenchmark(key, state, dispatch, feedback);
-
-        const correctResponse = true;
-        console.log(e);
-
         if (correctResponse) {
-            const coords = { x: e.pageX, y: e.pageY };
-
-            circle = buildCircleFigure();
-            burst = buildBurstFigure();
-            star = buildStarFigure(playBoop);
-
             timeline = new mojs.Timeline({ speed: 1.5 });
-            timeline.add(burst, circle, star);
 
-            burst.tune(coords);
-            circle.tune(coords);
-            star.tune(coords);
+            const tune1 = getCoordsForReferencedDiv(numberBoxReference1);
+
+            const circle1 = buildCircleFigure({delay: 0});
+            const burst1 = buildBurstFigure({delay: 0});
+            const star1 = buildStarFigure({delay: 0, playBoop});
+
+            burst1.tune(tune1);
+            circle1.tune(tune1);
+            star1.tune(tune1);
+
+            const tune2 = {
+                ...getCoordsForReferencedDiv(numberBoxReference2)
+            };
+
+            const circle2 = buildCircleFigure({delay: 500});
+            const burst2 = buildBurstFigure({delay: 500});
+            const star2 = buildStarFigure({delay: 800, playBoop});
+
+            burst2.tune(tune2);
+            circle2.tune(tune2);
+            star2.tune(tune2);
+
+            const tune3 = {
+                ...getCoordsForReferencedDiv(numberBoxReference3)
+            };
+
+            const circle3 = buildCircleFigure({delay: 1500});
+            const burst3 = buildBurstFigure({delay: 1500});
+            const star3 = buildStarFigure({delay: 1800, playBoop});
+
+            burst3.tune(tune3);
+            circle3.tune(tune3);
+            star3.tune(tune3);
+
+            timeline.add(
+                burst1, circle1, star1,
+                burst2, circle2, star2,
+                burst3, circle3, star3
+                );
+
+            /*
+
+            circle[1] = buildCircleFigure();
+            burst[1] = buildBurstFigure();
+            star[1] = buildStarFigure(playBoop);
+
+            burst[1].tune(coords2);
+            circle[1].tune(coords2);
+            star[1].tune(coords2);
+
+            const coords3 = getCoordsForReferencedDiv(numberBoxReference3);
+
+            circle[2] = buildCircleFigure();
+            burst[2] = buildBurstFigure();
+            star[2] = buildStarFigure(playBoop);
+
+            burst[2].tune(coords3);
+            circle[2].tune(coords3);
+            star[2].tune(coords3);
+            */
+
+
+
             timeline.replay();
+
+            
         }
     }
 
+    //style={{ userSelect: 'none' }}
     /**
     <ul>TODO:
         <li>Video Playthrough?</li>
@@ -205,12 +255,15 @@ export default function TutorialBenchmark() {
         <div
             className="wrapper-tutorial"
             ref={domReference}
-
-            style={{ userSelect: 'none' }}>
+            >
 
             <TutorialBenchmarkHeader />
 
-            <TutorialSimpleProblemItemLayout state={state} />
+            <TutorialSimpleProblemItemLayout state={state}             
+                numberBoxReference1={numberBoxReference1}
+                numberBoxReference2={numberBoxReference2}
+                numberBoxReference3={numberBoxReference3}
+            />
 
             <TutorialButtonLayout
                 className="box3-tutorial"
@@ -226,6 +279,7 @@ export default function TutorialBenchmark() {
                 dispatch={dispatch}
                 callBackFunction={clickHandler}
             />
+
         </div>
     )
 }

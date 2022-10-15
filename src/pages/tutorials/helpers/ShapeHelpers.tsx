@@ -6,31 +6,40 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { PlayFunction } from "use-sound/dist/types";
+import { PlayFunction } from 'use-sound/dist/types';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const mojs = require("@mojs/core");
+const mojs = require('@mojs/core');
 const RADIUS = 28;
+
+export interface buildCircleFigure {
+  delay: number
+}
 
 /** buildCircleFigure
  *
  * Build out shape for animation
  *
  */
-export function buildCircleFigure() {
+export function buildCircleFigure({delay} : buildCircleFigure) {
   return new mojs.Shape({
     left: 0,
     top: 0,
-    stroke: "#FF9C00",
+    stroke: '#FF9C00',
     strokeWidth: { [3 * RADIUS]: 0 },
-    fill: "none",
-    scale: { 0: 1, easing: "quad.out" },
+    fill: 'none',
+    scale: { 0: 1, easing: 'quad.out' },
     radius: RADIUS,
     duration: 450,
+    delay,
     onComplete: function () {
       this.el.parentNode.removeChild(this.el);
     },
   });
+}
+
+export interface buildBurstFigure {
+  delay: number
 }
 
 /** buildBurstFigure
@@ -38,7 +47,7 @@ export function buildCircleFigure() {
  * Build out shape for animation
  *
  */
-export function buildBurstFigure() {
+export function buildBurstFigure({delay} : buildBurstFigure) {
   const nParticles = Math.floor(Math.random() * 10) + 4;
 
   return new mojs.Burst({
@@ -47,35 +56,36 @@ export function buildBurstFigure() {
     radius: { 4: RADIUS },
     angle: { 15: 45 },
     count: nParticles,
-    timeline: { delay: 500 },
+    //delay,
+    timeline: { delay },
     children: {
-      radius: "rand(2, 4)",
+      radius: 'rand(2, 8)',
       direction: [-1],
       fill: [
-        { "#9EC9F5": "#9ED8C6" },
-        { "#91D3F7": "#9AE4CF" },
+        { '#9EC9F5': '#9ED8C6' },
+        { '#91D3F7': '#9AE4CF' },
 
-        { "#DC93CF": "#E3D36B" },
-        { "#CF8EEF": "#CBEB98" },
+        { '#DC93CF': '#E3D36B' },
+        { '#CF8EEF': '#CBEB98' },
 
-        { "#87E9C6": "#1FCC93" },
-        { "#A7ECD0": "#9AE4CF" },
+        { '#87E9C6': '#1FCC93' },
+        { '#A7ECD0': '#9AE4CF' },
 
-        { "#87E9C6": "#A635D9" },
-        { "#D58EB3": "#E0B6F5" },
+        { '#87E9C6': '#A635D9' },
+        { '#D58EB3': '#E0B6F5' },
 
-        { "#F48BA2": "#CF8EEF" },
-        { "#91D3F7": "#A635D9" },
+        { '#F48BA2': '#CF8EEF' },
+        { '#91D3F7': '#A635D9' },
 
-        { "#CF8EEF": "#CBEB98" },
-        { "#87E9C6": "#A635D9" },
+        { '#CF8EEF': '#CBEB98' },
+        { '#87E9C6': '#A635D9' },
       ],
-      scale: { 1: 0, easing: "quad.in" },
+      scale: { 1: 0, easing: 'quad.in' },
       pathScale: [0.8, null],
       degreeShift: [13, null],
-      swirlFrequency: "rand(2, 4)",
-      duration: [750, 1500],
-      easing: "quint.out",
+      swirlFrequency: 'rand(2, 4)',
+      duration: [750, 2000],
+      easing: 'quint.out',
     },
     onComplete: function () {
       this.el.parentNode.removeChild(this.el);
@@ -83,21 +93,26 @@ export function buildBurstFigure() {
   });
 }
 
+export interface buildStarFigure {
+  delay: number,
+  playBoop: any;
+}
+
 /** buildStarFigure
  *
  * Build out shape for animation
  *
  */
-export function buildStarFigure(playBoop: PlayFunction) {
+export function buildStarFigure({delay, playBoop} : buildStarFigure) {
   return new mojs.Shape({
     left: 0,
     top: 0,
-    shape: "star",
-    fill: "#FF9C00",
+    shape: 'star',
+    fill: '#FF9C00',
     scale: { 0: 1 },
-    easing: "elastic.out",
+    easing: 'elastic.out',
     duration: 2000,
-    delay: 300,
+    delay,
     radius: RADIUS / 1.5,
     onStart: function () {
       playBoop();
@@ -106,4 +121,34 @@ export function buildStarFigure(playBoop: PlayFunction) {
       this.el.parentNode.removeChild(this.el);
     },
   });
+}
+
+export interface ReferencedDivCoords {
+  x: number;
+  y: number;
+}
+
+/** getCoordsForReferencedDiv
+ * 
+ * @param {React.RefObject<HTMLDivElement>} reference answer box reference
+ * @returns {ReferencedDivCoords | null}
+ */
+export function getCoordsForReferencedDiv(
+  reference: React.RefObject<HTMLDivElement>,
+): ReferencedDivCoords | null {
+  if (reference === null || reference.current === null) {
+    return null;
+  }
+
+  const x =
+    (reference.current.getBoundingClientRect().left +
+      reference.current.getBoundingClientRect().right) /
+    2;
+
+  const y =
+    (reference.current.getBoundingClientRect().top +
+      reference.current.getBoundingClientRect().bottom) /
+    2;
+
+    return {x, y} as ReferencedDivCoords
 }

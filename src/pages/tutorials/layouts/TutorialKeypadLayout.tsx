@@ -6,14 +6,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from "react";
-import TutorialKeyPad from "../views/TutorialKeypad";
-import { InterventionFormat } from "../../../maths/Facts";
-import { InitialTutorialBenchmarkState } from "../TutorialBenchmark";
+import React from 'react';
+import TutorialKeyPad from '../views/TutorialKeypad';
+import { InterventionFormat } from '../../../maths/Facts';
+import { InitialTutorialBenchmarkState } from '../TutorialBenchmark';
 import {
   commonKeyHandlerET,
   commonKeyHandlerTutorialBenchmark,
-} from "../../intervention/helpers/InteractionHelpers";
+} from '../../intervention/helpers/InteractionHelpers';
 
 export interface TutorialKeyPadLayout {
   className: string;
@@ -46,6 +46,7 @@ export default function TutorialKeyPadLayout({
       }}
     >
       <TutorialKeyPad
+        state={state}
         callBackFunction={callBackFunction}
         operatorSymbol={operatorScreen}
         showEquals={showEquals}
