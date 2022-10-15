@@ -6,52 +6,40 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from "react";
-import PracticeStatusView from "./views/PracticeStatusView";
-import { GetApproachStringFromLabel } from "../../../utilities/LabelHelper";
-import { PracticeListInterface } from "../types/DashboardTypes";
-import "./styles/PracticeList.css";
+import React from 'react'
+import PracticeStatusView from './views/PracticeStatusView'
+import { GetApproachStringFromLabel } from '../../../utilities/LabelHelper'
+import { PracticeListInterface } from '../types/DashboardTypes'
+import './styles/PracticeList.css'
+import PracticeHeaderStatusView from './views/PracticeHeaderStatusView'
+import PracticeBodyStatusView from './views/PracticeBodyStatusView'
 
-export default function PracticeList({ students, }: PracticeListInterface): JSX.Element {
-  const addedPaddingStyle = {
-    marginTop: "5px",
-  }
+export default function PracticeList({
+    students,
+}: PracticeListInterface): JSX.Element {
+    if (students === null || students.length === 0) {
+        return (
+            <p className="no-practice-objects">
+                No students with intervention programmed.
+            </p>
+        )
+    } else {
+        return (
+            <div className="practice-list">
+                {students.map((student) => {
+                    return (
+                        <div className="practice-list-card" key={student.id}>
+                            <PracticeHeaderStatusView student={student} />
 
-  if (students === null || students.length === 0) {
-    return <p className="no-practice-objects">No students with intervention programmed.</p>;
-  } else {
-    return (
-      <div className="practice-list">
-        {students.map((student) => {
-          return (
-            <div className="practice-list-card" key={student.id}>
-              <p className="practice-list-name-tag">
-                {student.name} ({student.currentGrade})
-              </p>
+                            <hr />
 
-              <hr />
+                            <PracticeBodyStatusView student={student} />
 
-              <p style={addedPaddingStyle}>
-                <b>Approach:</b>{` ${GetApproachStringFromLabel(student.currentApproach)}`}
-              </p>
-
-              <p style={addedPaddingStyle}>
-                <b>Target:</b> {student.currentTarget} (
-                {student.factsTargeted.length} in Set)
-              </p>
-
-              <p style={addedPaddingStyle}>
-                <b>Items in Set:</b> {student.factsTargeted.length}
-              </p>
-
-              <br></br>
-
-              <PracticeStatusView student={student} />
+                            <PracticeStatusView student={student} />
+                        </div>
+                    )
+                })}
             </div>
-          )
-        }
-        )}
-      </div>
-    );
-  }
+        )
+    }
 }
