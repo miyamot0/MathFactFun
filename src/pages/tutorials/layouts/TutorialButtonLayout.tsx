@@ -6,12 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from "react";
-import { InterventionState } from "../../intervention/interfaces/InterventionInterfaces";
+import React from 'react';
 import {
   InitialTutorialBenchmarkState,
   TutorialBenchmarkActions,
-} from "../TutorialBenchmark";
+  TutorialSequenceBenchmark,
+} from '../TutorialBenchmark';
 
 export default function TutorialButtonLayout({
   //user,
@@ -27,6 +27,7 @@ export default function TutorialButtonLayout({
   //history,
   dispatch,
   className,
+  displayFeedback,
 }: {
   /*
     user: firebase.User | null;
@@ -45,6 +46,7 @@ export default function TutorialButtonLayout({
     */
   dispatch: any,
   className: string,
+  displayFeedback: any,
 }): JSX.Element {
   //console.log("in ccc load");
 
@@ -53,10 +55,25 @@ export default function TutorialButtonLayout({
       <section>
         {state.ShowButton && (
           <button
-            className="global-btn"
-            type="button"
-            onClick={(event) => {
-              dispatch({ type: TutorialBenchmarkActions.LoadTrainingItem });
+            className='global-btn'
+            type='button'
+            onClick={event => {
+              if (state.IsAnimating) return;
+
+              switch (state.CurrentAction) {
+                case TutorialSequenceBenchmark.InitialLoading:
+                  dispatch({ type: TutorialBenchmarkActions.LoadTrainingItem });
+                  break;
+                case TutorialSequenceBenchmark.Responding:
+                  console.log('answer');
+
+                  displayFeedback();
+
+                  break;
+              }
+
+              //switch
+
               /*
                             if (checkIfSubmittedViaClick(event) === true) {
                                 return;

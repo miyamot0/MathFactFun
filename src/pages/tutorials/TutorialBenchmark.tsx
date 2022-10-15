@@ -23,10 +23,23 @@ import {
 
 import './styles/TutorialBenchmark.css'
 
+export const DelCode = "Del";
+const DelayFeedbackReset = 3000;
+
+const PreSetTrainingItems = [
+    "1+2=3",
+    "4+2=8",
+    "2+6=6",
+    "3+2=5",
+    "1+6=7"
+]
+
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const mojs = require("@mojs/core");
 
 export interface InitialTutorialBenchmarkState {
+    CurrentAction: string,
+    TrainingItems: string[],
     ShowButton: boolean;
     ViewRepresentationInternal: string;
     EntryRepresentationInternal: string;
@@ -35,10 +48,18 @@ export interface InitialTutorialBenchmarkState {
     CoverProblemItem: boolean;
     DidLoad: boolean;
     Animations: boolean;
-    KeyRefs: any[3];
+    IsAnimating: boolean;
+}
+
+export const TutorialSequenceBenchmark = {
+    InitialLoading: "InitialLoading",
+    Responding: "Responding",
+    Correcting: "Correcting",
 }
 
 const InitialTutorialBenchmarkState: InitialTutorialBenchmarkState = {
+    CurrentAction: TutorialSequenceBenchmark.InitialLoading,
+    TrainingItems: PreSetTrainingItems,
     ShowButton: false,
     ViewRepresentationInternal: "",
     EntryRepresentationInternal: "",
@@ -47,12 +68,14 @@ const InitialTutorialBenchmarkState: InitialTutorialBenchmarkState = {
     CoverProblemItem: true,
     DidLoad: false,
     Animations: false,
-    KeyRefs: [undefined, undefined, undefined,],
+    IsAnimating: false,
 }
+
 
 export const enum TutorialBenchmarkActions {
     LoadInformation,
     LoadTrainingItem,
+    LoadNextItem,
     UpdateEntry,
     DeliverFeedback,
 }
@@ -79,19 +102,56 @@ export const TutorialReducer = (
         case TutorialBenchmarkActions.LoadTrainingItem:
             return {
                 ...state,
+                IsAnimating: false,
                 ShowButton: false,
-                ViewRepresentationInternal: "1+2=",
+                ViewRepresentationInternal: state.TrainingItems[0],
                 EntryRepresentationInternal: "",
                 OperatorSymbol: "+",
                 ButtonText: "Start",
                 CoverProblemItem: false,
                 Animations: true,
+                TrainingItems: state.TrainingItems.slice(1),
+                CurrentAction: TutorialSequenceBenchmark.Responding,
+            }
+
+        case TutorialBenchmarkActions.LoadNextItem:
+
+            // eslint-disable-next-line no-case-declarations
+            const nextItem = state.TrainingItems[0];
+            // eslint-disable-next-line no-case-declarations
+            const remainingItems = state.TrainingItems.slice(1);
+
+            if (!remainingItems) {
+                throw new Error("Training item not found")
+            }
+
+            return {
+                ...state,
+                IsAnimating: false,
+                ShowButton: true,
+                ViewRepresentationInternal: nextItem,
+                EntryRepresentationInternal: "",
+                OperatorSymbol: "+",
+                ButtonText: "Check",
+                CoverProblemItem: false,
+                Animations: true,
+                TrainingItems: remainingItems,
+                CurrentAction: TutorialSequenceBenchmark.Responding,
             }
 
         case TutorialBenchmarkActions.UpdateEntry:
             return {
                 ...state,
-                EntryRepresentationInternal: action.payload.EntryRepresentationInternal
+                EntryRepresentationInternal: action.payload.EntryRepresentationInternal,
+                ShowButton: true,
+                ButtonText: state.ButtonText !== "Check" ? "Check" : state.ButtonText,
+                CurrentAction: TutorialSequenceBenchmark.Responding,
+            }
+
+        case TutorialBenchmarkActions.DeliverFeedback:
+            return {
+                ...state,
+                IsAnimating: true,
             }
 
         default:
@@ -108,25 +168,11 @@ export default function TutorialBenchmark() {
     const numberBoxReference2 = useRef<HTMLDivElement>(null);
     const numberBoxReference3 = useRef<HTMLDivElement>(null);
 
-    //let circle: any[];
-    //let burst: any[];
-    //let star: any[];
-    let timeline: any;
+    let timeline: mojs.Timeline;
 
     useEffect(() => {
         if (state.DidLoad === false) {
             mojs.addShape("star", Star);
-
-            /*
-            // Prevent multiple loads
-            if (circle && circle[0].current) return;
-            if (burst && burst[0].current) return;
-            if (star && star[0].current) return;
-
-            circle[0] = buildCircleFigure();
-            burst[0] = buildBurstFigure();
-            star[0] = buildStarFigure(playBoop);
-            */
 
             dispatch({
                 type: TutorialBenchmarkActions.LoadInformation,
@@ -138,32 +184,110 @@ export default function TutorialBenchmark() {
         }
     });
 
-    /*
-    function fireAnimations() {
-        console.log('fireAnimations');
+    function showFeedback() {
+        /**
+            const combinedResponse =
+            state.ViewRepresentationInternal.split('=')[0] +
+            '=' +
+            state.EntryRepresentationInternal;
 
-        const correctResponse = true;
+            const isMatching =
+            state.ViewRepresentationInternal.trim() ===
+            combinedResponse.trim();
+        */
 
-        if (correctResponse) {
-            const coords = { x: 100, y: 100 };
+        dispatch({type: TutorialBenchmarkActions.DeliverFeedback, payload: {}})
 
-            circle = buildCircleFigure();
-            burst = buildBurstFigure();
-            star = buildStarFigure(playBoop);
+        
+        timeline = new mojs.Timeline({ speed: 1.5 });
 
-            timeline = new mojs.Timeline({ speed: 1.5 });
-            timeline.add(burst, circle, star);
+        const tune1 = getCoordsForReferencedDiv(numberBoxReference1);
 
-            burst.tune(coords);
-            circle.tune(coords);
-            star.tune(coords);
-            timeline.replay();
-        }
+        const circle1 = buildCircleFigure({delay: 0});
+        const burst1 = buildBurstFigure({delay: 0});
+        const star1 = buildStarFigure({delay: 0, playBoop});
+
+        burst1.tune(tune1);
+        circle1.tune(tune1);
+        star1.tune(tune1);
+
+        const tune2 = {
+            ...getCoordsForReferencedDiv(numberBoxReference2)
+        };
+
+        const circle2 = buildCircleFigure({delay: 500});
+        const burst2 = buildBurstFigure({delay: 500});
+        const star2 = buildStarFigure({delay: 800, playBoop});
+
+        burst2.tune(tune2);
+        circle2.tune(tune2);
+        star2.tune(tune2);
+
+        const tune3 = {
+            ...getCoordsForReferencedDiv(numberBoxReference3)
+        };
+
+        const circle3 = buildCircleFigure({delay: 1500});
+        const burst3 = buildBurstFigure({delay: 1500});
+        const star3 = buildStarFigure({delay: 1800, playBoop});
+
+        burst3.tune(tune3);
+        circle3.tune(tune3);
+        star3.tune(tune3);
+
+        timeline.add(
+            burst1, circle1, star1,
+            burst2, circle2, star2,
+            burst3, circle3, star3
+            );
+
+        timeline.replay();
+        
+        setTimeout(() => {
+            dispatch({type: TutorialBenchmarkActions.LoadNextItem, payload: {}})
+        }, DelayFeedbackReset)
     }
-    */
 
-    function clickHandler(e: any, char: string) {
+    function clickHandler(e: any, char: string) {   
+        if (state.IsAnimating) return;
+
+        if (char === DelCode) {
+            // # Rule #7: Exit out if nothin to delete
+            if (state.EntryRepresentationInternal.length === 0) return;
+
+            dispatch({
+                type: TutorialBenchmarkActions.UpdateEntry,
+                payload: {
+                EntryRepresentationInternal: state.EntryRepresentationInternal.slice(
+                    0,
+                    -1
+                ),
+                },
+            }
+            );
+        } else {
+            if (state.EntryRepresentationInternal.length >= 3) {
+            return;
+            } else {
+            dispatch(
+                {
+                type: TutorialBenchmarkActions.UpdateEntry,
+                payload: {
+                    EntryRepresentationInternal:
+                    state.EntryRepresentationInternal + char,
+                },
+                }
+            );
+            }
+        }
+
+
+
+        return;
         const correctResponse = true;
+
+
+        //return
         if (state.Animations === false || !correctResponse) return;
         e.persist();
 
@@ -210,47 +334,10 @@ export default function TutorialBenchmark() {
                 burst3, circle3, star3
                 );
 
-            /*
-
-            circle[1] = buildCircleFigure();
-            burst[1] = buildBurstFigure();
-            star[1] = buildStarFigure(playBoop);
-
-            burst[1].tune(coords2);
-            circle[1].tune(coords2);
-            star[1].tune(coords2);
-
-            const coords3 = getCoordsForReferencedDiv(numberBoxReference3);
-
-            circle[2] = buildCircleFigure();
-            burst[2] = buildBurstFigure();
-            star[2] = buildStarFigure(playBoop);
-
-            burst[2].tune(coords3);
-            circle[2].tune(coords3);
-            star[2].tune(coords3);
-            */
-
-
-
-            timeline.replay();
-
-            
+            timeline.replay();            
         }
     }
 
-    //style={{ userSelect: 'none' }}
-    /**
-    <ul>TODO:
-        <li>Video Playthrough?</li>
-        <li>- E2E video with button press visuals?</li>
-        <li>Model correct entry w/ clicks</li>
-        <li>- check for accuracy</li>
-        <li>Model correct entry w/ key presses</li>
-        <li>- check for accuracy</li>
-    </ul>
-     */
-    //onClick={clickHandler}
     return (
         <div
             className="wrapper-tutorial"
@@ -259,7 +346,8 @@ export default function TutorialBenchmark() {
 
             <TutorialBenchmarkHeader />
 
-            <TutorialSimpleProblemItemLayout state={state}             
+            <TutorialSimpleProblemItemLayout 
+                state={state}             
                 numberBoxReference1={numberBoxReference1}
                 numberBoxReference2={numberBoxReference2}
                 numberBoxReference3={numberBoxReference3}
@@ -269,6 +357,7 @@ export default function TutorialBenchmark() {
                 className="box3-tutorial"
                 state={state}
                 dispatch={dispatch}
+                displayFeedback={showFeedback}
             />
 
             <TutorialKeyPadLayout
