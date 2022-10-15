@@ -60,6 +60,7 @@ export default function BenchmarkItemStatusView({
                         src={PlayIcon}
                         style={{
                             marginLeft: '2px',
+                            filter: 'invert(100%)',
                         }}
                         alt="Settings link"
                     ></img>

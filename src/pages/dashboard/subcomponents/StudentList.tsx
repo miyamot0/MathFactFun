@@ -8,12 +8,12 @@
 
 import React from 'react'
 import BenchmarkStatusView from './views/BenchmarkStatusView'
-import SettingsIcon from '../../../assets/gear.svg'
-import { Link } from 'react-router-dom'
+import DashboardHeaderStatusView from './views/DashboardHeaderStatusView'
 import { GetApproachStringFromLabel } from '../../../utilities/LabelHelper'
 import { StudentListInterface } from '../types/DashboardTypes'
 
 import './styles/StudentList.css'
+import DashboardBodyStatusView from './views/DashboardBodyStatusView'
 
 /** StudentList
  *
@@ -36,55 +36,16 @@ export default function StudentList({
                     return (
                         <div className="student-list-card" key={student.id}>
                             <div className="student-list-head-item">
-                                <div
-                                    className="horizontal-header-student-list-item"
-                                    style={{
-                                        display: 'inline-block',
-                                        width: '100%',
-                                    }}
-                                >
-                                    <p style={{ display: 'inline-block' }}>
-                                        {student.name} ({student.currentGrade})
-                                    </p>
+                                <DashboardHeaderStatusView student={student} />
 
-                                    <Link
-                                        to={`/student/${student.id}`}
-                                        key={student.id}
-                                        style={{
-                                            display: 'inline-block',
-                                            float: 'right',
-                                        }}
-                                        className="student-list-settings-link"
-                                    >
-                                        <img
-                                            src={SettingsIcon}
-                                            alt="Settings link"
-                                        ></img>
-                                    </Link>
-                                </div>
                                 <hr />
-                                <p>
-                                    <b>Benchmarking:</b>{' '}
-                                    {student.currentBenchmarking.join(', ')}
-                                </p>
-                                <p>
-                                    <b>Intervention:</b>{' '}
-                                    {GetApproachStringFromLabel(
-                                        student.currentApproach
-                                    )}
-                                </p>
-                                <p>
-                                    <b>Intervention Target:</b>{' '}
-                                    {student.currentTarget}
-                                </p>
-                                <p>
-                                    <b>Intervention Set Items:</b>{' '}
-                                    {student.factsTargeted.length}
-                                </p>
-                                <br></br>
+
+                                <DashboardBodyStatusView student={student} />
                             </div>
 
-                            <BenchmarkStatusView student={student} />
+                            <div className="student-list-tail-item">
+                                <BenchmarkStatusView student={student} />
+                            </div>
                         </div>
                     )
                 })}

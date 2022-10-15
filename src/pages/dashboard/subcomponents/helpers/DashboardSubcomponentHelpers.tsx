@@ -186,11 +186,11 @@ export interface OutputStyledFeedbackBenchmarking {
 export function OutputStyledFeedbackBenchmarking({
     IsCompleted,
 }: OutputStyledFeedbackBenchmarking): JSX.Element {
-    return IsCompleted ? (
-        <span style={{ color: 'green' }}> Completed</span>
-    ) : (
-        <span style={{ color: '#ff9439' }}> Needs Benchmarking</span>
-    )
+    if (IsCompleted) {
+        return <span style={{ color: 'green' }}> Completed</span>
+    } else {
+        return <span style={{ color: '#ff9439' }}> Needs Benchmarking</span>
+    }
 }
 
 export interface WrapperBenchmarkList {
