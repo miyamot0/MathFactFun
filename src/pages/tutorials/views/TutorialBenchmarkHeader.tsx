@@ -6,12 +6,21 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from "react";
+import React from 'react'
+import { StudentDataInterface } from '../../student/interfaces/StudentInterfaces'
 
-export default function TutorialBenchmarkHeader(): JSX.Element {
-  return (
-    <div className="topBox-tutorial">
-      <h2 style={{ display: "inline-block" }}>PLACEHOLDER</h2>
-    </div>
-  );
+export interface TutorialBenchmarkHeader {
+    document: StudentDataInterface | null
+}
+
+export default function TutorialBenchmarkHeader({
+    document,
+}: TutorialBenchmarkHeader): JSX.Element {
+    const name = document && document.name ? document.name : ''
+
+    return (
+        <div className="topBox-tutorial">
+            <h2 style={{ display: 'inline-block' }}>{`${name}`}</h2>
+        </div>
+    )
 }

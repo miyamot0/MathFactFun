@@ -6,33 +6,33 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import firebase from "firebase";
-import { SingleOptionType } from "../../../types/SharedComponentTypes";
+import firebase from 'firebase'
+import { SingleOptionType } from '../../../types/SharedComponentTypes'
 import {
-  checkInputNullOrUndefined,
-  streamlinedCheck,
-} from "../../../utilities/FormHelpers";
+    checkInputNullOrUndefined,
+    streamlinedCheck,
+} from '../../../utilities/FormHelpers'
 import {
-  StudentCreateState,
-  StudentDataInterface,
-  StudentDispatchUpdateDidBuild,
-  StudentDispatchUpdateFormError,
-  StudentDispatchUpdateStudentLoaded,
-} from "../interfaces/StudentInterfaces";
-import { StudentCreatorBehavior } from "../types/StudentTypes";
-import { UserDataInterface } from "../../user/types/UserTypes";
-import { FirestoreState } from "../../../firebase/interfaces/FirebaseInterfaces";
+    StudentCreateState,
+    StudentDataInterface,
+    StudentDispatchUpdateDidBuild,
+    StudentDispatchUpdateFormError,
+    StudentDispatchUpdateStudentLoaded,
+} from '../interfaces/StudentInterfaces'
+import { StudentCreatorBehavior } from '../types/StudentTypes'
+import { UserDataInterface } from '../../user/types/UserTypes'
+import { FirestoreState } from '../../../firebase/interfaces/FirebaseInterfaces'
 import {
-  BenchmarkSets,
-  Contingencies,
-  ErrorCorrection,
-  Grades,
-  InterventionApproach,
-  Operations,
-} from "../../../maths/Facts";
-import { formatDate } from "../../../utilities/LabelHelper";
-import { CommentInterface } from "../subcomponents/types/CommentTypes";
-import { PerformanceDataInterface } from "../../intervention/interfaces/InterventionInterfaces";
+    BenchmarkSets,
+    Contingencies,
+    ErrorCorrection,
+    Grades,
+    InterventionApproach,
+    Operations,
+} from '../../../maths/Facts'
+import { formatDate } from '../../../utilities/LabelHelper'
+import { CommentInterface } from '../subcomponents/types/CommentTypes'
+import { PerformanceDataInterface } from '../../intervention/interfaces/InterventionInterfaces'
 
 /** verifySingleStudentCreate
  *
@@ -45,138 +45,146 @@ import { PerformanceDataInterface } from "../../intervention/interfaces/Interven
  * @returns
  */
 export async function verifySingleStudentCreate(
-  user: firebase.User | null,
-  state: StudentCreateState,
-  history: any,
-  addDocument: (
-    doc: StudentDataInterface | UserDataInterface | PerformanceDataInterface
-  ) => Promise<void>,
-  response: FirestoreState,
-  dispatch: any
+    user: firebase.User | null,
+    state: StudentCreateState,
+    history: any,
+    addDocument: (
+        doc: StudentDataInterface | UserDataInterface | PerformanceDataInterface
+    ) => Promise<void>,
+    response: FirestoreState,
+    dispatch: any
 ) {
-  if (user === null || user === undefined) {
-    return;
-  }
-
-  dispatch(new StudentDispatchUpdateFormError({
-    type: StudentCreatorBehavior.SetFormError,
-    payload: {
-      FormError: undefined
+    if (user === null || user === undefined) {
+        return
     }
-  }));
 
-  if (
-    streamlinedCheck(
-      state.CurrentGrade,
-      StudentCreatorBehavior.SetFormError,
-      "Please select current grade",
-      dispatch
+    dispatch(
+        new StudentDispatchUpdateFormError({
+            type: StudentCreatorBehavior.SetFormError,
+            payload: {
+                FormError: undefined,
+            },
+        })
     )
-  ) {
-    return;
-  }
 
-  if (
-    streamlinedCheck(
-      state.CurrentTarget,
-      StudentCreatorBehavior.SetFormError,
-      "Please select a target",
-      dispatch
-    )
-  ) {
-    return;
-  }
+    if (
+        streamlinedCheck(
+            state.CurrentGrade,
+            StudentCreatorBehavior.SetFormError,
+            'Please select current grade',
+            dispatch
+        )
+    ) {
+        return
+    }
 
-  if (
-    streamlinedCheck(
-      state.CurrentApproach,
-      StudentCreatorBehavior.SetFormError,
-      "Please select an intervention approach",
-      dispatch
-    )
-  ) {
-    return;
-  }
+    if (
+        streamlinedCheck(
+            state.CurrentTarget,
+            StudentCreatorBehavior.SetFormError,
+            'Please select a target',
+            dispatch
+        )
+    ) {
+        return
+    }
 
-  if (
-    streamlinedCheck(
-      state.CurrentErrorApproach,
-      StudentCreatorBehavior.SetFormError,
-      "Please select an error correct approach",
-      dispatch
-    )
-  ) {
-    return;
-  }
+    if (
+        streamlinedCheck(
+            state.CurrentApproach,
+            StudentCreatorBehavior.SetFormError,
+            'Please select an intervention approach',
+            dispatch
+        )
+    ) {
+        return
+    }
 
-  if (
-    streamlinedCheck(
-      state.CurrentSRApproach,
-      StudentCreatorBehavior.SetFormError,
-      "Please select a reinforcement strategy",
-      dispatch
-    )
-  ) {
-    return;
-  }
+    if (
+        streamlinedCheck(
+            state.CurrentErrorApproach,
+            StudentCreatorBehavior.SetFormError,
+            'Please select an error correct approach',
+            dispatch
+        )
+    ) {
+        return
+    }
 
-  if (
-    checkInputNullOrUndefined(state.CurrentBenchmarking) ||
-    state.CurrentBenchmarking.length < 1
-  ) {
-    dispatch(new StudentDispatchUpdateFormError({
-      type: StudentCreatorBehavior.SetFormError,
-      payload: {
-        FormError: "Please select benchmarking options"
-      }
-    }));
+    if (
+        streamlinedCheck(
+            state.CurrentSRApproach,
+            StudentCreatorBehavior.SetFormError,
+            'Please select a reinforcement strategy',
+            dispatch
+        )
+    ) {
+        return
+    }
 
-    return;
-  }
+    if (
+        checkInputNullOrUndefined(state.CurrentBenchmarking) ||
+        state.CurrentBenchmarking.length < 1
+    ) {
+        dispatch(
+            new StudentDispatchUpdateFormError({
+                type: StudentCreatorBehavior.SetFormError,
+                payload: {
+                    FormError: 'Please select benchmarking options',
+                },
+            })
+        )
 
-  const laggedDate = new Date();
-  laggedDate.setDate(laggedDate.getDate() - 1);
+        return
+    }
 
-  const studentInformationToAdd: StudentDataInterface = {
-    name: state.Name,
-    details: state.Details,
-    currentGrade: state.CurrentGrade.value,
-    currentApproach: state.CurrentApproach.value,
-    currentBenchmarking: state.CurrentBenchmarking.map(
-      (benchmark: SingleOptionType) => benchmark.label
-    ),
-    creator: user.uid,
-    dueDate: firebase.firestore.Timestamp.fromDate(new Date(state.DueDate)),
-    lastActivity: firebase.firestore.Timestamp.fromDate(laggedDate),
-    createdAt: firebase.firestore.Timestamp.fromDate(new Date()),
+    const laggedDate = new Date()
+    laggedDate.setDate(laggedDate.getDate() - 1)
 
-    currentTarget: state.CurrentTarget.value,
-    currentErrorApproach: state.CurrentErrorApproach.value,
-    currentSRApproach: state.CurrentSRApproach.value,
+    const studentInformationToAdd: StudentDataInterface = {
+        name: state.Name,
+        details: state.Details,
+        currentGrade: state.CurrentGrade.value,
+        currentApproach: state.CurrentApproach.value,
+        currentBenchmarking: state.CurrentBenchmarking.map(
+            (benchmark: SingleOptionType) => benchmark.label
+        ),
+        creator: user.uid,
+        dueDate: firebase.firestore.Timestamp.fromDate(new Date(state.DueDate)),
+        lastActivity: firebase.firestore.Timestamp.fromDate(laggedDate),
+        createdAt: firebase.firestore.Timestamp.fromDate(new Date()),
 
-    // defaults
-    id: null,
-    aimLine: 0,
-    problemSet: "A",
-    minForTask: 2,
-    comments: [],
-    completedBenchmark: [],
-    factsMastered: [],
-    factsSkipped: [],
-    factsTargeted: [],
+        currentTarget: state.CurrentTarget.value,
+        currentErrorApproach: state.CurrentErrorApproach.value,
+        currentSRApproach: state.CurrentSRApproach.value,
 
-    tutorialBenchmark: state.TutorialBenchmark,
-    tutorialCCC: state.TutorialCCC,
-    tutorialET: state.TutorialET
-  };
+        // defaults
+        id: null,
+        aimLine: 0,
+        problemSet: 'A',
+        minForTask: 2,
+        comments: [],
+        completedBenchmark: [],
+        factsMastered: [],
+        factsSkipped: [],
+        factsTargeted: [],
 
-  await addDocument(studentInformationToAdd);
+        TutorialBenchmarkAddition: state.TutorialBenchmarkAddition,
+        TutorialBenchmarkSubtraction: state.TutorialBenchmarkSubtraction,
+        TutorialBenchmarkMultiplication: state.TutorialBenchmarkMultiplication,
+        TutorialBenchmarkDivision: state.TutorialBenchmarkDivision,
 
-  if (!response.error || response.success === true) {
-    history.push(`/dashboard`);
-  } else {
-    alert(response.error);
-  }
+        tutorialCCC: state.TutorialCCC,
+        tutorialET: state.TutorialET,
+    }
+
+    await addDocument(studentInformationToAdd)
+
+    if (!response.error || response.success === true) {
+        history.push(`/dashboard`)
+    } else {
+        alert(response.error)
+    }
 }
 
 /** verifySingleStudentEdit
@@ -191,127 +199,131 @@ export async function verifySingleStudentCreate(
  * @returns
  */
 export async function verifySingleStudentEdit(
-  id: string | undefined,
-  state: StudentCreateState,
-  document: StudentDataInterface,
-  history: any,
-  updateDocument: (id: string, updates: any) => Promise<void>,
-  response: FirestoreState,
-  dispatch: any
+    id: string | undefined,
+    state: StudentCreateState,
+    document: StudentDataInterface,
+    history: any,
+    updateDocument: (id: string, updates: any) => Promise<void>,
+    response: FirestoreState,
+    dispatch: any
 ) {
-  if (document === null || id === undefined || id === null) {
-    return;
-  }
-
-  dispatch(new StudentDispatchUpdateFormError({
-    type: StudentCreatorBehavior.SetFormError,
-    payload: {
-      FormError: undefined
+    if (document === null || id === undefined || id === null) {
+        return
     }
-  }));
 
-  if (
-    streamlinedCheck(
-      state.CurrentGrade,
-      StudentCreatorBehavior.SetFormError,
-      "Please select current grade",
-      dispatch
+    dispatch(
+        new StudentDispatchUpdateFormError({
+            type: StudentCreatorBehavior.SetFormError,
+            payload: {
+                FormError: undefined,
+            },
+        })
     )
-  ) {
-    return;
-  }
 
-  if (
-    streamlinedCheck(
-      state.CurrentTarget,
-      StudentCreatorBehavior.SetFormError,
-      "Please select a target",
-      dispatch
-    )
-  ) {
-    return;
-  }
+    if (
+        streamlinedCheck(
+            state.CurrentGrade,
+            StudentCreatorBehavior.SetFormError,
+            'Please select current grade',
+            dispatch
+        )
+    ) {
+        return
+    }
 
-  if (
-    streamlinedCheck(
-      state.CurrentApproach,
-      StudentCreatorBehavior.SetFormError,
-      "Please select an intervention approach",
-      dispatch
-    )
-  ) {
-    return;
-  }
+    if (
+        streamlinedCheck(
+            state.CurrentTarget,
+            StudentCreatorBehavior.SetFormError,
+            'Please select a target',
+            dispatch
+        )
+    ) {
+        return
+    }
 
-  if (
-    streamlinedCheck(
-      state.CurrentErrorApproach,
-      StudentCreatorBehavior.SetFormError,
-      "Please select an error correct approach",
-      dispatch
-    )
-  ) {
-    return;
-  }
+    if (
+        streamlinedCheck(
+            state.CurrentApproach,
+            StudentCreatorBehavior.SetFormError,
+            'Please select an intervention approach',
+            dispatch
+        )
+    ) {
+        return
+    }
 
-  if (
-    streamlinedCheck(
-      state.CurrentSRApproach,
-      StudentCreatorBehavior.SetFormError,
-      "Please select a reinforcement strategy",
-      dispatch
-    )
-  ) {
-    return;
-  }
+    if (
+        streamlinedCheck(
+            state.CurrentErrorApproach,
+            StudentCreatorBehavior.SetFormError,
+            'Please select an error correct approach',
+            dispatch
+        )
+    ) {
+        return
+    }
 
-  if (
-    checkInputNullOrUndefined(state.CurrentBenchmarking) ||
-    state.CurrentBenchmarking.length < 1
-  ) {
-    dispatch(new StudentDispatchUpdateFormError({
-      type: StudentCreatorBehavior.SetFormError,
-      payload: {
-        FormError: "Please select benchmarking options"
-      }
-    }));
+    if (
+        streamlinedCheck(
+            state.CurrentSRApproach,
+            StudentCreatorBehavior.SetFormError,
+            'Please select a reinforcement strategy',
+            dispatch
+        )
+    ) {
+        return
+    }
 
-    return;
-  }
+    if (
+        checkInputNullOrUndefined(state.CurrentBenchmarking) ||
+        state.CurrentBenchmarking.length < 1
+    ) {
+        dispatch(
+            new StudentDispatchUpdateFormError({
+                type: StudentCreatorBehavior.SetFormError,
+                payload: {
+                    FormError: 'Please select benchmarking options',
+                },
+            })
+        )
 
-  const date = new Date(state.DueDate);
-  date.setTime(date.getTime() + date.getTimezoneOffset() * 60 * 1000);
+        return
+    }
 
-  const targetedList =
-    state.CurrentTarget.value === document.currentTarget
-      ? document.factsTargeted
-      : [];
+    const date = new Date(state.DueDate)
+    date.setTime(date.getTime() + date.getTimezoneOffset() * 60 * 1000)
 
-  const studentInformationToAdd = {
-    name: state.Name,
-    details: state.Details,
-    currentGrade: state.CurrentGrade.value,
-    currentTarget: state.CurrentTarget.value,
-    currentApproach: state.CurrentApproach.value,
-    currentBenchmarking: state.CurrentBenchmarking.map(
-      (benchmark: SingleOptionType) => benchmark.label
-    ),
-    currentErrorApproach: state.CurrentErrorApproach.value,
-    currentSRApproach: state.CurrentSRApproach.value,
-    dueDate: firebase.firestore.Timestamp.fromDate(date),
-    aimLine: state.AimLine,
-    minForTask: state.ExplicitTime,
-    problemSet: state.CurrentProblemSet.value,
-    factsTargeted: targetedList,
-  };
+    const targetedList =
+        state.CurrentTarget.value === document.currentTarget
+            ? document.factsTargeted
+            : []
 
-  await updateDocument(id, studentInformationToAdd);
+    const studentInformationToAdd = {
+        name: state.Name,
+        details: state.Details,
+        currentGrade: state.CurrentGrade.value,
+        currentTarget: state.CurrentTarget.value,
+        currentApproach: state.CurrentApproach.value,
+        currentBenchmarking: state.CurrentBenchmarking.map(
+            (benchmark: SingleOptionType) => benchmark.label
+        ),
+        currentErrorApproach: state.CurrentErrorApproach.value,
+        currentSRApproach: state.CurrentSRApproach.value,
+        dueDate: firebase.firestore.Timestamp.fromDate(date),
+        aimLine: state.AimLine,
+        minForTask: state.ExplicitTime,
+        problemSet: state.CurrentProblemSet.value,
+        factsTargeted: targetedList,
+    }
 
-  if (!response.error || response.success === true) {
-    history.push(`/dashboard`);
-  } else {
-    alert(response.error);
-  }
+    await updateDocument(id, studentInformationToAdd)
+
+    if (!response.error || response.success === true) {
+        history.push(`/dashboard`)
+    } else {
+        alert(response.error)
+    }
 }
 
 /** onLoadSingleStudentEdit
@@ -320,64 +332,71 @@ export async function verifySingleStudentEdit(
  * @param dispatch
  */
 export function onLoadSingleStudentEdit(
-  document: StudentDataInterface,
-  dispatch: any
+    document: StudentDataInterface,
+    dispatch: any
 ) {
-  dispatch(new StudentDispatchUpdateDidBuild({
-    type: StudentCreatorBehavior.SetBuilt,
-    payload: {
-      DidBuild: true
-    }
-  }))
+    dispatch(
+        new StudentDispatchUpdateDidBuild({
+            type: StudentCreatorBehavior.SetBuilt,
+            payload: {
+                DidBuild: true,
+            },
+        })
+    )
 
-  const CurrentTarget = Operations.find(
-    (obj) => obj.value === document.currentTarget
-  ) as SingleOptionType;
+    const CurrentTarget = Operations.find(
+        (obj) => obj.value === document.currentTarget
+    ) as SingleOptionType
 
-  const CurrentBenchmarking = Operations.filter((obj) =>
-    document.currentBenchmarking.includes(obj.label)
-  );
+    const CurrentBenchmarking = Operations.filter((obj) =>
+        document.currentBenchmarking.includes(obj.label)
+    )
 
-  const CurrentProblemSet = BenchmarkSets.find(
-    (obj) => obj.value === document.problemSet
-  ) as SingleOptionType;
-  const CurrentGrade = Grades.find(
-    (obj) => obj.value === document.currentGrade
-  ) as SingleOptionType;
-  const CurrentApproach = InterventionApproach.find(
-    (obj) => obj.value === document.currentApproach
-  ) as SingleOptionType;
-  const CurrentErrorApproach = ErrorCorrection.find(
-    (obj) => obj.value === document.currentErrorApproach
-  ) as SingleOptionType;
-  const CurrentSRApproach = Contingencies.find(
-    (obj) => obj.value === document.currentSRApproach
-  ) as SingleOptionType;
+    const CurrentProblemSet = BenchmarkSets.find(
+        (obj) => obj.value === document.problemSet
+    ) as SingleOptionType
+    const CurrentGrade = Grades.find(
+        (obj) => obj.value === document.currentGrade
+    ) as SingleOptionType
+    const CurrentApproach = InterventionApproach.find(
+        (obj) => obj.value === document.currentApproach
+    ) as SingleOptionType
+    const CurrentErrorApproach = ErrorCorrection.find(
+        (obj) => obj.value === document.currentErrorApproach
+    ) as SingleOptionType
+    const CurrentSRApproach = Contingencies.find(
+        (obj) => obj.value === document.currentSRApproach
+    ) as SingleOptionType
 
-  const tutorialBenchmark = document.tutorialBenchmark;
-  const tutorialCCC = document.tutorialCCC;
-  const tutorialET = document.tutorialET;
+    dispatch(
+        new StudentDispatchUpdateStudentLoaded({
+            type: StudentCreatorBehavior.SetLoadedStudent,
+            payload: {
+                Name: document.name,
+                Details: document.details,
+                DueDate: formatDate({ date: document.dueDate.toDate() }),
+                AimLine: document.aimLine,
+                ExplicitTime: document.minForTask,
+                CurrentTarget,
+                CurrentGrade,
+                CurrentApproach,
+                CurrentErrorApproach,
+                CurrentSRApproach,
+                CurrentBenchmarking,
+                CurrentProblemSet,
 
-  dispatch(new StudentDispatchUpdateStudentLoaded({
-    type: StudentCreatorBehavior.SetLoadedStudent,
-    payload: {
-      Name: document.name,
-      Details: document.details,
-      DueDate: formatDate({ date: document.dueDate.toDate() }),
-      AimLine: document.aimLine,
-      ExplicitTime: document.minForTask,
-      CurrentTarget,
-      CurrentGrade,
-      CurrentApproach,
-      CurrentErrorApproach,
-      CurrentSRApproach,
-      CurrentBenchmarking,
-      CurrentProblemSet,
-      TutorialBenchmark: tutorialBenchmark,
-      TutorialCCC: tutorialCCC,
-      TutorialET: tutorialET,
-    },
-  }))
+                TutorialBenchmarkAddition: document.TutorialBenchmarkAddition,
+                TutorialBenchmarkSubtraction:
+                    document.TutorialBenchmarkSubtraction,
+                TutorialBenchmarkMultiplication:
+                    document.TutorialBenchmarkMultiplication,
+                TutorialBenchmarkDivision: document.TutorialBenchmarkDivision,
+
+                TutorialCCC: document.tutorialCCC,
+                TutorialET: document.tutorialET,
+            },
+        })
+    )
 }
 
 /** verifyBulkStudentCreate
@@ -391,144 +410,154 @@ export function onLoadSingleStudentEdit(
  * @returns
  */
 export async function verifyBulkStudentCreate(
-  id: string,
-  state: StudentCreateState,
-  history: any,
-  addDocument: (
-    doc: StudentDataInterface | UserDataInterface | PerformanceDataInterface
-  ) => Promise<void>,
-  response: FirestoreState,
-  dispatch: any
+    id: string,
+    state: StudentCreateState,
+    history: any,
+    addDocument: (
+        doc: StudentDataInterface | UserDataInterface | PerformanceDataInterface
+    ) => Promise<void>,
+    response: FirestoreState,
+    dispatch: any
 ) {
-  dispatch(new StudentDispatchUpdateFormError({
-    type: StudentCreatorBehavior.SetFormError,
-    payload: {
-      FormError: undefined
+    dispatch(
+        new StudentDispatchUpdateFormError({
+            type: StudentCreatorBehavior.SetFormError,
+            payload: {
+                FormError: undefined,
+            },
+        })
+    )
+
+    if (
+        streamlinedCheck(
+            state.CurrentGrade,
+            StudentCreatorBehavior.SetFormError,
+            'Please select current grade',
+            dispatch
+        )
+    ) {
+        return
     }
-  }))
 
-  if (
-    streamlinedCheck(
-      state.CurrentGrade,
-      StudentCreatorBehavior.SetFormError,
-      "Please select current grade",
-      dispatch
-    )
-  ) {
-    return;
-  }
+    if (
+        streamlinedCheck(
+            state.CurrentTarget,
+            StudentCreatorBehavior.SetFormError,
+            'Please select a target',
+            dispatch
+        )
+    ) {
+        return
+    }
 
-  if (
-    streamlinedCheck(
-      state.CurrentTarget,
-      StudentCreatorBehavior.SetFormError,
-      "Please select a target",
-      dispatch
-    )
-  ) {
-    return;
-  }
+    if (
+        streamlinedCheck(
+            state.CurrentApproach,
+            StudentCreatorBehavior.SetFormError,
+            'Please select an intervention approach',
+            dispatch
+        )
+    ) {
+        return
+    }
 
-  if (
-    streamlinedCheck(
-      state.CurrentApproach,
-      StudentCreatorBehavior.SetFormError,
-      "Please select an intervention approach",
-      dispatch
-    )
-  ) {
-    return;
-  }
+    if (
+        streamlinedCheck(
+            state.CurrentErrorApproach,
+            StudentCreatorBehavior.SetFormError,
+            'Please select an error correct approach',
+            dispatch
+        )
+    ) {
+        return
+    }
 
-  if (
-    streamlinedCheck(
-      state.CurrentErrorApproach,
-      StudentCreatorBehavior.SetFormError,
-      "Please select an error correct approach",
-      dispatch
-    )
-  ) {
-    return;
-  }
+    if (
+        streamlinedCheck(
+            state.CurrentSRApproach,
+            StudentCreatorBehavior.SetFormError,
+            'Please select a reinforcement strategy',
+            dispatch
+        )
+    ) {
+        return
+    }
 
-  if (
-    streamlinedCheck(
-      state.CurrentSRApproach,
-      StudentCreatorBehavior.SetFormError,
-      "Please select a reinforcement strategy",
-      dispatch
-    )
-  ) {
-    return;
-  }
+    if (
+        checkInputNullOrUndefined(state.CurrentBenchmarking) ||
+        state.CurrentBenchmarking.length < 1
+    ) {
+        dispatch(
+            new StudentDispatchUpdateFormError({
+                type: StudentCreatorBehavior.SetFormError,
+                payload: {
+                    FormError: 'Please select benchmarking options',
+                },
+            })
+        )
 
-  if (
-    checkInputNullOrUndefined(state.CurrentBenchmarking) ||
-    state.CurrentBenchmarking.length < 1
-  ) {
-    dispatch(new StudentDispatchUpdateFormError({
-      type: StudentCreatorBehavior.SetFormError,
-      payload: {
-        FormError: "Please select benchmarking options",
-      }
-    }))
+        return
+    }
 
-    return;
-  }
+    const laggedDate = new Date()
+    laggedDate.setDate(laggedDate.getDate() - 1)
 
-  const laggedDate = new Date();
-  laggedDate.setDate(laggedDate.getDate() - 1);
+    const comments: CommentInterface[] = []
+    const factsTargeted: string[] = []
+    const factsMastered: string[] = []
+    const factsSkipped: string[] = []
+    const aimLine = 0
+    const minForTask = 2
 
-  const comments: CommentInterface[] = [];
-  const factsTargeted: string[] = [];
-  const factsMastered: string[] = [];
-  const factsSkipped: string[] = [];
-  const aimLine = 0;
-  const minForTask = 2;
+    const arrayTextAreaLines = state.Name.split('\n')
 
-  const arrayTextAreaLines = state.Name.split("\n");
+    for (let i = 0; i < arrayTextAreaLines.length; i++) {
+        const currentStudentID = arrayTextAreaLines[i].trim()
 
-  for (let i = 0; i < arrayTextAreaLines.length; i++) {
-    const currentStudentID = arrayTextAreaLines[i].trim();
+        if (currentStudentID.length < 1) continue
 
-    if (currentStudentID.length < 1) continue;
+        const studentObject = {
+            name: currentStudentID,
+            details: '',
+            currentGrade: state.CurrentGrade.value,
+            currentTarget: state.CurrentTarget.value,
+            currentApproach: state.CurrentApproach.value,
+            currentErrorApproach: state.CurrentErrorApproach.value,
+            currentSRApproach: state.CurrentSRApproach.value,
+            currentBenchmarking: state.CurrentBenchmarking.map(
+                (benchmark: SingleOptionType) => benchmark.label
+            ),
+            completedBenchmark: [],
+            creator: id,
+            dueDate: firebase.firestore.Timestamp.fromDate(
+                new Date(state.DueDate)
+            ),
+            lastActivity: firebase.firestore.Timestamp.fromDate(laggedDate),
+            createdAt: firebase.firestore.Timestamp.fromDate(new Date()),
+            comments,
+            factsTargeted,
+            factsMastered,
+            factsSkipped,
+            aimLine,
+            minForTask,
+            problemSet: 'A',
+            id: null,
 
-    const studentObject = {
-      name: currentStudentID,
-      details: "",
-      currentGrade: state.CurrentGrade.value,
-      currentTarget: state.CurrentTarget.value,
-      currentApproach: state.CurrentApproach.value,
-      currentErrorApproach: state.CurrentErrorApproach.value,
-      currentSRApproach: state.CurrentSRApproach.value,
-      currentBenchmarking: state.CurrentBenchmarking.map(
-        (benchmark: SingleOptionType) => benchmark.label
-      ),
-      completedBenchmark: [],
-      creator: id,
-      dueDate: firebase.firestore.Timestamp.fromDate(new Date(state.DueDate)),
-      lastActivity: firebase.firestore.Timestamp.fromDate(laggedDate),
-      createdAt: firebase.firestore.Timestamp.fromDate(new Date()),
-      comments,
-      factsTargeted,
-      factsMastered,
-      factsSkipped,
-      aimLine,
-      minForTask,
-      problemSet: "A",
-      id: null,
+            TutorialBenchmarkAddition: false,
+            TutorialBenchmarkSubtraction: false,
+            TutorialBenchmarkMultiplication: false,
+            TutorialBenchmarkDivision: false,
 
-      tutorialBenchmark: false,
-      tutorialCCC: false,
-      tutorialET: false
-    } as StudentDataInterface;
+            tutorialCCC: false,
+            tutorialET: false,
+        } as StudentDataInterface
 
-    await addDocument(studentObject);
-  }
+        await addDocument(studentObject)
+    }
 
-  if (!response.error || response.success === true) {
-    history.push(`/dashboard`);
-  } else {
-    alert(response.error);
-  }
+    if (!response.error || response.success === true) {
+        history.push(`/dashboard`)
+    } else {
+        alert(response.error)
+    }
 }

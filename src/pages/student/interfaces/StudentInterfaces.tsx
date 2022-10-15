@@ -1,63 +1,82 @@
-import firebase from "firebase/app";
-import { MultiValue } from "react-select";
-import { SingleOptionType } from "../../../types/SharedComponentTypes";
-import { CommentInterface } from "../subcomponents/types/CommentTypes";
-import { StudentCreatorBehavior } from "../types/StudentTypes";
+import firebase from 'firebase/app'
+import { MultiValue } from 'react-select'
+import { SingleOptionType } from '../../../types/SharedComponentTypes'
+import { CommentInterface } from '../subcomponents/types/CommentTypes'
+import { StudentCreatorBehavior } from '../types/StudentTypes'
+
+export interface StudentTutorialInterface {
+    id: string | undefined | null
+    Tutorial: string
+    Target: string
+    Problems: number
+    Attempts: number
+    InitialCorrect: number
+    Errors: number
+    SessionDuration: number
+}
 
 export interface StudentDataInterface {
-  id: string | undefined | null;
-  aimLine: number;
-  createdAt: firebase.firestore.Timestamp;
-  dueDate: firebase.firestore.Timestamp;
-  lastActivity: firebase.firestore.Timestamp;
-  comments: CommentInterface[];
-  completedBenchmark: string[];
-  currentBenchmarking: string[];
-  factsMastered: string[];
-  factsSkipped: string[];
-  factsTargeted: string[];
+    id: string | undefined | null
+    aimLine: number
+    createdAt: firebase.firestore.Timestamp
+    dueDate: firebase.firestore.Timestamp
+    lastActivity: firebase.firestore.Timestamp
+    comments: CommentInterface[]
+    completedBenchmark: string[]
+    currentBenchmarking: string[]
+    factsMastered: string[]
+    factsSkipped: string[]
+    factsTargeted: string[]
 
-  creator: string;
-  currentApproach: string;
-  currentErrorApproach: string;
-  currentGrade: string;
-  currentSRApproach: string;
-  currentTarget: string;
-  details: string;
-  name: string;
-  problemSet: string;
+    creator: string
+    currentApproach: string
+    currentErrorApproach: string
+    currentGrade: string
+    currentSRApproach: string
+    currentTarget: string
+    details: string
+    name: string
+    problemSet: string
 
-  minForTask: number;
+    minForTask: number
 
-  // New
-  tutorialBenchmark: boolean;
-  tutorialCCC: boolean;
-  tutorialET: boolean;
+    // New
+    TutorialBenchmarkAddition: boolean
+    TutorialBenchmarkSubtraction: boolean
+    TutorialBenchmarkMultiplication: boolean
+    TutorialBenchmarkDivision: boolean
+
+    tutorialCCC: boolean
+    tutorialET: boolean
 }
 
 export interface StudentCreateState {
-  Name: string;
-  Names: string[];
-  Details: string;
-  FormError: undefined | string;
-  DueDate: string;
-  CurrentApproach: SingleOptionType;
-  CurrentGrade: SingleOptionType;
-  CurrentTarget: SingleOptionType;
-  CurrentErrorApproach: SingleOptionType;
-  CurrentSRApproach: SingleOptionType;
-  CurrentBenchmarking: MultiValue<SingleOptionType>;
-  DidBuild: boolean;
-  TutorialBenchmark: boolean,
-  TutorialCCC: boolean,
-  TutorialET: boolean,
-  AimLine: number;
-  ExplicitTime: number;
-  CurrentProblemSet: SingleOptionType;
+    Name: string
+    Names: string[]
+    Details: string
+    FormError: undefined | string
+    DueDate: string
+    CurrentApproach: SingleOptionType
+    CurrentGrade: SingleOptionType
+    CurrentTarget: SingleOptionType
+    CurrentErrorApproach: SingleOptionType
+    CurrentSRApproach: SingleOptionType
+    CurrentBenchmarking: MultiValue<SingleOptionType>
+    DidBuild: boolean
+    TutorialCCC: boolean
+    TutorialET: boolean
+    AimLine: number
+    ExplicitTime: number
+    CurrentProblemSet: SingleOptionType
+
+    TutorialBenchmarkAddition: boolean
+    TutorialBenchmarkSubtraction: boolean
+    TutorialBenchmarkMultiplication: boolean
+    TutorialBenchmarkDivision: boolean
 }
 
 export interface StudentWidgetInterface {
-  student: StudentDataInterface;
+    student: StudentDataInterface
 }
 
 /** StudentDispatchUpdateName
@@ -66,23 +85,23 @@ export interface StudentWidgetInterface {
  *
  */
 export class StudentDispatchUpdateName {
-  public type?: number;
-  public payload: {
-    Name: string;
-  };
-  public StudentDispatchUpdateName?: string;
+    public type?: number
+    public payload: {
+        Name: string
+    }
+    public StudentDispatchUpdateName?: string
 
-  constructor({
-    payload,
-  }: {
-    type?: number;
-    payload: { Name: string };
-    StudentDispatchUpdateName?: string;
-  }) {
-    this.type = StudentCreatorBehavior.SetName;
-    this.payload = payload;
-    this.StudentDispatchUpdateName = "StudentDispatchUpdateName";
-  }
+    constructor({
+        payload,
+    }: {
+        type?: number
+        payload: { Name: string }
+        StudentDispatchUpdateName?: string
+    }) {
+        this.type = StudentCreatorBehavior.SetName
+        this.payload = payload
+        this.StudentDispatchUpdateName = 'StudentDispatchUpdateName'
+    }
 }
 
 /** StudentDispatchUpdateDetails
@@ -91,23 +110,23 @@ export class StudentDispatchUpdateName {
  *
  */
 export class StudentDispatchUpdateDetails {
-  public type?: number;
-  public payload: {
-    Details: string;
-  };
-  public StudentDispatchUpdateDetails?: string;
+    public type?: number
+    public payload: {
+        Details: string
+    }
+    public StudentDispatchUpdateDetails?: string
 
-  constructor({
-    payload,
-  }: {
-    type?: number;
-    payload: { Details: string };
-    StudentDispatchUpdateDetails?: string;
-  }) {
-    this.type = StudentCreatorBehavior.SetDetails;
-    this.payload = payload;
-    this.StudentDispatchUpdateDetails = "StudentDispatchUpdateDetails";
-  }
+    constructor({
+        payload,
+    }: {
+        type?: number
+        payload: { Details: string }
+        StudentDispatchUpdateDetails?: string
+    }) {
+        this.type = StudentCreatorBehavior.SetDetails
+        this.payload = payload
+        this.StudentDispatchUpdateDetails = 'StudentDispatchUpdateDetails'
+    }
 }
 
 /** StudentDispatchUpdateFormError
@@ -116,23 +135,23 @@ export class StudentDispatchUpdateDetails {
  *
  */
 export class StudentDispatchUpdateFormError {
-  public type?: number;
-  public payload: {
-    FormError: string | undefined;
-  };
-  public StudentDispatchUpdateFormError?: string;
+    public type?: number
+    public payload: {
+        FormError: string | undefined
+    }
+    public StudentDispatchUpdateFormError?: string
 
-  constructor({
-    payload,
-  }: {
-    type?: number;
-    payload: { FormError: string | undefined };
-    StudentDispatchUpdateFormError?: string;
-  }) {
-    this.type = StudentCreatorBehavior.SetFormError;
-    this.payload = payload;
-    this.StudentDispatchUpdateFormError = "StudentDispatchUpdateFormError";
-  }
+    constructor({
+        payload,
+    }: {
+        type?: number
+        payload: { FormError: string | undefined }
+        StudentDispatchUpdateFormError?: string
+    }) {
+        this.type = StudentCreatorBehavior.SetFormError
+        this.payload = payload
+        this.StudentDispatchUpdateFormError = 'StudentDispatchUpdateFormError'
+    }
 }
 
 /** StudentDispatchUpdateDueDate
@@ -141,23 +160,23 @@ export class StudentDispatchUpdateFormError {
  *
  */
 export class StudentDispatchUpdateDueDate {
-  public type?: number;
-  public payload: {
-    DueDate: string;
-  };
-  public StudentDispatchUpdateDueDate?: string;
+    public type?: number
+    public payload: {
+        DueDate: string
+    }
+    public StudentDispatchUpdateDueDate?: string
 
-  constructor({
-    payload,
-  }: {
-    type?: number;
-    payload: { DueDate: string };
-    StudentDispatchUpdateDueDate?: string;
-  }) {
-    this.type = StudentCreatorBehavior.SetDueDate;
-    this.payload = payload;
-    this.StudentDispatchUpdateDueDate = "StudentDispatchUpdateDueDate";
-  }
+    constructor({
+        payload,
+    }: {
+        type?: number
+        payload: { DueDate: string }
+        StudentDispatchUpdateDueDate?: string
+    }) {
+        this.type = StudentCreatorBehavior.SetDueDate
+        this.payload = payload
+        this.StudentDispatchUpdateDueDate = 'StudentDispatchUpdateDueDate'
+    }
 }
 
 /** StudentDispatchUpdateCurrentApproach
@@ -166,23 +185,24 @@ export class StudentDispatchUpdateDueDate {
  *
  */
 export class StudentDispatchUpdateCurrentApproach {
-  public type?: number;
-  public payload: {
-    CurrentApproach: SingleOptionType;
-  };
-  public StudentDispatchUpdateCurrentApproach?: string;
+    public type?: number
+    public payload: {
+        CurrentApproach: SingleOptionType
+    }
+    public StudentDispatchUpdateCurrentApproach?: string
 
-  constructor({
-    payload,
-  }: {
-    type?: number;
-    payload: { CurrentApproach: SingleOptionType };
-    StudentDispatchUpdateCurrentApproach?: string;
-  }) {
-    this.type = StudentCreatorBehavior.SetCurrentApproach;
-    this.payload = payload;
-    this.StudentDispatchUpdateCurrentApproach = "StudentDispatchUpdateCurrentApproach";
-  }
+    constructor({
+        payload,
+    }: {
+        type?: number
+        payload: { CurrentApproach: SingleOptionType }
+        StudentDispatchUpdateCurrentApproach?: string
+    }) {
+        this.type = StudentCreatorBehavior.SetCurrentApproach
+        this.payload = payload
+        this.StudentDispatchUpdateCurrentApproach =
+            'StudentDispatchUpdateCurrentApproach'
+    }
 }
 
 /** StudentDispatchUpdateCurrentGrade
@@ -191,23 +211,24 @@ export class StudentDispatchUpdateCurrentApproach {
  *
  */
 export class StudentDispatchUpdateCurrentGrade {
-  public type?: number;
-  public payload: {
-    CurrentGrade: SingleOptionType;
-  };
-  public StudentDispatchUpdateCurrentGrade?: string;
+    public type?: number
+    public payload: {
+        CurrentGrade: SingleOptionType
+    }
+    public StudentDispatchUpdateCurrentGrade?: string
 
-  constructor({
-    payload,
-  }: {
-    type?: number;
-    payload: { CurrentGrade: SingleOptionType };
-    StudentDispatchUpdateCurrentGrade?: string;
-  }) {
-    this.type = StudentCreatorBehavior.SetCurrentGrade;
-    this.payload = payload;
-    this.StudentDispatchUpdateCurrentGrade = "StudentDispatchUpdateCurrentGrade";
-  }
+    constructor({
+        payload,
+    }: {
+        type?: number
+        payload: { CurrentGrade: SingleOptionType }
+        StudentDispatchUpdateCurrentGrade?: string
+    }) {
+        this.type = StudentCreatorBehavior.SetCurrentGrade
+        this.payload = payload
+        this.StudentDispatchUpdateCurrentGrade =
+            'StudentDispatchUpdateCurrentGrade'
+    }
 }
 
 /** StudentDispatchUpdateCurrentErrorApproach
@@ -216,23 +237,24 @@ export class StudentDispatchUpdateCurrentGrade {
  *
  */
 export class StudentDispatchUpdateCurrentErrorApproach {
-  public type?: number;
-  public payload: {
-    CurrentErrorApproach: SingleOptionType;
-  };
-  public StudentDispatchUpdateCurrentErrorApproach?: string;
+    public type?: number
+    public payload: {
+        CurrentErrorApproach: SingleOptionType
+    }
+    public StudentDispatchUpdateCurrentErrorApproach?: string
 
-  constructor({
-    payload,
-  }: {
-    type?: number;
-    payload: { CurrentErrorApproach: SingleOptionType };
-    StudentDispatchUpdateCurrentErrorApproach?: string;
-  }) {
-    this.type = StudentCreatorBehavior.SetCurrentErrorApproach;
-    this.payload = payload;
-    this.StudentDispatchUpdateCurrentErrorApproach = "StudentDispatchUpdateCurrentErrorApproach";
-  }
+    constructor({
+        payload,
+    }: {
+        type?: number
+        payload: { CurrentErrorApproach: SingleOptionType }
+        StudentDispatchUpdateCurrentErrorApproach?: string
+    }) {
+        this.type = StudentCreatorBehavior.SetCurrentErrorApproach
+        this.payload = payload
+        this.StudentDispatchUpdateCurrentErrorApproach =
+            'StudentDispatchUpdateCurrentErrorApproach'
+    }
 }
 
 /** StudentDispatchUpdateCurrentTarget
@@ -241,23 +263,24 @@ export class StudentDispatchUpdateCurrentErrorApproach {
  *
  */
 export class StudentDispatchUpdateCurrentTarget {
-  public type?: number;
-  public payload: {
-    CurrentTarget: SingleOptionType;
-  };
-  public StudentDispatchUpdateCurrentTarget?: string;
+    public type?: number
+    public payload: {
+        CurrentTarget: SingleOptionType
+    }
+    public StudentDispatchUpdateCurrentTarget?: string
 
-  constructor({
-    payload,
-  }: {
-    type?: number;
-    payload: { CurrentTarget: SingleOptionType };
-    StudentDispatchUpdateCurrentTarget?: string;
-  }) {
-    this.type = StudentCreatorBehavior.SetCurrentTarget;
-    this.payload = payload;
-    this.StudentDispatchUpdateCurrentTarget = "StudentDispatchUpdateCurrentTarget";
-  }
+    constructor({
+        payload,
+    }: {
+        type?: number
+        payload: { CurrentTarget: SingleOptionType }
+        StudentDispatchUpdateCurrentTarget?: string
+    }) {
+        this.type = StudentCreatorBehavior.SetCurrentTarget
+        this.payload = payload
+        this.StudentDispatchUpdateCurrentTarget =
+            'StudentDispatchUpdateCurrentTarget'
+    }
 }
 
 /** StudentDispatchUpdateCurrentSRApproach
@@ -266,23 +289,24 @@ export class StudentDispatchUpdateCurrentTarget {
  *
  */
 export class StudentDispatchUpdateCurrentSRApproach {
-  public type?: number;
-  public payload: {
-    CurrentSRApproach: SingleOptionType;
-  };
-  public StudentDispatchUpdateCurrentSRApproach?: string;
+    public type?: number
+    public payload: {
+        CurrentSRApproach: SingleOptionType
+    }
+    public StudentDispatchUpdateCurrentSRApproach?: string
 
-  constructor({
-    payload,
-  }: {
-    type?: number;
-    payload: { CurrentSRApproach: SingleOptionType };
-    StudentDispatchUpdateCurrentSRApproach?: string;
-  }) {
-    this.type = StudentCreatorBehavior.SetCurrentSRApproach;
-    this.payload = payload;
-    this.StudentDispatchUpdateCurrentSRApproach = "StudentDispatchUpdateCurrentSRApproach";
-  }
+    constructor({
+        payload,
+    }: {
+        type?: number
+        payload: { CurrentSRApproach: SingleOptionType }
+        StudentDispatchUpdateCurrentSRApproach?: string
+    }) {
+        this.type = StudentCreatorBehavior.SetCurrentSRApproach
+        this.payload = payload
+        this.StudentDispatchUpdateCurrentSRApproach =
+            'StudentDispatchUpdateCurrentSRApproach'
+    }
 }
 
 /** StudentDispatchUpdateCurrentProblemSet
@@ -291,23 +315,24 @@ export class StudentDispatchUpdateCurrentSRApproach {
  *
  */
 export class StudentDispatchUpdateCurrentProblemSet {
-  public type?: number;
-  public payload: {
-    CurrentProblemSet: SingleOptionType;
-  };
-  public StudentDispatchUpdateCurrentProblemSet?: string;
+    public type?: number
+    public payload: {
+        CurrentProblemSet: SingleOptionType
+    }
+    public StudentDispatchUpdateCurrentProblemSet?: string
 
-  constructor({
-    payload,
-  }: {
-    type?: number;
-    payload: { CurrentProblemSet: SingleOptionType };
-    StudentDispatchUpdateCurrentProblemSet?: string;
-  }) {
-    this.type = StudentCreatorBehavior.SetProblemSet;
-    this.payload = payload;
-    this.StudentDispatchUpdateCurrentProblemSet = "StudentDispatchUpdateCurrentProblemSet";
-  }
+    constructor({
+        payload,
+    }: {
+        type?: number
+        payload: { CurrentProblemSet: SingleOptionType }
+        StudentDispatchUpdateCurrentProblemSet?: string
+    }) {
+        this.type = StudentCreatorBehavior.SetProblemSet
+        this.payload = payload
+        this.StudentDispatchUpdateCurrentProblemSet =
+            'StudentDispatchUpdateCurrentProblemSet'
+    }
 }
 
 /** StudentDispatchUpdateCurrentBenchmarking
@@ -316,23 +341,24 @@ export class StudentDispatchUpdateCurrentProblemSet {
  *
  */
 export class StudentDispatchUpdateCurrentBenchmarking {
-  public type?: number;
-  public payload: {
-    CurrentBenchmarking: MultiValue<SingleOptionType>;
-  };
-  public StudentDispatchUpdateCurrentBenchmarking?: string;
+    public type?: number
+    public payload: {
+        CurrentBenchmarking: MultiValue<SingleOptionType>
+    }
+    public StudentDispatchUpdateCurrentBenchmarking?: string
 
-  constructor({
-    payload,
-  }: {
-    type?: number;
-    payload: { CurrentBenchmarking: MultiValue<SingleOptionType> };
-    StudentDispatchUpdateCurrentBenchmarking?: string;
-  }) {
-    this.type = StudentCreatorBehavior.SetCurrentBenchmarking;
-    this.payload = payload;
-    this.StudentDispatchUpdateCurrentBenchmarking = "StudentDispatchUpdateCurrentBenchmarking";
-  }
+    constructor({
+        payload,
+    }: {
+        type?: number
+        payload: { CurrentBenchmarking: MultiValue<SingleOptionType> }
+        StudentDispatchUpdateCurrentBenchmarking?: string
+    }) {
+        this.type = StudentCreatorBehavior.SetCurrentBenchmarking
+        this.payload = payload
+        this.StudentDispatchUpdateCurrentBenchmarking =
+            'StudentDispatchUpdateCurrentBenchmarking'
+    }
 }
 
 /** StudentDispatchUpdateDidBuild
@@ -341,23 +367,23 @@ export class StudentDispatchUpdateCurrentBenchmarking {
  *
  */
 export class StudentDispatchUpdateDidBuild {
-  public type?: number;
-  public payload: {
-    DidBuild: boolean;
-  };
-  public StudentDispatchUpdateDidBuild?: string;
+    public type?: number
+    public payload: {
+        DidBuild: boolean
+    }
+    public StudentDispatchUpdateDidBuild?: string
 
-  constructor({
-    payload,
-  }: {
-    type?: number;
-    payload: { DidBuild: boolean };
-    StudentDispatchUpdateDidBuild?: string;
-  }) {
-    this.type = StudentCreatorBehavior.SetBuilt;
-    this.payload = payload;
-    this.StudentDispatchUpdateDidBuild = "StudentDispatchUpdateDidBuild";
-  }
+    constructor({
+        payload,
+    }: {
+        type?: number
+        payload: { DidBuild: boolean }
+        StudentDispatchUpdateDidBuild?: string
+    }) {
+        this.type = StudentCreatorBehavior.SetBuilt
+        this.payload = payload
+        this.StudentDispatchUpdateDidBuild = 'StudentDispatchUpdateDidBuild'
+    }
 }
 
 /** StudentDispatchUpdateAimLine
@@ -366,23 +392,23 @@ export class StudentDispatchUpdateDidBuild {
  *
  */
 export class StudentDispatchUpdateAimLine {
-  public type?: number;
-  public payload: {
-    AimLine: number;
-  };
-  public StudentDispatchUpdateAimLine?: string;
+    public type?: number
+    public payload: {
+        AimLine: number
+    }
+    public StudentDispatchUpdateAimLine?: string
 
-  constructor({
-    payload,
-  }: {
-    type?: number;
-    payload: { AimLine: number };
-    StudentDispatchUpdateAimLine?: string;
-  }) {
-    this.type = StudentCreatorBehavior.SetBuilt;
-    this.payload = payload;
-    this.StudentDispatchUpdateAimLine = "StudentDispatchUpdateAimLine";
-  }
+    constructor({
+        payload,
+    }: {
+        type?: number
+        payload: { AimLine: number }
+        StudentDispatchUpdateAimLine?: string
+    }) {
+        this.type = StudentCreatorBehavior.SetBuilt
+        this.payload = payload
+        this.StudentDispatchUpdateAimLine = 'StudentDispatchUpdateAimLine'
+    }
 }
 
 /** StudentDispatchUpdateExplicitTime
@@ -391,23 +417,24 @@ export class StudentDispatchUpdateAimLine {
  *
  */
 export class StudentDispatchUpdateExplicitTime {
-  public type?: number;
-  public payload: {
-    ExplicitTime: number;
-  };
-  public StudentDispatchUpdateExplicitTime?: string;
+    public type?: number
+    public payload: {
+        ExplicitTime: number
+    }
+    public StudentDispatchUpdateExplicitTime?: string
 
-  constructor({
-    payload,
-  }: {
-    type?: number;
-    payload: { ExplicitTime: number };
-    StudentDispatchUpdateExplicitTime?: string;
-  }) {
-    this.type = StudentCreatorBehavior.SetBuilt;
-    this.payload = payload;
-    this.StudentDispatchUpdateExplicitTime = "StudentDispatchUpdateExplicitTime";
-  }
+    constructor({
+        payload,
+    }: {
+        type?: number
+        payload: { ExplicitTime: number }
+        StudentDispatchUpdateExplicitTime?: string
+    }) {
+        this.type = StudentCreatorBehavior.SetBuilt
+        this.payload = payload
+        this.StudentDispatchUpdateExplicitTime =
+            'StudentDispatchUpdateExplicitTime'
+    }
 }
 
 /** StudentDispatchUpdateStudentLoaded
@@ -416,205 +443,216 @@ export class StudentDispatchUpdateExplicitTime {
  *
  */
 export class StudentDispatchUpdateStudentLoaded {
-  public type?: number;
-  public payload: {
-    Name: string;
-    Details: string;
-    DueDate: string;
-    AimLine: number;
-    ExplicitTime: number;
-    CurrentTarget: SingleOptionType;
-    CurrentGrade: SingleOptionType;
-    CurrentApproach: SingleOptionType;
-    CurrentErrorApproach: SingleOptionType;
-    CurrentSRApproach: SingleOptionType;
-    CurrentBenchmarking: MultiValue<SingleOptionType>;
-    CurrentProblemSet: SingleOptionType;
-    TutorialBenchmark: boolean;
-    TutorialCCC: boolean;
-    TutorialET: boolean;
-  };
-  public StudentDispatchUpdateStudentLoaded?: string;
+    public type?: number
+    public payload: {
+        Name: string
+        Details: string
+        DueDate: string
+        AimLine: number
+        ExplicitTime: number
+        CurrentTarget: SingleOptionType
+        CurrentGrade: SingleOptionType
+        CurrentApproach: SingleOptionType
+        CurrentErrorApproach: SingleOptionType
+        CurrentSRApproach: SingleOptionType
+        CurrentBenchmarking: MultiValue<SingleOptionType>
+        CurrentProblemSet: SingleOptionType
 
-  constructor({
-    payload,
-  }: {
-    type?: number;
-    payload: {
-      Name: string;
-      Details: string;
-      DueDate: string;
-      AimLine: number;
-      ExplicitTime: number;
-      CurrentTarget: SingleOptionType;
-      CurrentGrade: SingleOptionType;
-      CurrentApproach: SingleOptionType;
-      CurrentErrorApproach: SingleOptionType;
-      CurrentSRApproach: SingleOptionType;
-      CurrentBenchmarking: MultiValue<SingleOptionType>;
-      CurrentProblemSet: SingleOptionType;
-      TutorialBenchmark: boolean;
-      TutorialCCC: boolean;
-      TutorialET: boolean;
-    };
-    StudentDispatchUpdateStudentLoaded?: string;
-  }) {
-    this.type = StudentCreatorBehavior.SetBuilt;
-    this.payload = payload;
-    this.StudentDispatchUpdateStudentLoaded = "StudentDispatchUpdateStudentLoaded";
-  }
+        TutorialBenchmarkAddition: boolean
+        TutorialBenchmarkSubtraction: boolean
+        TutorialBenchmarkMultiplication: boolean
+        TutorialBenchmarkDivision: boolean
+
+        TutorialCCC: boolean
+        TutorialET: boolean
+    }
+    public StudentDispatchUpdateStudentLoaded?: string
+
+    constructor({
+        payload,
+    }: {
+        type?: number
+        payload: {
+            Name: string
+            Details: string
+            DueDate: string
+            AimLine: number
+            ExplicitTime: number
+            CurrentTarget: SingleOptionType
+            CurrentGrade: SingleOptionType
+            CurrentApproach: SingleOptionType
+            CurrentErrorApproach: SingleOptionType
+            CurrentSRApproach: SingleOptionType
+            CurrentBenchmarking: MultiValue<SingleOptionType>
+            CurrentProblemSet: SingleOptionType
+
+            TutorialBenchmarkAddition: boolean
+            TutorialBenchmarkSubtraction: boolean
+            TutorialBenchmarkMultiplication: boolean
+            TutorialBenchmarkDivision: boolean
+
+            TutorialCCC: boolean
+            TutorialET: boolean
+        }
+        StudentDispatchUpdateStudentLoaded?: string
+    }) {
+        this.type = StudentCreatorBehavior.SetBuilt
+        this.payload = payload
+        this.StudentDispatchUpdateStudentLoaded =
+            'StudentDispatchUpdateStudentLoaded'
+    }
 }
 
 // Type guards
 
 export type StudentDataDispatches =
-  | StudentDispatchUpdateName
-  | StudentDispatchUpdateDetails
-  | StudentDispatchUpdateDueDate
-  | StudentDispatchUpdateCurrentApproach
-  | StudentDispatchUpdateCurrentGrade
-  | StudentDispatchUpdateCurrentErrorApproach
-  | StudentDispatchUpdateCurrentTarget
-  | StudentDispatchUpdateCurrentSRApproach
-  | StudentDispatchUpdateCurrentProblemSet
-  | StudentDispatchUpdateCurrentBenchmarking
-  | StudentDispatchUpdateDidBuild
-  | StudentDispatchUpdateAimLine
-  | StudentDispatchUpdateExplicitTime
-  | StudentDispatchUpdateStudentLoaded
-  | StudentDispatchUpdateFormError;
+    | StudentDispatchUpdateName
+    | StudentDispatchUpdateDetails
+    | StudentDispatchUpdateDueDate
+    | StudentDispatchUpdateCurrentApproach
+    | StudentDispatchUpdateCurrentGrade
+    | StudentDispatchUpdateCurrentErrorApproach
+    | StudentDispatchUpdateCurrentTarget
+    | StudentDispatchUpdateCurrentSRApproach
+    | StudentDispatchUpdateCurrentProblemSet
+    | StudentDispatchUpdateCurrentBenchmarking
+    | StudentDispatchUpdateDidBuild
+    | StudentDispatchUpdateAimLine
+    | StudentDispatchUpdateExplicitTime
+    | StudentDispatchUpdateStudentLoaded
+    | StudentDispatchUpdateFormError
 
 export function isStudentDispatchUpdateName(
-  object: StudentDataDispatches
+    object: StudentDataDispatches
 ): object is StudentDispatchUpdateName {
-  const res_ =
-    (object as StudentDispatchUpdateName).StudentDispatchUpdateName !==
-    undefined;
-  return res_;
+    const res_ =
+        (object as StudentDispatchUpdateName).StudentDispatchUpdateName !==
+        undefined
+    return res_
 }
 
 export function isStudentDispatchUpdateDetails(
-  object: StudentDataDispatches
+    object: StudentDataDispatches
 ): object is StudentDispatchUpdateDetails {
-  const res_ =
-    (object as StudentDispatchUpdateDetails).StudentDispatchUpdateDetails !==
-    undefined;
-  return res_;
+    const res_ =
+        (object as StudentDispatchUpdateDetails)
+            .StudentDispatchUpdateDetails !== undefined
+    return res_
 }
 
 export function isStudentDispatchUpdateDueDate(
-  object: StudentDataDispatches
+    object: StudentDataDispatches
 ): object is StudentDispatchUpdateDueDate {
-  const res_ =
-    (object as StudentDispatchUpdateDueDate).StudentDispatchUpdateDueDate !==
-    undefined;
-  return res_;
+    const res_ =
+        (object as StudentDispatchUpdateDueDate)
+            .StudentDispatchUpdateDueDate !== undefined
+    return res_
 }
 
 export function isStudentDispatchUpdateCurrentApproach(
-  object: StudentDataDispatches
+    object: StudentDataDispatches
 ): object is StudentDispatchUpdateCurrentApproach {
-  const res_ =
-    (object as StudentDispatchUpdateCurrentApproach).StudentDispatchUpdateCurrentApproach !==
-    undefined;
-  return res_;
+    const res_ =
+        (object as StudentDispatchUpdateCurrentApproach)
+            .StudentDispatchUpdateCurrentApproach !== undefined
+    return res_
 }
 
 export function isStudentDispatchUpdateCurrentGrade(
-  object: StudentDataDispatches
+    object: StudentDataDispatches
 ): object is StudentDispatchUpdateCurrentGrade {
-  const res_ =
-    (object as StudentDispatchUpdateCurrentGrade).StudentDispatchUpdateCurrentGrade !==
-    undefined;
-  return res_;
+    const res_ =
+        (object as StudentDispatchUpdateCurrentGrade)
+            .StudentDispatchUpdateCurrentGrade !== undefined
+    return res_
 }
 
 export function isStudentDispatchUpdateCurrentErrorApproach(
-  object: StudentDataDispatches
+    object: StudentDataDispatches
 ): object is StudentDispatchUpdateCurrentErrorApproach {
-  const res_ =
-    (object as StudentDispatchUpdateCurrentErrorApproach).StudentDispatchUpdateCurrentErrorApproach !==
-    undefined;
-  return res_;
+    const res_ =
+        (object as StudentDispatchUpdateCurrentErrorApproach)
+            .StudentDispatchUpdateCurrentErrorApproach !== undefined
+    return res_
 }
 
 export function isStudentDispatchUpdateCurrentTarget(
-  object: StudentDataDispatches
+    object: StudentDataDispatches
 ): object is StudentDispatchUpdateCurrentTarget {
-  const res_ =
-    (object as StudentDispatchUpdateCurrentTarget).StudentDispatchUpdateCurrentTarget !==
-    undefined;
-  return res_;
+    const res_ =
+        (object as StudentDispatchUpdateCurrentTarget)
+            .StudentDispatchUpdateCurrentTarget !== undefined
+    return res_
 }
 
 export function isStudentDispatchUpdateCurrentSRApproach(
-  object: StudentDataDispatches
+    object: StudentDataDispatches
 ): object is StudentDispatchUpdateCurrentSRApproach {
-  const res_ =
-    (object as StudentDispatchUpdateCurrentSRApproach).StudentDispatchUpdateCurrentSRApproach !==
-    undefined;
-  return res_;
+    const res_ =
+        (object as StudentDispatchUpdateCurrentSRApproach)
+            .StudentDispatchUpdateCurrentSRApproach !== undefined
+    return res_
 }
 
 export function isStudentDispatchUpdateCurrentProblemSet(
-  object: StudentDataDispatches
+    object: StudentDataDispatches
 ): object is StudentDispatchUpdateCurrentProblemSet {
-  const res_ =
-    (object as StudentDispatchUpdateCurrentProblemSet).StudentDispatchUpdateCurrentProblemSet !==
-    undefined;
-  return res_;
+    const res_ =
+        (object as StudentDispatchUpdateCurrentProblemSet)
+            .StudentDispatchUpdateCurrentProblemSet !== undefined
+    return res_
 }
 
 export function isStudentDispatchUpdateCurrentBenchmarking(
-  object: StudentDataDispatches
+    object: StudentDataDispatches
 ): object is StudentDispatchUpdateCurrentBenchmarking {
-  const res_ =
-    (object as StudentDispatchUpdateCurrentBenchmarking).StudentDispatchUpdateCurrentBenchmarking !==
-    undefined;
-  return res_;
+    const res_ =
+        (object as StudentDispatchUpdateCurrentBenchmarking)
+            .StudentDispatchUpdateCurrentBenchmarking !== undefined
+    return res_
 }
 
 export function isStudentDispatchUpdateDidBuild(
-  object: StudentDataDispatches
+    object: StudentDataDispatches
 ): object is StudentDispatchUpdateDidBuild {
-  const res_ =
-    (object as StudentDispatchUpdateDidBuild).StudentDispatchUpdateDidBuild !==
-    undefined;
-  return res_;
+    const res_ =
+        (object as StudentDispatchUpdateDidBuild)
+            .StudentDispatchUpdateDidBuild !== undefined
+    return res_
 }
 
 export function isStudentDispatchUpdateAimLine(
-  object: StudentDataDispatches
+    object: StudentDataDispatches
 ): object is StudentDispatchUpdateAimLine {
-  const res_ =
-    (object as StudentDispatchUpdateAimLine).StudentDispatchUpdateAimLine !==
-    undefined;
-  return res_;
+    const res_ =
+        (object as StudentDispatchUpdateAimLine)
+            .StudentDispatchUpdateAimLine !== undefined
+    return res_
 }
 
 export function isStudentDispatchUpdateExplicitTime(
-  object: StudentDataDispatches
+    object: StudentDataDispatches
 ): object is StudentDispatchUpdateExplicitTime {
-  const res_ =
-    (object as StudentDispatchUpdateExplicitTime).StudentDispatchUpdateExplicitTime !==
-    undefined;
-  return res_;
+    const res_ =
+        (object as StudentDispatchUpdateExplicitTime)
+            .StudentDispatchUpdateExplicitTime !== undefined
+    return res_
 }
 
 export function isStudentDispatchUpdateStudentLoaded(
-  object: StudentDataDispatches
+    object: StudentDataDispatches
 ): object is StudentDispatchUpdateStudentLoaded {
-  const res_ =
-    (object as StudentDispatchUpdateStudentLoaded).StudentDispatchUpdateStudentLoaded !==
-    undefined;
-  return res_;
+    const res_ =
+        (object as StudentDispatchUpdateStudentLoaded)
+            .StudentDispatchUpdateStudentLoaded !== undefined
+    return res_
 }
 
 export function isStudentDispatchUpdateFormError(
-  object: StudentDataDispatches
+    object: StudentDataDispatches
 ): object is StudentDispatchUpdateFormError {
-  const res_ =
-    (object as StudentDispatchUpdateFormError).StudentDispatchUpdateFormError !==
-    undefined;
-  return res_;
+    const res_ =
+        (object as StudentDispatchUpdateFormError)
+            .StudentDispatchUpdateFormError !== undefined
+    return res_
 }

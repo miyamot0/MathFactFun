@@ -6,37 +6,41 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { FirestoreAction } from "../../interfaces/FirebaseInterfaces";
+import { FirestoreAction } from '../../interfaces/FirebaseInterfaces'
 
 export function complexCollectionGetter(
-  collection: string,
-  studentId: string | undefined,
-  projectFirestore: any,
-  targetSkill: string | undefined
+    collection: string,
+    studentId: string | undefined,
+    projectFirestore: any,
+    targetSkill: string | undefined
 ) {
-  const ref =
-    collection === "" && studentId !== undefined
-      ? projectFirestore
-          .collection("performances")
-          .doc(targetSkill)
-          .collection(studentId)
-      : projectFirestore.collection(collection);
-
-  return ref;
+    if (collection === '' && studentId !== undefined) {
+        return projectFirestore
+            .collection('performances')
+            .doc(targetSkill)
+            .collection(studentId)
+    } else if (collection === 'tutorials' && studentId !== undefined) {
+        return projectFirestore
+            .collection('tutorials')
+            .doc(targetSkill)
+            .collection(studentId)
+    } else {
+        return projectFirestore.collection(collection)
+    }
 }
 
 export function dispatchIfNotCancelledHelper({
-  action,
-  isCancelled,
-  dispatch,
+    action,
+    isCancelled,
+    dispatch,
 }: {
-  action: FirestoreAction;
-  isCancelled: boolean;
-  dispatch: any;
+    action: FirestoreAction
+    isCancelled: boolean
+    dispatch: any
 }) {
-  if (!isCancelled) {
-    dispatch(action);
-  } else {
-    return;
-  }
+    if (!isCancelled) {
+        dispatch(action)
+    } else {
+        return
+    }
 }

@@ -6,18 +6,17 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from "react";
-import { Link } from "react-router-dom";
-import { formatDate } from "../../../../utilities/LabelHelper";
-import { StudentDataInterface } from "../../../student/interfaces/StudentInterfaces";
+import React from 'react'
+import { Link } from 'react-router-dom'
+import { formatDate } from '../../../../utilities/LabelHelper'
+import { StudentDataInterface } from '../../../student/interfaces/StudentInterfaces'
 import {
-  checkIfBenchmarksCompleted,
-  checkIfProgrammingCurrent,
-} from "../helpers/DashboardSubcomponentHelpers";
+    checkIfBenchmarksCompleted,
+    checkIfProgrammingCurrent,
+} from '../helpers/DashboardSubcomponentHelpers'
 
 export interface BenchmarkStatusView {
-  student: StudentDataInterface;
-  isTutorialCompleted: boolean;
+    student: StudentDataInterface
 }
 
 /** BenchmarkStatusView
@@ -27,10 +26,13 @@ export interface BenchmarkStatusView {
  * @param {StudentDataInterface} student document info
  * @returns {Link}
  */
-export default function BenchmarkStatusView({ student, isTutorialCompleted }: BenchmarkStatusView): JSX.Element {
-  const isBenchmarkingCurrent = checkIfProgrammingCurrent(student.dueDate);
-  const isBenchmarkingCompleted = checkIfBenchmarksCompleted(student);
+export default function BenchmarkStatusView({
+    student,
+}: BenchmarkStatusView): JSX.Element {
+    const isBenchmarkingCurrent = checkIfProgrammingCurrent(student.dueDate)
+    const isBenchmarkingCompleted = checkIfBenchmarksCompleted(student)
 
+    /*
   if (isTutorialCompleted === false) {
     return (
       <Link to={`/tutorial/benchmark/${student.id}`} className="student-list-tail-item">
@@ -39,30 +41,34 @@ export default function BenchmarkStatusView({ student, isTutorialCompleted }: Be
       </Link>
     );
   }
+  */
 
-  if (isBenchmarkingCurrent) {
-    const formattedDate = formatDate({ date: student.dueDate.toDate(), format: "display" });
+    if (isBenchmarkingCurrent) {
+        const formattedDate = formatDate({
+            date: student.dueDate.toDate(),
+            format: 'display',
+        })
+        return (
+            <p className="student-list-tail-item">
+                <span className="on-track"></span>
+                `Benchmarking Starts: ${formattedDate}`
+            </p>
+        )
+    }
+
+    if (isBenchmarkingCompleted) {
+        return (
+            <p className="student-list-tail-item">
+                <span className="benchmark-completed"></span>
+                {''}Current Benchmarking Complete
+            </p>
+        )
+    }
+
     return (
-      <p className="student-list-tail-item">
-        <span className="on-track"></span>
-        `Benchmarking Starts: ${formattedDate}`
-      </p>
-    );
-  }
-
-  if (isBenchmarkingCompleted) {
-    return (
-      <p className="student-list-tail-item">
-        <span className="benchmark-completed"></span>
-        {""}Current Benchmarking Complete
-      </p>
-    );
-  }
-
-  return (
-    <Link to={`/probe/${student.id}`} className="student-list-tail-item">
-      <span className="needs-review"></span>
-      {""}Benchmarking is Due
-    </Link>
-  );
+        <Link to={`/probe/${student.id}`} className="student-list-tail-item">
+            <span className="needs-review"></span>
+            {''}Benchmarking is Due
+        </Link>
+    )
 }

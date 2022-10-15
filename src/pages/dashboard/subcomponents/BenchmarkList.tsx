@@ -10,55 +10,123 @@
  * Benchmark list widget
  */
 
-import React from "react";
-
+import React from 'react'
+import BenchmarkItemStatusView from './views/BenchmarkItemStatusView'
+import { BenchmarkInterface } from '../types/DashboardTypes'
+import { Link } from 'react-router-dom'
 import {
-  checkIfCompletedBenchmark,
-  generatedStyledFeedback,
-  generateWrapperBenchmarkList,
-} from "./helpers/DashboardSubcomponentHelpers";
-import { BenchmarkInterface } from "../types/DashboardTypes";
+    checkIfCompletedBenchmark,
+    WrapperBenchmarkList,
+} from './helpers/DashboardSubcomponentHelpers'
 
-import "./styles/BenchmarkList.css";
-import BenchmarkItemStatusView from "./views/BenchmarkItemStatusView";
+import './styles/BenchmarkList.css'
 
 export default function BenchmarkList({
-  student,
+    student,
 }: BenchmarkInterface): JSX.Element {
-  if (student === null || student.currentBenchmarking.length === 0) {
-    return <p className="benchmark-no-targets">No benchmarking targets</p>;
-  } else {
-    return (
-      <div className="benchmark-list" key={student.id}>
-        {student.currentBenchmarking.map((benchmark: string) => {
-          const benchmarkCompleted = checkIfCompletedBenchmark(
-            student,
-            benchmark
-          );
+    if (student === null || student.currentBenchmarking.length === 0) {
+        return <p className="benchmark-no-targets">No benchmarking targets</p>
+    } else {
+        return (
+            <div className="benchmark-list" key={student.id}>
+                {student.currentBenchmarking.map((benchmark: string) => {
+                    const benchmarkCompleted = checkIfCompletedBenchmark(
+                        student,
+                        benchmark
+                    )
 
-          return (
-            <div
-              className="benchmark-list-card"
-              style={{ opacity: benchmarkCompleted ? 0.5 : 1 }}
-              key={`${student.id}-${benchmark}`}
-            >
-              {generateWrapperBenchmarkList(
-                student,
-                benchmark,
-                benchmarkCompleted
-              )}
-              <hr />
-              <p>
-                <b>Benchmark Period:</b>{" "}
-                {student.dueDate.toDate().toDateString()}
-              </p>
-              <BenchmarkItemStatusView
-                benchmarkCompleted={benchmarkCompleted}
-              />
+                    let needsTutorial = false
+
+                    if (
+                        benchmark.includes('Addition') &&
+                        !student.TutorialBenchmarkAddition
+                    ) {
+                        needsTutorial = true
+                    } else if (
+                        benchmark.includes('Subtraction') &&
+                        !student.TutorialBenchmarkSubtraction
+                    ) {
+                        needsTutorial = true
+                    } else if (
+                        benchmark.includes('Multiplication') &&
+                        !student.TutorialBenchmarkMultiplication
+                    ) {
+                        needsTutorial = true
+                    } else if (
+                        benchmark.includes('Division') &&
+                        !student.TutorialBenchmarkDivision
+                    ) {
+                        needsTutorial = true
+                    }
+
+                    if (needsTutorial) {
+                        return (
+                            <div
+                                className="benchmark-list-card"
+                                style={{
+                                    opacity: benchmarkCompleted ? 0.5 : 1,
+                                }}
+                                key={`${student.id}-${benchmark}`}
+                            >
+                                <div className="benchmark-list-head-item">
+                                    <div
+                                        className="horizontal-header-benchmark-list-item"
+                                        style={{
+                                            display: 'inline-block',
+                                            width: '100%',
+                                        }}
+                                    >
+                                        <p>{`${benchmark}`}</p>
+                                    </div>
+
+                                    <hr />
+                                    <p>
+                                        <b>Benchmark Period:</b>{' '}
+                                        {student.dueDate
+                                            .toDate()
+                                            .toDateString()}
+                                    </p>
+
+                                    <br></br>
+                                </div>
+                                <div className="benchmark-list-tail-item">
+                                    <Link
+                                        to={`/tutorial/benchmark/${student.id}/${benchmark}`}
+                                        className="student-list-tail-item"
+                                    >
+                                        <span className="needs-training"></span>
+                                        {''}Complete Initial Tutorial
+                                    </Link>
+                                </div>
+                            </div>
+                        )
+                    } else {
+                        return (
+                            <div
+                                className="benchmark-list-card"
+                                style={{
+                                    opacity: benchmarkCompleted ? 0.5 : 1,
+                                }}
+                                key={`${student.id}-${benchmark}`}
+                            >
+                                <WrapperBenchmarkList
+                                    student={student}
+                                    benchmark={benchmark}
+                                    isCompleted={benchmarkCompleted}
+                                />
+                                <hr />
+                                <p>
+                                    <b>Benchmark Period:</b>{' '}
+                                    {student.dueDate.toDate().toDateString()}
+                                </p>
+                                <BenchmarkItemStatusView
+                                    benchmarkCompleted={benchmarkCompleted}
+                                />
+                            </div>
+                        )
+                    }
+                })}
             </div>
-          );
-        })}
-      </div>
-    );
-  }
+        )
+    }
 }

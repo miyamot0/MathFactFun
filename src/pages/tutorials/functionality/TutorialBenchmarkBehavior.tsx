@@ -19,6 +19,12 @@ export interface InitialTutorialBenchmarkState {
     Animations: boolean
     IsAnimating: boolean
     EmphasizeDelete: boolean
+    StartTime: Date | undefined
+
+    Problems: number
+    Attempts: number
+    InitialCorrect: number
+    Errors: number
 }
 
 export const TutorialSequenceBenchmark = {
@@ -27,10 +33,9 @@ export const TutorialSequenceBenchmark = {
     Correcting: 'Correcting',
 }
 
-const PreSetTrainingItems = ['1+2=3', '4+2=6', '2+6=8', '3+2=5', '1+6=7']
 export const InitialTutorialBenchmarkState: InitialTutorialBenchmarkState = {
     CurrentAction: TutorialSequenceBenchmark.InitialLoading,
-    TrainingItems: PreSetTrainingItems,
+    TrainingItems: [],
     ShowButton: false,
     ViewRepresentationInternal: '',
     EntryRepresentationInternal: '',
@@ -41,6 +46,12 @@ export const InitialTutorialBenchmarkState: InitialTutorialBenchmarkState = {
     Animations: false,
     IsAnimating: false,
     EmphasizeDelete: false,
+    StartTime: undefined,
+
+    Problems: 0,
+    Attempts: 0,
+    InitialCorrect: 0,
+    Errors: 0,
 }
 
 export const enum TutorialBenchmarkActions {
@@ -70,6 +81,8 @@ export const BenchmarkTutorialReducer = (
                 ...state,
                 DidLoad: true,
                 ShowButton: true,
+                TrainingItems: action.payload.TrainingItems,
+                Problems: action.payload.TrainingItems.length,
             }
 
         case TutorialBenchmarkActions.LoadTrainingItem:
@@ -85,6 +98,10 @@ export const BenchmarkTutorialReducer = (
                 Animations: true,
                 TrainingItems: state.TrainingItems.slice(1),
                 CurrentAction: TutorialSequenceBenchmark.Responding,
+                StartTime:
+                    state.StartTime === undefined
+                        ? new Date()
+                        : state.StartTime,
             }
 
         case TutorialBenchmarkActions.LoadNextItem:
@@ -100,7 +117,6 @@ export const BenchmarkTutorialReducer = (
             return {
                 ...state,
                 IsAnimating: false,
-                ShowButton: true,
                 ViewRepresentationInternal: nextItem,
                 EntryRepresentationInternal: '',
                 OperatorSymbol: '+',
@@ -129,6 +145,8 @@ export const BenchmarkTutorialReducer = (
                 ShowButton: false,
                 CurrentAction: TutorialSequenceBenchmark.Responding,
                 EmphasizeDelete: true,
+                Attempts: state.Attempts + 1,
+                Errors: state.Errors + 1,
             }
 
         case TutorialBenchmarkActions.LiftDeleteEmphasis:
@@ -143,6 +161,11 @@ export const BenchmarkTutorialReducer = (
                 EntryRepresentationInternal: '',
                 IsAnimating: true,
                 EmphasizeDelete: false,
+                ShowButton: false,
+                Attempts: state.Attempts + 1,
+                InitialCorrect: !state.EmphasizeDelete
+                    ? state.InitialCorrect + 1
+                    : state.InitialCorrect,
             }
 
         default:

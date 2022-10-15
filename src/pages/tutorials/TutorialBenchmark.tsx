@@ -14,19 +14,29 @@ import TutorialKeyPadLayout from './layouts/TutorialKeypadLayout'
 import TutorialButtonLayout from './layouts/TutorialButtonLayout'
 import TutorialSimpleProblemItemLayout from './layouts/TutorialSimpleProblemItemLayout'
 import { Star } from './animations/Star'
+import { RoutedIdTargetParam } from '../../interfaces/RoutingInterfaces'
+import { useHistory, useParams } from 'react-router-dom'
+import { useFirebaseDocumentTyped } from '../../firebase/hooks/useFirebaseDocument'
+import { useAuthorizationContext } from '../../context/hooks/useAuthorizationContext'
+import { useFirestore } from '../../firebase/hooks/useFirestore'
+import {
+    StudentDataInterface,
+    StudentTutorialInterface,
+} from '../student/interfaces/StudentInterfaces'
 import {
     buildBurstFigure,
     buildCircleFigure,
     buildStarFigure,
     getCoordsForReferencedDiv,
 } from './helpers/ShapeHelpers'
-
-import './styles/TutorialBenchmark.css'
 import {
     BenchmarkTutorialReducer,
     InitialTutorialBenchmarkState,
     TutorialBenchmarkActions,
 } from './functionality/TutorialBenchmarkBehavior'
+
+import './styles/TutorialBenchmark.css'
+import firebase from 'firebase'
 
 export const DelCode = 'Del'
 const DelayFeedbackResetPerItem = 1000
@@ -35,6 +45,25 @@ const DelayFeedbackResetPerItem = 1000
 const mojs = require('@mojs/core')
 
 export default function TutorialBenchmark() {
+    const { id, target } = useParams<RoutedIdTargetParam>()
+    const history = useHistory()
+    const { document } = useFirebaseDocumentTyped<StudentDataInterface>({
+        collectionString: 'students',
+        idString: id,
+    })
+    const { user } = useAuthorizationContext()
+    const { addDocument, response: addResponse } = useFirestore(
+        'tutorials',
+        target.split('-')[0],
+        id
+    )
+
+    const { updateDocument, response: updateResponse } = useFirestore(
+        'students',
+        undefined,
+        undefined
+    )
+
     const [playBoop] = useSound(Boop)
     const [state, dispatch] = useReducer(
         BenchmarkTutorialReducer,
@@ -49,17 +78,121 @@ export default function TutorialBenchmark() {
     let timeline: mojs.Timeline
 
     useEffect(() => {
-        if (state.DidLoad === false) {
+        if (user && document && state.DidLoad === false) {
             mojs.addShape('star', Star)
+
+            let trainingItems: string[] = []
+
+            switch (target) {
+                case 'Addition-Sums to 18':
+                    trainingItems = [
+                        '1+2=3',
+                        '4+2=6',
+                        '2+6=8',
+                        '3+2=5',
+                        '1+6=7',
+                    ]
+                    break
+                case 'Subtraction-Lessing From 18':
+                    trainingItems = [
+                        '1+2=3',
+                        '4+2=6',
+                        '2+6=8',
+                        '3+2=5',
+                        '1+6=7',
+                    ]
+                    break
+                case 'Multiplication-Single Digit':
+                    trainingItems = [
+                        '1+2=3',
+                        '4+2=6',
+                        '2+6=8',
+                        '3+2=5',
+                        '1+6=7',
+                    ]
+                    break
+                case 'Division-Single Digit':
+                    trainingItems = [
+                        '1+2=3',
+                        '4+2=6',
+                        '2+6=8',
+                        '3+2=5',
+                        '1+6=7',
+                    ]
+                    break
+            }
 
             dispatch({
                 type: TutorialBenchmarkActions.LoadInformation,
                 payload: {
-                    playBoop,
+                    TrainingItems: trainingItems,
                 },
             })
         }
-    })
+    }, [user, document])
+
+    async function logPerformance() {
+        // TODO: time/latency check?
+        const passedTrainingTask = state.Errors === 0
+
+        if (!document || !state.StartTime) return
+
+        const end = new Date()
+
+        const uploadObject = {
+            id: id,
+            Tutorial: 'Benchmark',
+            Target: target,
+            Problems: state.Problems,
+            Attempts: state.Attempts,
+            InitialCorrect: state.InitialCorrect,
+            Errors: state.Errors,
+            SessionDuration: (end.getTime() - state.StartTime.getTime()) / 1000,
+            createdAt: firebase.firestore.Timestamp.fromDate(new Date()),
+        } as StudentTutorialInterface
+
+        await addDocument(uploadObject)
+
+        if (addResponse.error) {
+            return
+        }
+
+        const {
+            TutorialBenchmarkAddition,
+            TutorialBenchmarkSubtraction,
+            TutorialBenchmarkMultiplication,
+            TutorialBenchmarkDivision,
+        } = document
+
+        const updateObject = {
+            TutorialBenchmarkAddition,
+            TutorialBenchmarkSubtraction,
+            TutorialBenchmarkMultiplication,
+            TutorialBenchmarkDivision,
+        }
+
+        switch (target) {
+            case 'Addition-Sums to 18':
+                updateObject.TutorialBenchmarkAddition = passedTrainingTask
+                break
+            case 'Subtraction-Lessing From 18':
+                updateObject.TutorialBenchmarkSubtraction = passedTrainingTask
+                break
+            case 'Multiplication-Single Digit':
+                updateObject.TutorialBenchmarkMultiplication =
+                    passedTrainingTask
+                break
+            case 'Division-Single Digit':
+                updateObject.TutorialBenchmarkDivision = passedTrainingTask
+                break
+        }
+
+        await updateDocument(id, updateObject)
+
+        if (!updateResponse.error) {
+            history.push(`/probe/${id}`)
+        }
+    }
 
     function showFeedback() {
         const combinedResponse =
@@ -71,8 +204,6 @@ export default function TutorialBenchmark() {
             state.ViewRepresentationInternal.trim() === combinedResponse.trim()
 
         if (isMatching === false) {
-            // TODO: Error correction guidance
-
             dispatch({
                 type: TutorialBenchmarkActions.ClearResponseAndRetry,
                 payload: {},
@@ -112,6 +243,10 @@ export default function TutorialBenchmark() {
         timeline.replay()
 
         setTimeout(() => {
+            if (state.TrainingItems.length === 0) {
+                logPerformance()
+            }
+
             dispatch({
                 type: TutorialBenchmarkActions.LoadNextItem,
                 payload: {},
@@ -121,7 +256,7 @@ export default function TutorialBenchmark() {
 
     return (
         <div className="wrapper-tutorial" ref={domReference}>
-            <TutorialBenchmarkHeader />
+            <TutorialBenchmarkHeader document={document} />
 
             <TutorialSimpleProblemItemLayout
                 state={state}

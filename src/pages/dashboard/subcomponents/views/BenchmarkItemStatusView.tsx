@@ -6,8 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from "react";
-import { generatedStyledFeedback } from "../helpers/DashboardSubcomponentHelpers";
+import React from 'react'
+import { generatedStyledFeedback } from '../helpers/DashboardSubcomponentHelpers'
+
+export interface BenchmarkItemStatusView {
+    benchmarkCompleted: boolean
+}
 
 /** BenchmarkItemStatusView
  *
@@ -15,13 +19,11 @@ import { generatedStyledFeedback } from "../helpers/DashboardSubcomponentHelpers
  * @returns {Link}
  */
 export default function BenchmarkItemStatusView({
-  benchmarkCompleted,
-}: {
-  benchmarkCompleted: boolean;
-}): JSX.Element {
-  return (
-    <p>
-      <b>Status:</b> {generatedStyledFeedback(benchmarkCompleted)}
-    </p>
-  );
+    benchmarkCompleted,
+}: BenchmarkItemStatusView): JSX.Element {
+    return (
+        <p>
+            <b>Status:</b> {generatedStyledFeedback(benchmarkCompleted)}
+        </p>
+    )
 }
