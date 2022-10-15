@@ -6,51 +6,63 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from 'react';
+import React from 'react'
+import { commonKeyHandlerTutorialBenchmark } from '../../intervention/helpers/InteractionHelpers'
 import {
-  InitialTutorialBenchmarkState,
-  TutorialSequenceBenchmark,
-} from '../TutorialBenchmark';
+    InitialTutorialBenchmarkState,
+    TutorialSequenceBenchmark,
+} from '../functionality/TutorialBenchmarkBehavior'
 
 export interface TutorialButton {
-  char: string;
-  classList: string;
-  showKey: boolean;
-  onClick: any;
-  state: InitialTutorialBenchmarkState;
+    char: string
+    classList: string
+    showKey: boolean
+    dispatch: React.Dispatch<any>
+    state: InitialTutorialBenchmarkState
 }
 
 export default function TutorialButton({
-  char,
-  classList,
-  showKey,
-  onClick,
-  state,
+    char,
+    classList,
+    showKey,
+    dispatch,
+    state,
 }: TutorialButton) {
-  return (
-    <button
-      className={`${classList}`}
-      style={{
-        visibility: showKey ? 'visible' : 'hidden',
-      }}
-      onClick={(event: React.MouseEvent<HTMLElement>): void => {
-        console.log(state);
+    let opacity = 1
 
-        switch (state.CurrentAction) {
-          case TutorialSequenceBenchmark.InitialLoading:
-            return;
+    if (state.EmphasizeDelete === true && classList.includes('key13')) {
+        opacity = 1
+    } else if (state.EmphasizeDelete === true && !classList.includes('key13')) {
+        opacity = 0.5
+    }
 
-          case TutorialSequenceBenchmark.Responding:
-            onClick(event, char.trim());
+    return (
+        <button
+            className={`${classList}`}
+            style={{
+                visibility: showKey ? 'visible' : 'hidden',
+                opacity: opacity,
+            }}
+            onClick={(): void => {
+                switch (state.CurrentAction) {
+                    case TutorialSequenceBenchmark.InitialLoading:
+                        return
 
-            return;
+                    case TutorialSequenceBenchmark.Responding:
+                        commonKeyHandlerTutorialBenchmark(
+                            char.trim(),
+                            state,
+                            dispatch
+                        )
 
-          case TutorialSequenceBenchmark.Correcting:
-            return;
-        }
-      }}
-    >
-      <span className='content'>{char}</span>
-    </button>
-  );
+                        return
+
+                    case TutorialSequenceBenchmark.Correcting:
+                        return
+                }
+            }}
+        >
+            <span className="content">{char}</span>
+        </button>
+    )
 }

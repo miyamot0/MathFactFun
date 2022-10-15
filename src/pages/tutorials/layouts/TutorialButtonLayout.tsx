@@ -6,50 +6,52 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from 'react';
+import React from 'react'
 import {
-  InitialTutorialBenchmarkState,
-  TutorialBenchmarkActions,
-  TutorialSequenceBenchmark,
-} from '../TutorialBenchmark';
+    InitialTutorialBenchmarkState,
+    TutorialBenchmarkActions,
+    TutorialSequenceBenchmark,
+} from '../functionality/TutorialBenchmarkBehavior'
 
 export interface TutorialButtonLayout {
-  state: InitialTutorialBenchmarkState;
-  dispatch: any;
-  className: string;
-  displayFeedback: any;
+    state: InitialTutorialBenchmarkState
+    dispatch: any
+    className: string
+    displayFeedback: any
 }
 
 export default function TutorialButtonLayout({
-  state,
-  dispatch,
-  className,
-  displayFeedback,
+    state,
+    dispatch,
+    className,
+    displayFeedback,
 }: TutorialButtonLayout): JSX.Element {
-  return (
-    <div className={className}>
-      <section>
-        {state.ShowButton && (
-          <button
-            className='global-btn'
-            type='button'
-            onClick={event => {
-              if (state.IsAnimating) return;
+    return (
+        <div className={className}>
+            <section>
+                {state.ShowButton && (
+                    <button
+                        className="global-btn"
+                        type="button"
+                        onClick={() => {
+                            if (state.IsAnimating) return
 
-              switch (state.CurrentAction) {
-                case TutorialSequenceBenchmark.InitialLoading:
-                  dispatch({ type: TutorialBenchmarkActions.LoadTrainingItem });
-                  break;
-                case TutorialSequenceBenchmark.Responding:
-                  displayFeedback();
-                  break;
-              }
-            }}
-          >
-            {state.ButtonText}
-          </button>
-        )}
-      </section>
-    </div>
-  );
+                            switch (state.CurrentAction) {
+                                case TutorialSequenceBenchmark.InitialLoading:
+                                    dispatch({
+                                        type: TutorialBenchmarkActions.LoadTrainingItem,
+                                    })
+                                    break
+                                case TutorialSequenceBenchmark.Responding:
+                                    displayFeedback()
+                                    break
+                            }
+                        }}
+                    >
+                        {state.ButtonText}
+                    </button>
+                )}
+            </section>
+        </div>
+    )
 }
