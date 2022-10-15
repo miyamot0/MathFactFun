@@ -30,7 +30,7 @@ export default function BenchmarkItemStatusView({
 }: BenchmarkItemStatusView): JSX.Element {
     const classNameConditional = benchmarkCompleted
         ? 'benchmarkd-today'
-        : 'needs-training'
+        : 'needs-benchmark'
 
     return (
         <p>
@@ -44,20 +44,35 @@ export default function BenchmarkItemStatusView({
                 <Link
                     to={`/benchmark/${student.id}/${benchmark}`}
                     key={student.id}
-                    style={{ display: 'inline-block', float: 'right' }}
+                    style={{
+                        float: 'right',
+                        width: 30,
+                        height: 30,
+                        backgroundColor: '#ff9439',
+                        borderRadius: 100,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                    }}
                     className="student-list-settings-link"
                 >
-                    <img src={PlayIcon} alt="Settings link"></img>
+                    <img
+                        src={PlayIcon}
+                        style={{
+                            marginLeft: '2px',
+                        }}
+                        alt="Settings link"
+                    ></img>
                 </Link>
             )}
 
             {benchmarkCompleted && (
-                <div
+                <span
                     className="student-list-settings-link"
                     style={{ display: 'inline-block', float: 'right' }}
                 >
                     <img src={PlayIcon} alt="Settings link"></img>
-                </div>
+                </span>
             )}
         </p>
     )

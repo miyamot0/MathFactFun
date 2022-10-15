@@ -74,6 +74,10 @@
     border-top: 1px solid #eee;
 }
 
+.benchmark-list img {
+    filter: invert(100%);
+}
+
 .benchmark-list .assigned-to li {
     display: inline-block;
 }
@@ -108,7 +112,8 @@
     margin-right: 10px;
     width: 12px;
     height: 12px;
-    background: #ff5733;
+    background: rgb(255, 148, 57);
+    color: rgb(255, 148, 57);
     border-radius: 50%;
     margin-top: 2px;
 }

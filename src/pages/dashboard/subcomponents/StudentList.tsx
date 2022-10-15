@@ -7,12 +7,11 @@
  */
 
 import React from 'react'
+import BenchmarkStatusView from './views/BenchmarkStatusView'
+import SettingsIcon from '../../../assets/gear.svg'
 import { Link } from 'react-router-dom'
 import { GetApproachStringFromLabel } from '../../../utilities/LabelHelper'
 import { StudentListInterface } from '../types/DashboardTypes'
-import BenchmarkStatusView from './views/BenchmarkStatusView'
-
-import SettingsIcon from '../../../assets/gear.svg'
 
 import './styles/StudentList.css'
 

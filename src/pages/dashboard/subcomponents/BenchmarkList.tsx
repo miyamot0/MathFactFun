@@ -19,6 +19,10 @@ import { checkIfCompletedBenchmark } from './helpers/DashboardSubcomponentHelper
 
 import './styles/BenchmarkList.css'
 
+/**
+
+ */
+
 export default function BenchmarkList({
     student,
 }: BenchmarkInterface): JSX.Element {
@@ -98,13 +102,22 @@ export default function BenchmarkList({
                                         to={`/tutorial/benchmark/${student.id}/${benchmark}`}
                                         key={student.id}
                                         style={{
-                                            display: 'inline-block',
                                             float: 'right',
+                                            width: 30,
+                                            height: 30,
+                                            backgroundColor: '#3392eb',
+                                            borderRadius: 100,
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
                                         }}
                                         className="student-list-settings-link"
                                     >
                                         <img
                                             src={PlayIcon}
+                                            style={{
+                                                marginLeft: '2px',
+                                            }}
                                             alt="Settings link"
                                         ></img>
                                     </Link>
