@@ -63,7 +63,6 @@ export interface BenchmarkStatusView {
 export default function BenchmarkStatusView({
     student,
 }: BenchmarkStatusView): JSX.Element {
-    console.log('fired')
     const isBenchmarkingCurrent = checkIfProgrammingCurrent(student.dueDate)
     const isBenchmarkingCompleted = checkIfBenchmarksCompleted(student)
 

@@ -6,36 +6,34 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from "react";
-import { useParams } from "react-router-dom";
-import { useFirebaseDocumentTyped } from "../../firebase/hooks/useFirebaseDocument";
-import { RoutedIdParam } from "../../interfaces/RoutingInterfaces";
-import StudentSummary from "./subcomponents/StudentSummary";
-import StudentComments from "./subcomponents/StudentComments";
-import "./styles/DisplayStudent.css";
-import { StudentDataInterface } from "./interfaces/StudentInterfaces";
+import React from 'react'
+import { useParams } from 'react-router-dom'
+import { useFirebaseDocumentTyped } from '../../firebase/hooks/useFirebaseDocument'
+import { RoutedIdParam } from '../../interfaces/RoutingInterfaces'
+import StudentSummary from './subcomponents/StudentSummary'
+import StudentComments from './subcomponents/StudentComments'
+import './styles/DisplayStudent.css'
+import { StudentDataInterface } from './interfaces/StudentInterfaces'
 
 export default function DisplayStudent() {
-  const { id } = useParams<RoutedIdParam>();
+    const { id } = useParams<RoutedIdParam>()
 
-  const { document, documentError } =
-    useFirebaseDocumentTyped<StudentDataInterface>({
-      collectionString: "students",
-      idString: id,
-    });
+    const { document, documentError } =
+        useFirebaseDocumentTyped<StudentDataInterface>({
+            collectionString: 'students',
+            idString: id,
+        })
 
-    const result = useParams<RoutedIdParam>();
-
-  if (documentError) {
-    return <div className="error">{documentError}</div>;
-  } else if (!document) {
-    return <div className="loading">Loading...</div>;
-  } else {
-    return (
-      <div className="student-details-style">
-        <StudentSummary student={document} />
-        <StudentComments student={document} />
-      </div>
-    );
-  }
+    if (documentError) {
+        return <div className="error">{documentError}</div>
+    } else if (!document) {
+        return <div className="loading">Loading...</div>
+    } else {
+        return (
+            <div className="student-details-style">
+                <StudentSummary student={document} />
+                <StudentComments student={document} />
+            </div>
+        )
+    }
 }
