@@ -24,6 +24,8 @@ export default function DisplayStudent() {
             idString: id,
         })
 
+    // TODO: move over chart to here, display not particularly rich
+
     if (documentError) {
         return <div className="error">{documentError}</div>
     } else if (!document) {

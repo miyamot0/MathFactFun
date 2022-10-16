@@ -286,8 +286,6 @@ export function loadCreatorMathFacts(
                   (obj: ItemHistory) => obj.FactString === entry.Answer
               )
 
-        console.log(releventResult)
-
         if (releventResult && releventResult.length === 1) {
             return {
                 ...entry,
