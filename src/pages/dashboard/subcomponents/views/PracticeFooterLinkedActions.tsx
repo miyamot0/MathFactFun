@@ -7,7 +7,7 @@
  */
 
 import React from 'react'
-import PlayIcon from '../../../../assets/play.svg'
+import PlayIcon from '../../../../assets/play-24.svg'
 import { Link } from 'react-router-dom'
 import { StudentDataInterface } from '../../../student/interfaces/StudentInterfaces'
 import {

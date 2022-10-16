@@ -12,7 +12,7 @@
 
 import React from 'react'
 import BenchmarkItemStatusView from './views/BenchmarkItemStatusView'
-import PlayIcon from '../../../assets/play.svg'
+import PlayIcon from '../../../assets/play-24.svg'
 import { BenchmarkInterface } from '../types/DashboardTypes'
 import { Link } from 'react-router-dom'
 import { checkIfCompletedBenchmark } from './helpers/DashboardSubcomponentHelpers'

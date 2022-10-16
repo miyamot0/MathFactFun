@@ -10,7 +10,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { StudentDataInterface } from '../../../student/interfaces/StudentInterfaces'
 import { OutputStyledFeedbackBenchmarking } from '../helpers/DashboardSubcomponentHelpers'
-import PlayIcon from '../../../../assets/play.svg'
+import PlayIcon from '../../../../assets/play-24.svg'
 
 export interface BenchmarkItemStatusView {
     benchmark: string
