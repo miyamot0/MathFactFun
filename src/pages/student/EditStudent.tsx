@@ -43,6 +43,7 @@ import {
 } from '../../utilities/FieldHelpers'
 
 import './styles/DisplayStudent.css'
+import AnimatedHero from '../landing/views/AnimatedHero'
 
 export default function EditStudent() {
     const { id } = useParams<RoutedIdParam>()
@@ -77,6 +78,7 @@ export default function EditStudent() {
         return (
             <div style={{ maxWidth: '600px' }} className="edit-student-page">
                 <h2 className="global-page-title">Edit current student</h2>
+                <AnimatedHero />
 
                 <form
                     onSubmit={(event) => {

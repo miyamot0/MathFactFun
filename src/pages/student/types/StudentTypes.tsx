@@ -6,18 +6,18 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { MultiValue, SingleValue } from "react-select";
-import { SingleOptionType } from "../../../types/SharedComponentTypes";
+import { MultiValue, SingleValue } from 'react-select'
+import { SingleOptionType } from '../../../types/SharedComponentTypes'
 
 export type StudentPayloadObjects = {
-  [key: string]:
-  | string
-  | SingleValue<SingleOptionType>
-  | MultiValue<SingleOptionType>
-  | number
-  | boolean
-  | undefined;
-};
+    [key: string]:
+        | string
+        | SingleValue<SingleOptionType>
+        | MultiValue<SingleOptionType>
+        | number
+        | boolean
+        | undefined
+}
 
 // TODO: restore payload types at end!
 //export type StudentActionObject = {
@@ -26,20 +26,22 @@ export type StudentPayloadObjects = {
 //};
 
 export enum StudentCreatorBehavior {
-  SetName = 1000,
-  SetDetails = 1001,
-  SetDueDate = 1002,
-  SetFormError = 1003,
-  SetCurrentApproach = 1004,
-  SetCurrentGrade = 1005,
-  SetCurrentTarget = 1006,
-  SetCurrentErrorApproach = 1007,
-  SetCurrentSRApproach = 1008,
-  SetCurrentBenchmarking = 1009,
-  SetProblemSet = 1010,
-  SetAimLine = 1011,
-  SetExplicitTime = 1012,
-  SetBuilt = 1013,
-  SetLoadedStudent = 1014,
-  SetThrow = 1015,
+    SetName = 1000,
+    SetDetails = 1001,
+    SetDueDate = 1002,
+    SetFormError = 1003,
+    SetCurrentApproach = 1004,
+    SetCurrentGrade = 1005,
+    SetCurrentTarget = 1006,
+    SetCurrentErrorApproach = 1007,
+    SetCurrentSRApproach = 1008,
+    SetCurrentBenchmarking = 1009,
+    SetProblemSet = 1010,
+    SetAimLine = 1011,
+    SetExplicitTime = 1012,
+    SetBuilt = 1013,
+    SetLoadedStudent = 1014,
+    SetThrow = 1015,
+    SetLoadedStudents = 1016,
+    SetToggleSelectedStudent = 1017,
 }

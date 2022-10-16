@@ -67,6 +67,7 @@ const TapedProblems = lazy(() => import('./pages/intervention/TapedProblems'))
 // Styles
 import './App.css'
 import Home from './pages/home/Home'
+import EditBulkStudents from './pages/student/EditBulkStudents'
 
 export type AppInterface = JSX.Element
 
@@ -187,6 +188,12 @@ export function App(): AppInterface {
                                     {user && adminFlag && (
                                         <CreateBulkStudents />
                                     )}
+                                </Route>
+                                <Route path="/editStudents/:id">
+                                    {user && !adminFlag && (
+                                        <Redirect to="/dashboard" />
+                                    )}
+                                    {user && adminFlag && <EditBulkStudents />}
                                 </Route>
                                 <Route path="/login">
                                     {user && <Redirect to="/" />}

@@ -6,34 +6,34 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import firebase from "firebase/app";
-import { MultiValue } from "react-select";
-import { StudentDispatchUpdateFormError } from "../pages/student/interfaces/StudentInterfaces";
-import { StudentCreatorBehavior } from "../pages/student/types/StudentTypes";
-import { UserDispatchUpdateFormError } from "../pages/user/interfaces/UserInterfaces";
-import { UserCreatorBehavior } from "../pages/user/types/UserTypes";
-import { SingleOptionType } from "../types/SharedComponentTypes";
-import { checkIfOptionKeysPresent } from "./ReducerHelpers";
+import firebase from 'firebase/app'
+import { MultiValue } from 'react-select'
+import { StudentDispatchUpdateFormError } from '../pages/student/interfaces/StudentInterfaces'
+import { StudentCreatorBehavior } from '../pages/student/types/StudentTypes'
+import { UserDispatchUpdateFormError } from '../pages/user/interfaces/UserInterfaces'
+import { UserCreatorBehavior } from '../pages/user/types/UserTypes'
+import { SingleOptionType } from '../types/SharedComponentTypes'
+import { checkIfOptionKeysPresent } from './ReducerHelpers'
 
 export const CommonPanelWidth = {
-  minHeight: "600px",
-};
+    minHeight: '600px',
+}
 
 export const CommonDisplayHeadingStyle = {
-  fontSize: "1.25em",
-  color: "var(--heading-style-color)",
-  display: "block",
-  marginBottom: "6px",
-};
+    fontSize: '1.25em',
+    color: 'var(--heading-style-color)',
+    display: 'block',
+    marginBottom: '6px',
+}
 
 export const LoginPanelStyle = {
-  maxWidth: "360px",
-  margin: "60px auto",
-  padding: "40px",
-  border: "1px solid #ddd",
-  boxShadow: "3px 3px 5px rgba(0,0,0,0.05)",
-  background: "#fff",
-};
+    maxWidth: '360px',
+    margin: '60px auto',
+    padding: '40px',
+    border: '1px solid #ddd',
+    boxShadow: '3px 3px 5px rgba(0,0,0,0.05)',
+    background: '#fff',
+}
 
 /** checkInputNullOrUndefined
  *
@@ -43,18 +43,18 @@ export const LoginPanelStyle = {
  * @returns {boolean}
  */
 export function checkInputNullOrUndefined(
-  value:
-    | string
-    | number
-    | SingleOptionType
-    | MultiValue<SingleOptionType>
-    | firebase.User
-    | null
-    | undefined
+    value:
+        | string
+        | number
+        | SingleOptionType
+        | MultiValue<SingleOptionType>
+        | firebase.User
+        | null
+        | undefined
 ): boolean {
-  if (value === null) return true;
-  if (value === undefined) return true;
-  return false;
+    if (value === null) return true
+    if (value === undefined) return true
+    return false
 }
 
 /** streamlinedCheck
@@ -67,60 +67,63 @@ export function checkInputNullOrUndefined(
  * @returns {boolean}
  */
 export function streamlinedCheck(
-  value: string | SingleOptionType,
-  type: UserCreatorBehavior | StudentCreatorBehavior,
-  err: string,
-  dispatch: any
+    value: string | SingleOptionType | undefined,
+    type: UserCreatorBehavior | StudentCreatorBehavior,
+    err: string,
+    dispatch: any
 ): boolean {
-  if (dispatch === null || dispatch === undefined) {
-    return true;
-  }
-
-  if (value === undefined) {
-    return true;
-  }
-
-  if (typeof value === "string") {
-    const statusOfCheck = checkInputNullOrUndefined(value);
-
-    if (statusOfCheck) {
-
-      switch (type) {
-        case UserCreatorBehavior.SetFormError:
-          dispatch(new UserDispatchUpdateFormError({
-            type,
-            payload: {
-              FormError: err
-            }
-          }));
-          break;
-        case StudentCreatorBehavior.SetFormError:
-          dispatch(new StudentDispatchUpdateFormError({
-            type,
-            payload: {
-              FormError: err
-            }
-          }));
-          break;
-      }
+    if (dispatch === null || dispatch === undefined) {
+        return true
     }
-    return statusOfCheck;
-  }
 
-  const valueToCheck: SingleOptionType = value as SingleOptionType;
+    if (value === undefined) {
+        return true
+    }
 
-  if (
-    valueToCheck !== null &&
-    valueToCheck !== undefined &&
-    checkIfOptionKeysPresent(valueToCheck)
-  ) {
-    return false;
-  } else {
-    dispatch({
-      type: type,
-      payload: err,
-    });
+    if (typeof value === 'string') {
+        const statusOfCheck = checkInputNullOrUndefined(value)
 
-    return true;
-  }
+        if (statusOfCheck) {
+            switch (type) {
+                case UserCreatorBehavior.SetFormError:
+                    dispatch(
+                        new UserDispatchUpdateFormError({
+                            type,
+                            payload: {
+                                FormError: err,
+                            },
+                        })
+                    )
+                    break
+                case StudentCreatorBehavior.SetFormError:
+                    dispatch(
+                        new StudentDispatchUpdateFormError({
+                            type,
+                            payload: {
+                                FormError: err,
+                            },
+                        })
+                    )
+                    break
+            }
+        }
+        return statusOfCheck
+    }
+
+    const valueToCheck: SingleOptionType = value as SingleOptionType
+
+    if (
+        valueToCheck !== null &&
+        valueToCheck !== undefined &&
+        checkIfOptionKeysPresent(valueToCheck)
+    ) {
+        return false
+    } else {
+        dispatch({
+            type: type,
+            payload: err,
+        })
+
+        return true
+    }
 }

@@ -15,6 +15,7 @@ import {
 import {
     StudentCreateState,
     StudentDataInterface,
+    StudentDispatchUpdateBulkStudentsLoaded,
     StudentDispatchUpdateDidBuild,
     StudentDispatchUpdateFormError,
     StudentDispatchUpdateStudentLoaded,
@@ -33,6 +34,7 @@ import {
 import { formatDate } from '../../../utilities/LabelHelper'
 import { CommentInterface } from '../subcomponents/types/CommentTypes'
 import { PerformanceDataInterface } from '../../intervention/interfaces/InterventionInterfaces'
+import { StudentSelectState } from '../functionality/StudentFunctionality'
 
 /** verifySingleStudentCreate
  *
@@ -399,6 +401,40 @@ export function onLoadSingleStudentEdit(
     )
 }
 
+/** onLoadSingleStudentEdit
+ *
+ * @param document
+ * @param dispatch
+ */
+export function onLoadBulkStudentEdit(
+    documents: StudentDataInterface[] | undefined,
+    userUid: string,
+    dispatch: any
+) {
+    if (documents === null || documents === undefined) {
+        return
+    }
+
+    const BulkStudentLoad: StudentSelectState[] = documents.map((doc) => {
+        return {
+            docId: doc.id,
+            usrId: userUid,
+            Student: doc,
+            Checked: false,
+        } as StudentSelectState
+    })
+
+    dispatch(
+        new StudentDispatchUpdateBulkStudentsLoaded({
+            type: StudentCreatorBehavior.SetLoadedStudents,
+            payload: {
+                DidBuild: true,
+                BulkStudentLoad,
+            },
+        })
+    )
+}
+
 /** verifyBulkStudentCreate
  *
  * @param id
@@ -553,6 +589,118 @@ export async function verifyBulkStudentCreate(
         } as StudentDataInterface
 
         await addDocument(studentObject)
+    }
+
+    if (!response.error || response.success === true) {
+        history.push(`/dashboard`)
+    } else {
+        alert(response.error)
+    }
+}
+
+/** verifyBulkStudentEdit
+ *
+ * @param state
+ * @param history
+ * @param updateDocument
+ * @param response
+ * @param dispatch
+ * @returns
+ */
+export async function verifyBulkStudentEdit(
+    state: StudentCreateState,
+    history: any,
+    updateDocument: any,
+    response: FirestoreState,
+    dispatch: any
+) {
+    dispatch(
+        new StudentDispatchUpdateFormError({
+            type: StudentCreatorBehavior.SetFormError,
+            payload: {
+                FormError: undefined,
+            },
+        })
+    )
+
+    for (let i = 0; i < state.BulkStudentLoad.length; i++) {
+        const currentStudent = state.BulkStudentLoad[i]
+
+        if (currentStudent.Checked === false) continue
+
+        let updateObject = {}
+
+        updateObject = {
+            ...updateObject,
+            dueDate: firebase.firestore.Timestamp.fromDate(
+                new Date(state.DueDate)
+            ),
+        }
+
+        if (
+            state.CurrentGrade &&
+            !state.CurrentGrade.value.includes('Ignore')
+        ) {
+            updateObject = {
+                ...updateObject,
+                currentGrade: state.CurrentGrade.value,
+            }
+        }
+
+        if (
+            state.CurrentTarget &&
+            !state.CurrentTarget.value.includes('Ignore')
+        ) {
+            updateObject = {
+                ...updateObject,
+                currentTarget: state.CurrentTarget.value,
+            }
+        }
+
+        if (
+            state.CurrentApproach &&
+            !state.CurrentApproach.value.includes('Ignore')
+        ) {
+            updateObject = {
+                ...updateObject,
+                currentApproach: state.CurrentApproach.value,
+            }
+        }
+
+        if (
+            state.CurrentErrorApproach &&
+            !state.CurrentErrorApproach.value.includes('Ignore')
+        ) {
+            updateObject = {
+                ...updateObject,
+                currentErrorApproach: state.CurrentErrorApproach.value,
+            }
+        }
+
+        if (
+            state.CurrentSRApproach &&
+            !state.CurrentSRApproach.value.includes('Ignore')
+        ) {
+            updateObject = {
+                ...updateObject,
+                currentSRApproach: state.CurrentSRApproach.value,
+            }
+        }
+
+        if (state.CurrentBenchmarking && state.CurrentBenchmarking.length > 0) {
+            const benchmarkTargets = state.CurrentBenchmarking.map((bench) => {
+                return bench.value
+            })
+
+            if (!benchmarkTargets.includes('Ignore')) {
+                updateObject = {
+                    ...updateObject,
+                    currentBenchmarking: state.CurrentBenchmarking,
+                }
+            }
+        }
+
+        await updateDocument(currentStudent.docId, updateObject)
     }
 
     if (!response.error || response.success === true) {

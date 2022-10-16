@@ -1,6 +1,7 @@
 import firebase from 'firebase/app'
 import { MultiValue } from 'react-select'
 import { SingleOptionType } from '../../../types/SharedComponentTypes'
+import { StudentSelectState } from '../functionality/StudentFunctionality'
 import { CommentInterface } from '../subcomponents/types/CommentTypes'
 import { StudentCreatorBehavior } from '../types/StudentTypes'
 
@@ -73,6 +74,8 @@ export interface StudentCreateState {
     TutorialBenchmarkSubtraction: boolean
     TutorialBenchmarkMultiplication: boolean
     TutorialBenchmarkDivision: boolean
+
+    BulkStudentLoad: StudentSelectState[]
 }
 
 export interface StudentWidgetInterface {
@@ -503,6 +506,63 @@ export class StudentDispatchUpdateStudentLoaded {
     }
 }
 
+/** StudentDispatchUpdateBulkStudentsLoaded
+ *
+ * Class for updating string entry
+ *
+ */
+export class StudentDispatchUpdateBulkStudentsLoaded {
+    public type?: number
+    public payload: {
+        DidBuild: boolean
+        BulkStudentLoad: StudentSelectState[]
+    }
+    public StudentDispatchUpdateBulkStudentsLoaded?: string
+
+    constructor({
+        payload,
+    }: {
+        type?: number
+        payload: {
+            DidBuild: boolean
+            BulkStudentLoad: StudentSelectState[]
+        }
+        StudentDispatchUpdateBulkStudentsLoaded?: string
+    }) {
+        this.type = StudentCreatorBehavior.SetLoadedStudents
+        this.payload = payload
+        this.StudentDispatchUpdateBulkStudentsLoaded =
+            'StudentDispatchUpdateBulkStudentsLoaded'
+    }
+}
+/** StudentDispatchUpdateBulkStudentsLoaded
+ *
+ * Class for updating string entry
+ *
+ */
+export class StudentDispatchUpdateBulkStudentsToggled {
+    public type?: number
+    public payload: {
+        ModifiedState: StudentSelectState
+    }
+    public StudentDispatchUpdateBulkStudentsToggled?: string
+
+    constructor({
+        payload,
+    }: {
+        type?: number
+        payload: {
+            ModifiedState: StudentSelectState
+        }
+        StudentDispatchUpdateBulkStudentsToggled?: string
+    }) {
+        this.type = StudentCreatorBehavior.SetLoadedStudents
+        this.payload = payload
+        this.StudentDispatchUpdateBulkStudentsToggled =
+            'StudentDispatchUpdateBulkStudentsToggled'
+    }
+}
+
 // Type guards
 
 export type StudentDataDispatches =
@@ -521,6 +581,8 @@ export type StudentDataDispatches =
     | StudentDispatchUpdateExplicitTime
     | StudentDispatchUpdateStudentLoaded
     | StudentDispatchUpdateFormError
+    | StudentDispatchUpdateBulkStudentsLoaded
+    | StudentDispatchUpdateBulkStudentsToggled
 
 export function isStudentDispatchUpdateName(
     object: StudentDataDispatches
@@ -654,5 +716,23 @@ export function isStudentDispatchUpdateFormError(
     const res_ =
         (object as StudentDispatchUpdateFormError)
             .StudentDispatchUpdateFormError !== undefined
+    return res_
+}
+
+export function isStudentDispatchUpdateBulkStudentsLoaded(
+    object: StudentDataDispatches
+): object is StudentDispatchUpdateBulkStudentsLoaded {
+    const res_ =
+        (object as StudentDispatchUpdateBulkStudentsLoaded)
+            .StudentDispatchUpdateBulkStudentsLoaded !== undefined
+    return res_
+}
+
+export function isStudentDispatchUpdateBulkStudentsToggled(
+    object: StudentDataDispatches
+): object is StudentDispatchUpdateBulkStudentsToggled {
+    const res_ =
+        (object as StudentDispatchUpdateBulkStudentsToggled)
+            .StudentDispatchUpdateBulkStudentsToggled !== undefined
     return res_
 }

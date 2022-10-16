@@ -11,6 +11,8 @@ import { ErrorHandling } from '../../../maths/Facts'
 import { SingleOptionType } from '../../../types/SharedComponentTypes'
 import {
     isStudentDispatchUpdateAimLine,
+    isStudentDispatchUpdateBulkStudentsLoaded,
+    isStudentDispatchUpdateBulkStudentsToggled,
     isStudentDispatchUpdateCurrentApproach,
     isStudentDispatchUpdateCurrentBenchmarking,
     isStudentDispatchUpdateCurrentErrorApproach,
@@ -27,7 +29,10 @@ import {
     isStudentDispatchUpdateStudentLoaded,
     StudentCreateState,
     StudentDataDispatches,
+    StudentDataInterface,
     StudentDispatchUpdateAimLine,
+    StudentDispatchUpdateBulkStudentsLoaded,
+    StudentDispatchUpdateBulkStudentsToggled,
     StudentDispatchUpdateCurrentApproach,
     StudentDispatchUpdateCurrentBenchmarking,
     StudentDispatchUpdateCurrentErrorApproach,
@@ -44,6 +49,13 @@ import {
     StudentDispatchUpdateStudentLoaded,
 } from '../interfaces/StudentInterfaces'
 import { StudentCreatorBehavior } from '../types/StudentTypes'
+
+export interface StudentSelectState {
+    docId: string
+    usrId: string
+    Student: StudentDataInterface
+    Checked: boolean
+}
 
 export const StudentCreateSingleInitialState: StudentCreateState = {
     Name: '',
@@ -85,6 +97,7 @@ export const StudentCreateSingleInitialState: StudentCreateState = {
     TutorialBenchmarkDivision: false,
     TutorialCCC: false,
     TutorialET: false,
+    BulkStudentLoad: [],
 }
 
 /** overwriteOnlyExisting
@@ -392,6 +405,44 @@ export function overwriteOnlyExistingStudent(
         }
     }
 
+    if (isStudentDispatchUpdateBulkStudentsLoaded(incoming)) {
+        const local: StudentDispatchUpdateBulkStudentsLoaded =
+            incoming as StudentDispatchUpdateBulkStudentsLoaded
+
+        local.payload.DidBuild = true
+
+        local.payload.BulkStudentLoad =
+            local.payload.BulkStudentLoad === undefined
+                ? destination.BulkStudentLoad
+                : local.payload.BulkStudentLoad
+
+        return {
+            ...destination,
+            ...local.payload,
+        }
+    }
+
+    if (isStudentDispatchUpdateBulkStudentsToggled(incoming)) {
+        const local: StudentDispatchUpdateBulkStudentsToggled =
+            incoming as StudentDispatchUpdateBulkStudentsToggled
+
+        const incomeState = incoming.payload.ModifiedState
+        const modifiedBulkState = destination.BulkStudentLoad.map((student) => {
+            return {
+                ...student,
+                Checked:
+                    student.docId === incomeState.docId
+                        ? !student.Checked
+                        : student.Checked,
+            }
+        })
+
+        return {
+            ...destination,
+            BulkStudentLoad: modifiedBulkState,
+        }
+    }
+
     if (isStudentDispatchUpdateFormError(incoming)) {
         const local: StudentDispatchUpdateFormError =
             incoming as StudentDispatchUpdateFormError
@@ -435,6 +486,8 @@ export function userCreationReducer(
         case StudentCreatorBehavior.SetAimLine:
         case StudentCreatorBehavior.SetExplicitTime:
         case StudentCreatorBehavior.SetLoadedStudent:
+        case StudentCreatorBehavior.SetLoadedStudents:
+        case StudentCreatorBehavior.SetToggleSelectedStudent:
             return overwriteOnlyExistingStudent(state, action)
 
         default:
