@@ -9,46 +9,44 @@
 import React from 'react'
 import ReactTooltip from 'react-tooltip'
 
-export interface IconButton {
-    Icon: any
-    Action: any
-    BackgroundStyle: string
-    AltText: string
+export interface TextButton {
+    Text: string
     Tooltip: string
+    BackgroundColor: string
 }
 
-export default function IconButton({
-    Icon,
-    Action,
-    BackgroundStyle,
-    AltText,
+export default function TextButton({
+    Text,
     Tooltip,
-}: IconButton) {
+    BackgroundColor,
+}: TextButton) {
     return (
         <>
             <div
                 data-tip={Tooltip}
                 style={{
-                    float: 'right',
-                    width: 32,
-                    height: 32,
                     marginLeft: '10px',
-                    backgroundColor: BackgroundStyle,
+                    marginTop: '5px',
+                    backgroundColor: BackgroundColor,
                     borderRadius: 100,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                 }}
             >
-                <img
-                    src={Icon}
+                <p
                     style={{
-                        marginRight: '0px',
+                        margin: '0px',
+                        paddingLeft: '10px',
+                        paddingRight: '10px',
+                        paddingTop: '2px',
+                        paddingBottom: '2px',
                         filter: 'invert(100%)',
+                        color: '#000000',
                     }}
-                    onClick={() => Action()}
-                    alt={AltText}
-                ></img>
+                >
+                    {Text}
+                </p>
             </div>
             <ReactTooltip />
         </>

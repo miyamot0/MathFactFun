@@ -7,12 +7,10 @@
  */
 
 import React from 'react'
-import { Link } from 'react-router-dom'
 import { useFirestore } from '../../../firebase/hooks/useFirestore'
 import { useHistory } from 'react-router-dom'
 import { useAuthorizationContext } from '../../../context/hooks/useAuthorizationContext'
 import { StudentWidgetInterface } from '../interfaces/StudentInterfaces'
-import { ShowSpecificOutcomesButton } from './views/StudentSummaryViews'
 
 import StudentSummaryCard from './views/StudentSummaryCard'
 
@@ -41,18 +39,6 @@ export default function StudentSummary({ student }: StudentWidgetInterface) {
             />
 
             <StudentSummaryCard student={student} />
-
-            <div className="student-summary">
-                <h2 className="global-page-title">Student Performance</h2>
-                <hr />
-                <Link to={`/Screening/${student.id}`}>
-                    <button className="global-btn global-btn-green btn-below">
-                        Overall Math
-                    </button>
-                </Link>
-
-                <ShowSpecificOutcomesButton student={student} />
-            </div>
         </div>
     )
 }

@@ -11,10 +11,12 @@ import firebase from 'firebase'
 import DeleteIcon from '../../../../assets/trash3.svg'
 import SettingsIcon from '../../../../assets/gear.svg'
 import ItemSetsIcon from '../../../../assets/plus-slash-minus.svg'
+import ProgressIcon from '../../../../assets/graph-up.svg'
+import ClassificationIcon from '../../../../assets/pie-chart.svg'
+import IconButton from '../../../../components/IconButton'
 import { StudentDataInterface } from '../../interfaces/StudentInterfaces'
 import { handleStudentDelete } from '../helpers/StudentSummaryHelpers'
 import { FirestoreState } from '../../../../firebase/interfaces/FirebaseInterfaces'
-import IconButton from '../../../../components/IconButton'
 
 export interface StudentDisplayHeader {
     student: StudentDataInterface
@@ -35,94 +37,6 @@ export default function StudentDisplayHeader({
 }: StudentDisplayHeader) {
     const shouldShowPanel = user && adminFlag
 
-    /**
-<div
-    style={{
-        float: 'right',
-        width: 32,
-        height: 32,
-        marginLeft: '10px',
-        backgroundColor: 'rgb(51, 146, 235)',
-        borderRadius: 100,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-    }}
->
-    <img
-        src={SettingsIcon}
-        style={{
-            marginRight: '0px',
-            filter: 'invert(100%)',
-        }}
-        onClick={() => {
-            history.push(`/edit/${student.id}`)
-        }}
-        alt="Settings link"
-    ></img>
-</div>
-
-<div
-    style={{
-        float: 'right',
-        width: 32,
-        height: 32,
-        marginLeft: '10px',
-        backgroundColor: 'rgb(51, 146, 235)',
-        borderRadius: 100,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-    }}
->
-    <img
-        src={ItemSetsIcon}
-        style={{
-            marginRight: '0px',
-            filter: 'invert(100%)',
-        }}
-        onClick={() => {
-            history.push(
-                `/set/${student.currentTarget}/${student.id}`
-            )
-        }}
-        alt="Settings link"
-    ></img>
-</div>
-
-<div
-    style={{
-        float: 'right',
-        width: 32,
-        height: 32,
-        marginLeft: '10px',
-        backgroundColor: 'red',
-        borderRadius: 100,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-    }}
->
-    <img
-        src={DeleteIcon}
-        style={{
-            marginRight: '0px',
-            filter: 'invert(100%)',
-        }}
-        onClick={() =>
-            handleStudentDelete(
-                student,
-                deleteDocument,
-                response,
-                history
-            )
-        }
-        alt="Settings link"
-    ></img>
-</div>
-
-*/
-
     return (
         <h4
             className="student-summary-h4"
@@ -131,7 +45,7 @@ export default function StudentDisplayHeader({
                 display: 'inline-block',
             }}
         >
-            Student Settings: {student.name}
+            {`Student Settings: ${student.name} (${student.currentGrade} Grade)`}
             <div
                 style={{
                     float: 'right',
@@ -142,12 +56,35 @@ export default function StudentDisplayHeader({
                 className="student-list-settings-link"
             >
                 <IconButton
+                    Icon={ProgressIcon}
+                    Action={() => {
+                        history.push(`/Screening/${student.id}`)
+                    }}
+                    BackgroundStyle={'rgb(14, 187, 80)'}
+                    AltText={'Button to student screening'}
+                    Tooltip={'Show overall screening outcomes'}
+                />
+
+                <IconButton
+                    Icon={ClassificationIcon}
+                    Action={() => {
+                        history.push(
+                            `/ProgressMonitor/${student.currentTarget}/${student.id}/${student.currentApproach}/${student.aimLine}`
+                        )
+                    }}
+                    BackgroundStyle={'rgb(14, 187, 80)'}
+                    AltText={'Button to intervention progress'}
+                    Tooltip={'Show detailed intervention outcomes'}
+                />
+
+                <IconButton
                     Icon={SettingsIcon}
                     Action={() => {
                         history.push(`/edit/${student.id}`)
                     }}
-                    backgroundStyle={'rgb(51, 146, 235)'}
-                    altText={'Enter settings'}
+                    BackgroundStyle={'rgb(51, 146, 235)'}
+                    AltText={'Button to edit student details'}
+                    Tooltip={'Edit current screening and intervention'}
                 />
 
                 <IconButton
@@ -157,8 +94,9 @@ export default function StudentDisplayHeader({
                             `/set/${student.currentTarget}/${student.id}`
                         )
                     }}
-                    backgroundStyle={'rgb(51, 146, 235)'}
-                    altText={'Enter settings'}
+                    BackgroundStyle={'rgb(51, 146, 235)'}
+                    AltText={'Button to edit targeted problems'}
+                    Tooltip={'Edit items targeted for intervention'}
                 />
 
                 {shouldShowPanel && (
@@ -172,8 +110,11 @@ export default function StudentDisplayHeader({
                                 history
                             )
                         }}
-                        backgroundStyle={'red'}
-                        altText={'Delete student'}
+                        BackgroundStyle={'red'}
+                        AltText={'Button to delete student'}
+                        Tooltip={
+                            'Delete student (Warning: Point of no return!)'
+                        }
                     />
                 )}
             </div>
