@@ -6,82 +6,62 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-/**
- * Admin Page
- */
-
-import React from "react";
-import { Link } from "react-router-dom";
-import { useFirebaseCollectionTyped } from "../../firebase/hooks/useFirebaseCollection";
-import { UserDataInterface } from "../user/types/UserTypes";
+import React from 'react'
+import AddIcon from '../../assets/add_icon.svg'
+import AdminTable from './views/AdminTable'
+import { Link } from 'react-router-dom'
+import { useFirebaseCollectionTyped } from '../../firebase/hooks/useFirebaseCollection'
+import { UserDataInterface } from '../user/types/UserTypes'
 
 // styles
-import "./styles/Admin.css";
+import './styles/Admin.css'
 
 export default function Admin(): JSX.Element {
-  const { documents, error } = useFirebaseCollectionTyped<UserDataInterface>({
-    collectionString: "users",
-    queryString: undefined,
-    orderString: undefined,
-  });
+    const { documents, error } = useFirebaseCollectionTyped<UserDataInterface>({
+        collectionString: 'users',
+        queryString: undefined,
+        orderString: undefined,
+    })
 
-  return (
-    <div>
-      <h2 className="global-page-title">Administrative Dashboard</h2>
-      {error && <p className="error">{error}</p>}
+    return (
+        <div className="admin-panel">
+            <div
+                className="admin-header-item"
+                style={{
+                    display: 'inline-block',
+                    width: '100%',
+                }}
+            >
+                <p style={{ display: 'inline-block' }}>
+                    Administrative User Dashboard
+                </p>
 
-      {documents && documents.length > 0 ? (
-        <table className="adminTable">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Email</th>
-              <th>Name</th>
-              <th>School</th>
-              <th>Edit</th>
-              <th>Roster</th>
-            </tr>
-          </thead>
-          <tbody>
-            {documents.map((indivUser) => (
-              <tr key={`${indivUser.id}-row`}>
-                <td>{indivUser.id}</td>
-                <td>{indivUser.displayEmail}</td>
-                <td>{indivUser.displayName}</td>
-                <td>{indivUser.displaySchool}</td>
-                <td>
-                  <Link
-                    to={`/editUser/${indivUser.id}`}
-                    key={`${indivUser.id}-link1`}
-                  >
-                    <button className="global-btn global-btn-orange btn-grow-horiz">
-                      Edit
-                    </button>
-                  </Link>
-                </td>
-                <td>
-                  <Link
-                    to={`/createStudents/${indivUser.id}`}
-                    key={`${indivUser.id}-link2`}
-                  >
-                    <button className="global-btn btn-grow-horiz">
-                      Add Student(s)
-                    </button>
-                  </Link>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      ) : (
-        <></>
-      )}
+                <Link
+                    to={`/createUser`}
+                    style={{
+                        float: 'right',
+                        width: 32,
+                        height: 32,
+                        backgroundColor: 'rgb(15, 175, 79)',
+                        borderRadius: 100,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                    }}
+                    className="student-list-settings-link"
+                >
+                    <img
+                        src={AddIcon}
+                        style={{
+                            marginRight: '1px',
+                            filter: 'invert(100%)',
+                        }}
+                        alt="Add user"
+                    />
+                </Link>
+            </div>
 
-      <Link to={`/createUser`}>
-        <button className="global-btn global-btn-light-red new-user-btn">
-          Create New User
-        </button>
-      </Link>
-    </div>
-  );
+            <AdminTable users={documents} error={error} />
+        </div>
+    )
 }

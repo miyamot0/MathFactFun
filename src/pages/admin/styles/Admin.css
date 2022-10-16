@@ -6,9 +6,20 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+.admin-panel {
+  background-color: #fff;
+  padding: 16px;
+  border-radius: 6px;
+  box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.05);
+  text-decoration: none;
+  color: inherit;
+  width: auto;
+}
+
 .adminTable {
   width: 100%;
   padding-top: 10px;
+  border-collapse: collapse;
 }
 
 .adminTable th {
@@ -19,7 +30,7 @@
 
 .adminTable td {
   padding: 10px;
-  border: 1px solid #666;
+  border-bottom: 1px solid #666;
   color: var(--text-style-color);
 }
 
@@ -29,4 +40,11 @@
 
 .btn-grow-horiz {
   width: 100%;
+}
+
+.admin-header-item p {
+    text-decoration: none;
+    color: var(--heading-style-color);
+    font-weight: bold;
+    margin-bottom: 20px;
 }

@@ -6,33 +6,38 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from "react";
-import Select, { MultiValue, SingleValue } from "react-select";
-import { StudentCreatorBehavior } from "../pages/student/types/StudentTypes";
-import { SingleOptionType } from "../types/SharedComponentTypes";
-import { UserCreatorBehavior } from "../pages/user/types/UserTypes";
+import React from 'react'
+import Select, { MultiValue, SingleValue } from 'react-select'
+import { StudentCreatorBehavior } from '../pages/student/types/StudentTypes'
+import { SingleOptionType } from '../types/SharedComponentTypes'
+import { UserCreatorBehavior } from '../pages/user/types/UserTypes'
 import {
-  StudentDataDispatches,
-  StudentDispatchUpdateAimLine,
-  StudentDispatchUpdateCurrentApproach,
-  StudentDispatchUpdateCurrentBenchmarking,
-  StudentDispatchUpdateCurrentErrorApproach,
-  StudentDispatchUpdateCurrentGrade,
-  StudentDispatchUpdateCurrentProblemSet,
-  StudentDispatchUpdateCurrentSRApproach,
-  StudentDispatchUpdateCurrentTarget,
-  StudentDispatchUpdateDetails,
-  StudentDispatchUpdateDueDate,
-  StudentDispatchUpdateExplicitTime,
-  StudentDispatchUpdateName
-} from "../pages/student/interfaces/StudentInterfaces";
-import { UserDispatchUpdateName, UserDispatchUpdateSchool } from "../pages/user/interfaces/UserInterfaces";
+    StudentDataDispatches,
+    StudentDispatchUpdateAimLine,
+    StudentDispatchUpdateCurrentApproach,
+    StudentDispatchUpdateCurrentBenchmarking,
+    StudentDispatchUpdateCurrentErrorApproach,
+    StudentDispatchUpdateCurrentGrade,
+    StudentDispatchUpdateCurrentProblemSet,
+    StudentDispatchUpdateCurrentSRApproach,
+    StudentDispatchUpdateCurrentTarget,
+    StudentDispatchUpdateDetails,
+    StudentDispatchUpdateDueDate,
+    StudentDispatchUpdateExplicitTime,
+    StudentDispatchUpdateName,
+} from '../pages/student/interfaces/StudentInterfaces'
+import {
+    UserDispatchUpdateEmail,
+    UserDispatchUpdateName,
+    UserDispatchUpdatePassword,
+    UserDispatchUpdateSchool,
+} from '../pages/user/interfaces/UserInterfaces'
 
 export interface StandardEntryFieldText {
-  label: string;
-  currentValue: string;
-  type: StudentCreatorBehavior | UserCreatorBehavior;
-  dispatch: any;
+    label: string
+    currentValue: string
+    type: StudentCreatorBehavior | UserCreatorBehavior
+    dispatch: any
 }
 
 /** standardEntryFieldText
@@ -43,40 +48,52 @@ export interface StandardEntryFieldText {
  * @returns
  */
 export function StandardEntryFieldText({
-  label,
-  currentValue,
-  type,
-  dispatch }: StandardEntryFieldText) {
-  return (
-    <label>
-      <span>{label}:</span>
-      <input
-        required
-        type="text"
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-          switch (type) {
-            case StudentCreatorBehavior.SetName:
-              dispatch(new StudentDispatchUpdateName({
-                type,
-                payload: {
-                  Name: e.target.value
-                }
-              }));
-              break;
-            case UserCreatorBehavior.SetName:
-              dispatch(new UserDispatchUpdateName({
-                type,
-                payload: {
-                  Name: e.target.value
-                }
-              }));
-              break;
-          }
-        }}
-        value={currentValue}
-      ></input>
-    </label>
-  );
+    label,
+    currentValue,
+    type,
+    dispatch,
+}: StandardEntryFieldText) {
+    return (
+        <label>
+            <span>{label}:</span>
+            <input
+                required
+                type="text"
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    switch (type) {
+                        case StudentCreatorBehavior.SetName:
+                            dispatch(
+                                new StudentDispatchUpdateName({
+                                    type,
+                                    payload: {
+                                        Name: e.target.value,
+                                    },
+                                })
+                            )
+                            break
+                        case UserCreatorBehavior.SetName:
+                            dispatch(
+                                new UserDispatchUpdateName({
+                                    type,
+                                    payload: {
+                                        Name: e.target.value,
+                                    },
+                                })
+                            )
+                            break
+                    }
+                }}
+                value={currentValue}
+            ></input>
+        </label>
+    )
+}
+
+export interface StandardEmailFieldText {
+    label: string
+    currentValue: string
+    type: StudentCreatorBehavior | UserCreatorBehavior
+    dispatch: any
 }
 
 /** standardEmailFieldText
@@ -86,28 +103,38 @@ export function StandardEntryFieldText({
  * @param dispatch
  * @returns
  */
-export function standardEmailFieldText(
-  label: string,
-  currentValue: string,
-  type: StudentCreatorBehavior | UserCreatorBehavior,
-  dispatch: any
-) {
-  return (
-    <label>
-      <span>{label}:</span>
-      <input
-        required
-        type="email"
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-          dispatch({
-            type: type,
-            payload: e.target.value,
-          });
-        }}
-        value={currentValue}
-      ></input>
-    </label>
-  );
+export function StandardEmailFieldText({
+    label,
+    currentValue,
+    type,
+    dispatch,
+}: StandardEmailFieldText) {
+    return (
+        <label>
+            <span>{label}:</span>
+            <input
+                required
+                type="email"
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    dispatch(
+                        new UserDispatchUpdateEmail({
+                            payload: {
+                                Email: e.target.value,
+                            },
+                        })
+                    )
+                }}
+                value={currentValue}
+            ></input>
+        </label>
+    )
+}
+
+export interface StandardPasswordFieldText {
+    label: string
+    currentValue: string
+    type: StudentCreatorBehavior | UserCreatorBehavior
+    dispatch: any
 }
 
 /** standardPasswordFieldText
@@ -117,35 +144,38 @@ export function standardEmailFieldText(
  * @param dispatch
  * @returns
  */
-export function standardPasswordFieldText(
-  label: string,
-  currentValue: string,
-  type: StudentCreatorBehavior | UserCreatorBehavior,
-  dispatch: any
-) {
-  return (
-    <label>
-      <span>{label}:</span>
-      <input
-        required
-        type="password"
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-          dispatch({
-            type: type,
-            payload: e.target.value,
-          });
-        }}
-        value={currentValue}
-      ></input>
-    </label>
-  );
+export function StandardPasswordFieldText({
+    label,
+    currentValue,
+    type,
+    dispatch,
+}: StandardPasswordFieldText) {
+    return (
+        <label>
+            <span>{label}:</span>
+            <input
+                required
+                type="password"
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    dispatch(
+                        new UserDispatchUpdatePassword({
+                            payload: {
+                                Password: e.target.value,
+                            },
+                        })
+                    )
+                }}
+                value={currentValue}
+            ></input>
+        </label>
+    )
 }
 
 export interface StandardEntryFieldTextArea {
-  label: string;
-  currentValue: string;
-  type: StudentCreatorBehavior | UserCreatorBehavior;
-  dispatch: any;
+    label: string
+    currentValue: string
+    type: StudentCreatorBehavior | UserCreatorBehavior
+    dispatch: any
 }
 
 /** standardEntryFieldTextArea
@@ -157,56 +187,63 @@ export interface StandardEntryFieldTextArea {
  * @returns
  */
 export function StandardEntryFieldTextArea({
-  label,
-  currentValue,
-  type,
-  dispatch }: StandardEntryFieldTextArea) {
-  return (
-    <label>
-      <span>{label}:</span>
-      <textarea
-        required
-        onChange={(e) => {
-          switch (type) {
-            case StudentCreatorBehavior.SetDetails:
-              dispatch(new StudentDispatchUpdateDetails({
-                type: StudentCreatorBehavior.SetDetails,
-                payload: {
-                  Details: e.target.value
-                }
-              }));
-              break;
+    label,
+    currentValue,
+    type,
+    dispatch,
+}: StandardEntryFieldTextArea) {
+    return (
+        <label>
+            <span>{label}:</span>
+            <textarea
+                required
+                onChange={(e) => {
+                    switch (type) {
+                        case StudentCreatorBehavior.SetDetails:
+                            dispatch(
+                                new StudentDispatchUpdateDetails({
+                                    type: StudentCreatorBehavior.SetDetails,
+                                    payload: {
+                                        Details: e.target.value,
+                                    },
+                                })
+                            )
+                            break
 
-            case UserCreatorBehavior.SetName:
-              dispatch(new UserDispatchUpdateName({
-                type: UserCreatorBehavior.SetName,
-                payload: {
-                  Name: e.target.value
-                }
-              }));
-              break;
+                        case UserCreatorBehavior.SetName:
+                            dispatch(
+                                new UserDispatchUpdateName({
+                                    type: UserCreatorBehavior.SetName,
+                                    payload: {
+                                        Name: e.target.value,
+                                    },
+                                })
+                            )
+                            break
 
-            case UserCreatorBehavior.SetSchool:
-              dispatch(new UserDispatchUpdateSchool({
-                type: UserCreatorBehavior.SetSchool,
-                payload: {
-                  School: e.target.value
-                }
-              }));
-              break;
-          }
-        }}
-        value={currentValue}
-      ></textarea>
-    </label>
-  );
+                        case UserCreatorBehavior.SetSchool:
+                            dispatch(
+                                new UserDispatchUpdateSchool({
+                                    type: UserCreatorBehavior.SetSchool,
+                                    payload: {
+                                        School: e.target.value,
+                                    },
+                                })
+                            )
+                            break
+                    }
+                }}
+                value={currentValue}
+            ></textarea>
+        </label>
+    )
 }
 
 export interface StandardEntryFieldNumber {
-  label: string;
-  currentValue: number;
-  type: StudentCreatorBehavior;
-  dispatch: React.Dispatch<StudentDataDispatches>;
+    label: string
+    currentValue: number
+    type: StudentCreatorBehavior
+    dispatch: React.Dispatch<StudentDataDispatches>
 }
 
 /** standardEntryFieldNumber
@@ -218,49 +255,54 @@ export interface StandardEntryFieldNumber {
  * @returns
  */
 export function StandardEntryFieldNumber({
-  label,
-  currentValue,
-  type,
-  dispatch }: StandardEntryFieldNumber) {
-  return (
-    <label>
-      <span>{label}:</span>
-      <input
-        required
-        type="number"
-        min="0"
-        max="80"
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-          switch (type) {
-            case StudentCreatorBehavior.SetAimLine:
-              dispatch(new StudentDispatchUpdateAimLine({
-                type: StudentCreatorBehavior.SetAimLine,
-                payload: {
-                  AimLine: parseInt(e.target.value)
-                }
-              }));
-              break;
-            case StudentCreatorBehavior.SetExplicitTime:
-              dispatch(new StudentDispatchUpdateExplicitTime({
-                type: StudentCreatorBehavior.SetExplicitTime,
-                payload: {
-                  ExplicitTime: parseInt(e.target.value)
-                }
-              }));
-              break;
-          }
-        }}
-        value={currentValue}
-      ></input>
-    </label>
-  );
+    label,
+    currentValue,
+    type,
+    dispatch,
+}: StandardEntryFieldNumber) {
+    return (
+        <label>
+            <span>{label}:</span>
+            <input
+                required
+                type="number"
+                min="0"
+                max="80"
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    switch (type) {
+                        case StudentCreatorBehavior.SetAimLine:
+                            dispatch(
+                                new StudentDispatchUpdateAimLine({
+                                    type: StudentCreatorBehavior.SetAimLine,
+                                    payload: {
+                                        AimLine: parseInt(e.target.value),
+                                    },
+                                })
+                            )
+                            break
+                        case StudentCreatorBehavior.SetExplicitTime:
+                            dispatch(
+                                new StudentDispatchUpdateExplicitTime({
+                                    type: StudentCreatorBehavior.SetExplicitTime,
+                                    payload: {
+                                        ExplicitTime: parseInt(e.target.value),
+                                    },
+                                })
+                            )
+                            break
+                    }
+                }}
+                value={currentValue}
+            ></input>
+        </label>
+    )
 }
 
 export interface StandardEntryFieldDate {
-  label: string;
-  currentValue: string;
-  type: StudentCreatorBehavior | UserCreatorBehavior;
-  dispatch: React.Dispatch<StudentDataDispatches>;
+    label: string
+    currentValue: string
+    type: StudentCreatorBehavior | UserCreatorBehavior
+    dispatch: React.Dispatch<StudentDataDispatches>
 }
 
 /** StandardEntryFieldDate
@@ -272,36 +314,39 @@ export interface StandardEntryFieldDate {
  * @returns
  */
 export function StandardEntryFieldDate({
-  label,
-  currentValue,
-  type,
-  dispatch }: StandardEntryFieldDate) {
-  return (
-    <label>
-      <span>{label}:</span>
-      <input
-        required
-        type="date"
-        onChange={(e) => {
-          dispatch(new StudentDispatchUpdateDueDate({
-            type,
-            payload: {
-              DueDate: e.target.value
-            }
-          }));
-        }}
-        value={currentValue}
-      ></input>
-    </label>
-  );
+    label,
+    currentValue,
+    type,
+    dispatch,
+}: StandardEntryFieldDate) {
+    return (
+        <label>
+            <span>{label}:</span>
+            <input
+                required
+                type="date"
+                onChange={(e) => {
+                    dispatch(
+                        new StudentDispatchUpdateDueDate({
+                            type,
+                            payload: {
+                                DueDate: e.target.value,
+                            },
+                        })
+                    )
+                }}
+                value={currentValue}
+            ></input>
+        </label>
+    )
 }
 
 export interface StandardSelectField {
-  label: string;
-  options: SingleOptionType[];
-  currentValue: SingleOptionType;
-  type: StudentCreatorBehavior;
-  dispatch: React.Dispatch<StudentDataDispatches>;
+    label: string
+    options: SingleOptionType[]
+    currentValue: SingleOptionType
+    type: StudentCreatorBehavior
+    dispatch: React.Dispatch<StudentDataDispatches>
 }
 
 /**
@@ -314,84 +359,103 @@ export interface StandardSelectField {
  * @returns
  */
 export function StandardSelectField({
-  label,
-  options,
-  currentValue,
-  type,
-  dispatch }: StandardSelectField) {
-  return (
-    <>
-      <label htmlFor="single-field" className="select-label">
-        {label}:
-      </label>
-      <Select
-        name={"single-field"}
-        inputId={"single-field"}
-        options={options}
-        onChange={(option: SingleValue<SingleOptionType>) => {
-          switch (type) {
-            case StudentCreatorBehavior.SetCurrentGrade:
-              dispatch(new StudentDispatchUpdateCurrentGrade({
-                type,
-                payload: {
-                  CurrentGrade: option as SingleOptionType
-                }
-              }));
-              break;
-            case StudentCreatorBehavior.SetCurrentTarget:
-              dispatch(new StudentDispatchUpdateCurrentTarget({
-                type,
-                payload: {
-                  CurrentTarget: option as SingleOptionType
-                }
-              }));
-              break;
-            case StudentCreatorBehavior.SetCurrentApproach:
-              dispatch(new StudentDispatchUpdateCurrentApproach({
-                type,
-                payload: {
-                  CurrentApproach: option as SingleOptionType
-                }
-              }));
-              break;
-            case StudentCreatorBehavior.SetCurrentErrorApproach:
-              dispatch(new StudentDispatchUpdateCurrentErrorApproach({
-                type,
-                payload: {
-                  CurrentErrorApproach: option as SingleOptionType
-                }
-              }));
-              break;
-            case StudentCreatorBehavior.SetCurrentSRApproach:
-              dispatch(new StudentDispatchUpdateCurrentSRApproach({
-                type,
-                payload: {
-                  CurrentSRApproach: option as SingleOptionType
-                }
-              }));
-              break;
-            case StudentCreatorBehavior.SetProblemSet:
-              dispatch(new StudentDispatchUpdateCurrentProblemSet({
-                type,
-                payload: {
-                  CurrentProblemSet: option as SingleOptionType
-                }
-              }));
-              break;
-          }
-        }}
-        value={currentValue}
-      />
-    </>
-  );
+    label,
+    options,
+    currentValue,
+    type,
+    dispatch,
+}: StandardSelectField) {
+    return (
+        <>
+            <label htmlFor="single-field" className="select-label">
+                {label}:
+            </label>
+            <Select
+                name={'single-field'}
+                inputId={'single-field'}
+                options={options}
+                onChange={(option: SingleValue<SingleOptionType>) => {
+                    switch (type) {
+                        case StudentCreatorBehavior.SetCurrentGrade:
+                            dispatch(
+                                new StudentDispatchUpdateCurrentGrade({
+                                    type,
+                                    payload: {
+                                        CurrentGrade:
+                                            option as SingleOptionType,
+                                    },
+                                })
+                            )
+                            break
+                        case StudentCreatorBehavior.SetCurrentTarget:
+                            dispatch(
+                                new StudentDispatchUpdateCurrentTarget({
+                                    type,
+                                    payload: {
+                                        CurrentTarget:
+                                            option as SingleOptionType,
+                                    },
+                                })
+                            )
+                            break
+                        case StudentCreatorBehavior.SetCurrentApproach:
+                            dispatch(
+                                new StudentDispatchUpdateCurrentApproach({
+                                    type,
+                                    payload: {
+                                        CurrentApproach:
+                                            option as SingleOptionType,
+                                    },
+                                })
+                            )
+                            break
+                        case StudentCreatorBehavior.SetCurrentErrorApproach:
+                            dispatch(
+                                new StudentDispatchUpdateCurrentErrorApproach({
+                                    type,
+                                    payload: {
+                                        CurrentErrorApproach:
+                                            option as SingleOptionType,
+                                    },
+                                })
+                            )
+                            break
+                        case StudentCreatorBehavior.SetCurrentSRApproach:
+                            dispatch(
+                                new StudentDispatchUpdateCurrentSRApproach({
+                                    type,
+                                    payload: {
+                                        CurrentSRApproach:
+                                            option as SingleOptionType,
+                                    },
+                                })
+                            )
+                            break
+                        case StudentCreatorBehavior.SetProblemSet:
+                            dispatch(
+                                new StudentDispatchUpdateCurrentProblemSet({
+                                    type,
+                                    payload: {
+                                        CurrentProblemSet:
+                                            option as SingleOptionType,
+                                    },
+                                })
+                            )
+                            break
+                    }
+                }}
+                value={currentValue}
+            />
+        </>
+    )
 }
 
 export interface StandardSelectFieldMulti {
-  label: string;
-  options: SingleOptionType[];
-  currentValue: MultiValue<SingleOptionType>;
-  type: StudentCreatorBehavior;
-  dispatch: React.Dispatch<StudentDataDispatches>;
+    label: string
+    options: SingleOptionType[]
+    currentValue: MultiValue<SingleOptionType>
+    type: StudentCreatorBehavior
+    dispatch: React.Dispatch<StudentDataDispatches>
 }
 
 /** standardSelectFieldMulti
@@ -404,37 +468,40 @@ export interface StandardSelectFieldMulti {
  * @returns
  */
 export function StandardSelectFieldMulti({
-  label,
-  options,
-  currentValue,
-  type,
-  dispatch }: StandardSelectFieldMulti) {
-  return (
-    <>
-      <label htmlFor="multi-field" className="select-label">
-        {label}:
-      </label>
-      <Select
-        name={"multi-field"}
-        inputId={"multi-field"}
-        options={options}
-        onChange={(option: MultiValue<SingleOptionType>) => {
-          dispatch(new StudentDispatchUpdateCurrentBenchmarking({
-            type,
-            payload: {
-              CurrentBenchmarking: option
-            }
-          }));
-        }}
-        value={currentValue}
-        isMulti={true}
-      />
-    </>
-  );
+    label,
+    options,
+    currentValue,
+    type,
+    dispatch,
+}: StandardSelectFieldMulti) {
+    return (
+        <>
+            <label htmlFor="multi-field" className="select-label">
+                {label}:
+            </label>
+            <Select
+                name={'multi-field'}
+                inputId={'multi-field'}
+                options={options}
+                onChange={(option: MultiValue<SingleOptionType>) => {
+                    dispatch(
+                        new StudentDispatchUpdateCurrentBenchmarking({
+                            type,
+                            payload: {
+                                CurrentBenchmarking: option,
+                            },
+                        })
+                    )
+                }}
+                value={currentValue}
+                isMulti={true}
+            />
+        </>
+    )
 }
 
 export interface StandardErrorField {
-  formError: string | undefined | null;
+    formError: string | undefined | null
 }
 
 /** standardErrorField
@@ -442,11 +509,10 @@ export interface StandardErrorField {
  * @param formError
  * @returns
  */
-export function StandardErrorField({
-  formError }: StandardErrorField) {
-  if (formError === undefined) {
-    return <></>;
-  } else {
-    return <p className="error">{formError}</p>;
-  }
+export function StandardErrorField({ formError }: StandardErrorField) {
+    if (formError === undefined) {
+        return <></>
+    } else {
+        return <p className="error">{formError}</p>
+    }
 }

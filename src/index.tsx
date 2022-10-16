@@ -6,15 +6,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from "react";
-import ReactDOM from "react-dom";
-import "./index.css";
-import App from "./App";
-import { AuthorizationContextProvider } from "./context/AuthorizationContext";
+import React from 'react'
+import ReactDOM from 'react-dom'
+import App from './App'
+import { AuthorizationContextProvider } from './context/AuthorizationContext'
+import './index.css'
 
 ReactDOM.render(
-  <AuthorizationContextProvider>
-    <App />
-  </AuthorizationContextProvider>,
-  document.getElementById("root")
-);
+    <AuthorizationContextProvider>
+        <App />
+    </AuthorizationContextProvider>,
+    document.getElementById('root')
+)
