@@ -12,11 +12,42 @@ import { StudentDataInterface } from '../../interfaces/StudentInterfaces'
 
 export interface StudentSummaryCurrentBenchmarking {
     student: StudentDataInterface
+    ButtonOnly?: boolean
 }
 
 export default function StudentSummaryCurrentBenchmarking({
     student,
+    ButtonOnly,
 }: StudentSummaryCurrentBenchmarking) {
+    if (ButtonOnly) {
+        return (
+            <>
+                {student.currentBenchmarking.map((benchmark) => {
+                    let backgroundColor = '#000000'
+
+                    if (benchmark.includes('Addition')) {
+                        backgroundColor = '#0FAF4F'
+                    } else if (benchmark.includes('Subtraction')) {
+                        backgroundColor = '#5488C2'
+                    } else if (benchmark.includes('Multiplication')) {
+                        backgroundColor = '#EC921A'
+                    } else if (benchmark.includes('Division')) {
+                        backgroundColor = '#0071C7'
+                    }
+
+                    return (
+                        <TextButton
+                            Text={benchmark.split('-')[0]}
+                            BasicOutput
+                            key={benchmark}
+                            BackgroundColor={backgroundColor}
+                        />
+                    )
+                })}
+            </>
+        )
+    }
+
     return (
         <>
             <p

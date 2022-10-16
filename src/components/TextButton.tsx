@@ -11,15 +11,41 @@ import ReactTooltip from 'react-tooltip'
 
 export interface TextButton {
     Text: string
-    Tooltip: string
+    Tooltip?: string
     BackgroundColor: string
+    BasicOutput?: boolean
 }
 
 export default function TextButton({
     Text,
     Tooltip,
     BackgroundColor,
+    BasicOutput,
 }: TextButton) {
+    if (BasicOutput) {
+        return (
+            <>
+                <span
+                    style={{
+                        marginLeft: '10px',
+                        marginTop: '1px',
+                        backgroundColor: BackgroundColor,
+                        borderRadius: 50,
+                        margin: '0px',
+                        paddingLeft: '10px',
+                        paddingRight: '10px',
+                        paddingTop: '0px',
+                        paddingBottom: '0px',
+                        color: '#FFFFFF',
+                        font: 'Roboto',
+                    }}
+                >
+                    {Text}
+                </span>
+            </>
+        )
+    }
+
     return (
         <>
             <div

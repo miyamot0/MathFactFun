@@ -8,16 +8,20 @@
 
 import React from 'react'
 import Particles from 'react-tsparticles'
+import StickerTitle from '../../../components/StickerTitle'
 import { useCallback } from 'react'
 import { loadFull } from 'tsparticles'
 import { Engine } from 'tsparticles-engine'
 import { tsParticles } from 'tsparticles-engine'
 import { loadTextShape } from 'tsparticles-shape-text'
-import StickerTitle from '../../../components/StickerTitle'
 
 loadTextShape(tsParticles)
 
-export default function AnimatedHero() {
+export interface AnimatedHero {
+    DisplayTitle?: boolean
+}
+
+export default function AnimatedHero({ DisplayTitle = false }: AnimatedHero) {
     const particlesInit = useCallback(async (engine: Engine) => {
         await loadFull(engine)
     }, [])
@@ -164,7 +168,7 @@ export default function AnimatedHero() {
                 }}
             />
 
-            <StickerTitle />
+            {DisplayTitle && <StickerTitle />}
         </>
     )
 }

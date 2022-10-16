@@ -8,7 +8,6 @@
 
 import React from 'react'
 import AnimatedHero from './views/AnimatedHero'
-import { Link } from 'react-router-dom'
 
 // styles
 import './styles/Landing.css'
@@ -17,7 +16,7 @@ import LandingPanel from './views/LandingPanel'
 export default function Landing() {
     return (
         <>
-            <AnimatedHero />
+            <AnimatedHero DisplayTitle />
             <div className="landing-width-wrapper">
                 <div className="landing-form-list">
                     <LandingPanel

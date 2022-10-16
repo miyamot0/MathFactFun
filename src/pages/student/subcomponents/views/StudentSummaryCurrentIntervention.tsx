@@ -13,10 +13,12 @@ import { StudentDataInterface } from '../../interfaces/StudentInterfaces'
 
 export interface StudentSummaryCurrentIntervention {
     student: StudentDataInterface
+    ButtonOnly?: boolean
 }
 
 export default function StudentSummaryCurrentIntervention({
     student,
+    ButtonOnly,
 }: StudentSummaryCurrentIntervention) {
     const currentApproach = GetApproachStringFromLabel(student.currentApproach)
 
@@ -26,6 +28,17 @@ export default function StudentSummaryCurrentIntervention({
         backgroundColor = '#2596B4'
     } else if (currentApproach.includes('Cover')) {
         backgroundColor = '#5488C2'
+    }
+
+    if (ButtonOnly) {
+        return (
+            <TextButton
+                Text={currentApproach}
+                BasicOutput
+                BackgroundColor={backgroundColor}
+                Tooltip={`${currentApproach} is the current intervention strategy`}
+            />
+        )
     }
 
     return (

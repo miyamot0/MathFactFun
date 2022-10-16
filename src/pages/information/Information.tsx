@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-key */
 /** @license
  *
  * Copyright (c) Shawn P. Gilroy, Louisiana State University.
@@ -6,307 +7,637 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from "react";
-import { Link } from "react-router-dom";
+import React from 'react'
+import Fade from 'react-reveal'
+import { Link } from 'react-router-dom'
+
+import AnimatedHero from '../landing/views/AnimatedHero'
+import InformationPanels from './views/InformationPanels'
+import StudentSummaryCurrentBenchmarking from '../student/subcomponents/views/StudentSummaryCurrentBenchmarking'
+import { StudentDataInterface } from '../student/interfaces/StudentInterfaces'
+
+import NavigationButton from '../../components/NavigationButton'
+import SettingsButton from '../../components/SettingsButton'
+
+import AddIcon from '../../assets/plus-square.svg'
+import PlayIcon from '../../assets/play.svg'
+import DashboardIcon from '../../assets/window-sidebar.svg'
+import SettingsIcon from '../../assets/gear.svg'
+import ItemSetsIcon from '../../assets/plus-slash-minus.svg'
+import ProgressIcon from '../../assets/graph-up.svg'
 
 // styles
-import "./styles/Information.css";
+import './styles/Information.css'
+import StudentSummaryCurrentIntervention from '../student/subcomponents/views/StudentSummaryCurrentIntervention'
 
 export default function Information(): JSX.Element {
-  return (
-    <>
-      <h2 className="global-page-title">Information and Start-up Guide</h2>
-      <div className="info-form-list">
-        <div className="info-panel">
-          <h2 className="global-page-title">Is this web-app evidence-based?</h2>
-          <hr></hr>
-          <p>
-            This web-app, Math Fact Fun, is based on the Measures and
-            Interventions for Numeracy Development (
-            <a href="https://brianponcy.wixsite.com/mind">MIND</a>), an
-            established resource for school-age children.{" "}
-          </p>
-          <p>
-            The specific math problems, presentation procedures, curricular
-            sequencing, and intervention strategies have been adapted from this
-            resources into an electronic, web-based form.
-          </p>
-        </div>
+    return (
+        <>
+            <AnimatedHero />
+            <div className="information-page-width-wrapper">
+                <h2 className="global-page-title">
+                    Information and Start-up Guide
+                </h2>
 
-        <div className="info-panel">
-          <h2 className="global-page-title">Where do I begin?</h2>
-          <hr></hr>
-          <p>
-            The web-app facilitates the tools and materials featured in the MIND
-            and the MIND can be used strategically (e.g.,{" "}
-            <a href="https://brianponcy.wixsite.com/mind/explicit-timing">
-              Explicit Timing
-            </a>{" "}
-            exercises,{" "}
-            <a href="https://brianponcy.wixsite.com/mind/cover-copy-compare">
-              Cover-Copy-Compare
-            </a>
-            ) or as an element of Tier I programming to support screening and
-            fluency development (i.e., supplement to universal instruction).
-          </p>
-          <p>
-            Regardless of the specific goals, users would need to begin by first
-            adding students to their dashboard (i.e., corresponding to their
-            group, classroom).
-          </p>
-        </div>
+                <div className="info-form-list">
+                    <Fade>
+                        <InformationPanels
+                            Title={'Is the MFF app evidence-based?'}
+                            Content={[
+                                <p>
+                                    This web-app is based on the Measures and
+                                    Interventions for Numeracy Development (
+                                    <a href="https://brianponcy.wixsite.com/mind">
+                                        MIND
+                                    </a>
+                                    ). The MIND is an established resource for
+                                    students learning K-8 math.
+                                </p>,
+                                <p>
+                                    The specific math problems, teaching
+                                    procedures, curricular sequencing, and
+                                    intervention strategies from the MIND have
+                                    been adapted into an electronic, web-based
+                                    form.
+                                </p>,
+                            ]}
+                        />
+                        <InformationPanels
+                            Title={'Where do I begin?'}
+                            Content={[
+                                <p>
+                                    MFF is an designed to help teachers (1){' '}
+                                    <b>
+                                        monitor student performance related to
+                                        math facts
+                                    </b>{' '}
+                                    and (2){' '}
+                                    <b>
+                                        provide supplemental math fact practice
+                                    </b>
+                                    . You may wish to begin with monitoring
+                                    performance first and then consider
+                                    intervention after data is collected.
+                                </p>,
+                                <p>
+                                    To get started, you need to start adding
+                                    students to your dashboard by selecting the{' '}
+                                    <NavigationButton
+                                        Icon={AddIcon}
+                                        Text={'Add Student'}
+                                        BackgroundColor={'#33a7e4'}
+                                        AltText={'Add a new student'}
+                                    />{' '}
+                                    link on the sidebar.
+                                </p>,
+                            ]}
+                        />
+                        <InformationPanels
+                            Title={'Adding my first student (Screeners)'}
+                            Content={[
+                                <p>
+                                    You can easily a a student by visiting the{' '}
+                                    <NavigationButton
+                                        Icon={AddIcon}
+                                        Text={'Add Student'}
+                                        BackgroundColor={'#33a7e4'}
+                                        AltText={'Add a new student'}
+                                    />{' '}
+                                    page, which is displayed in the side bar. On
+                                    the <br />
+                                    <NavigationButton
+                                        Icon={AddIcon}
+                                        Text={'Add Student'}
+                                        BackgroundColor={'#33a7e4'}
+                                        AltText={'Add a new student'}
+                                    />{' '}
+                                    page, you will need to provide some basic
+                                    details for the student (e.g., ID number,
+                                    grade) and highlight the types of math you
+                                    need to benchmark for the semester.
+                                </p>,
+                                <p>
+                                    By default, benchmarking covers{' '}
+                                    <StudentSummaryCurrentBenchmarking
+                                        ButtonOnly
+                                        student={
+                                            {
+                                                currentBenchmarking: [
+                                                    'Addition-Sums to 18',
+                                                ],
+                                            } as unknown as StudentDataInterface
+                                        }
+                                    />
+                                    ,{' '}
+                                    <StudentSummaryCurrentBenchmarking
+                                        ButtonOnly
+                                        student={
+                                            {
+                                                currentBenchmarking: [
+                                                    'Subtraction-Lessing to 18',
+                                                ],
+                                            } as unknown as StudentDataInterface
+                                        }
+                                    />
+                                    ,{' '}
+                                    <StudentSummaryCurrentBenchmarking
+                                        ButtonOnly
+                                        student={
+                                            {
+                                                currentBenchmarking: [
+                                                    'Multiplication-Single Digit',
+                                                ],
+                                            } as unknown as StudentDataInterface
+                                        }
+                                    />
+                                    , and{' '}
+                                    <StudentSummaryCurrentBenchmarking
+                                        ButtonOnly
+                                        student={
+                                            {
+                                                currentBenchmarking: [
+                                                    'Division-Single Digit',
+                                                ],
+                                            } as unknown as StudentDataInterface
+                                        }
+                                    />
+                                </p>,
+                            ]}
+                        />
+                        <InformationPanels
+                            Title={'Setting up Student Benchmarking'}
+                            Content={[
+                                <p>
+                                    MFF assist teachers by streamlining how
+                                    benchmarking is scheduled and implemented.
+                                    Once you select the skills to benchmark
+                                    (e.g.,{' '}
+                                    <StudentSummaryCurrentBenchmarking
+                                        ButtonOnly
+                                        student={
+                                            {
+                                                currentBenchmarking: [
+                                                    'Addition-Sums to 18',
+                                                ],
+                                            } as unknown as StudentDataInterface
+                                        }
+                                    />
+                                    ), the app will ask when the benchmarking
+                                    should begin (e.g., October 1st).
+                                </p>,
+                                <p>
+                                    The app will provide cues regarding when
+                                    benchmarking for individual students is{' '}
+                                    <br />{' '}
+                                    <span className="benchmark-completed" />{' '}
+                                    <span
+                                        style={{
+                                            color: '#0ebb50',
+                                            fontWeight: 'bold',
+                                        }}
+                                    >
+                                        Completed
+                                    </span>{' '}
+                                    or <span className="needs-benchmark" />{' '}
+                                    <span
+                                        style={{
+                                            color: '#ff5733',
+                                            fontWeight: 'bold',
+                                        }}
+                                    >
+                                        Due
+                                    </span>{' '}
+                                    .
+                                </p>,
+                            ]}
+                        />
+                        <InformationPanels
+                            Title={'Programming Interventions'}
+                            Content={[
+                                <p>
+                                    After reviewing student progress, you may
+                                    wish to have the student complete
+                                    benchmarking as well as gain extra practice
+                                    with math facts. You can edit student
+                                    programming by visiting the dashboard (i.e.,{' '}
+                                    <NavigationButton
+                                        Icon={DashboardIcon}
+                                        Text={'Dashboard'}
+                                        BackgroundColor={'#33a7e4'}
+                                        AltText={'Visit dashboard'}
+                                    />
+                                    ) and pressing the{' '}
+                                    <SettingsButton
+                                        Icon={SettingsIcon}
+                                        BackgroundColor={'rgb(51, 146, 235)'}
+                                        AltText={'Edit settings'}
+                                    />{' '}
+                                    to navigate to that individual
+                                    student&apos;s settings.
+                                </p>,
+                                <p>
+                                    Changes made in the{' '}
+                                    <SettingsButton
+                                        Icon={SettingsIcon}
+                                        BackgroundColor={'rgb(51, 146, 235)'}
+                                        AltText={'Edit settings'}
+                                    />{' '}
+                                    page occur in real-time.
+                                </p>,
+                            ]}
+                        />
+                        <InformationPanels
+                            Title={'Intervention: Cover-Copy-Compare'}
+                            Content={[
+                                <p>
+                                    The{' '}
+                                    <StudentSummaryCurrentIntervention
+                                        ButtonOnly
+                                        student={
+                                            {
+                                                currentApproach:
+                                                    'CoverCopyCompare',
+                                            } as StudentDataInterface
+                                        }
+                                    />{' '}
+                                    intervention (CCC) is a self-guided math
+                                    practice procedure where students work to
+                                    improve their math fact accuracy and
+                                    fluency. It has been used extensively in the
+                                    area of basic numeracy.
+                                </p>,
+                                <p>
+                                    A detailed description of <br />
+                                    <StudentSummaryCurrentIntervention
+                                        ButtonOnly
+                                        student={
+                                            {
+                                                currentApproach:
+                                                    'CoverCopyCompare',
+                                            } as StudentDataInterface
+                                        }
+                                    />{' '}
+                                    and its applications within the MIND are
+                                    available at{' '}
+                                    <a href="https://brianponcy.wixsite.com/mind/cover-copy-compare">
+                                        here
+                                    </a>
+                                    .
+                                </p>,
+                            ]}
+                        />
+                        <InformationPanels
+                            Title={'Intervention: Explicit Timing'}
+                            Content={[
+                                <p>
+                                    The{' '}
+                                    <StudentSummaryCurrentIntervention
+                                        ButtonOnly
+                                        student={
+                                            {
+                                                currentApproach:
+                                                    'ExplicitTiming',
+                                            } as StudentDataInterface
+                                        }
+                                    />{' '}
+                                    intervention (ET) is another self-guided
+                                    procedure by which students work to improve
+                                    their <b>fluency</b> completing math
+                                    problems. For <br />
+                                    <StudentSummaryCurrentIntervention
+                                        ButtonOnly
+                                        student={
+                                            {
+                                                currentApproach:
+                                                    'ExplicitTiming',
+                                            } as StudentDataInterface
+                                        }
+                                    />{' '}
+                                    with basic math facts, this consists of a
+                                    student setting a goal to complete as many
+                                    math problems as they can, correctly, within
+                                    a set amount of time (e.g., 2 minutes).
+                                </p>,
+                                <p>
+                                    A detailed description of <br />
+                                    <StudentSummaryCurrentIntervention
+                                        ButtonOnly
+                                        student={
+                                            {
+                                                currentApproach:
+                                                    'ExplicitTiming',
+                                            } as StudentDataInterface
+                                        }
+                                    />{' '}
+                                    and its applications within the MIND are
+                                    available at{' '}
+                                    <a href="https://brianponcy.wixsite.com/mind/explicit-timing">
+                                        here
+                                    </a>
+                                    .
+                                </p>,
+                            ]}
+                        />
 
-        <div className="info-panel">
-          <h2 className="global-page-title">How do I add a student?</h2>
-          <hr></hr>
-          <p>
-            To add a new student, users should navigate to the{" "}
-            <Link to={"/create"}>Create Student</Link> tab in the side bar. In
-            this area, you should list the basic indicators for the student
-            (e.g., initials, ID number, grade) as well as specify the types of
-            math content you wish to focus on.
-          </p>
-          <p>
-            Specifically, you will need to indicate (1) targets to be included
-            in benchmarks (e.g., semesterly, monthly) and/or (2) a target for
-            behavioral intervention.
-          </p>
-        </div>
+                        <InformationPanels
+                            Title={'Targeting Specific Math Facts'}
+                            Content={[
+                                <p>
+                                    When using either and intervention like{' '}
+                                    <br />
+                                    <StudentSummaryCurrentIntervention
+                                        ButtonOnly
+                                        student={
+                                            {
+                                                currentApproach:
+                                                    'CoverCopyCompare',
+                                            } as StudentDataInterface
+                                        }
+                                    />{' '}
+                                    or <br />
+                                    <StudentSummaryCurrentIntervention
+                                        ButtonOnly
+                                        student={
+                                            {
+                                                currentApproach:
+                                                    'ExplicitTiming',
+                                            } as StudentDataInterface
+                                        }
+                                    />{' '}
+                                    , you can use either pre-made item sets or
+                                    choose to customize your own.
+                                </p>,
+                                <p>
+                                    You can modify item sets by navigating to
+                                    the{' '}
+                                    <NavigationButton
+                                        Icon={DashboardIcon}
+                                        Text={'Dashboard'}
+                                        BackgroundColor={'#33a7e4'}
+                                        AltText={'Visit dashboard'}
+                                    />
+                                    ), enter the settings menu for the
+                                    respective student (i.e.,{' '}
+                                    <SettingsButton
+                                        Icon={SettingsIcon}
+                                        BackgroundColor={'rgb(51, 146, 235)'}
+                                        AltText={'Edit settings'}
+                                    />
+                                    ) and then pressing the{' '}
+                                    <SettingsButton
+                                        Icon={ItemSetsIcon}
+                                        BackgroundColor={'rgb(51, 146, 235)'}
+                                        AltText={'Edit item set'}
+                                    />{' '}
+                                    to enter the Set Creator page.
+                                </p>,
+                            ]}
+                        />
 
-        <div className="info-panel">
-          <h2 className="global-page-title">Setting up Benchmarking</h2>
-          <hr></hr>
-          <p>
-            To set up benchmarking for each student, you will need to supply a
-            set of information. First, you will need to set a benchmark date
-            that corresponds with when benchmarking is due next for that
-            student. For example, a student beginning in the fall may have their
-            Fall benchmark set for October 1.
-          </p>
-          <p>
-            Second, you will need to identify which targets to include in the
-            benchmark. For example, a 1st grade student may need to be screened
-            for Addition and Subtraction problems but not for Multiplication or
-            Division.
-          </p>
-          <p>
-            Third, you will need to select a problem set (e.g., Set A, Set B,
-            Set C). As a working default, Set A is likely sufficient to start
-            but may need to be alternated in the subsequent benchmarks.
-          </p>
-        </div>
+                        <InformationPanels
+                            Title={'Using the Set Creator'}
+                            Content={[
+                                <p>
+                                    The Set Creator page (i.e.,{' '}
+                                    <SettingsButton
+                                        Icon={ItemSetsIcon}
+                                        BackgroundColor={'rgb(51, 146, 235)'}
+                                        AltText={'Edit item set'}
+                                    />
+                                    ) allows teachers and consultants to edit
+                                    programming, in real-time, with a
+                                    drag-and-drop interface. Information on
+                                    specific math problems (e.g., latency,
+                                    accuracy) is available to determine which
+                                    items are considered <b>Mastered</b>, which
+                                    should be <b>Targeted</b>, and which may
+                                    need to be <b>Skipped</b>.
+                                </p>,
+                                <p>
+                                    Items targeted in the{' '}
+                                    <SettingsButton
+                                        Icon={ItemSetsIcon}
+                                        BackgroundColor={'rgb(51, 146, 235)'}
+                                        AltText={'Edit item set'}
+                                    />{' '}
+                                    page are only relevant to the{' '}
+                                    <StudentSummaryCurrentIntervention
+                                        ButtonOnly
+                                        student={
+                                            {
+                                                currentApproach:
+                                                    'CoverCopyCompare',
+                                            } as StudentDataInterface
+                                        }
+                                    />{' '}
+                                    and{' '}
+                                    <StudentSummaryCurrentIntervention
+                                        ButtonOnly
+                                        student={
+                                            {
+                                                currentApproach:
+                                                    'ExplicitTiming',
+                                            } as StudentDataInterface
+                                        }
+                                    />{' '}
+                                    interventions.
+                                </p>,
+                            ]}
+                        />
 
-        <div className="info-panel">
-          <h2 className="global-page-title">
-            Completing Benchmarks (Tier I, Tier II)
-          </h2>
-          <hr></hr>
-          <p>
-            Once a student is added, and benchmarking targets and dates are
-            entered, information related to benchmarking will be displayed on
-            the <Link to={`/dashboard`}>Student Dashboard</Link>.
-          </p>
-          <p>
-            If the probe is either not yet due or completed, there will not be
-            an indicator that a probe is due. However, if a probe is warranted,
-            then a link will be available for the student to complete each of
-            the respective probes (e.g., Addition, Subtraction).
-          </p>
-        </div>
+                        <InformationPanels
+                            Title={'Viewing Progress (Screening)'}
+                            Content={[
+                                <p>
+                                    The MFF app makes it easy to view student
+                                    performance over time. You can view the
+                                    results of on-going benchmarking and
+                                    intervention for individual students by
+                                    navigating to the{' '}
+                                    <NavigationButton
+                                        Icon={DashboardIcon}
+                                        Text={'Dashboard'}
+                                        BackgroundColor={'#33a7e4'}
+                                        AltText={'Visit dashboard'}
+                                    />{' '}
+                                    and entering the{' '}
+                                    <SettingsButton
+                                        Icon={SettingsIcon}
+                                        BackgroundColor={'rgb(51, 146, 235)'}
+                                        AltText={'Edit settings'}
+                                    />{' '}
+                                    page for the respective student.
+                                </p>,
+                                <p>
+                                    The{' '}
+                                    <SettingsButton
+                                        Icon={SettingsIcon}
+                                        BackgroundColor={'rgb(51, 146, 235)'}
+                                        AltText={'Edit settings'}
+                                    />{' '}
+                                    page will provide a high-level overview of
+                                    current settings and overall performance
+                                    over time.
+                                </p>,
+                            ]}
+                        />
 
-        <div className="info-panel">
-          <h2 className="global-page-title">
-            Selecting an Intervention (Tier II, Tier III)
-          </h2>
-          <hr></hr>
-          <p>
-            In some cases, you may wish to conduct benchmarking across multiple
-            targets (e.g., Addition, Subtraction) but also include a more
-            intense intervention on a specific target (e.g., Addition). In the{" "}
-            <Link to={"/create"}>Create Student</Link> page, you should
-            designate the target in the &apos;Target for Intervention&apos;
-            widget and the intervention approach in the &apos;Intervention
-            Approach&apos; widget.
-          </p>
-          <p>
-            You may also adjust your rules for responding to student errors and
-            strategies for motivating students (i.e., reinforcement strategies).
-          </p>
-        </div>
+                        <InformationPanels
+                            Title={'Viewing Progress (Intervention)'}
+                            Content={[
+                                <p>
+                                    The MFF app provides a more intense, more
+                                    detailed visualization of student
+                                    performance when an intervention is
+                                    programmed. To view intervention progress,
+                                    navigate to the{' '}
+                                    <NavigationButton
+                                        Icon={DashboardIcon}
+                                        Text={'Dashboard'}
+                                        BackgroundColor={'#33a7e4'}
+                                        AltText={'Visit dashboard'}
+                                    />{' '}
+                                    and enter the{' '}
+                                    <SettingsButton
+                                        Icon={ProgressIcon}
+                                        BackgroundColor={'rgb(15, 175, 79)'}
+                                        AltText={'View intervention progress'}
+                                    />{' '}
+                                    page for the respective student.
+                                </p>,
+                                <p>
+                                    The{' '}
+                                    <SettingsButton
+                                        Icon={ProgressIcon}
+                                        BackgroundColor={'rgb(15, 175, 79)'}
+                                        AltText={'View intervention progress'}
+                                    />{' '}
+                                    page provides both overall and item-level
+                                    information regarding student performance.
+                                    Item-level performance is helpful for
+                                    updating the Item Sets, as necessary.
+                                </p>,
+                            ]}
+                        />
 
-        <div className="info-panel">
-          <h2 className="global-page-title">
-            Intervention Option: Cover-Copy-Compare
-          </h2>
-          <hr></hr>
-          <p>
-            Cover-Copy-Compare (CCC) is a self-guided procedure by which
-            students work to improve their accuracy and fluency. For CCC with
-            basic math facts, this consists of a student visually inspecting a
-            complete math problem (e.g., 2+6=8), covering the complete math
-            problem, copying it from memory, and then comparing their answer to
-            the original cue.
-          </p>
-          <p>
-            A detailed description of CCC and its applications within the MIND
-            are available at{" "}
-            <a href="https://brianponcy.wixsite.com/mind/cover-copy-compare">
-              here
-            </a>
-            .
-          </p>
-        </div>
+                        <InformationPanels
+                            Title={'Running Interventions'}
+                            Content={[
+                                <p>
+                                    To facilitate easy navigation for students,
+                                    a separate dashboard is dedicated to
+                                    intervention practice. The dashboard
+                                    specific to intervention is available at{' '}
+                                    <NavigationButton
+                                        Icon={PlayIcon}
+                                        Text={'Practice'}
+                                        BackgroundColor={'#33a7e4'}
+                                        AltText={'Visit practice dashboard'}
+                                    />
+                                    .
+                                </p>,
+                                <p>
+                                    Like the other dashboard, students
+                                    programmed to received intervention on the{' '}
+                                    <NavigationButton
+                                        Icon={PlayIcon}
+                                        Text={'Practice'}
+                                        BackgroundColor={'#33a7e4'}
+                                        AltText={'Visit practice dashboard'}
+                                    />{' '}
+                                    will be displayed along with their current
+                                    status. The app will provide cues regarding
+                                    whether the student has completed their
+                                    daily practice (i.e.,{' '}
+                                    <span className="benchmark-completed" />{' '}
+                                    <span
+                                        style={{
+                                            color: '#0ebb50',
+                                            fontWeight: 'bold',
+                                        }}
+                                    >
+                                        Completed
+                                    </span>
+                                    ) or have yet to complete their daily
+                                    practice (i.e.,{' '}
+                                    <span className="needs-benchmark" />{' '}
+                                    <span
+                                        style={{
+                                            color: '#ff5733',
+                                            fontWeight: 'bold',
+                                        }}
+                                    >
+                                        Due
+                                    </span>
+                                    ) .
+                                </p>,
+                            ]}
+                        />
 
-        <div className="info-panel">
-          <h2 className="global-page-title">
-            Intervention Option: Explicit Timing
-          </h2>
-          <hr></hr>
-          <p>
-            Explicit Timing (ET) is another self-guided procedure by which
-            students work to improve their fluency completing math problems. For
-            ET with basic math facts, this consists of a student setting a goal
-            to complete as many math problems as they can, correctly, within a
-            set amount of time (e.g., 2 minutes).
-          </p>
-          <p>
-            A detailed description of ET and its applications within the MIND
-            are available{" "}
-            <a href="https://brianponcy.wixsite.com/mind/explicit-timing">
-              here
-            </a>
-            .
-          </p>
-        </div>
+                        <InformationPanels
+                            Title={'Accessibility Options'}
+                            Content={[
+                                <p>
+                                    By default, students have the opportunity to
+                                    practice their math skills using a mouse, a
+                                    touchscreen, or a keyboard. At present,
+                                    there are no restrictions on these options
+                                    and teachers are encouraged to assist
+                                    students in determining which approach works
+                                    best for them and their physical abilities.
+                                </p>,
+                                <p>
+                                    Generally speaking, most young learners have
+                                    greater exposure to touchscreen interfaces
+                                    than they do with mice and keyboards. As a
+                                    starting point, that may be the easiest
+                                    place to begin (technology permitting, of
+                                    course). Transition to the keyboard may most
+                                    the most sense when mouse movement and
+                                    touchscreen gestures begin to negative
+                                    impact overall fluency.
+                                </p>,
+                            ]}
+                        />
 
-        <div className="info-panel">
-          <h2 className="global-page-title">
-            Selecting/Customizing Intervention Problems
-          </h2>
-          <hr></hr>
-          <p>
-            Apart from selecting an intervention type (e.g., CCC), it is also
-            important to select math problems that are appropriate in terms of
-            difficulty (e.g., not too easy, too hard) and not too numerous
-            (e.g., 8 vs 50).
-          </p>
-          <p>
-            Once a student is added to a group/classroom, and an intervention is
-            selected, math problems can be added by selecting a student on the{" "}
-            <Link to={`/dashboard`}>Dashboard</Link> and then press the button
-            labeled &apos;Targeted Item Sets.&apos; If you do not see this
-            button displayed under the Benchmarking and Intervention Settings
-            heading, it is likely that you did not select an intervention for
-            the student (see &apos;Selecting an Intervention&apos; heading
-            above). Once you press the &apos;Targeted Item Sets&apos; button,
-            you will be at a screen where you have items Available (i.e., in the
-            bank), items Targeted (i.e., those being worked on), items Mastered
-            (i.e., previously worked on), and items Skipped.
-          </p>
-          <p>
-            It is important to be mindful about working from the same Tier I
-            set, so if benchmarking uses Set A, it would be best to draw items
-            from Set A1, A2, A3, etc. There is no pre-defined targeted Set Size
-            and it is up to the educator/clinician to determine what fits best
-            for each student.
-          </p>
-        </div>
-
-        <div className="info-panel">
-          <h2 className="global-page-title">
-            Viewing Overall and Intervention-specific Progress
-          </h2>
-          <hr></hr>
-          <p>
-            Regular practice and visual inspection of progress is critical and
-            the web-app supports the visual inspection of student performance at
-            global (i.e., across multiple benchmarked targets) and at
-            skill-specific levels. Regarding global performance (e.g., across
-            Addition and Subtraction benchmarks), a students overall fluency
-            across all targeted benchmarks can be viewed by selecting the
-            student in the <Link to={`/dashboard`}>Dashboard</Link> and clicking
-            on the &apos;Overall Math&apos; button under the heading &apos;View
-            Student Performance.&apos;
-          </p>
-          <p>
-            In this page, a student&apos;s fluency across all targeted skills
-            will be displayed as a function of time (i.e., all skills across
-            time). However, there is another option to view more detailed,
-            item-level information resulting from progress-monitoring and
-            intervention.
-          </p>
-          <p>
-            {" "}
-            To view more in-depth information regarding the intervention target
-            (e.g., Addition), you can select the &apos;Intervention-specific
-            Targets&apos; button. This functionality provides overall accuracy
-            and fluency information, as well as the item-level performances that
-            exist across various sets.
-          </p>
-        </div>
-
-        <div className="info-panel">
-          <h2 className="global-page-title">
-            Delivering Intervention Sessions
-          </h2>
-          <hr></hr>
-          <p>
-            For students receiving benchmarking and intervention, each activity
-            (i.e., benchmarking, intervention) begins in a different dashboard.
-            Specifically, benchmarking is available through a link on the{" "}
-            <Link to={`/dashboard`}>Student Dashboard</Link> and intervention
-            through a link on the{" "}
-            <Link to={`/practice`}>Practice Dashboard</Link>. To assist teachers
-            and interventionists in tracking practice sessions, the{" "}
-            <Link to={`/practice`}>Practice Dashboard</Link> lists the most
-            recently record practice session. A green indicator means that a
-            practice session was run today whereas a red indicator means no new
-            data has been recorded for the day.
-          </p>
-        </div>
-
-        <div className="info-panel">
-          <h2 className="global-page-title">
-            Maneuvering the Intervention Interface
-          </h2>
-          <hr></hr>
-          <p>
-            Although students are surely most familiar with pencil-and-paper
-            math applications, this modality has some limitations (e.g., cost,
-            lack of automatation, fine motor dexterity limits). The interface
-            provided through Math Fact Fun provides a combination of
-            point-and-click/touch and keyboard input options. For example,
-            learners working through a tablet are likely able to work most
-            quickly by using the On-Screen Keyboard provided in the interface.
-            However, learners working at a desktop/laptop may fine the physical
-            keyboard to be quicker and easier.
-          </p>
-        </div>
-
-        <div className="info-panel">
-          <h2 className="global-page-title">Keyboard Hotkeys</h2>
-          <hr></hr>
-          <p>
-            In addition to number keys, the numpad available on keyboards has
-            been repurposed to minimize the need for the use of a mouse during
-            practice sessions (i.e., improves fluency, simplifies responding). A
-            number of Hotkeys and their functions are listed below:
-          </p>
-          <ul className="information-element">
-            <li>
-              Space = Check/advance to the next problem (CCC/ET/Benchmark)
-            </li>
-            <li>
-              Enter = Functions as the &apos;=&apos; operator, so that work can
-              remain on the numpad exclusively
-            </li>
-            <li>
-              Delete/Backspace = Removes the trailing character in the inputted
-              answer (ET/Benchmark)/math problem (CCC)
-            </li>
-          </ul>
-        </div>
-      </div>{" "}
-    </>
-  );
+                        <InformationPanels
+                            Title={'Keyboard Hotkeys'}
+                            Content={[
+                                <p>
+                                    For students using the keyboard, both the
+                                    number keys and various other keys are
+                                    recognized as valid input. The numberpad
+                                    available on on most keyboards has been
+                                    repurposed to minimize the need for both a
+                                    mouse AND keyboard during practice (i.e.,
+                                    simplifies responding, requires less
+                                    coordination).
+                                </p>,
+                                <p>
+                                    A number of Hotkeys and their functions are
+                                    listed below:
+                                </p>,
+                                <ul className="information-element">
+                                    <li>
+                                        Space = Check/advance to the next
+                                        problem (CCC/ET/Benchmark)
+                                    </li>
+                                    <li>
+                                        Enter = Functions as the &apos;=&apos;
+                                        operator, so that work can remain on the
+                                        numpad exclusively
+                                    </li>
+                                    <li>
+                                        Delete/Backspace = Removes the trailing
+                                        character in the inputted answer
+                                        (ET/Benchmark)/math problem (CCC)
+                                    </li>
+                                </ul>,
+                            ]}
+                        />
+                    </Fade>
+                </div>
+            </div>
+        </>
+    )
 }
