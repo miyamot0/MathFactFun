@@ -26,6 +26,7 @@ export default function StudentSummaryCard({
     return (
         <div className="student-summary">
             <h2 className="global-page-title">Current Student Settings</h2>
+
             <hr />
 
             <StudentSummaryCurrentBenchmarking student={student} />
@@ -45,8 +46,11 @@ export default function StudentSummaryCard({
             <p>
                 <b>Relevant Programming Details</b>: {student.details}
             </p>
-            <p className="due-date">
-                Next Benchmark Scheduled:{' '}
+
+            <hr />
+
+            <p>
+                <b>Next Benchmark Scheduled:</b>{' '}
                 {student.dueDate.toDate().toDateString()}
             </p>
         </div>

@@ -154,7 +154,7 @@ export default function TutorialBenchmark() {
         await addDocument(uploadObject)
 
         if (addResponse.error) {
-            return
+            alert(addResponse.error)
         }
 
         const {
@@ -188,6 +188,10 @@ export default function TutorialBenchmark() {
         }
 
         await updateDocument(id, updateObject)
+
+        if (addResponse.error) {
+            alert(addResponse.error)
+        }
 
         if (!updateResponse.error) {
             history.push(`/probe/${id}`)

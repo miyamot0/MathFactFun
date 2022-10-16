@@ -6,43 +6,43 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { ItemHistory, SetItem } from "../interfaces/SetCreatorInterfaces";
+import { ItemHistory, SetItem } from '../interfaces/SetCreatorInterfaces'
 import {
-  ColumnObject,
-  ColumnsObject,
-  DragDropActions,
-} from "../types/SetCreatorTypes";
+    ColumnObject,
+    ColumnsObject,
+    DragDropActions,
+} from '../types/SetCreatorTypes'
 
 export const StartingColumnValues: ColumnObject = {
-  Available: {
-    name: "Available",
-    items: [],
-  },
-  Targeted: {
-    name: "Targeted",
-    items: [],
-  },
-  Mastered: {
-    name: "Mastered",
-    items: [],
-  },
-  Skipped: {
-    name: "Skipped",
-    items: [],
-  },
-};
+    Available: {
+        name: 'Available',
+        items: [],
+    },
+    Targeted: {
+        name: 'Targeted',
+        items: [],
+    },
+    Mastered: {
+        name: 'Mastered',
+        items: [],
+    },
+    Skipped: {
+        name: 'Skipped',
+        items: [],
+    },
+}
 
 /**
  * Initial state
  */
 export const InitialSetCreatorState: ColumnsObject = {
-  columns: StartingColumnValues,
-  columnsOld: StartingColumnValues,
-  ItemHistory: {} as ItemHistory[],
-  BaseItems: {} as SetItem[],
-  LoadedData: false,
-  Callback: undefined,
-};
+    columns: StartingColumnValues,
+    columnsOld: StartingColumnValues,
+    ItemHistory: undefined,
+    BaseItems: {} as SetItem[],
+    LoadedData: false,
+    Callback: undefined,
+}
 
 /**
  * Reducer for submission
@@ -52,23 +52,23 @@ export const InitialSetCreatorState: ColumnsObject = {
  * @returns {ColumnsObject}
  */
 export const SetCreatorReducer = (
-  state: ColumnsObject,
-  action: any
+    state: ColumnsObject,
+    action: any
 ): ColumnsObject => {
-  switch (action.type) {
-    case DragDropActions.LoadCallback:
-      return { ...state, Callback: action.payload };
-    case DragDropActions.SetItemHistory:
-      return { ...state, ItemHistory: action.payload };
-    case DragDropActions.SetBaseItems:
-      return { ...state, BaseItems: action.payload };
-    case DragDropActions.UpdateColumns:
-      state.Callback(action.payload as ColumnObject, state.columns);
-      return { ...state, columns: action.payload };
-    case DragDropActions.ToggleLoaded:
-      return { ...state, LoadedData: action.payload };
+    switch (action.type) {
+        case DragDropActions.LoadCallback:
+            return { ...state, Callback: action.payload }
+        case DragDropActions.SetItemHistory:
+            return { ...state, ItemHistory: action.payload }
+        case DragDropActions.SetBaseItems:
+            return { ...state, BaseItems: action.payload }
+        case DragDropActions.UpdateColumns:
+            state.Callback(action.payload as ColumnObject, state.columns)
+            return { ...state, columns: action.payload }
+        case DragDropActions.ToggleLoaded:
+            return { ...state, LoadedData: action.payload }
 
-    default:
-      throw new Error();
-  }
-};
+        default:
+            throw new Error()
+    }
+}

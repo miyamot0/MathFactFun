@@ -19,10 +19,6 @@ import { checkIfCompletedBenchmark } from './helpers/DashboardSubcomponentHelper
 
 import './styles/BenchmarkList.css'
 
-/**
-
- */
-
 export default function BenchmarkList({
     student,
 }: BenchmarkInterface): JSX.Element {
@@ -41,22 +37,22 @@ export default function BenchmarkList({
 
                     if (
                         benchmark.includes('Addition') &&
-                        !student.TutorialBenchmarkAddition
+                        student.TutorialBenchmarkAddition !== true
                     ) {
                         needsTutorial = true
                     } else if (
                         benchmark.includes('Subtraction') &&
-                        !student.TutorialBenchmarkSubtraction
+                        student.TutorialBenchmarkSubtraction !== true
                     ) {
                         needsTutorial = true
                     } else if (
                         benchmark.includes('Multiplication') &&
-                        !student.TutorialBenchmarkMultiplication
+                        student.TutorialBenchmarkMultiplication !== true
                     ) {
                         needsTutorial = true
                     } else if (
                         benchmark.includes('Division') &&
-                        !student.TutorialBenchmarkDivision
+                        student.TutorialBenchmarkDivision !== true
                     ) {
                         needsTutorial = true
                     }

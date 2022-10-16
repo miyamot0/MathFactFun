@@ -6,49 +6,49 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { ItemHistory, SetItem } from "../interfaces/SetCreatorInterfaces";
+import { ItemHistory, SetItem } from '../interfaces/SetCreatorInterfaces'
 
 /**
  * Actions for reducer
  */
 export enum DragDropActions {
-  LoadCallback = "LoadCallback",
-  SetItemHistory = "SetItemHistory",
-  SetBaseItems = "SetBaseItems",
-  UpdateColumns = "UpdateColumns",
-  ToggleLoaded = "ToggleLoaded",
-  SetThrow = "SetThrow",
+    LoadCallback = 'LoadCallback',
+    SetItemHistory = 'SetItemHistory',
+    SetBaseItems = 'SetBaseItems',
+    UpdateColumns = 'UpdateColumns',
+    ToggleLoaded = 'ToggleLoaded',
+    SetThrow = 'SetThrow',
 }
 
 export type ColumnVector = {
-  name: string;
-  items: any[];
-};
+    name: string
+    items: any[]
+}
 
 export type ColumnObject = {
-  [key: string]: ColumnVector;
-};
+    [key: string]: ColumnVector
+}
 
 export type ColumnsObject = {
-  columns: {
-    [key: string]: ColumnVector;
-  };
-  columnsOld: {
-    [key: string]: ColumnVector;
-  };
-  ItemHistory: ItemHistory[];
-  BaseItems: SetItem[];
-  LoadedData: boolean;
-  Callback: any;
-};
+    columns: {
+        [key: string]: ColumnVector
+    }
+    columnsOld: {
+        [key: string]: ColumnVector
+    }
+    ItemHistory: ItemHistory[] | undefined
+    BaseItems: SetItem[]
+    LoadedData: boolean
+    Callback: any
+}
 
 export type FactSaveObject = {
-  factsTargeted: string[];
-  factsSkipped: string[];
-  factsMastered: string[];
+    factsTargeted: string[]
+    factsSkipped: string[]
+    factsMastered: string[]
 }
 
 export type ColumnSnapsot = {
-  Preview: FactSaveObject,
-  Current: FactSaveObject
+    Preview: FactSaveObject
+    Current: FactSaveObject
 }
