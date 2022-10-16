@@ -7,16 +7,15 @@
  */
 
 import React from 'react'
+import StudentSummaryCard from './views/StudentSummaryCard'
+import StudentDisplayHeader from './views/StudentDisplayHeader'
 import { useFirestore } from '../../../firebase/hooks/useFirestore'
 import { useHistory } from 'react-router-dom'
 import { useAuthorizationContext } from '../../../context/hooks/useAuthorizationContext'
 import { StudentWidgetInterface } from '../interfaces/StudentInterfaces'
 
-import StudentSummaryCard from './views/StudentSummaryCard'
-
 // styles
 import './styles/StudentSummary.css'
-import StudentDisplayHeader from './views/StudentDisplayHeader'
 
 export default function StudentSummary({ student }: StudentWidgetInterface) {
     const { deleteDocument, response } = useFirestore(

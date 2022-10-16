@@ -58,16 +58,6 @@ export default function StudentDisplayHeader({
                 <IconButton
                     Icon={ProgressIcon}
                     Action={() => {
-                        history.push(`/Screening/${student.id}`)
-                    }}
-                    BackgroundStyle={'rgb(14, 187, 80)'}
-                    AltText={'Button to student screening'}
-                    Tooltip={'Show overall screening outcomes'}
-                />
-
-                <IconButton
-                    Icon={ClassificationIcon}
-                    Action={() => {
                         history.push(
                             `/ProgressMonitor/${student.currentTarget}/${student.id}/${student.currentApproach}/${student.aimLine}`
                         )

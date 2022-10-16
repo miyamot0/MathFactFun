@@ -9,6 +9,7 @@
 import React from 'react'
 import PlayIcon from '../../../../assets/play-24.svg'
 import PracticeFooterLinkedSummary from './PracticeFooterLinkedSummary'
+import PracticeFooterLinkedAction from './PracticeFooterLinkedActions'
 import { Link } from 'react-router-dom'
 import { StudentDataInterface } from '../../../student/interfaces/StudentInterfaces'
 import {
@@ -16,7 +17,6 @@ import {
     generateRouteBaseOnStrategy,
     warnNoProblemsAssigned,
 } from '../helpers/DashboardSubcomponentHelpers'
-import PracticeFooterLinkedAction from './PracticeFooterLinkedActions'
 
 export interface PracticeStatusView {
     student: StudentDataInterface
@@ -44,12 +44,12 @@ export default function PracticeStatusView({
                     width: '100%',
                 }}
             >
-                <p style={{ display: 'inline-block' }}>
+                <div style={{ display: 'inline-block' }}>
                     <p className="p-needs-training">
                         <span className="needs-training"> </span>
                         Complete Cover, Copy, Compare Tutorial
                     </p>
-                </p>
+                </div>
 
                 <Link
                     to={`/tutorial/${student.currentApproach}/${student.id}`}
@@ -89,12 +89,12 @@ export default function PracticeStatusView({
                     width: '100%',
                 }}
             >
-                <p style={{ display: 'inline-block' }}>
+                <div style={{ display: 'inline-block' }}>
                     <p className="p-needs-training">
                         <span className="needs-training"> </span>
                         Complete Explicit Timing Tutorial
                     </p>
-                </p>
+                </div>
 
                 <Link
                     to={`/tutorial/${student.currentApproach}/${student.id}`}
