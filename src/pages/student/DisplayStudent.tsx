@@ -33,6 +33,7 @@ require('highcharts/modules/accessibility')(Highcharts)
 AnnotationsModule(Highcharts)
 
 import './styles/DisplayStudent.css'
+import AnimatedHero from '../landing/views/AnimatedHero'
 
 export default function DisplayStudent() {
     const { id } = useParams<RoutedIdParam>()
@@ -118,22 +119,22 @@ export default function DisplayStudent() {
                 },
                 series: [
                     {
-                        name: 'Addition (DCPM)',
+                        name: 'Addition',
                         data: remapReducedEntriesToPoint(additionR),
                         type: 'line',
                     },
                     {
-                        name: 'Subtraction (DCPM)',
+                        name: 'Subtraction',
                         data: remapReducedEntriesToPoint(subtractionR),
                         type: 'line',
                     },
                     {
-                        name: 'Multiplication (DCPM)',
+                        name: 'Multiplication',
                         data: remapReducedEntriesToPoint(multiplicationR),
                         type: 'line',
                     },
                     {
-                        name: 'Division (DCPM)',
+                        name: 'Division',
                         data: remapReducedEntriesToPoint(divisionR),
                         type: 'line',
                     },

@@ -6,43 +6,54 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from "react";
-import BenchmarkList from "./subcomponents/BenchmarkList";
-import { useParams } from "react-router-dom";
-import { useFirebaseDocumentTyped } from "../../firebase/hooks/useFirebaseDocument";
-import { RoutedIdParam } from "../../interfaces/RoutingInterfaces";
-import { StudentDataInterface } from "../student/interfaces/StudentInterfaces";
+import React from 'react'
+import BenchmarkList from './subcomponents/BenchmarkList'
+import { useParams } from 'react-router-dom'
+import { useFirebaseDocumentTyped } from '../../firebase/hooks/useFirebaseDocument'
+import { RoutedIdParam } from '../../interfaces/RoutingInterfaces'
+import { StudentDataInterface } from '../student/interfaces/StudentInterfaces'
 import {
-  DashboardErrorMessage,
-  DashboardLoadingMessage,
-} from "./helpers/DashboardHelpers";
+    DashboardErrorMessage,
+    DashboardLoadingMessage,
+} from './helpers/DashboardHelpers'
 
 // styles
-import "./styles/Dashboards.css";
+import './styles/Dashboards.css'
+import AnimatedHero from '../landing/views/AnimatedHero'
 
 export default function DashboardBenchmark() {
-  const { id } = useParams<RoutedIdParam>();
+    const { id } = useParams<RoutedIdParam>()
 
-  const { document, documentError } =
-    useFirebaseDocumentTyped<StudentDataInterface>({
-      collectionString: "students",
-      idString: id,
-    });
-  const DataType = "Benchmark";
+    const { document, documentError } =
+        useFirebaseDocumentTyped<StudentDataInterface>({
+            collectionString: 'students',
+            idString: id,
+        })
+    const DataType = 'Benchmark'
 
-  if (documentError) {
-    return <DashboardErrorMessage documentError={documentError} dataType={DataType} />
-  } else if (document !== null && documentError === undefined) {
-    return (
-      <div>
-        <h2 className="global-page-title">
-          Benchmark Dashboard: {document.name}
-        </h2>
-        <BenchmarkList student={document} />
-      </div>
-    );
-  }
-  else {
-    return <DashboardLoadingMessage documentError={documentError} dataType={DataType} />;
-  }
+    if (documentError) {
+        return (
+            <DashboardErrorMessage
+                documentError={documentError}
+                dataType={DataType}
+            />
+        )
+    } else if (document !== null && documentError === undefined) {
+        return (
+            <div className="dashboard-page-width-wrapper">
+                <AnimatedHero />
+                <h2 className="global-page-title">
+                    Benchmark Dashboard: {document.name}
+                </h2>
+                <BenchmarkList student={document} />
+            </div>
+        )
+    } else {
+        return (
+            <DashboardLoadingMessage
+                documentError={documentError}
+                dataType={DataType}
+            />
+        )
+    }
 }

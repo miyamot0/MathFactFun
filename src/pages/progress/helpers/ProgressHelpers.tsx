@@ -7,20 +7,20 @@
  */
 
 import {
-  GetOperatorFromLabel,
-  OnlyUnique,
-  Sum,
-} from "../../../utilities/LabelHelper";
-import { PerformanceDataInterface } from "../../intervention/interfaces/InterventionInterfaces";
-import { FactDataInterface } from "../../setcreator/interfaces/SetCreatorInterfaces";
+    GetOperatorFromLabel,
+    OnlyUnique,
+    Sum,
+} from '../../../utilities/LabelHelper'
+import { PerformanceDataInterface } from '../../intervention/interfaces/InterventionInterfaces'
+import { FactDataInterface } from '../../setcreator/interfaces/SetCreatorInterfaces'
 import {
-  ChartInformation,
-  DailyPerformanceMetrics,
-  ItemLevelCalculationsObject,
-  ItemPerformanceMetrics,
-  OverallCalculationObject,
-  RemappedPerformances,
-} from "../interfaces/ProgressInterfaces";
+    ChartInformation,
+    DailyPerformanceMetrics,
+    ItemLevelCalculationsObject,
+    ItemPerformanceMetrics,
+    OverallCalculationObject,
+    RemappedPerformances,
+} from '../interfaces/ProgressInterfaces'
 
 /** modifyDate
  *
@@ -30,12 +30,12 @@ import {
  * @returns {Date} Amended date object
  */
 export function modifyDate(newDate: Date): Date {
-  const modDate = newDate;
-  modDate.setHours(0);
-  modDate.setMinutes(0);
-  modDate.setSeconds(0);
+    const modDate = newDate
+    modDate.setHours(0)
+    modDate.setMinutes(0)
+    modDate.setSeconds(0)
 
-  return modDate;
+    return modDate
 }
 
 /** getMappedColor
@@ -45,14 +45,14 @@ export function modifyDate(newDate: Date): Date {
  * @param {number} accuracy Accuracy numbers
  * @returns {string} Color for marker
  */
-export function getMappedColor(accuracy: number): "red" | "orange" | "green" {
-  if (accuracy < 50) {
-    return "red";
-  } else if (accuracy < 80) {
-    return "orange";
-  } else {
-    return "green";
-  }
+export function getMappedColor(accuracy: number): 'red' | 'orange' | 'green' {
+    if (accuracy < 50) {
+        return 'red'
+    } else if (accuracy < 80) {
+        return 'orange'
+    } else {
+        return 'green'
+    }
 }
 
 /** getMappedMarker
@@ -63,17 +63,17 @@ export function getMappedColor(accuracy: number): "red" | "orange" | "green" {
  * @returns {string} Shape for marker
  */
 export function getMappedMarker(
-  latency: number
-): "circle" | "triangle" | "diamond" | "square" {
-  if (latency < 5) {
-    return "circle";
-  } else if (latency < 10) {
-    return "triangle";
-  } else if (latency < 15) {
-    return "diamond";
-  } else {
-    return "square";
-  }
+    latency: number
+): 'circle' | 'triangle' | 'diamond' | 'square' {
+    if (latency < 5) {
+        return 'circle'
+    } else if (latency < 10) {
+        return 'triangle'
+    } else if (latency < 15) {
+        return 'diamond'
+    } else {
+        return 'square'
+    }
 }
 
 /** remapPerformances
@@ -84,22 +84,22 @@ export function getMappedMarker(
  * @returns {RemappedPerformances[]}
  */
 export function remapPerformances(
-  documents: PerformanceDataInterface[]
+    documents: PerformanceDataInterface[]
 ): RemappedPerformances[] {
-  return documents.map((doc) => {
-    return {
-      // TODO: clean up this flip flopping
-      Items: doc.entries as FactDataInterface[],
-      Date: new Date(doc.dateTimeStart),
-      ShortDate: new Date(doc.dateTimeStart).toLocaleDateString("en-US"),
-      Errors: doc.errCount,
-      DigitsCorrect: doc.correctDigits,
-      DigitsCorrectInitial: doc.nCorrectInitial,
-      DigitsTotal: doc.totalDigits,
-      SessionDuration: doc.sessionDuration,
-      Method: doc.method,
-    };
-  });
+    return documents.map((doc) => {
+        return {
+            // TODO: clean up this flip flopping
+            Items: doc.entries as FactDataInterface[],
+            Date: new Date(doc.dateTimeStart),
+            ShortDate: new Date(doc.dateTimeStart).toLocaleDateString('en-US'),
+            Errors: doc.errCount,
+            DigitsCorrect: doc.correctDigits,
+            DigitsCorrectInitial: doc.nCorrectInitial,
+            DigitsTotal: doc.totalDigits,
+            SessionDuration: doc.sessionDuration,
+            Method: doc.method,
+        }
+    })
 }
 
 /** aggregatePerformances
@@ -110,42 +110,43 @@ export function remapPerformances(
  * @returns {DailyPerformanceMetrics[]}
  */
 export function aggregatePerformances(
-  mappedDocument: RemappedPerformances[]
+    mappedDocument: RemappedPerformances[]
 ): DailyPerformanceMetrics[] {
-  const performancesReducedToDays: DailyPerformanceMetrics[] = mappedDocument
-    .map((remapped) => remapped.ShortDate)
-    .filter(OnlyUnique)
-    .sort()
-    .map((remappedShortDate) => {
-      // Pull in relevant performance metrics by date
-      const relevantData = mappedDocument.filter(
-        (obj) => obj.ShortDate === remappedShortDate
-      );
+    const performancesReducedToDays: DailyPerformanceMetrics[] = mappedDocument
+        .map((remapped) => remapped.ShortDate)
+        .filter(OnlyUnique)
+        .sort()
+        .map((remappedShortDate) => {
+            // Pull in relevant performance metrics by date
+            const relevantData = mappedDocument.filter(
+                (obj) => obj.ShortDate === remappedShortDate
+            )
 
-      // Aggregate numbers per the date
-      const totalDigitsCorr = relevantData
-        .map((obj) => obj.DigitsCorrect)
-        .reduce(Sum);
-      const totalDigits = relevantData
-        .map((obj) => obj.DigitsTotal)
-        .reduce(Sum);
-      const totalTime =
-        relevantData.map((obj) => obj.SessionDuration).reduce(Sum) / 60.0;
+            // Aggregate numbers per the date
+            const totalDigitsCorr = relevantData
+                .map((obj) => obj.DigitsCorrect)
+                .reduce(Sum)
+            const totalDigits = relevantData
+                .map((obj) => obj.DigitsTotal)
+                .reduce(Sum)
+            const totalTime =
+                relevantData.map((obj) => obj.SessionDuration).reduce(Sum) /
+                60.0
 
-      // Generate summary, given the date
-      return {
-        Date: remappedShortDate,
-        DateObject: relevantData[0].Date,
-        DCPM: totalDigitsCorr / totalTime,
-        Accuracy: (totalDigitsCorr / totalDigits) * 100,
-      } as DailyPerformanceMetrics;
-    })
-    .sort(
-      (a: DailyPerformanceMetrics, b: DailyPerformanceMetrics) =>
-        a.DateObject.valueOf() - b.DateObject.valueOf()
-    );
+            // Generate summary, given the date
+            return {
+                Date: remappedShortDate,
+                DateObject: relevantData[0].Date,
+                DCPM: totalDigitsCorr / totalTime,
+                Accuracy: (totalDigitsCorr / totalDigits) * 100,
+            } as DailyPerformanceMetrics
+        })
+        .sort(
+            (a: DailyPerformanceMetrics, b: DailyPerformanceMetrics) =>
+                a.DateObject.valueOf() - b.DateObject.valueOf()
+        )
 
-  return performancesReducedToDays;
+    return performancesReducedToDays
 }
 
 /** aggregateItemLevelPerformances
@@ -158,39 +159,39 @@ export function aggregatePerformances(
  * @returns
  */
 export function aggregateItemLevelPerformances(
-  uniqueMathFacts: string[],
-  flatItemSummaries: FactDataInterface[],
-  target: string
+    uniqueMathFacts: string[],
+    flatItemSummaries: FactDataInterface[],
+    target: string
 ): ItemPerformanceMetrics[] {
-  return uniqueMathFacts.map((itemString) => {
-    // Select matching performances from array of objects
-    const relevantPerformances = flatItemSummaries.filter(
-      (obj) => obj.factString === itemString
-    );
+    return uniqueMathFacts.map((itemString) => {
+        // Select matching performances from array of objects
+        const relevantPerformances = flatItemSummaries.filter(
+            (obj) => obj.factString === itemString
+        )
 
-    // Sum problems correctly copied
-    const itemsCorrect = relevantPerformances
-      .map((item) => (item.factCorrect ? 1.0 : 0.0) as number)
-      .reduce(Sum);
+        // Sum problems correctly copied
+        const itemsCorrect = relevantPerformances
+            .map((item) => (item.factCorrect ? 1.0 : 0.0) as number)
+            .reduce(Sum)
 
-    // Sum latency to correct responding
-    const itemLatency = relevantPerformances
-      .map((item) => Math.abs(item.latencySeconds))
-      .reduce(Sum);
+        // Sum latency to correct responding
+        const itemLatency = relevantPerformances
+            .map((item) => Math.abs(item.latencySeconds))
+            .reduce(Sum)
 
-    // Construct object for plotting
-    return {
-      FactString: itemString,
-      X: parseInt(itemString.split(GetOperatorFromLabel(target))[0]),
-      Y: parseInt(
-        itemString.split(GetOperatorFromLabel(target))[1].split("=")[0]
-      ),
-      Latency: itemLatency / relevantPerformances.length,
-      AverageCorrect: (itemsCorrect / relevantPerformances.length) * 100,
-      Correct: itemsCorrect,
-      Total: relevantPerformances.length,
-    };
-  });
+        // Construct object for plotting
+        return {
+            FactString: itemString,
+            X: parseInt(itemString.split(GetOperatorFromLabel(target))[0]),
+            Y: parseInt(
+                itemString.split(GetOperatorFromLabel(target))[1].split('=')[0]
+            ),
+            Latency: itemLatency / relevantPerformances.length,
+            AverageCorrect: (itemsCorrect / relevantPerformances.length) * 100,
+            Correct: itemsCorrect,
+            Total: relevantPerformances.length,
+        }
+    })
 }
 
 /** prepareOverallCalculations
@@ -200,39 +201,39 @@ export function aggregateItemLevelPerformances(
  * @returns
  */
 export function prepareOverallCalculations(
-  documents: PerformanceDataInterface[],
-  aim: string
+    documents: PerformanceDataInterface[],
+    aim: string
 ) {
-  // Generate object from document collection
-  const mappedDocument = remapPerformances(documents);
+    // Generate object from document collection
+    const mappedDocument = remapPerformances(documents)
 
-  // Bring together all performances, by day
-  const aggregatePerformancesDaily = aggregatePerformances(mappedDocument);
+    // Bring together all performances, by day
+    const aggregatePerformancesDaily = aggregatePerformances(mappedDocument)
 
-  // Extract all dates
-  const dateArr = mappedDocument.map((d) => d.Date.getTime());
-  const maxDate = modifyDate(new Date(Math.max.apply(null, dateArr)));
-  const minDate = modifyDate(new Date(Math.min.apply(null, dateArr)));
+    // Extract all dates
+    const dateArr = mappedDocument.map((d) => d.Date.getTime())
+    const maxDate = modifyDate(new Date(Math.max.apply(null, dateArr)))
+    const minDate = modifyDate(new Date(Math.min.apply(null, dateArr)))
 
-  // Extract max for y-axis
-  let maxYAxis = Math.ceil(
-    Math.max.apply(
-      null,
-      aggregatePerformancesDaily.map((obj) => obj.DCPM)
+    // Extract max for y-axis
+    let maxYAxis = Math.ceil(
+        Math.max.apply(
+            null,
+            aggregatePerformancesDaily.map((obj) => obj.DCPM)
+        )
     )
-  );
 
-  // Extend out, if aim line exceeds current max
-  maxYAxis = maxYAxis < parseInt(aim) ? parseInt(aim) + 1 : maxYAxis + 1;
+    // Extend out, if aim line exceeds current max
+    maxYAxis = maxYAxis < parseInt(aim) ? parseInt(aim) + 1 : maxYAxis + 1
 
-  return {
-    MappedDocument: mappedDocument,
-    AggregatePerformancesDaily: aggregatePerformancesDaily,
-    DateArray: dateArr,
-    MaxDate: maxDate,
-    MinDate: minDate,
-    MaxYAxis: maxYAxis,
-  } as OverallCalculationObject;
+    return {
+        MappedDocument: mappedDocument,
+        AggregatePerformancesDaily: aggregatePerformancesDaily,
+        DateArray: dateArr,
+        MaxDate: maxDate,
+        MinDate: minDate,
+        MaxYAxis: maxYAxis,
+    } as OverallCalculationObject
 }
 
 /** getPrimaryProgressChartData
@@ -242,70 +243,70 @@ export function prepareOverallCalculations(
  * @returns
  */
 export function getPrimaryProgressChartData(
-  overallCalculations: OverallCalculationObject,
-  aim: string
+    overallCalculations: OverallCalculationObject,
+    aim: string
 ): ChartInformation {
-  return {
-    chart: {
-      height: "600px",
-    },
-    title: {
-      text: null,
-    },
-    series: {
-      name: "Digits Correct Per Minute",
-      data: overallCalculations.AggregatePerformancesDaily.map((obj) => {
-        return {
-          x: obj.DateObject.getTime(),
-          y: Math.round(obj.DCPM * 100) / 100,
-        };
-      }),
-      type: "line",
-    },
-    xAxis: {
-      type: "datetime",
-      minTickInterval: 24 * 3600 * 1000,
-    },
-    yAxis: {
-      title: {
-        text: "Digits Correct/Minute (DCPM)",
-      },
-      min: 0,
-      max: overallCalculations.MaxYAxis,
-    },
-    tooltip: null,
-    annotations: [
-      {
-        draggable: "",
-        shapeOptions: {
-          type: "path",
-          dashStyle: "Solid",
-          strokeWidth: 1,
-          stroke: "red",
-          fill: "red",
+    return {
+        chart: {
+            height: '600px',
         },
-        shapes: [
-          {
-            type: "path",
-            points: [
-              {
-                x: overallCalculations.MinDate.getTime(),
-                y: parseInt(aim),
-                xAxis: 0,
-                yAxis: 0,
-              },
-              {
-                x: overallCalculations.MaxDate.getTime(),
-                y: parseInt(aim),
-                xAxis: 0,
-                yAxis: 0,
-              },
-            ],
-          },
+        title: {
+            text: null,
+        },
+        series: {
+            name: 'Digits Correct Per Minute',
+            data: overallCalculations.AggregatePerformancesDaily.map((obj) => {
+                return {
+                    x: obj.DateObject.getTime(),
+                    y: Math.round(obj.DCPM * 100) / 100,
+                }
+            }),
+            type: 'line',
+        },
+        xAxis: {
+            type: 'datetime',
+            minTickInterval: 24 * 3600 * 1000,
+        },
+        yAxis: {
+            title: {
+                text: 'Digits Correct/Minute (DCPM)',
+            },
+            min: 0,
+            max: overallCalculations.MaxYAxis,
+        },
+        tooltip: null,
+        annotations: [
+            {
+                draggable: '',
+                shapeOptions: {
+                    type: 'path',
+                    dashStyle: 'Solid',
+                    strokeWidth: 1,
+                    stroke: 'red',
+                    fill: 'red',
+                },
+                shapes: [
+                    {
+                        type: 'path',
+                        points: [
+                            {
+                                x: overallCalculations.MinDate.getTime(),
+                                y: parseInt(aim),
+                                xAxis: 0,
+                                yAxis: 0,
+                            },
+                            {
+                                x: overallCalculations.MaxDate.getTime(),
+                                y: parseInt(aim),
+                                xAxis: 0,
+                                yAxis: 0,
+                            },
+                        ],
+                    },
+                ],
+            },
         ],
-      },
-    ],
-  };
+    }
 }
 
 /** prepareItemLevelCalculations
@@ -315,54 +316,52 @@ export function getPrimaryProgressChartData(
  * @returns
  */
 export function prepareItemLevelCalculations(
-  overallCalculations: OverallCalculationObject,
-  target: string
+    overallCalculations: OverallCalculationObject,
+    target: string
 ) {
-
-  if (overallCalculations.MappedDocument.length === 0) {
-    return {
-      ItemSummaries: [],
-      FlatItemSummaries: [],
-      UniqueMathFacts: [],
-      UniqueQuants: [],
-    } as ItemLevelCalculationsObject;
-  } else {
-
-    const itemSummaries = overallCalculations.MappedDocument.map(
-      ({ Items }) => Items
-    );
-
-    const flatItemSummaries: FactDataInterface[] = itemSummaries.reduce(
-      (accumulator, value) => accumulator.concat(value)
-    );
-
-    if (!Array.isArray(flatItemSummaries)) {
-      return {
-        ItemSummaries: itemSummaries,
-        FlatItemSummaries: null,
-        UniqueMathFacts: null,
-        UniqueQuants: null,
-      } as ItemLevelCalculationsObject;
+    if (overallCalculations.MappedDocument.length === 0) {
+        return {
+            ItemSummaries: [],
+            FlatItemSummaries: [],
+            UniqueMathFacts: [],
+            UniqueQuants: [],
+        } as ItemLevelCalculationsObject
     } else {
-      const uniqueMathFacts = flatItemSummaries
-        .map((obj) => obj.factString)
-        .filter(OnlyUnique)
-        .sort();
+        const itemSummaries = overallCalculations.MappedDocument.map(
+            ({ Items }) => Items
+        )
 
-      const uniqueQuants = aggregateItemLevelPerformances(
-        uniqueMathFacts,
-        flatItemSummaries,
-        target
-      );
+        const flatItemSummaries: FactDataInterface[] = itemSummaries.reduce(
+            (accumulator, value) => accumulator.concat(value)
+        )
 
-      return {
-        ItemSummaries: itemSummaries,
-        FlatItemSummaries: flatItemSummaries,
-        UniqueMathFacts: uniqueMathFacts,
-        UniqueQuants: uniqueQuants,
-      } as ItemLevelCalculationsObject;
+        if (!Array.isArray(flatItemSummaries)) {
+            return {
+                ItemSummaries: itemSummaries,
+                FlatItemSummaries: null,
+                UniqueMathFacts: null,
+                UniqueQuants: null,
+            } as ItemLevelCalculationsObject
+        } else {
+            const uniqueMathFacts = flatItemSummaries
+                .map((obj) => obj.factString)
+                .filter(OnlyUnique)
+                .sort()
+
+            const uniqueQuants = aggregateItemLevelPerformances(
+                uniqueMathFacts,
+                flatItemSummaries,
+                target
+            )
+
+            return {
+                ItemSummaries: itemSummaries,
+                FlatItemSummaries: flatItemSummaries,
+                UniqueMathFacts: uniqueMathFacts,
+                UniqueQuants: uniqueQuants,
+            } as ItemLevelCalculationsObject
+        }
     }
-  }
 }
 
 /** getSecondaryProgressChartData
@@ -372,55 +371,59 @@ export function prepareItemLevelCalculations(
  * @returns
  */
 export function getSecondaryProgressChartData(
-  itemLevelCalculations: ItemLevelCalculationsObject,
-  target: string
+    itemLevelCalculations: ItemLevelCalculationsObject,
+    target: string
 ): ChartInformation {
-  return {
-    title: {
-      text: null,
-    },
-    chart: {
-      type: "scatter",
-      zoomType: "xy",
-      height: "600px",
-    },
-    tooltip: {
-      formatter: function (this: Highcharts.Point): string {
-        return (
-          "Problem: " + this.x + GetOperatorFromLabel(target) + this.y + "</b>"
-        );
-      },
-    },
-    series: {
-      name: "Item Metrics",
-      data: itemLevelCalculations.UniqueQuants
-        ? itemLevelCalculations.UniqueQuants.map((item) => {
-          return {
-            x: item.X,
-            y: item.Y,
-            marker: {
-              symbol: getMappedMarker(item.Latency),
-              fillColor: getMappedColor(item.AverageCorrect),
-              radius: item.Total > 5 ? 5 + 1 : item.Total + 1,
+    return {
+        title: {
+            text: null,
+        },
+        chart: {
+            type: 'scatter',
+            zoomType: 'xy',
+            height: '600px',
+        },
+        tooltip: {
+            formatter: function (this: Highcharts.Point): string {
+                return (
+                    'Problem: ' +
+                    this.x +
+                    GetOperatorFromLabel(target) +
+                    this.y +
+                    '</b>'
+                )
             },
-          };
-        })
-        : [],
-    },
-    yAxis: {
-      title: {
-        text: "Magnitude Change",
-      },
-      min: 0,
-      gridLineWidth: 1,
-    },
-    xAxis: {
-      title: {
-        text: "Base Value",
-      },
-      min: 0,
-      gridLineWidth: 1,
-    },
-    annotations: [],
-  };
+        },
+        series: {
+            name: 'Item Metrics',
+            data: itemLevelCalculations.UniqueQuants
+                ? itemLevelCalculations.UniqueQuants.map((item) => {
+                      return {
+                          x: item.X,
+                          y: item.Y,
+                          marker: {
+                              symbol: getMappedMarker(item.Latency),
+                              fillColor: getMappedColor(item.AverageCorrect),
+                              radius: item.Total > 5 ? 5 + 1 : item.Total + 1,
+                          },
+                      }
+                  })
+                : [],
+        },
+        yAxis: {
+            title: {
+                text: 'Magnitude Change',
+            },
+            min: 0,
+            gridLineWidth: 1,
+        },
+        xAxis: {
+            title: {
+                text: 'Base Value',
+            },
+            min: 0,
+            gridLineWidth: 1,
+        },
+        annotations: [],
+    }
 }

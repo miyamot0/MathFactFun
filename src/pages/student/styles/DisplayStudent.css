@@ -7,9 +7,22 @@
  */
 
 .student-details-style {
-  margin-top: 0px;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(0px, 720px));
-  align-items: start;
-  grid-gap: 30px;
+    margin-top: 0px;
+    margin-left: 75px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(0px, 640px));
+    align-items: start;
+    grid-gap: 30px;
+}
+
+.create-student-page {
+    margin-left: 75px;
+}
+
+.edit-student-page {
+    margin-left: 75px;
+}
+
+.create-bulk-student-page {
+    margin-left: 75px;
 }

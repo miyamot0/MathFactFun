@@ -7,39 +7,40 @@
  */
 
 .admin-panel {
-  background-color: #fff;
-  padding: 16px;
-  border-radius: 6px;
-  box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.05);
-  text-decoration: none;
-  color: inherit;
-  width: auto;
+    margin-left: 75px;
+    background-color: #fff;
+    padding: 16px;
+    border-radius: 6px;
+    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.05);
+    text-decoration: none;
+    color: inherit;
+    width: auto;
 }
 
 .adminTable {
-  width: 100%;
-  padding-top: 10px;
-  border-collapse: collapse;
+    width: 100%;
+    padding-top: 10px;
+    border-collapse: collapse;
 }
 
 .adminTable th {
-  font-weight: bold;
-  text-align: left;
-  text-decoration: underline;
+    font-weight: bold;
+    text-align: left;
+    text-decoration: underline;
 }
 
 .adminTable td {
-  padding: 10px;
-  border-bottom: 1px solid #666;
-  color: var(--text-style-color);
+    padding: 10px;
+    border-bottom: 1px solid #666;
+    color: var(--text-style-color);
 }
 
 .new-user-btn {
-  margin-top: 20px;
+    margin-top: 20px;
 }
 
 .btn-grow-horiz {
-  width: 100%;
+    width: 100%;
 }
 
 .admin-header-item p {

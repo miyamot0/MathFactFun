@@ -21,6 +21,9 @@ import {
     StandardPasswordFieldText,
 } from '../../utilities/FieldHelpers'
 
+import './styles/UserStyles.css'
+import AnimatedHero from '../landing/views/AnimatedHero'
+
 // Page to create new students
 export default function CreateUser(): JSX.Element {
     const history = useHistory()
@@ -37,6 +40,7 @@ export default function CreateUser(): JSX.Element {
 
     return (
         <div style={{ maxWidth: '600px' }} className="create-user-page">
+            <AnimatedHero />
             <h2 className="global-page-title">Add a new user (Teacher)</h2>
 
             <form

@@ -34,6 +34,8 @@ require('highcharts/modules/annotations')(Highcharts)
 require('highcharts/modules/accessibility')(Highcharts)
 AnnotationsModule(Highcharts)
 
+import './styles/ProgressMonitor.css'
+
 export default function ProgressMonitor() {
     const { id, target, method, aim } = useParams<RoutedStudentProgressSet>()
     const { user, adminFlag } = useAuthorizationContext()
@@ -76,8 +78,8 @@ export default function ProgressMonitor() {
     }, [documents, aim, target, method])
 
     return (
-        <>
-            <div style={CommonPanelWidth} className="progress-monitor-page">
+        <div className="progress-monitor-page">
+            <div style={CommonPanelWidth}>
                 <h2 style={CommonDisplayHeadingStyle}>
                     Current Progress (Overall Fluency/
                     {GetApproachStringFromLabel(method)})
@@ -115,6 +117,6 @@ export default function ProgressMonitor() {
                 </p>
             </div>
             <br></br>
-        </>
+        </div>
     )
 }

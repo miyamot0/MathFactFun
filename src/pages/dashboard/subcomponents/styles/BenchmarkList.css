@@ -7,10 +7,13 @@
  */
 
 .benchmark-list {
-    margin-top: 40px;
+    margin-top: 30px;
+    margin-left: 75px;
+    margin-right: 75px;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    grid-gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    grid-gap: 30px;
+    margin-bottom: 50px;
 }
 
 .benchmark-list-card {

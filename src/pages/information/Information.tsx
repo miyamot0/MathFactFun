@@ -9,12 +9,10 @@
 
 import React from 'react'
 import Fade from 'react-reveal'
-import { Link } from 'react-router-dom'
-
 import AnimatedHero from '../landing/views/AnimatedHero'
 import InformationPanels from './views/InformationPanels'
 import StudentSummaryCurrentBenchmarking from '../student/subcomponents/views/StudentSummaryCurrentBenchmarking'
-import { StudentDataInterface } from '../student/interfaces/StudentInterfaces'
+import StudentSummaryCurrentIntervention from '../student/subcomponents/views/StudentSummaryCurrentIntervention'
 
 import NavigationButton from '../../components/NavigationButton'
 import SettingsButton from '../../components/SettingsButton'
@@ -26,9 +24,10 @@ import SettingsIcon from '../../assets/gear.svg'
 import ItemSetsIcon from '../../assets/plus-slash-minus.svg'
 import ProgressIcon from '../../assets/graph-up.svg'
 
+import { StudentDataInterface } from '../student/interfaces/StudentInterfaces'
+
 // styles
 import './styles/Information.css'
-import StudentSummaryCurrentIntervention from '../student/subcomponents/views/StudentSummaryCurrentIntervention'
 
 export default function Information(): JSX.Element {
     return (

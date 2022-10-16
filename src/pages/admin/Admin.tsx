@@ -15,6 +15,7 @@ import { UserDataInterface } from '../user/types/UserTypes'
 
 // styles
 import './styles/Admin.css'
+import AnimatedHero from '../landing/views/AnimatedHero'
 
 export default function Admin(): JSX.Element {
     const { documents, error } = useFirebaseCollectionTyped<UserDataInterface>({
@@ -25,6 +26,7 @@ export default function Admin(): JSX.Element {
 
     return (
         <div className="admin-panel">
+            <AnimatedHero />
             <div
                 className="admin-header-item"
                 style={{
