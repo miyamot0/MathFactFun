@@ -22,9 +22,10 @@ export default function StudentSummaryCurrentErrorCorrection({
 
     if (student.currentErrorApproach.includes('Every')) {
         backgroundColor = '#1D8051'
-    } else if (student.currentErrorApproach.includes('Never')) {
-        backgroundColor = '#E3185A'
     }
+    //else if (student.currentErrorApproach.includes('Never')) {
+    //    backgroundColor = '#E3185A'
+    //}
 
     return (
         <>

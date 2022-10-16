@@ -27,8 +27,6 @@ export default function StudentSummaryCurrentAimLine({
         backgroundColor = '#ffd966'
     } else if (student.aimLine < 20 && student.aimLine >= 10) {
         backgroundColor = '#fa9e3e'
-    } else {
-        backgroundColor = '#f75c5c'
     }
 
     return (

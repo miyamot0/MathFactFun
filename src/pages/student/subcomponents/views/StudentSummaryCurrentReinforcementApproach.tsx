@@ -17,11 +17,11 @@ export interface StudentSummaryCurrentReinforcementApproach {
 export default function StudentSummaryCurrentReinforcementApproach({
     student,
 }: StudentSummaryCurrentReinforcementApproach) {
-    let backgroundColor = '#000000'
+    const backgroundColor = '#000000'
 
-    if (student.currentSRApproach.includes('None')) {
-        backgroundColor = '#69A1A0'
-    }
+    //if (student.currentSRApproach.includes('None')) {
+    //    backgroundColor = '#69A1A0'
+    //}
 
     return (
         <>
