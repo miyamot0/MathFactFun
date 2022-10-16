@@ -91,7 +91,7 @@ export default function LoginAnimatedBackground() {
                             },
                         },
                         line_linked: {
-                            enable: true,
+                            enable: false,
                             distance: 150,
                             color: '#ffffff',
                             opacity: 0.4,

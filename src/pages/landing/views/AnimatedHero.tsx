@@ -13,6 +13,7 @@ import { loadFull } from 'tsparticles'
 import { Engine } from 'tsparticles-engine'
 import { tsParticles } from 'tsparticles-engine'
 import { loadTextShape } from 'tsparticles-shape-text'
+import StickerTitle from '../../../components/StickerTitle'
 
 loadTextShape(tsParticles)
 
@@ -21,12 +22,11 @@ export default function AnimatedHero() {
         await loadFull(engine)
     }, [])
 
-    const particlesLoaded = useCallback(async (container: any) => {
-        await console.log(container)
-    }, [])
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    const particlesLoaded = useCallback(async (container: any) => {}, [])
 
     return (
-        <div className="landing-hero">
+        <>
             <Particles
                 id="tsparticles"
                 init={particlesInit}
@@ -91,7 +91,7 @@ export default function AnimatedHero() {
                             },
                         },
                         line_linked: {
-                            enable: true,
+                            enable: false,
                             distance: 150,
                             color: '#ffffff',
                             opacity: 0.4,
@@ -164,7 +164,7 @@ export default function AnimatedHero() {
                 }}
             />
 
-            <h1>Math Fact Fun</h1>
-        </div>
+            <StickerTitle />
+        </>
     )
 }

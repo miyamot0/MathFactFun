@@ -66,6 +66,7 @@ const TapedProblems = lazy(() => import('./pages/intervention/TapedProblems'))
 
 // Styles
 import './App.css'
+import Home from './pages/home/Home'
 
 export type AppInterface = JSX.Element
 
@@ -86,6 +87,10 @@ export function App(): AppInterface {
                         <Suspense fallback={<div>Loading...</div>}>
                             <Switch>
                                 <Route exact path="/">
+                                    {!user && <Home />}
+                                    {user && <Landing />}
+                                </Route>
+                                <Route exact path="/landing">
                                     {!user && <Redirect to="/login" />}
                                     {user && <Landing />}
                                 </Route>

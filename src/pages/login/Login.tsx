@@ -8,12 +8,18 @@
 
 import React, { useReducer } from 'react'
 import LoginAnimatedBackground from './views/LoginAnimatedBackground'
+import StickerTitle from '../../components/StickerTitle'
 import { useFirebaseLogin } from '../../firebase/hooks/useFirebaseLogin'
 import { LoginDataBehavior } from './types/LoginTypes'
 import {
     InitialLoginState,
     UserLoginReducer,
 } from './functionality/LoginBehavior'
+import {
+    RenderError,
+    RenderLoading,
+    RenderLoginButton,
+} from './views/LoginInputElements'
 
 import './styles/LoginStyles.css'
 
@@ -77,63 +83,14 @@ export default function Login(): JSX.Element {
         }
     }
 
-    /** renderLoginButton
-     *
-     * @returns {JSX.Element}
-     */
-    function renderLoginButton(): JSX.Element {
-        /* istanbul ignore next */
-        if (loginPending === undefined || loginPending) {
-            return <></>
-        } else {
-            return (
-                <button className="global-btn" data-testid="login-button-input">
-                    Login
-                </button>
-            )
-        }
-    }
-
-    /** renderLoading
-     *
-     * @returns {JSX.Element}
-     */
-    function renderLoading(): JSX.Element {
-        /* istanbul ignore next */
-        if (
-            loginPending === undefined ||
-            loginPending === null ||
-            loginPending === true
-        ) {
-            return (
-                <button className="global-btn" disabled>
-                    loading...
-                </button>
-            )
-        } else {
-            return <></>
-        }
-    }
-
-    /** renderError
-     *
-     * @returns {JSX.Element}
-     */
-    function renderError(): JSX.Element {
-        /* istanbul ignore next */
-        if (loginError === null || loginError === undefined) {
-            return <></>
-        } else {
-            return <div className="error"> {loginError} </div>
-        }
-    }
-
     return (
-        <div>
-            <h2 className="centered-title">Math Fact Fun</h2>
+        <div className="login-width-wrapper">
+            <StickerTitle />
 
-            <form className="login-form" onSubmit={handleLoginSubmission}>
-                <h2>Login</h2>
+            <form className="login-panel" onSubmit={handleLoginSubmission}>
+                <h2>Authentication</h2>
+
+                <hr />
                 <label>
                     <span>Email:</span>
                     <input
@@ -161,11 +118,11 @@ export default function Login(): JSX.Element {
                     ></input>
                 </label>
 
-                {renderLoginButton()}
+                <RenderLoginButton loginPending={loginPending} />
 
-                {renderLoading()}
+                <RenderLoading loginPending={loginPending} />
 
-                {renderError()}
+                <RenderError loginError={loginError} />
             </form>
             <LoginAnimatedBackground />
         </div>

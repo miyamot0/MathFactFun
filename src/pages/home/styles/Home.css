@@ -6,38 +6,26 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-.landing-width-wrapper {
-    position: relative;
+.home-width-wrapper {
+    width: 780px;
+    margin: auto;
 }
 
-#tsparticles {
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    padding: 0;
-    margin: 0;
-    z-index: -1; /* if you use -1 you have to set to `"window"` the interactivity.detectsOn property */
-}
-
-.landing-form-list {
+.home-form-list {
     margin-top: 30px;
-    margin-left: 75px;
-    margin-right: 75px;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(0px, 400px));
-    grid-gap: 30px;
+    grid-template-columns: repeat(auto-fit, minmax(0px, 780px));
+    grid-gap: 50px;
     margin-bottom: 50px;
 }
 
-.landing-form-list p {
+.home-form-list p {
     color: var(--text-style-color);
 }
 
-.landing-panel {
+.home-panel {
     background-color: #fff;
-    padding: 16px;
+    padding: 30px;
     border-radius: 6px;
     box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.05);
     text-decoration: none;
@@ -45,23 +33,27 @@
     width: auto;
 }
 
-.landing-panel > hr {
+.home-panel > hr {
     border-top: 1px dotted black;
     border-bottom: 0px dotted black;
 }
 
-.landing-hero {
+.home-hero {
     position: relative;
     width: 100%;
+    height: 200px;
 }
 
-.landing-hero .sticker {
-    position: absolute !important;
-    top: 50% !important;
-    left: 50% !important;
+#tsparticles {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.home-width-wrapper h1 {
     color: var(--heading-style-color) !important;
     font-weight: bold;
     font-family: Roboto;
     text-align: center;
-    transform: translate(-50%, -50%);
+    margin-bottom: 50px;
 }
