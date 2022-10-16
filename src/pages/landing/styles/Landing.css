@@ -6,11 +6,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+.landing-width-wrapper {
+   width: 1280px;
+}
+
 .landing-form-list {
   margin-top: 30px;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(0px, 400px));
-  grid-gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(0px, 415px));
+  grid-gap: 17.25px;
   margin-bottom: 50px;
 }
 
@@ -31,4 +35,27 @@
 .landing-panel > hr {
   border-top: 1px dotted black;
   border-bottom: 0px dotted black;
+}
+
+.landing-hero {
+  position: relative;
+ 	width:100%;
+	height:200px;
+}
+
+#tsparticles {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.landing-hero h1 {
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  color: var(--heading-style-color) !important;
+  font-weight: bold;
+  font-family: Roboto;
+  text-align: center;
+  transform: translate(-50%, -50%);
 }
