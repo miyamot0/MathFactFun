@@ -261,7 +261,7 @@ export function StandardEntryFieldNumber({
     dispatch,
 }: StandardEntryFieldNumber) {
     return (
-        <label>
+        <label className="form-input-number">
             <span>{label}:</span>
             <input
                 required

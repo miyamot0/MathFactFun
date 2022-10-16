@@ -42,6 +42,8 @@ import {
     StandardSelectFieldMulti,
 } from '../../utilities/FieldHelpers'
 
+import './styles/DisplayStudent.css'
+
 export default function EditStudent() {
     const { id } = useParams<RoutedIdParam>()
     const { document, documentError } =

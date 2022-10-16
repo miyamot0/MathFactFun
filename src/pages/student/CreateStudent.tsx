@@ -31,9 +31,9 @@ import {
     StandardSelectField,
     StandardSelectFieldMulti,
 } from '../../utilities/FieldHelpers'
+import AnimatedHero from '../landing/views/AnimatedHero'
 
 import './styles/DisplayStudent.css'
-import AnimatedHero from '../landing/views/AnimatedHero'
 
 // Page to create new students
 export default function CreateStudent() {
